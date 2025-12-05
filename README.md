@@ -1,0 +1,1 @@
+# HiredNerds Portfolio — Static site
