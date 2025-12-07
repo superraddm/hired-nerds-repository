@@ -1,61 +1,209 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>HiredNerds — Select your Jof</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HiredNerds - Select Your Jof</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">HIREDNERDS</a>
+            <ul class="nav-links">
+                <li><a href="work-examples.html">Work Examples</a></li>
+                <li><a href="testimonials.html">Testimonials</a></li>
+                <li><a href="videos.html">Videos</a></li>
+            </ul>
+        </div>
+    </nav>
 
-<body class="console-bg">
-    <main class="container">
-        <h1 class="title">HIREDNERDS — SELECT YOUR JOF</h1>
-        <p class="subtitle">A 16-bit console-style character selection. Click a Jof to view CV and workflows.</p>
+    <main class="character-select">
+        <header class="select-header">
+            <h1>HIREDNERDS — SELECT YOUR JOF</h1>
+            <div class="ethos-section">
+                <h2>STATEMENT: Multiple Skills, One Person</h2>
+                <p>Welcome. I'm Jof Davies, and this is my portfolio website. I designed and built it as a practical way to present the range of work I have carried out across my career. I am not a web developer by trade, but over the years I have gained experience in several disciplines, and rewriting a single CV repeatedly for narrowly defined roles became increasingly inefficient. So instead, I stuck them all here.<br /><br />
 
+The site introduces several “versions” of me, each representing a distinct area of expertise. These profiles link to role-specific CVs that draw on more than three decades of professional, amateur, and hobbyist experience. Every CV is accurate and originates from a single, comprehensive biography documenting my work in detail.<br /><br />
 
-        <div class="character-grid" role="list">
-            <!-- 5 characters: Email Marketing, CRM/Data, Video Production, Workflow Automation, Digital Marketing -->
-            <a class="char" href="jof-email/" role="listitem" data-jof="email">
-                <img src="assets/placeholders/email-CRM.png" alt="Jof Email sprite" class="sprite">
-                <span class="name">EMAIL MARKETING</span>
-            </a>
+Complete honestety upfront, advances in AI-assisted programming have enabled me to realise ideas that previously required skills beyond my technical vocabulary. The structure and function of this site are a direct result of that support: the concepts were mine, and modern tools provided the language to execute them.<br /><br />
 
+If any of these profiles align with what your organisation requires, I would welcome the opportunity to discuss further.<br /><br />
+So go ahead, pick your Jof below.<br /><br />
+— J.</p>
+            </div>
+        </header>
 
-            <a class="char" href="jof-crm/" role="listitem" data-jof="crm">
-                <img src="assets/placeholders/web-dev.png" alt="Jof CRM sprite" class="sprite">
-                <span class="name">WEB DEV</span>
-            </a>
+        <div class="carousel-container">
+            <button class="carousel-btn carousel-btn-prev" id="prevBtn" aria-label="Previous character">
+                <span>◀</span>
+            </button>
+            
+            <div class="character-display">
+                <div class="character-card" data-index="0">
+                    <div class="character-image">
+                        <img src="assets/characters/email-CRM.png" alt="Email Marketing Expert" />
+                    </div>
+                    <h3 class="character-title">EMAIL MARKETING DEVELOPER</h3>
+                    <p class="character-desc">Campaign Management • 3000+ HTML templates hand-coded</p>
+                    <button class="view-cv-btn" onclick="window.location.href='cv-email-marketing.html'">VIEW CV & WORKFLOWS</button>
+                </div>
+            </div>
 
-
-            <a class="char" href="jof-video/" role="listitem" data-jof="video">
-                <img src="assets/placeholders/video-producer.png" alt="Jof Video sprite" class="sprite">
-                <span class="name">VIDEO PRODUCTION</span>
-            </a>
-
-
-            <a class="char" href="jof-workflow/" role="listitem" data-jof="workflow">
-                <img src="assets/placeholders/automation-specialist.png" alt="Jof Workflow sprite" class="sprite">
-                <span class="name">WORKFLOW AUTOMATION</span>
-            </a>
-
-
-            <a class="char" href="jof-digital/" role="listitem" data-jof="digital">
-                <img src="assets/placeholders/Digital-Director.png" alt="Jof Digital sprite" class="sprite">
-                <span class="name">DIGITAL MARKETING</span>
-            </a>
-            <a class="char" href="jof-vo/" role="listitem" data-jof="digital">
-                <img src="assets/placeholders/voice-over.png" alt="Jof Digital sprite" class="sprite">
-                <span class="name">VOICE OVER / ACTING / PRESENTING</span>
-            </a>
+            <button class="carousel-btn carousel-btn-next" id="nextBtn" aria-label="Next character">
+                <span>▶</span>
+            </button>
         </div>
 
+        <div class="carousel-indicators" id="indicators"></div>
 
-        <footer class="footer">Press a Jof to view custom CV & workflows — hirednerds.com</footer>
+        <footer class="select-footer">
+            <p>Press a Jof to view custom CV & workflows — hirednerds.com</p>
+        </footer>
     </main>
 
+    <script>
+        const characters = [
+            {
+                name: 'EMAIL MARKETING DEVELOPER',
+                desc: 'Campaign Management • 3000+ HTML templates hand-coded',
+                image: 'assets/characters/email-CRM.png',
+                link: 'cv/cv-email-marketing.html'
+            },
+            {
+                name: 'CRM & DATA ANALYSIS SPECIALIST',
+                desc: 'Manager/Developer • SQL • Insurance CRMs specialist',
+                image: 'assets/characters/data-expert.png',
+                link: 'cv/cv-crm-data.html'
+            },
+            {
+                name: 'VIDEO PRODUCTION EXPERT',
+                desc: 'Filming/Editing/Audio • Live streams • Hardware specialist',
+                image: 'assets/characters/video-producer.png',
+                link: 'cv/cv-video-production.html'
+            },
+            {
+                name: 'WORKFLOW AUTOMATION ARCHITECT',
+                desc: 'Zapier • AI • CRM Workflows • Monday.com',
+                image: 'assets/characters/automation-specialist.png',
+                link: 'cv/cv-workflow-automation.html'
+            },
+            {
+                name: 'DIGITAL MARKETING DIRECTOR',
+                desc: 'Content • Automation • Copywriting • Management ',
+                image: 'assets/characters/Digital-Director.png',
+                link: 'cv/cv-digital-marketing.html'
+            },
+            {
+                name: 'WEB AND IT NERD',
+                desc: 'Full-stack • Vibe-Coder • Built this site',
+                image: 'assets/characters/web-dev.png',
+                link: 'cv/cv-web-dev.html'
+            }
+        ];
 
-    <script src="js/main.js"></script>
+        let currentIndex = 0;
+        let isAnimating = false;
+
+        function updateCharacter(index) {
+            if (isAnimating) return;
+            
+            const char = characters[index];
+            const card = document.querySelector('.character-card');
+            
+            isAnimating = true;
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.9)';
+            
+            setTimeout(() => {
+                card.querySelector('.character-image img').src = char.image;
+                card.querySelector('.character-image img').alt = char.name;
+                card.querySelector('.character-title').textContent = char.name;
+                card.querySelector('.character-desc').textContent = char.desc;
+                card.querySelector('.view-cv-btn').onclick = () => window.location.href = char.link;
+                
+                card.style.opacity = '1';
+                card.style.transform = 'scale(1)';
+                
+                updateIndicators(index);
+                
+                setTimeout(() => {
+                    isAnimating = false;
+                }, 300);
+            }, 300);
+        }
+
+        function updateIndicators(activeIndex) {
+            const indicatorsContainer = document.getElementById('indicators');
+            indicatorsContainer.innerHTML = '';
+            
+            characters.forEach((_, index) => {
+                const dot = document.createElement('span');
+                dot.className = 'indicator-dot' + (index === activeIndex ? ' active' : '');
+                dot.onclick = () => navigateToCharacter(index);
+                indicatorsContainer.appendChild(dot);
+            });
+        }
+
+        function navigateToCharacter(index) {
+            if (index < 0) index = characters.length - 1;
+            if (index >= characters.length) index = 0;
+            currentIndex = index;
+            updateCharacter(currentIndex);
+        }
+
+        function nextCharacter() {
+            navigateToCharacter(currentIndex + 1);
+        }
+
+        function prevCharacter() {
+            navigateToCharacter(currentIndex - 1);
+        }
+
+        document.getElementById('prevBtn').addEventListener('click', prevCharacter);
+        document.getElementById('nextBtn').addEventListener('click', nextCharacter);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevCharacter();
+            if (e.key === 'ArrowRight') nextCharacter();
+        });
+
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextCharacter();
+            if (touchEndX > touchStartX + 50) prevCharacter();
+        }
+
+        document.querySelector('.character-display').addEventListener('mousedown', (e) => {
+            touchStartX = e.clientX;
+        });
+
+        document.querySelector('.character-display').addEventListener('mouseup', (e) => {
+            touchEndX = e.clientX;
+            handleSwipe();
+        });
+
+        updateIndicators(0);
+        
+        const footer = document.querySelector('footer');
+        if (footer) {
+            const yearSpan = footer.querySelector('.year');
+            if (yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+        }
+    </script>
 </body>
-
 </html>
