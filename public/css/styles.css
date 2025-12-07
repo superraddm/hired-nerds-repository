@@ -1,0 +1,22 @@
+/* Minimal 16-bit console-style look */
+:root{--bg:#071019;--text:#c7f9ff;--accent:#86e1ff}
+*{box-sizing:border-box}
+body.console-bg{background:linear-gradient(180deg,#001018 0%, #071019 100%);color:var(--text);font-family:monospace}
+.container{max-width:980px;margin:40px auto;padding:24px}
+.title{font-size:2.2rem;letter-spacing:2px;margin-bottom:6px}
+.subtitle{opacity:0.8;margin-bottom:18px}
+.character-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:18px}
+.char{display:flex;flex-direction:column;align-items:center;padding:12px;border:2px solid rgba(134,225,255,0.08);border-radius:10px;text-decoration:none;color:var(--text);background:rgba(0,0,0,0.12)}
+.char:hover{outline:3px solid rgba(134,225,255,0.12);transform:translateY(-4px)}
+.sprite{width:128px;height:128px;image-rendering:pixelated}
+.name{margin-top:8px;font-weight:700}
+.footer{margin-top:22px;opacity:0.6}
+
+
+/* Accessibility focus */
+.char:focus{outline:3px dashed var(--accent);outline-offset:3px}
+
+
+
+
+--- public/js/main.js ---
