@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Marketing Expert - HiredNerds</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/openseadragon.min.js"></script>
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">HIREDNERDS</a>
+            <ul class="nav-links">
+                <li><a href="../work-examples.html">Work Examples</a></li>
+                <li><a href="../testimonials.html">Testimonials</a></li>
+                <li><a href="../videos.html">Videos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="cv-page">
+        <div class="cv-container">
+            <header class="cv-header">
+                <div class="character-badge">
+                    <img src="../assets/characters/email-CRM.png" alt="Email Marketing Expert" class="badge-image" />
+                </div>
+                <div class="cv-title-section">
+                    <h1>EMAIL MARKETING EXPERT</h1>
+                    <p class="cv-tagline">Manager • Developer • 3000+ HTML Email Templates Hand-Coded</p>
+                    <div class="cv-actions">
+                        <button class="download-cv-btn" onclick="downloadCV()">
+                            <span>⬇</span> DOWNLOAD CV (PDF)
+                        </button>
+                        <a href="../index.html" class="back-btn">← BACK TO JOF SELECT</a>
+                    </div>
+                </div>
+            </header>
+
+            <section class="cv-section">
+                <h2>Core Competencies</h2>
+                <div class="competencies-grid">
+                    <div class="competency-card">
+                        <h3>Email Development</h3>
+                        <ul>
+                            <li>HTML/CSS email coding from scratch</li>
+                            <li>Responsive email templates</li>
+                            <li>Cross-client compatibility (Outlook, Gmail, Apple Mail)</li>
+                            <li>Inline CSS optimization</li>
+                            <li>Table-based layouts for email</li>
+                        </ul>
+                    </div>
+                    <div class="competency-card">
+                        <h3>Campaign Management</h3>
+                        <ul>
+                            <li>ESP platform expertise (Mailchimp, SendGrid, Campaign Monitor)</li>
+                            <li>A/B testing implementation</li>
+                            <li>Segmentation strategies</li>
+                            <li>Deliverability optimization</li>
+                            <li>Analytics and reporting</li>
+                        </ul>
+                    </div>
+                    <div class="competency-card">
+                        <h3>Technical Skills</h3>
+                        <ul>
+                            <li>MJML framework</li>
+                            <li>Litmus/Email on Acid testing</li>
+                            <li>Dynamic content integration</li>
+                            <li>API integrations</li>
+                            <li>Email automation workflows</li>
+                        </ul>
+                    </div>
+                    <div class="competency-card">
+                        <h3>Strategy & Leadership</h3>
+                        <ul>
+                            <li>Team management and mentoring</li>
+                            <li>Campaign strategy development</li>
+                            <li>Conversion optimization</li>
+                            <li>Stakeholder communication</li>
+                            <li>Process documentation</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cv-section">
+                <h2>Professional Experience Highlights</h2>
+                <div class="experience-timeline">
+                    <div class="experience-item">
+                        <div class="experience-year">RECENT</div>
+                        <div class="experience-content">
+                            <h3>Email Marketing Manager/Developer</h3>
+                            <p class="experience-company">Various Organizations</p>
+                            <ul class="experience-duties">
+                                <li>Developed and coded 3000+ HTML email templates from scratch</li>
+                                <li>Managed multi-channel email campaigns with 500K+ subscriber base</li>
+                                <li>Implemented automated drip campaigns increasing conversion by 35%</li>
+                                <li>Led team of 3 email specialists</li>
+                                <li>Established email best practices and coding standards</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="experience-item">
+                        <div class="experience-year">ONGOING</div>
+                        <div class="experience-content">
+                            <h3>Technical Specialist</h3>
+                            <p class="experience-company">Email Development & Optimization</p>
+                            <ul class="experience-duties">
+                                <li>Cross-platform email testing and debugging</li>
+                                <li>Custom ESP integrations via API</li>
+                                <li>Template library development and maintenance</li>
+                                <li>Deliverability troubleshooting and spam score optimization</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cv-section">
+                <h2>Key Achievements</h2>
+                <div class="achievements-grid">
+                    <div class="achievement-card">
+                        <div class="achievement-number">3000+</div>
+                        <div class="achievement-label">Email Templates Coded</div>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-number">99.2%</div>
+                        <div class="achievement-label">Average Deliverability Rate</div>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-number">35%</div>
+                        <div class="achievement-label">Conversion Increase</div>
+                    </div>
+                    <div class="achievement-card">
+                        <div class="achievement-number">500K+</div>
+                        <div class="achievement-label">Subscribers Managed</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cv-section workflow-section">
+                <h2>Workflow Examples</h2>
+                <p class="section-description">Below are detailed workflow diagrams showing email marketing processes. Use the deep-zoom viewer to explore the full detail.</p>
+                
+                <div class="workflow-grid">
+                    <div class="workflow-item">
+                        <h3>Email Campaign Workflow</h3>
+                        <div class="workflow-viewer" id="viewer1"></div>
+                        <button class="fullscreen-btn" onclick="toggleFullscreen('viewer1')">VIEW FULLSCREEN</button>
+                    </div>
+                    
+                    <div class="workflow-item">
+                        <h3>Automation Setup Process</h3>
+                        <div class="workflow-viewer" id="viewer2"></div>
+                        <button class="fullscreen-btn" onclick="toggleFullscreen('viewer2')">VIEW FULLSCREEN</button>
+                    </div>
+                    
+                    <div class="workflow-item">
+                        <h3>Email Template Development</h3>
+                        <div class="workflow-viewer" id="viewer3"></div>
+                        <button class="fullscreen-btn" onclick="toggleFullscreen('viewer3')">VIEW FULLSCREEN</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cv-section">
+                <h2>Tools & Platforms</h2>
+                <div class="tools-list">
+                    <span class="tool-badge">Mailchimp</span>
+                    <span class="tool-badge">SendGrid</span>
+                    <span class="tool-badge">Campaign Monitor</span>
+                    <span class="tool-badge">ActiveCampaign</span>
+                    <span class="tool-badge">Constant Contact</span>
+                    <span class="tool-badge">MJML</span>
+                    <span class="tool-badge">Litmus</span>
+                    <span class="tool-badge">Email on Acid</span>
+                    <span class="tool-badge">HTML/CSS</span>
+                    <span class="tool-badge">JavaScript</span>
+                    <span class="tool-badge">Git</span>
+                    <span class="tool-badge">Photoshop</span>
+                    <span class="tool-badge">Figma</span>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>© <span class="year">2024</span> HiredNerds.com | Multiple Skills, One Person</p>
+    </footer>
+
+    <script>
+        // OpenSeadragon initialization for workflow viewers
+        function initializeViewers() {
+            // Example viewer 1 - Replace with actual .dzi path
+            const viewer1 = OpenSeadragon({
+                id: "viewer1",
+                prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/images/",
+                tileSources: "assets/workflows/email-campaign-workflow.dzi",
+                showNavigationControl: true,
+                navigationControlAnchor: OpenSeadragon.ControlAnchor.TOP_RIGHT,
+                showNavigator: true,
+                navigatorPosition: "BOTTOM_RIGHT",
+                minZoomLevel: 0.5,
+                maxZoomLevel: 10,
+                visibilityRatio: 1,
+                constrainDuringPan: true,
+                placeholderFillStyle: "#0f1e32",
+                timeout: 120000
+            });
+
+            // Example viewer 2
+            const viewer2 = OpenSeadragon({
+                id: "viewer2",
+                prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/images/",
+                tileSources: "assets/workflows/automation-workflow.dzi",
+                showNavigationControl: true,
+                navigationControlAnchor: OpenSeadragon.ControlAnchor.TOP_RIGHT,
+                showNavigator: true,
+                navigatorPosition: "BOTTOM_RIGHT",
+                minZoomLevel: 0.5,
+                maxZoomLevel: 10,
+                visibilityRatio: 1,
+                constrainDuringPan: true,
+                placeholderFillStyle: "#0f1e32",
+                timeout: 120000
+            });
+
+            // Example viewer 3
+            const viewer3 = OpenSeadragon({
+                id: "viewer3",
+                prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/images/",
+                tileSources: "assets/workflows/template-development.dzi",
+                showNavigationControl: true,
+                navigationControlAnchor: OpenSeadragon.ControlAnchor.TOP_RIGHT,
+                showNavigator: true,
+                navigatorPosition: "BOTTOM_RIGHT",
+                minZoomLevel: 0.5,
+                maxZoomLevel: 10,
+                visibilityRatio: 1,
+                constrainDuringPan: true,
+                placeholderFillStyle: "#0f1e32",
+                timeout: 120000
+            });
+        }
+
+        function toggleFullscreen(viewerId) {
+            const element = document.getElementById(viewerId);
+            if (!document.fullscreenElement) {
+                element.requestFullscreen().catch(err => {
+                    console.error('Error attempting to enable fullscreen:', err);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        function downloadCV() {
+            // Replace with actual PDF path
+            const link = document.createElement('a');
+            link.href = 'assets/cv/email-marketing-cv.pdf';
+            link.download = 'HiredNerds-Email-Marketing-CV.pdf';
+            link.click();
+        }
+
+        // Initialize viewers on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Only initialize if workflow viewers exist on page
+            if (document.querySelector('.workflow-viewer')) {
+                // Add error handling for missing .dzi files
+                try {
+                    initializeViewers();
+                } catch (error) {
+                    console.warn('Workflow viewers not yet configured. Add .dzi files to assets/workflows/');
+                }
+            }
+
+            // Update footer year
+            const yearSpan = document.querySelector('.year');
+            if (yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+        });
+    </script>
+</body>
+</html>
