@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Jof Davies - Digital Marketing & Automation Expert</title>
+    <meta name="description" content="Jof Davies - Email Marketing Expert, CRM Specialist, Video Production, Workflow Automation, and Digital Marketing Professional based in Northampton, UK">
+    <meta name="keywords" content="Email Marketing Manager, CRM Developer, SQL Specialist, Video Production Expert, Workflow Automation Consultant, Digital Marketing Manager, Marketing Automation Specialist, Zapier Expert, Monday.com Consultant">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">HIRED NERDS</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Character Select</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="#" onclick="openContactModal(); return false;">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="about-container">
+        <div class="about-header">
+            <h1>About Jof Davies</h1>
+            <div class="vital-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Born:</span>
+                    <span class="stat-value">1984</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Location:</span>
+                    <span class="stat-value">Northampton, United Kingdom</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Availability:</span>
+                    <span class="stat-value">Full-Time Roles Only</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Working Pattern:</span>
+                    <span class="stat-value">Office / Hybrid / WFH</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Work Locations:</span>
+                    <span class="stat-value">Global (depending on working pattern)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-content">
+            <div class="profile-images">
+                <div class="image-box childhood-image">
+                    <img src="assets/images/Jof-Young.png" alt="Jof Davies childhood photo">
+                    <p class="image-caption">Early Level</p>
+                </div>
+                <div class="image-box modern-image">
+                    <img src="assets/images/headshot.png" alt="Jof Davies current headshot">
+                    <p class="image-caption">Max Level</p>
+                </div>
+            </div>
+
+            <section class="roles-section">
+                <h2>Roles & Expertise</h2>
+                <div class="roles-list">
+                    <span class="role-tag">Email Marketing Manager</span>
+                    <span class="role-tag">Email Marketing Developer</span>
+                    <span class="role-tag">HTML Email Developer</span>
+                    <span class="role-tag">CRM Manager</span>
+                    <span class="role-tag">CRM Developer</span>
+                    <span class="role-tag">Data Analyst</span>
+                    <span class="role-tag">SQL Developer</span>
+                    <span class="role-tag">Insurance CRM Specialist</span>
+                    <span class="role-tag">Video Production Manager</span>
+                    <span class="role-tag">Video Editor</span>
+                    <span class="role-tag">Live Stream Producer</span>
+                    <span class="role-tag">Workflow Automation Specialist</span>
+                    <span class="role-tag">Zapier Consultant</span>
+                    <span class="role-tag">Marketing Automation Manager</span>
+                    <span class="role-tag">Monday.com Specialist</span>
+                    <span class="role-tag">Digital Marketing Manager</span>
+                    <span class="role-tag">Content Creator</span>
+                    <span class="role-tag">Marketing Strategist</span>
+                    <span class="role-tag">Copywriter</span>
+                    <span class="role-tag">Digital Marketing Consultant</span>
+                </div>
+            </section>
+
+            <section class="statement-section">
+                <h2>Professional Statement</h2>
+                <div class="statement-box">
+                    <p>With decades of experience spanning email marketing, CRM development, video production, and workflow automation, I bring a unique multi-disciplinary approach to digital marketing challenges. Having hand-coded over 3,000 HTML email templates and built complex automation workflows across enterprise platforms, I combine technical expertise with creative problem-solving.</p>
+                    
+                    <p>My background in SQL development and insurance CRM systems provides deep data analysis capabilities, while my video production skills enable complete content creation from concept to delivery. I specialize in connecting disparate systems through automation, streamlining processes, and building scalable marketing operations.</p>
+                    
+                    <p>Whether managing campaigns, developing technical solutions, or creating multimedia content, I deliver results through a combination of hands-on execution and strategic thinking.</p>
+                </div>
+            </section>
+
+            <div class="cta-section">
+                <button class="contact-btn" onclick="openContactModal()">CONTACT ME</button>
+                <a href="#" class="download-cv-btn">DOWNLOAD CV</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Contact Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeContactModal()">&times;</span>
+            <h2>Contact Jof Davies</h2>
+            <form id="contactForm" onsubmit="handleContactSubmit(event)">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Your Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject:</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" rows="6" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">SEND MESSAGE</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Hired Nerds. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Footer year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Modal functions
+        function openContactModal() {
+            document.getElementById('contactModal').style.display = 'block';
+        }
+
+        function closeContactModal() {
+            document.getElementById('contactModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('contactModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Contact form handler
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+
+            // Construct mailto link
+            const mailtoLink = `mailto:your-email@example.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
+                `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+            )}`;
+
+            // Open email client
+            window.location.href = mailtoLink;
+
+            // Close modal and reset form
+            closeContactModal();
+            document.getElementById('contactForm').reset();
+        }
+    </script>
+</body>
+</html>
