@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-index-053",
+  "text": "The Master CV Encyclopaedia should be updated whenever:\n\n- A new project or automation is built.\n- A new repository is published.\n- A new workflow diagram is created.\n- Major job responsibilities change.\n- New certifications or skill advancements occur.\n\nEach update should be added as:\n- A new chunk, or\n- A replacement of an existing chunk by re-ingesting the updated version.\n\nAvoid modifying chunks inside Vectorize directly; always update by re-ingesting via the Worker.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "maintenance"
+  }
+}

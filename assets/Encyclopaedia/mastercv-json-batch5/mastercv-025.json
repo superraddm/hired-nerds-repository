@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-workflows-crm-025",
+  "text": "The CRM Automation Workflow describes a large-scale, multi-branch lead enrichment, scoring, and routing system.\n\nCore functions:\n- Email validation, enrichment, and role/company lookup.\n- Multi-path qualification logic.\n- Lead scoring and prioritisation.\n- Hot lead routing and nurture sequence placement.\n- Automatic notifications and CRM updates.\n\nPurpose: To provide a fully automated, high-fidelity lead handling mechanism for MTDCNC.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "workflows"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-achievements-040",
+  "text": "Key achievements across MTDCNC and previous roles include:\n\n1. Designed and delivered a global ingest and backup architecture using QNAP, Dropbox, and AWS Glacier, enabling worldwide content creation at half the cost of competing systems.\n\n2. Built a remote-first content production pipeline during the pandemic using vMix, talkback systems, and studio infrastructure, ensuring uninterrupted video output.\n\n3. Engineered CRM automations producing a 75% conversion rate for hot leads and providing clean, actionable sales workflows.\n\n4. Created a full-scale LinkedIn → WordPress publishing automation, rewriting posts into SEO-friendly articles using AI, and automating media handling.\n\n5. Developed the Ultimate YouTube Upload Automation, drastically reducing manual labour around thumbnails, metadata, and scheduling.\n\n6. Constructed reusable HTML email frameworks enabling ~1M emails/month with consistent rendering and high deliverability.\n\n7. Built structured timesheet and transport systems for prior employers, replacing manual spreadsheets with automated Access/VBA applications.\n\n8. Migrated multiple insurance CRMs with zero data loss, implementing renewal workflows and advanced cleansing routines.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "achievements"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-mtdcnc-youtube-016",
+  "text": "The YouTube publishing automation manages metadata creation, thumbnail processing, conditional logic for short and long videos, scheduled publishing, and status notifications.\n\nCapabilities:\n- Trigger-driven YouTube uploads.\n- Formatter steps for titles, descriptions, tags, and categories.\n- Thumbnail ingestion and transformation.\n- Conditional branches for short-form (<2 min) and long-form content.\n- Full API-driven upload and scheduling.\n- Automatic logging and automated failure notifications.\n\nThis system significantly reduces manual labour and standardises output quality across MTDCNC’s video publishing process.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "automation-youtube"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-github-019",
+  "text": "Repository: render-youtube-uploader\n\nPurpose: Automates the packaging and formatting of metadata for YouTube uploads.\n\nFunctions:\n- Structures metadata including title, description, tags, and schedule.\n- Integrates with Zapier and other automation tools.\n- Ensures consistent formatting for automated publishing pipelines.\n\nTechnologies: JavaScript, JSON, REST integration.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "github-repositories"
+  }
+}

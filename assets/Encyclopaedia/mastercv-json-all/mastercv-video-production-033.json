@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-video-production-033",
+  "text": "MTDCNC’s core video production workflow integrates planning, multicamera field filming, ingest, proxy generation, editing, client review, and final publication.\n\nKey workflow elements:\n- Pre-production coordination with manufacturers and engineering teams.\n- Multicamera filming: run-and-gun coverage, interviews, factory tours, product demonstrations.\n- Acquisition with BMPCC, Sony, and Panasonic cameras, supported by wireless AV transmitters such as Hollyland, Teradek, LiveU, and Vaxis.\n- In-field backup and content organisation using structured folder naming and checksum verification.\n- Immediate upload to QNAP Office for ingestion and replication.\n- Editors work exclusively from automatically generated proxy files to accelerate turnaround.\n- Final renders include compression pass, metadata tagging, thumbnail creation, and publication through automated pipelines.\n\nJof operates as camera operator, lighting technician, audio handler, and on occasion as director, depending on production type.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "video-production"
+  }
+}

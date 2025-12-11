@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-index-045",
+  "text": "This index lists all Master CV Encyclopaedia chunks with their IDs and sections.\n\n001 early-life-foundations\n002 education\n003 early-career-roles\n004 moulton-college\n005 integrity-business-connections\n006 mak-media\n007 super-rad-data-management\n008 mtdcnc-overview\n009 mtdcnc-summary\n010 mtdcnc-ingest-pipeline\n011 mtdcnc-proxy-generation\n012 mtdcnc-livestream-engineering\n013 mtdcnc-podcast-techcorner\n014 mtdcnc-crm-architecture\n015 mtdcnc-linkedin-automation\n016 mtdcnc-youtube-automation\n017 mtdcnc-email-engineering\n018 mtdcnc-training-mentoring\n019 github-render-youtube-uploader\n020 github-public-monday-images\n021 github-bunny-temp-storage\n022 github-linkedin-image-processor\n023 json-mtd-proxy-preset\n024 html-responsive-template\n025 workflow-crm\n026 workflow-linkedin-wordpress\n027 workflow-youtube\n028 workflow-ingest-architecture\n029 skills-technical\n030 skills-soft\n031 professional-attributes\n032 system-architecture\n033 video-production\n034 editing-workflows\n035 streaming-architecture\n036 podcast-engineering\n037 training-systems\n038 tools-software\n039 notable-clients\n040 achievements\n041 hardware-expertise\n042 video-compression\n043 crm-data-engineering\n044 professional-summary\n045 master-index (this document)",
+  "metadata": {
+    "source": "master-cv",
+    "section": "index"
+  }
+}

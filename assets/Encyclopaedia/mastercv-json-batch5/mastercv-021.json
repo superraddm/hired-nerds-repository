@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-github-021",
+  "text": "Repository: bunny-temp-storage\n\nPurpose: Temporary storage layer used for automation workflows requiring public, short-lived asset URLs.\n\nCapabilities:\n- Receives uploaded assets via API.\n- Stores files on BunnyCDN for rapid access.\n- Returns automation-ready public URLs.\n- Supports image transformations where necessary.\n\nTechnologies: JavaScript, BunnyCDN API, HTTP upload handling.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "github-repositories"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-html-024",
+  "text": "Responsive-master660.html is a master email template engineered for cross-client compatibility.\n\nFeatures:\n- Extensive VML sections for Outlook Desktop.\n- Responsive behaviour via table-based design.\n- Conditional comments for client-specific rendering paths.\n- Mobile overrides for iOS and Android.\n- Fallback-safe image and layout handling.\n\nPurpose: Serves as the foundation for MTDCNC’s high-volume email campaigns.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "html-email-templates"
+  }
+}

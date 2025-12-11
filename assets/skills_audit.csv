@@ -1,0 +1,50 @@
+Category,ID,Skill,Description,Rating_1_to_5
+Web Languages,A1,HTML (General),Web HTML outside of email development,5
+Web Languages,A2,CSS (General),"Styling, layout, responsive design (non-email)",4
+Web Languages,A3,JavaScript (Front-end),"Scripting for DOM, UI behavior, and web applications",2
+Web Languages,A4,PHP,"WordPress theme editing, CMS back-end scripting",3
+Web Languages,A5,Node.js,"JavaScript runtime for tooling, automation, or server logic",2
+Web Languages,A6,JSON,"Working with structured data, APIs, and automation payloads",2
+Web Languages,A7,Regex,"Pattern matching, validation, text extraction",3
+,,,,
+Programming,B1,Python,"Automation, scripting, data handling",2
+Programming,B2,SQL (General),"Relational queries, joins, functions, schemas",4
+Programming,B3,MySQL / MariaDB,Using MySQL-based systems for web or CRM,4
+Programming,B4,T-SQL,Microsoft SQL Server queries and stored logic,2
+Programming,B5,VBA,"Excel/Access automation, forms, business logic",4
+Programming,B6,PowerShell,"Windows scripting, automation, system tasks",3
+Programming,B7,Bash / Shell,Command-line automation in Linux/Unix environments,3
+Programming,B8,ASP.NET / Classic ASP,Legacy web application back-end technologies,2
+Programming,B9,JSP,"Java Server Pages, enterprise web templating",2
+,,,,
+Automation,C1,Zapier Automation,"Designing multi-step workflows, data routing, custom logic",5
+Automation,C2,Monday.com Automation,"Boards, custom recipes, API-triggered workflows",5
+Automation,C3,REST API Integration,"Webhooks, authentication, JSON requests/responses",4
+Automation,C4,CLI Tools,Proficiency using command-line tools for development or operations,4
+Automation,C5,Git / GitHub,"Version control, branching, repo management",2
+,,,,
+Infrastructure,D1,Cloudflare,"DNS, Pages, Workers, Vectorize, caching rules",3
+Infrastructure,D2,AWS,"Glacier, S3 concepts, IAM basics",3
+Infrastructure,D3,Linux Administration,"Servers, permissions, services, file systems",2
+Infrastructure,D4,Networking Fundamentals,"Routing, latency, ports, TCP/UDP, SRT/RTMP concepts",4
+Infrastructure,D5,Virtualisation / Containers,"Docker, VMs, container workflows",1
+,,,,
+Email,E1,HTML Email Development,"Tables, VML, compatibility work, responsive logic",5
+Email,E2,Email Deliverability,"SPF, DKIM, DMARC, IP reputation, warm-up",5
+Email,E3,ESP Platforms,"Mailchimp, HubSpot, ActiveCampaign, others",5
+Email,E4,Marketing Automation,"Genie.AI, HubSpot automation, customer journeys",5
+,,,,
+Video,F1,Premiere Pro,"Editing, timeline management, effects, multi-cam",5
+Video,F2,After Effects,"Graphics, animation, motion design",2
+Video,F3,Livestream Engineering,"vMix, ATEM, SDI/NDI, RTMP/SRT, live switching",4
+Video,F4,Audio Engineering,"Podcast mixing, mastering, clean-up",5
+,,,,
+CRM,G1,CRM Architecture,"Building CRM structures, linking marketing+sales+operations",5
+CRM,G2,CRM Migrations,"Data cleansing, transfer, mapping, insurance workflows",5
+CRM,G3,Data Modelling,"Structuring datasets, relational mapping, profiling",5
+CRM,G4,Reporting & Dashboards,"Access, SQL, Power BI, operational reporting",5
+,,,,
+Professional,H1,Technical Documentation,"Writing guides, SOPs, diagrams, workflow documentation",5
+Professional,H2,Training & Mentoring,"Staff coaching, onboarding, skill development",5
+Professional,H3,Project Management,"Spec writing, delivery coordination, timelines",5
+Professional,H4,Troubleshooting Under Pressure,"Live-stream failures, CRM issues, IT/AV faults",5

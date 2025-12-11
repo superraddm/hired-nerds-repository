@@ -1,0 +1,33 @@
+Category,ID,Soft Skill,Description,Rating_1_to_5
+Communication,S1,Written Communication,"Ability to create clear documentation, guides, SOPs, and technical explanations.",5
+Communication,S2,Verbal Communication,"Clarity in meetings, stakeholder discussions, presentations, and training.",5
+Communication,S3,Technical Translation,Ability to explain complex technical topics in simple business language.,5
+,,,,
+Leadership,S4,Team Leadership,"Leading projects, guiding technical direction, influencing without authority.",5
+Leadership,S5,Mentoring & Coaching,"Supporting junior staff, skill development, constructive feedback.",4
+Leadership,S6,Stakeholder Management,"Coordinating expectations between sales, marketing, technical teams, and management.",5
+,,,,
+Problem Solving,S7,Troubleshooting,"Diagnosing failures in live systems (AV, IT, CRM), rapid resolution under pressure.",5
+Problem Solving,S8,Analytical Thinking,"Structured reasoning for complex data, CRM, and automation problems.",5
+Problem Solving,S9,Root Cause Analysis,Identifying long-term fixes and underlying issues across systems.,5
+,,,,
+Planning,S10,Project Management,"Organising tasks, timelines, resources, scope, and delivery.",4
+Planning,S11,Prioritisation,Balancing multiple urgent technical or content-production workloads.,3
+Planning,S12,Process Design,"Ability to create efficient workflows, SOPs, and operational frameworks.",5
+,,,,
+Creativity,S13,System Design Creativity,"Inventing new workflows, automations, and unconventional technical solutions.",5
+Creativity,S14,Content Creativity,"Ideas for video, livestream formats, training content, or communications.",5
+Creativity,S15,Innovation,"Tendency to design self-built solutions (e.g., ingest pipeline, automations).",5
+,,,,
+Interpersonal,S16,Collaboration,"Working effectively across technical, sales, and editorial teams.",5
+Interpersonal,S17,Client Interaction,"Managing expectations, handling requests, and delivering professional communication.",5
+Interpersonal,S18,Conflict Resolution,Handling disagreements diplomatically in high-pressure or time-critical situations.,5
+,,,,
+Adaptability,S19,Learning Agility,"Ability to rapidly understand new tools, APIs, systems, or workflows.",5
+Adaptability,S20,Change Management,"Supporting teams through CRM transitions, workflow changes, or new automations.",5
+Adaptability,S21,Resilience,"Maintaining performance during production failures, livestream issues, or tight deadlines.",5
+,,,,
+Professionalism,S22,Time Management,"Meeting deadlines, managing workload across multiple roles.",4
+Professionalism,S23,Attention to Detail,"Accuracy in CRM data work, coding, email templates, video editing.",5
+Professionalism,S24,Integrity,"Handling sensitive data, GDPR responsibilities, and client trust.",5
+Professionalism,S25,Work Ethic,"Reliability, initiative, and consistency across varied roles.",5

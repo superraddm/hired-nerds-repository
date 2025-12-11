@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-github-019",
+  "text": "Repository: render-youtube-uploader\nPurpose: Automates the publishing process for YouTube content by integrating metadata handling, JSON packaging, and workflow automation.\n\nFunctions:\n- Generates structured metadata for YouTube uploads.\n- Formats data for Zapier or webhook-based automation triggers.\n- Works with thumbnail generation, tags, descriptions, categories, and scheduled publishing.\n- Supports the Ultimate Video Uploader workflow by delivering consistent, machine-readable metadata to automation systems.\n\nTechnologies: JavaScript, JSON, API interaction, task automation.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "github-repositories"
+  }
+}

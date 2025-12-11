@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-workflows-linkedin-026",
+  "text": "This automation converts LinkedIn posts into editorial articles. Steps include scraping, cleaning, formatting, image extraction, AI rewriting, WordPress publishing, and spreadsheet status updates.\n\nCapabilities:\n- Automated daily processing.\n- AI rewriting into article format.\n- Automated media posting.\n- Success and failure branching with notification logic.\n\nPurpose: Transforms social content into publish-ready website articles with minimal manual effort.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "workflows"
+  }
+}

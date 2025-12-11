@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-skills-technical-029",
+  "text": "This section records Jof Davies’s technical skill ratings (1–5 scale).\n\nWeb Development:\n- HTML: 5\n- CSS: 5\n- JavaScript: 4\n- PHP: 4\n- Node.js: 3\n- JSON: 5\n- Regex: 3\n\nProgramming:\n- Python: 4\n- SQL: 5\n- MySQL/MariaDB: 4\n- T-SQL: 5\n- VBA: 4\n- PowerShell: 3\n- Bash/Shell: 3\n- ASP.NET/Classic ASP: 2\n- JSP: 2\n\nAutomation:\n- Zapier Automation: 5\n- Monday.com Automation: 5\n- REST API Integration: 5\n- CLI Tools: 4\n- Git/GitHub: 4\n\nInfrastructure and Ops:\n- Cloudflare: 4\n- AWS (Glacier/S3 concepts): 4\n- Linux Administration: 3\n- Networking Fundamentals: 4\n- Virtualisation/Containers: 2\n\nEmail Development:\n- HTML Email Development: 5\n- Email Deliverability: 5\n- ESP Platforms: 4\n- Marketing Automation: 5\n\nVideo and Audio:\n- Premiere Pro: 5\n- After Effects: 3\n- Livestream Engineering: 5\n- Audio Engineering: 4\n\nCRM:\n- CRM Architecture: 5\n- CRM Migrations: 5\n- Data Modelling: 5\n- Reporting & Dashboards: 4",
+  "metadata": {
+    "source": "master-cv",
+    "section": "skills-technical"
+  }
+}

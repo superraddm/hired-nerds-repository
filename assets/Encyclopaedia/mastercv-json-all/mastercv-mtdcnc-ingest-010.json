@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-mtdcnc-ingest-010",
+  "text": "Jof Davies engineered the MTDCNC global ingest pipeline supporting 20+ remote editors across multiple time zones. The system processes incoming footage from camera operators located in the UK, Europe, USA, Mexico, and India.\n\nArchitecture includes:\n- Primary ingest into QNAP Office, where operators upload raw video files.\n- Automated sync to Dropbox, enabling worldwide access for remote editors.\n- Additional sync to QNAP Remote, providing redundancy and regional access.\n- Hourly replication from Master Footage to Project Footage.\n- Automated proxy generation using HBBatchBeast with the custom MTD-Proxy-HB-Preset.json profile.\n- Proxy files produced with minimized file size and maximum editing usability, optimised for remote workflows.\n- Nightly archival of new Master Footage and Project Files to AWS Glacier (~100 TB stored), providing low-cost long-term retention.\n\nThis system reduces global ingest overhead dramatically and ensures editors can access proxy-ready footage within 60 minutes of upload. It was built at less than half the cost of competing solutions and requires almost no manual intervention.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "ingest-pipeline"
+  }
+}

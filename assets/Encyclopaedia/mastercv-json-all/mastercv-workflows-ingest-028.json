@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-workflows-ingest-028",
+  "text": "This workflow describes the MTDCNC ingest architecture: QNAP Office for primary ingest, Dropbox for global sync, QNAP Remote for redundancy, MTD Studio for proxy creation, and AWS Glacier for nightly archival.\n\nFunctions:\n- Worldwide operator uploads to QNAP.\n- Automatic replication to Dropbox and QNAP Remote.\n- Hourly proxy generation for editors.\n- Nightly archival to Glacier (~100 TB).\n\nPurpose: Enables global editing capability, fault tolerance, and cost-efficiency.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "workflows"
+  }
+}
