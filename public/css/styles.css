@@ -390,7 +390,7 @@ body {
 
 .badge-image {
     width: 200px;
-    height: 200px;
+    height: auto;
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
@@ -745,4 +745,203 @@ body {
     .workflow-viewer {
         height: 300px;
     }
+}
+
+/* About Page Styles */
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.about-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.about-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.vital-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border: 2px solid #333;
+    background: #fff;
+    color: #333;
+}
+
+.stat-label {
+    font-weight: bold;
+    color: #333;
+}
+
+.stat-value {
+    color: #333;
+}
+
+.profile-images {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-bottom: 3rem;
+}
+
+.image-box img {
+    width: 330px;
+    height: 330px;
+    object-fit: cover;
+    border: 3px solid #333;
+    display: block;
+    
+}
+
+.image-caption {
+    margin-top: 0.5rem;
+    font-weight: bold;
+}
+
+.roles-section {
+    margin-bottom: 3rem;
+}
+
+.roles-section h2 {
+    margin-bottom: 1.5rem;
+}
+
+.roles-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.role-tag {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #333;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.statement-section {
+    margin-bottom: 3rem;
+}
+
+.statement-box {
+    padding: 2rem;
+    border: 2px solid #333;
+    background: #f9f9f9;
+    line-height: 1.8;
+}
+
+.statement-box p {
+    margin-bottom: 1rem;
+    color:#333;
+    font-size: 1.1em
+}
+
+.cta-section {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.contact-btn, .download-cv-btn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: 3px solid #333;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.contact-btn {
+    background: #333;
+    color: #fff;
+}
+
+.download-cv-btn {
+    background: #fff;
+    color: #333;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 2rem;
+    border: 3px solid #333;
+    width: 90%;
+    max-width: 600px;
+    color:#333
+}
+
+.close {
+    color: #333;
+    float: right;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #333;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 1rem;
+    background: #333;
+    color: #fff;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background: #555;
 }

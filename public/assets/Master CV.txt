@@ -1,0 +1,145 @@
+Name: Jof Davies
+Born: 1984
+Location: Northampton
+
+[Contact Details available on form submission]
+
+Education: Education 
+September 1996 - July 2001 
+The Ferrers School 
+Queensway 
+Higham Ferrers 
+Northamptonshire   NN10 8LF 
+GCSE's 
+2 x A* 
+3 x B
+4 x C 
+
+Further Education 
+The Tresham Institute 
+1/2 Btech National Diploma In Performing Arts  (8 Units) 
+
+The Northampton College 
+A/S/2 Levels in 
+                       Film Studies                         B 
+                       Film & Video                       C 
+               (Btech Award) Acting                 Merit
+
+
+Early Life/Hobby/Pre-Career : 
+IT: I've been using computers from around 1990 starting with a commodore64, programming text adventure games with if/then statements and variables in BASIC. My Father was an IT consultant during the 1990's with companies like Compaq and Digital Equipment Corporation. He'd often bring home spare computing parts and machines, beginning with 386 and 486 systems. My family and I would set up local networks to play games like Doom and Duke Nukem over LAN. This started an interest in computers that hasn't stopped. Since the x486 days I've consistently upgraded the same systems, buying and installing new parts. Building PCs for friends and colleagues. Installing and operating Windows from version 3.1 to Windows 11. I've built my own apps, plugins, databases.
+Film and Video: Been playing with video cameras and making films [NOT MOVIES] from the age of 10 when I insisted my mum rent a video camera from the local video shop. We'd make simple films, stop motion animation out of clay and toys, and our own TV program. Where we'd introduce cartoons, and record them to tape using 2 VCRs and a SCART cable. Again, the interest has not stopped, and followed me well into my professional career. I know an incredible amount about plugging one thing into another, and how to get a signal without degradation from one spot to another. From cables, to online streaming protocols.
+Circa 2002 first exposure to NLE Premiere Pro at college.
+Started my first videograpy business age 18. Filming friends bands, then weddings, then some coprorate work. all on cheap mini DV cameras. Purchased my first 'prosumer' camera, the Sony PD-170. Filmed gigs and weddings with multiple cameras and separate mics and auido inputs. First exposure to multi-cam editing.
+Acting and VO: I've been interested in acting from a very young age, and was good at it. As an adult I performed in amateur theatre and people wrote nice things. I've been fortunate enough to have some very limited paid acting and voiceover work.
+
+Career:
+Employer: Cineworld Northampton
+Location: Northampton
+Role: Team Member
+Dates: 2003 - 2005
+Key Points: Complimented love of film, Always wanted to graduate to become a projectionist. Splicing and fitting reels, but the opportunity was never there. First experience of Databases in professional setting. Programming film schedules. Organised 'Classic Film' nights playing old releases. Created posters. Co-ordinated with local news media for marketing.
+Software/Tools: Word, Excel, Databases
+Programming Languages: none
+
+Employer: Barclaycard
+Location: Northampton
+Role: Customer Servcie Advisor
+Dates: 2005 - 2006
+Key Points: Using internal CRM and Databases for customer conflict resolution. Exposure to large corporate environment. Presenting a professional and corporate image at all times. First exposure to telephony systems
+Software/Tools: Word, Excel, Databases, CRM system, auto diallers
+Programming Languages: none
+Industry: Financial Service
+
+Employer: Moulton College
+Location: Northampton
+Role: Transport supervisor / Reprographics Assistant/ AV Assistant
+Dates: 2007 - 2009
+Key points: First exposure to Microsoft Access, SQL and VBA. Wrote custom functions for different pricing models. Integrated Access DBA with wider college DB system. •	Advanced use of Microsoft Excel to design spreadsheets concerning budgeting of transport costs, Students payments, and invoices to clients.
+
+Also assited reprographics department in creating printed assets for staff and students. using large format printers and photocopiers. Assisted AV department in AV installation projects around the college. Produced a training and recruitment DVD for the Stonemasonry department. Used PD-170 camera and Prmeiere Pro to film and edit testimonials and b roll.
+•	Responsible for design and implementation of mapping software to display all route and student information.
+•	Instrumental in design and implementation of Transport Database, from concept through to completion. 
+•	Designed advanced formulae within Database to accurately invoice 8 different types of client payer, in order to accurately balance budget.
+•	Providing end user support for said Database.
+•	Instigation of various initiatives, procedures and software to improve various weaknesses in the existing transport system. Benefits have included higher student numbers, improved accountability, and higher profits.
+
+Software/Tools: Word, Excel, Databases, Access, Photoshop, Premiere Pro
+Programming Languages: VBA, SQL
+Industry: Further Education
+
+Employer: Integrity Business Connections
+Location: Bristol
+Role: Data Administrator/Systems Analyst
+Dates: 2009 - 2011
+Key points: 
+Designed and improved exiasting CRM system. First exposure to HTML email. Trained staff on CRM use. Knowledge of telephony systems and call centre environment. First exposure to direct client servicing. Attending planning meetings. Assisted IT contractor with user installations, mailbox configuration, using Windows server 2003/2008 and MS Exchange
+•	Working for a high level B2B telesales company
+•	Liaising with high value accounts and clients
+•	Responsible for all data in a clients campaign cycle, to include initial cleanse, load, administration and reporting
+•	Handling multiple accounts/campaigns at once
+•	Familiar with HTML email design, to include response logging. (Opens/Click throughs/basic workflow automation)
+•	Maintenance of in house CRM system
+•	Reporting of call data
+•	Responsible for design and implementation of Access database for internal reporting replacing existing Excel method
+•	Advanced knowledge of Microsoft Excel, to include expressions, formula and VBA.
+•	Fluent in VBA programming language
+•	Adept at designing Access databases
+•	Familiar with SQL
+•	Directly responsible to the MD
+
+Software/Tools: Word, Excel, Databases, Access, Runway CRM, Windows Server 2003, Windows Server 2008, MS Exchange
+Programming Languages: VBA, SQL, HTML, CSS
+Industry: Telemarketing
+Industries Served: Finance, Insurance Brokers, Import/Export, Sales, Software, Accounting, Legal Services
+Notable Clients: Jardine Lloyd Thompson
+
+Employer: MAK Media Solutions
+Location: Kettering
+Role: Customer Support Manager
+Dates: 2011- 2012
+Key points: 
+
+•	Senior decision making position in a marketing agency
+•	Designing, implementing, and training on a bespoke CRM solution
+•	Video Editing, attending shoots. Ensuring end product was to customers satisfaction
+•	Project Management, handling large design jobs from start to finish. Website implementations, product videos, visual branding 
+•	Account Management – Handling relationships, usually with client’s most senior staff.
+•	Directly responsible to MD
+•	Responsible for all technical decisions within business
+•	Delivered training in various products, solutions sold within the business. Either in one on one, team, or online scenarios
+•	Responsible for booking contractors, and planning/liaising with them to deliver client’s vision.
+•	Wide skill set used utilising all previous roles and personal interests. Video, Database, programming, planning, IT infrastructure, hardware & software installation.
+
+Software/Tools: Word, Excel, Databases, Access, Runway CRM, Windows Server 2003, Windows Server 2008, MS Exchange, Power BI, CMS, Wordpress, Drupal, Squarespace
+Programming Languages: VBA, SQL, HTML, CSS, Javascript, Python, PHP, MySQL, SQL Server
+Industry: Digital marketing
+Industries Served: Finance, Insurance Brokers, Import/Export, Sales, Software, Jewellery, Food, FMCG, Business Services
+
+Employer: Super Rad Data Management
+Location: Northampton
+Role: Owner/Founder
+Dates: 2012 - Present Day
+Key Points: Self employed consultancy service. After MAK Media Solutions went into administration. I took some clients with the previous MD's blessing. I continued to service them with CRM and Data solutions, expanded into more video production. And offered consultancy on anything that fell within my wheel house based on previous experience. Delivered training in multiple environments on CRM use, one on one or in groups.
+•	Founder of Super Rad Data Management
+•	Delivering B2B technology consulting and solutions to a number of clients.
+•	Key industry sectors delivered to are Telemarketing firms and Insurance Brokerages.
+•	Typical workflow normally means delivering CRM / e-Marketing solutions. Advising and delivering marketing platforms, and creating a marketing cycle utilising e-marketing--->Video--->CRM--->Telephony/offline marketing.
+•	Also happy taking on web development responsibilities, then graduating to become the out-sourced IT and telecoms manager!
+•	Video Editor - 15+ years in Adobe Premiere / 5+ years After Effects / 5+ years supporting Adobe products - Audition/Photoshop/Indesign
+•	FCP Experience
+•	Directorial/Camera Operator/Project management/Producer
+•	10 years in Database Sales and Administration.
+•	Programming languages - VBA / MySQL / T-SQL / .JSP / HTML / PHP / ASP /CSS / .JS
+•	CRM deployment for telephone and email marketing, Campaign build and structure.
+•	Specialist in e-mail marketing campaigns, particularly the development of HTML email.
+
+
+
+Software/Tools: Word, Excel, Databases, Access, Runway CRM, Windows Server 2003, Windows Server 2008, MS Exchange, Power BI, CMS, Wordpress, Drupal, Squarespace, MailChimp, SendGrid, Mandrill, Click Dimensions, VS Code, Brackets, Google Analytics
+Programming Languages: VBA, SQL, HTML, CSS, Javascript, Python, PHP, MySQL, SQL Server, VML, asp.net
+Industry: Digital marketing
+
+
+
+
