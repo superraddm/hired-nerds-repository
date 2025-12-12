@@ -56,6 +56,20 @@
             font-style: italic;
         }
 
+        .hn-ellipsis::after {
+            content: "";
+            animation: hn-ellipsis 1.4s infinite;
+        }
+
+        @keyframes hn-ellipsis {
+            0%   { content: ""; }
+            25%  { content: "."; }
+            50%  { content: ".."; }
+            75%  { content: "..."; }
+            100% { content: ""; }
+        }
+
+
 
     `;
 
@@ -105,7 +119,7 @@
     // THINKING indicator (NEW)
     const thinkingMsg = document.createElement("div");
     thinkingMsg.className = "hn-thinking";
-    thinkingMsg.textContent = "AI Bot is thinking…";
+    thinkingMsg.textContent = "AI Bot is thinking<span class="hn-ellipsis"></span>";
     messages.appendChild(thinkingMsg);
     messages.scrollTop = messages.scrollHeight;
 
