@@ -29,6 +29,34 @@
             width: 100%; padding: 8px;
             border: none; border-radius: 6px;
         }
+        .hn-user-message {
+            background: #2a2a2a;
+            color: #e0e0e0;
+            padding: 8px 10px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .hn-bot-message {
+            background: #1f1f1f;
+            color: #d6d6d6;
+            padding: 8px 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .hn-thinking {
+            background: #1f1f1f;
+            color: #a8a8a8;
+            padding: 8px 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+
     `;
 
     const styleEl = document.createElement("style");
@@ -55,29 +83,59 @@
 
     const input = win.querySelector("#hn-chat-input");
     const messages = win.querySelector("#hn-chat-messages");
+    const introMsg = document.createElement("div");
+            introMsg.className = "hn-bot-message";
+            introMsg.textContent =
+            "AI Bot: This assistant answers questions about Jof Davies using a curated reference archive built from his documented career, projects, and technical work. I do not guess, embellish, or invent—if something is not in my dataset, I simply do not know. Please ask me something about Jof.";
+            messages.appendChild(introMsg);
 
     input.addEventListener("keypress", async (ev) => {
-        if (ev.key !== "Enter") return;
+    if (ev.key !== "Enter") return;
 
-        const query = input.value.trim();
-        if (!query) return;
-        input.value = "";
+    const query = input.value.trim();
+    if (!query) return;
+    input.value = "";
 
-        const userMsg = document.createElement("div");
-        userMsg.textContent = "USER: " + query;
-        messages.appendChild(userMsg);
+    // USER message
+    const userMsg = document.createElement("div");
+    userMsg.className = "hn-user-message";
+    userMsg.textContent = "USER: " + query;
+    messages.appendChild(userMsg);
 
+    // THINKING indicator (NEW)
+    const thinkingMsg = document.createElement("div");
+    thinkingMsg.className = "hn-thinking";
+    thinkingMsg.textContent = "AI Bot is thinking…";
+    messages.appendChild(thinkingMsg);
+    messages.scrollTop = messages.scrollHeight;
+
+    try {
         const res = await fetch("https://app.joffad.workers.dev/api/chat", {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ question: query })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ question: query }),
         });
 
         const data = await res.json();
 
+        // Remove thinking indicator
+        thinkingMsg.remove();
+
         const botMsg = document.createElement("div");
-        botMsg.textContent = data.answer;
+        botMsg.className = "hn-bot-message";
+        botMsg.textContent = "AI Bot: " + data.answer;
         messages.appendChild(botMsg);
-        messages.scrollTop = messages.scrollHeight;
-    });
+    } catch (err) {
+        thinkingMsg.remove();
+
+        const errorMsg = document.createElement("div");
+        errorMsg.className = "hn-bot-message";
+        errorMsg.textContent =
+            "AI Bot: An error occurred while processing your request.";
+        messages.appendChild(errorMsg);
+    }
+
+    messages.scrollTop = messages.scrollHeight;
+});
+
 })();
