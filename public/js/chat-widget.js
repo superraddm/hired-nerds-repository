@@ -68,9 +68,6 @@
             75%  { content: "..."; }
             100% { content: ""; }
         }
-
-
-
     `;
 
     const styleEl = document.createElement("style");
@@ -119,10 +116,10 @@
     // THINKING indicator (NEW)
     const thinkingMsg = document.createElement("div");
     thinkingMsg.className = "hn-thinking";
-    thinkingMsg.textContent = "AI Bot is thinking<span class="hn-ellipsis"></span>";
+    tthinkingMsg.innerHTML = 'AI Bot is thinking<span class="hn-ellipsis"></span>';
+
     messages.appendChild(thinkingMsg);
     messages.scrollTop = messages.scrollHeight;
-
     try {
         const res = await fetch("https://app.joffad.workers.dev/api/chat", {
             method: "POST",
