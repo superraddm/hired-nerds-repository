@@ -116,7 +116,7 @@
     // THINKING indicator (NEW)
     const thinkingMsg = document.createElement("div");
     thinkingMsg.className = "hn-thinking";
-    tthinkingMsg.innerHTML = 'AI Bot is thinking<span class="hn-ellipsis"></span>';
+    thinkingMsg.innerHTML = 'AI Bot is thinking<span class="hn-ellipsis"></span>';
 
     messages.appendChild(thinkingMsg);
     messages.scrollTop = messages.scrollHeight;
