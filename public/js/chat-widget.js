@@ -45,7 +45,7 @@
     win.innerHTML = `
         <div id="hn-chat-messages"></div>
         <div id="hn-chat-input-wrap">
-            <input id="hn-chat-input" placeholder="Ask a question…" />
+            <input id="hn-chat-input" placeholder="Ask literally anything about Jof's career…" />
         </div>`;
     document.body.appendChild(win);
 
@@ -70,7 +70,7 @@
         const res = await fetch("https://app.joffad.workers.dev/api/chat", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ query })
+            body: JSON.stringify({ question: query })
         });
 
         const data = await res.json();
