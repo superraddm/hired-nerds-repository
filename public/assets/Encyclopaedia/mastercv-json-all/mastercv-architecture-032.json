@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-architecture-032",
+  "text": "Jof Davies has architected multi-system solutions combining AV engineering, automation, cloud storage, CRM integration, and data processing. Key architectural competencies include:\n\n- Distributed ingest workflows across QNAP, Dropbox, and AWS Glacier.\n- Multi-step automation pipelines involving Zapier, Monday.com, Google Sheets, and Webhooks.\n- Email marketing infrastructures capable of handling ~1 million emails monthly.\n- CRM ecosystems linking FiveCRM, HubSpot, and Genie.AI.\n- Distributed remote editing architecture enabling 20+ editors worldwide.\n- API-driven systems for content publishing, scraping, and data cleanup.\n\nJof integrates diverse technologies into cohesive, scalable systems that reduce cost and operational load.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "system-architecture"
+  }
+}

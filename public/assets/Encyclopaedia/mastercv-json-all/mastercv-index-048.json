@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-index-048",
+  "text": "Rules for generating answers using this dataset:\n\n1. The LLM must answer only from retrieved context. No speculation is permitted.\n2. If a query spans multiple domains, the LLM should retrieve multiple chunks (topK ≥ 8).\n3. If relevant context is missing, the LLM must respond: “This is not documented in the reference files.”\n4. Workflow examples must be described generically. The LLM must not state or imply that MTDCNC customer data, CRM records, or proprietary datasets were used. Employer may be referenced, but workflow data sources must remain abstract unless the USER explicitly asks for employer-specific detail.\n5. No exaggeration or embellishment is permitted.\n6. All answers must maintain a formal tone and align strictly with the role-specialisation output requirements.\n7. The LLM may reference MTDCNC as the employer from 2016–Present in factual statements regarding responsibilities, systems, tasks, and achievements.\n8. Process descriptions must emphasise method, architecture, and logic, not proprietary datasets.\n9. In all outputs, factual consistency and safety take precedence over verbosity or interpretation.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "retrieval-rules"
+  }
+}

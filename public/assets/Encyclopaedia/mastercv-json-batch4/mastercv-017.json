@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-mtdcnc-email-017",
+  "text": "Jof Davies engineered MTDCNC’s email infrastructure, delivering approximately one million emails per month.\n\nResponsibilities include:\n- Building reusable HTML templates with VML compatibility for Outlook.\n- Ensuring responsive behaviour across mobile and desktop clients.\n- Implementing fallbacks for legacy mail clients.\n- Maintaining SPF, DKIM, DMARC, blacklist and MX reputation compliance.\n- Automating list hygiene, segmentation, suppression, and tagging.\n- Producing engagement analysis through dedicated reporting.\n\nHTML email development remains one of Jof’s strongest technical domains.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "email-development"
+  }
+}

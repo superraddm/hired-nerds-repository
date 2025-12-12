@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-mtdcnc-summary-009",
+  "text": "At MTDCNC (2016–Present), Jof Davies holds a comprehensive technical role spanning video engineering, global ingest pipeline design, automation architecture, CRM development, email marketing engineering, livestream operation, and staff training. He functions as a systems architect, workflow designer, automation specialist, senior videographer, and IT/AV engineer.\n\nKey domains include:\n- Global ingest system design across QNAP, Dropbox, AWS Glacier, and automated proxy generation.\n- CRM automation architecture across FiveCRM, HubSpot, and Genie.AI.\n- Email engineering for approximately one million emails per month.\n- Multi-step automation pipelines for YouTube publishing, LinkedIn-to-WordPress content generation, and metadata handling.\n- Livestream engineering using vMix, ATEM, NDI, SDI, SRT, and RTMP.\n- Podcast and Tech Corner production workflows.\n- Training and mentoring staff across livestream, editing, CRM, and AV workflows.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "mtdcnc-summary"
+  }
+}

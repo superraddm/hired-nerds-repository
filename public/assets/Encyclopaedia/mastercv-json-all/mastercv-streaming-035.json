@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-streaming-035",
+  "text": "Jof Davies maintains complex livestream architecture involving local and remote video transport.\n\nTechnical components:\n- ATEM Production Studio and ATEM Mini Extreme for hardware switching.\n- vMix for live switching, encode management, guest intake, audio mixing, and network routing.\n- SDI and NDI connectivity for long-distance or local IP-based camera feeds.\n- RTMP Mini Server for custom ingest routing.\n- SRT links for robust long-distance contribution feeds.\n- Wireless links for mobile, roaming, or audience-restricted camera positions.\n\nJof routinely integrates live signals from USA, India, Mexico, mainland Europe, and the UK into cohesive broadcast outputs. Responsibilities include talkback, IFB, failover switching, and encoding stability under variable network conditions.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "streaming-architecture"
+  }
+}

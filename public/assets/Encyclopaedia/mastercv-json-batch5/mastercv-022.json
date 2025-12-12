@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-github-022",
+  "text": "Repository: linkedin-image-processor\n\nPurpose: Processes LinkedIn-hosted media into WordPress-ready assets.\n\nCapabilities:\n- Fetches image assets from LinkedIn URLs.\n- Performs resizing, formatting, or renaming operations.\n- Returns cleaned media suitable for CMS ingestion.\n- Integrates directly with Zapier and Webhook workflows.\n\nTechnologies: Node.js, HTTP media handling, image processing.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "github-repositories"
+  }
+}

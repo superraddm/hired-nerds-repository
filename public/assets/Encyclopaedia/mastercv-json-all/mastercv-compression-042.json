@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-compression-042",
+  "text": "Jof Davies has in-depth understanding of video compression, codecs, and delivery formats.\n\nCapabilities:\n- Encoding optimisation using HandBrake, ffmpeg, and custom presets.\n- Bitrate targeting for web, mobile, livestream, and archival delivery.\n- Codec selection including H.264, H.265/HEVC, and ProRes offline workflows.\n- Creating automation-friendly presets for consistent proxy generation.\n- Structuring final deliverables to meet platform-specific requirements.\n\nThis skill supports high-volume content production with minimal delivery issues.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "video-compression"
+  }
+}

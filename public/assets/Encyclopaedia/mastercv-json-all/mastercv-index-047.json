@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-index-047",
+  "text": "Each chunk contains metadata fields including:\n\nsource: \"master-cv\"\nsection: <domain-name>\ntext: <the content>\n\nRecommended sections:\n- early-life, education\n- employment-history\n- mtdcnc\n- workflows\n- github\n- html-json\n- skills-technical\n- skills-soft\n- attributes\n- systems-architecture\n- production-video\n- livestream\n- crm-data\n\nYour LLM should prefer:\n- section-matching first\n- semantic similarity second\n- completeness over brevity\n\nThis improves deterministic behaviour when user queries span multiple domains.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "retrieval-metadata"
+  }
+}

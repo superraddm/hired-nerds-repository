@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-index-050",
+  "text": "After ingestion, validate the dataset using the following test questions:\n\n1. \"Summarise Jof Davies’s video production experience.\"\n2. \"Describe the MTDCNC global ingest pipeline.\"\n3. \"What automation workflows has Jof created?\"\n4. \"List Jof’s CRM engineering capabilities.\"\n5. \"What are Jof’s strongest soft skills?\"\n6. \"Which industries has Jof served through MTDCNC?\"\n7. \"What GitHub repositories has Jof built and what do they do?\"\n8. \"Explain Jof’s knowledge of email development.\"\n\nExpected behaviour:\n- Answers should be specific, factual, and reference chunk content.\n- No hallucination or invented detail.\n- No missing-domain errors if ingestion is complete.\n- Retrieval should consistently return the same content for similar queries.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "validation"
+  }
+}

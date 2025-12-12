@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-index-052",
+  "text": "Frontend queries to your Worker endpoint:\n\nPOST /api/chat\n{\n  \"question\": \"<user question>\"\n}\n\nResponse:\n{\n  \"answer\": \"<model output>\"\n}\n\nEnsure:\n- Debounce user input for rapid queries.\n- Handle network timeouts and retry.\n- Display \"Based on available records...\" to user for transparency.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "frontend-api"
+  }
+}

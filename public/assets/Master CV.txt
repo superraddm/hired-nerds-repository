@@ -26,7 +26,7 @@ A/S/2 Levels in
                (Btech Award) Acting                 Merit
 
 
-<<<<<<< HEAD
+
 Early Life/Hobby/Pre-Career : 
 IT: I've been using computers from around 1990 starting with a commodore64, programming text adventure games with if/then statements and variables in BASIC. My Father was an IT consultant during the 1990's with companies like Compaq and Digital Equipment Corporation. He'd often bring home spare computing parts and machines, beginning with 386 and 486 systems. My family and I would set up local networks to play games like Doom and Duke Nukem over LAN. This started an interest in computers that hasn't stopped. Since the x486 days I've consistently upgraded the same systems, buying and installing new parts. Building PCs for friends and colleagues. Installing and operating Windows from version 3.1 to Windows 11. I've built my own apps, plugins, databases.
 Film and Video: Been playing with video cameras and making films [NOT MOVIES] from the age of 10 when I insisted my mum rent a video camera from the local video shop. We'd make simple films, stop motion animation out of clay and toys, and our own TV program. Where we'd introduce cartoons, and record them to tape using 2 VCRs and a SCART cable. Again, the interest has not stopped, and followed me well into my professional career. I know an incredible amount about plugging one thing into another, and how to get a signal without degradation from one spot to another. From cables, to online streaming protocols.
@@ -143,7 +143,4 @@ Industry: Digital marketing
 
 
 
-=======
-Early Life/Hobby/Pre Career : I've been using computers from around 1990 starting with a commodore64, programming text adventure games with if/then statements and variables in BASIC. My Father was an IT consultant during the 1990's with companies like Compaq and Digital Equipment Corporation. He'd often bring home spare computing parts and machines, beginning with 386 and 486 systems. My family and I would set up local networks to play games like Doom and Duke Nukem over LAN. This started an interest in computers that hasn't stopped. Since the 486 days I've consistently upgraded the same systems, buying and installing new parts. Building PCs for friends and colleagues. Installing and operating Windows from version 3.1 to Windows 11. 
->>>>>>> 62ea6c6a7738305a3b7e887c1826ee5efddac6c9
 

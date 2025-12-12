@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-index-049",
+  "text": "To ingest any chunk into Cloudflare Vectorize via your Worker:\n\nUse this single-line command in Windows CMD:\n\ncurl -X POST \"https://app.joffad.workers.dev/api/ingest\" -H \"Content-Type: application/json\" -d \"{\\\"id\\\":\\\"<CHUNK-ID>\\\",\\\"text\\\":\\\"<ESCAPED-TEXT>\\\",\\\"metadata\\\":{\\\"source\\\":\\\"master-cv\\\",\\\"section\\\":\\\"<SECTION>\\\"}}\"\n\nNotes:\n- Escape all quotes inside text with \\\"\n- Replace line breaks with \\n\n- For long chunks, place JSON into a file and use --data-binary \"@file.json\"\n\nExample using file-based ingestion:\n\ncurl -X POST \"https://app.joffad.workers.dev/api/ingest\" -H \"Content-Type: application/json\" --data-binary \"@mastercv-001.json\"",
+  "metadata": {
+    "source": "master-cv",
+    "section": "ingestion-commands"
+  }
+}

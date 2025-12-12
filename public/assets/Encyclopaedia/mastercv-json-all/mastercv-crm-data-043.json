@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-crm-data-043",
+  "text": "Jof demonstrates advanced capability in CRM and data engineering:\n\n- Designing relational schemas for customer, product, and renewal data.\n- Cleaning, normalising, deduplicating, and enriching large datasets.\n- Building migration routines that preserve referential integrity.\n- Implementing marketing and sales automation across multiple CRM platforms.\n- Creating analytical reports for engagement, activity tracking, and performance evaluation.\n- Writing SQL queries, views, and stored procedures for operational reporting.\n\nThese abilities support consistent, scalable, and maintainable CRM ecosystems.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "crm-data"
+  }
+}

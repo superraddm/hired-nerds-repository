@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-workflows-youtube-027",
+  "text": "The YouTube automation workflow controls upload triggers, metadata formatting, thumbnail handling, conditional logic for short vs long videos, API scheduling, and notifications. It significantly reduces manual labour in publishing MTDCNC’s video content.\n\nCapabilities:\n- Automated API upload.\n- Dynamic metadata generation.\n- Thumbnail ingestion and media handling.\n- Condition-based branching and scheduled publishing.\n\nPurpose: Full automation of YouTube content publishing.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "workflows"
+  }
+}

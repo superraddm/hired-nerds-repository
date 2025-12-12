@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-mtdcnc-linkedin-015",
+  "text": "Jof Davies built a LinkedIn-to-WordPress automation pipeline.\n\nSystem features:\n- Scraping LinkedIn URLs using Phantombuster into Google Sheets.\n- Cleaning and filtering records for automation readiness.\n- Using Webhooks to extract LinkedIn content and associated media.\n- Generating rewritten articles through ChatGPT for publication.\n- Posting images and articles directly into WordPress.\n- Updating source spreadsheets and sending success/failure notifications.\n\nThis automation replaces manual editorial workflows, providing consistent, publish-ready content with minimal human involvement.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "automation-linkedin"
+  }
+}

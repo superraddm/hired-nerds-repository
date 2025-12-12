@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-github-020",
+  "text": "Repository: public-monday-images\n\nPurpose: Provides temporary asset hosting and image processing for Monday.com workflows.\n\nCapabilities:\n- Accepts image uploads via API.\n- Returns automation-friendly URLs.\n- Used for temporary hosting in automation chains.\n\nTechnologies: Node.js, HTTP endpoints, CDN integration.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "github-repositories"
+  }
+}

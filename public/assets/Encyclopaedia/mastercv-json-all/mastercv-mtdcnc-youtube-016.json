@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-mtdcnc-youtube-016",
+  "text": "The YouTube publishing automation (Ultimate Video Uploader v30-2) handles metadata creation, thumbnail processing, conditional branching, and automated upload.\n\nCapabilities include:\n- Trigger-driven automation for uploading YouTube content.\n- Formatter steps for titles, descriptions, tags, and categories.\n- Conditional branches for short-form (<2 min) vs long-form video.\n- Automated thumbnail ingestion and WordPress publishing.\n- Multi-step YouTube API interaction for scheduling and upload.\n- Final verification steps, status logging, and automated notifications on success or failure.\n\nThis system consolidates the work of multiple staff roles into a single-button publishing workflow.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "automation-youtube"
+  }
+}

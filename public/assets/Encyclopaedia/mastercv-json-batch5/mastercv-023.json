@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-json-023",
+  "text": "MTD-Proxy-HB-Preset.json defines the HandBrake preset used for automated proxy creation.\n\nCharacteristics:\n- Uses H.264 encoding tuned for speed and low file size.\n- Ensures uniform output for remote editing.\n- Configures audio passthrough or lightweight compression.\n- Forces consistent resolution and bitrate constraints.\n\nPurpose: Standardises proxy media for editors and ensures reliable playback across systems.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "json-configurations"
+  }
+}

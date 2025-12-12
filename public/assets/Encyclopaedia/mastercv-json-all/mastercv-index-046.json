@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-index-046",
+  "text": "Recommended ingestion order for optimal semantic clustering in Vectorize:\n\n1. Foundational sections: 001–003\n2. Early career / previous roles: 004–007\n3. MTDCNC overview and details: 008–018\n4. Repositories and configuration files: 019–024\n5. Workflow diagrams: 025–028\n6. Technical and soft skills matrices: 029–030\n7. Attributes, architecture, personal capabilities: 031–033\n8. Video/AV/Production-specific chunks: 033–036\n9. Tools, clients, achievements: 038–040\n10. Hardware, compression, CRM engineering: 041–043\n11. Final professional summary: 044\n12. Index chunks: 045–046\n\nThis order ensures:\n- Correct grouping of related content\n- High retrieval accuracy\n- Lower semantic noise during question answering",
+  "metadata": {
+    "source": "master-cv",
+    "section": "ingestion-order"
+  }
+}

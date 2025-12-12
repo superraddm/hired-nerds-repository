@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-mtdcnc-livestream-012",
+  "text": "Jof Davies regularly directs and engineers multicamera livestreams for MTDCNC. Responsibilities span technical setup, operation, and live fault management.\n\nCore competencies include:\n- Operation of BMPCC, Sony, and Panasonic cameras.\n- Switching and routing using ATEM hardware and vMix.\n- Networked video transport with NDI, SDI, RTMP-mini servers, and SRT.\n- Wireless AV systems including Hollyland, LiveU, Teradek, and Vaxis.\n- Remote guest management and two-way communication using vMix Call.\n- Complete control of talkback, monitoring, audio mix, levels, and redundancy.\n\nJof covers every technical role except presenting: director, operator, camera, audio, encoder, and systems engineer. Livestreams often involve receiving signals from multiple countries, routing them into a unified show structure, and broadcasting to MTDCNC channels.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "livestream-engineering"
+  }
+}

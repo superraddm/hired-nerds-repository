@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-mtdcnc-linkedin-015",
+  "text": "Jof Davies built an advanced LinkedIn-to-WordPress automation system using Zapier, Webhooks, Google Sheets, Formatter, and ChatGPT.\n\nCapabilities include:\n- Scraping LinkedIn post URLs from Phantombuster into Google Sheets.\n- Cleaning, validating, and filtering content for automation.\n- Using Webhooks to extract post data including body text and media.\n- Passing content to ChatGPT to produce full editorial-style articles.\n- Posting both the image and the rewritten article to WordPress.\n- Updating spreadsheets with status and metadata.\n- Using fallback logic for failed rewrites and republished posts.\n\nThis automation replaced an entire manual editorial workflow and produced consistent, formatted site-ready content with minimal human input.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "automation-linkedin"
+  }
+}

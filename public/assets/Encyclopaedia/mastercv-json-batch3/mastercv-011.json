@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-mtdcnc-proxy-011",
+  "text": "Proxy creation at MTDCNC is fully automated using HBBatchBeast running on the MTD Studio workstation. The system monitors the Project Footage folder hourly and processes only newly added files.\n\nThe proxy encoder uses a custom preset file (MTD-Proxy-HB-Preset.json), optimised to retain acceptable visual clarity while reducing file size and ensuring consistent editing performance. The preset standardises codec, bitrate, format, and colour behaviour across remote editors.\n\nThis automation eliminates manual transcoding, enforces uniform proxy quality, and ensures rapid editor access to footage worldwide.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "proxy-generation"
+  }
+}

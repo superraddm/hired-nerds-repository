@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-json-023",
+  "text": "The file MTD-Proxy-HB-Preset.json defines the HandBrake preset used for automated proxy creation within the MTDCNC ingest pipeline. The profile is optimised for low file size, fast encoding, and consistent playback across remote editor systems.\n\nCharacteristics:\n- Constant framerate and resolution targets to ensure editing stability.\n- H.264 video encoding tuned for high-speed processing.\n- Audio stream handling optimised for minimal file overhead.\n- Template works reliably in HBBatchBeast’s automated environment.\n\nPurpose: Standardises all proxy outputs and ensures uniform quality for remote editing teams.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "json-configurations"
+  }
+}

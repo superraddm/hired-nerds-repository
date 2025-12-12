@@ -1,0 +1,974 @@
+CHUNK001: ID: mastercv-foundations-001
+Source: master-cv
+Section: early-life-foundations
+Text:
+Jof Davies developed technical and creative skills from an early age. Childhood exposure to computers included the Commodore 64, followed by 386 and 486 Windows PCs. He experimented with BASIC programming, LAN gaming, troubleshooting hardware, and building early custom PCs. This early period established his grounding in troubleshooting, optimisation, and system-level thinking.
+
+Beginning around age ten, Jof used VHS camcorders and VCRs to film and edit his own short films, claymation sequences, and mock television shows. He taught himself linear editing, composition, framing, and timing without formal guidance. This period formed the foundation of his lifelong capability in video production.
+
+Throughout teenage years, Jof continued developing video skills by filming local events and experimenting with editing tools. He developed habits of self-directed learning, analytical thinking, and creative workflow building that later shaped his professional capabilities in video production, IT systems, and automation.
+
+CHUNK002: ID: mastercv-education-002
+Source: master-cv
+Section: education
+Text:
+Formal education includes The Ferrers School (September 1996 – July 2001) attaining GCSEs: 2×A*, 3×B, 4×C. Further education includes The Tresham Institute, studying half of a BTEC National Diploma in Performing Arts (8 Units), and Northampton College, achieving A/S/2 Levels in Film Studies (B), Film & Video (C), and Acting BTEC Award (Merit).
+
+Parallel to formal study, Jof continued expanding technical literacy in computing, AV equipment, editing workflows, and web technology. His early exposure to performing arts and media studies directly contributed to the long-term development of communication skills, scripting, direction, and editorial decision-making.
+
+CHUNK003: ID: mastercv-early-career-003
+Source: master-cv
+Section: early-career-roles
+Text:
+Before transitioning into technical and media-heavy roles, Jof Davies developed customer-facing and operational discipline through early employment.
+
+Cineworld (2003–2005): Gained foundational operational experience in customer service, shift-based operations, and high-throughput environments. This period strengthened interpersonal communication and process reliability.
+
+Barclaycard (2005–2006): Worked in a financial service setting requiring accuracy, data handling, and compliance with regulated workflows.
+
+These early positions provided a baseline for structured working, adherence to regulated processes, and clear communication—skills that later supported large-scale CRM, data, and automation projects.
+
+CHUNK004: ID: mastercv-moulton-college-004
+Source: master-cv
+Section: employment-history
+Text:
+Role: Moulton College (2007–2009)
+Jof Davies delivered data-driven internal systems within the Transport Department. He designed and implemented an Access and VBA-based transport management database supporting hundreds of students. The solution handled routes, passenger lists, scheduling, and printable manifests. Jof created custom mapping software to visualise bus routes and student distribution.
+
+He replaced large, complex Excel budgeting and invoicing sheets with controlled data-driven systems that reduced manual errors and improved clarity. This role represented his first large-scale systems engineering project, demonstrating skills in database design, logic automation, VBA, and operational process optimisation.
+
+CHUNK005: ID: mastercv-integrity-005
+Source: master-cv
+Section: employment-history
+Text:
+Role: Integrity Business Connections (2009–2011)
+Jof Davies upgraded the organisation’s CRM system, improving efficiency across telemarketing and client reporting workflows. He created an Access-based internal reporting system, replacing Excel-based processes with reliable, query-driven output. Responsibilities included data import, cleansing, deduplication, and creating daily reporting structures.
+
+This role strengthened capabilities in data modelling, Excel automation, VBA programming, and designing structured systems that align sales activity with operational needs. Jof demonstrated the ability to translate raw business requirements into dependable technical solutions.
+
+CHUNK006: ID: mastercv-makmedia-006
+Source: master-cv
+Section: employment-history
+Text:
+Role: MAK Media Solutions (2011–2012)
+At MAK Media, Jof Davies served as a technical and creative lead across web, IT, video, and CRM functions. Responsibilities included directing and editing video content, recording promotional media, building websites, and managing custom CRM implementations.
+
+Key competencies demonstrated:
+- Multi-camera recording and editing
+- CMS management including WordPress, Squarespace, and Drupal
+- CRM setup, configuration, and training stakeholders
+- Small-business IT management involving hosting, DNS, email, telephony, and technical troubleshooting
+
+This role established Jof as a hybrid AV-IT professional capable of managing end-to-end digital production and technical systems delivery.
+
+CHUNK007: ID: mastercv-srdm-007
+Source: master-cv
+Section: employment-history
+Text:
+Role: Super Rad Data Management (2012–Present, with reduced activity since 2018)
+Jof Davies acted as a CRM and IT consultant for insurance-sector clients. Responsibilities included CRM migrations, data cleansing, system restructuring, and implementing renewal workflows specific to insurance operations.
+
+Key projects included:
+- Multiple insurance CRM migrations with zero data loss
+- Designing structured data models for customer, policy, and renewal tracking
+- Implementing automated workflows for renewals, cancellations, and follow-ups
+- Creating bulk data cleaning routines for Excel and SQL-based systems
+- Delivering technical support around IT, hosting, and systems integration
+
+This period demonstrates high proficiency in CRM architecture, data modelling, and operational automation design.
+
+CHUNK008: ID: mastercv-mtdcnc-prelude-008
+Source: master-cv
+Section: mtdcnc-overview
+Text:
+MTDCNC (2016–Present) represents the longest and most technically diverse role in Jof Davies’s career. Responsibilities span video production, livestream engineering, email development, CRM architecture, workflow automation, systems design, training, and global ingest pipeline engineering.
+
+Across MTDCNC, Jof:
+- Built large-scale automation systems
+- Engineered global ingest + proxy workflows for 20+ remote editors
+- Designed CRM automations with 75% conversion for hot leads
+- Created extensive email development frameworks sending ~1M emails/month
+- Implemented multi-step video publishing automation pipelines
+- Acted as livestream director, operator, and technical engineer across international events
+
+The following chunks detail MTDCNC in structured sections.
+
+CHUNK009: ID: mastercv-mtdcnc-summary-009
+Source: master-cv
+Section: mtdcnc-summary
+Text:
+At MTDCNC (2016–Present), Jof Davies holds a comprehensive technical role spanning video engineering, global ingest pipeline design, automation architecture, CRM development, email marketing engineering, livestream operation, and staff training. Jof functions simultaneously as a systems architect, workflow designer, automation specialist, senior videographer, and IT/AV engineer.
+
+Key domains include:
+- Global ingest system design using QNAP, Dropbox, AWS Glacier, and automated proxy generation.
+- CRM automation architecture across FiveCRM, HubSpot, and Genie.AI.
+- Email marketing engineering, including large-scale template frameworks and deliverability systems.
+- High-throughput automation pipelines for YouTube publishing, LinkedIn-to-WordPress article creation, and metadata handling.
+- Multicamera livestream direction and operation using vMix, ATEM, NDI/SDI, and SRT/RTMP technologies.
+- Studio-based podcast and Tech Corner production workflows.
+- Training staff across editing, camera operation, livestream technical handling, and CRM usage.
+
+This role integrates operational, creative, engineering, and automation capabilities into a unified technical function.
+
+CHUNK010: ID: mastercv-mtdcnc-ingest-010
+Source: master-cv
+Section: ingest-pipeline
+Text:
+Jof Davies engineered the MTDCNC global ingest pipeline supporting 20+ remote editors across multiple time zones. The system processes incoming footage from camera operators located in the UK, Europe, USA, Mexico, and India.
+
+Architecture includes:
+- Primary ingest into QNAP Office, where operators upload raw video files.
+- Automated sync to Dropbox, enabling worldwide access for remote editors.
+- Additional sync to QNAP Remote, providing redundancy and regional access.
+- Hourly replication from Master Footage to Project Footage.
+- Automated proxy generation using HBBatchBeast with the custom MTD-Proxy-HB-Preset.json profile.
+- Proxy files produced with minimized file size and maximum editing usability, optimised for remote workflows.
+- Nightly archival of new Master Footage and Project Files to AWS Glacier (~100 TB stored), providing low-cost long-term retention.
+
+This system reduces global ingest overhead dramatically and ensures editors can access proxy-ready footage within 60 minutes of upload. It was built at less than half the cost of competing solutions and requires almost no manual intervention.
+
+CHUNK011: ID: mastercv-mtdcnc-proxy-011
+Source: master-cv
+Section: proxy-generation
+Text:
+Proxy creation at MTDCNC is fully automated using HBBatchBeast running on the MTD Studio workstation. The system monitors the Project Footage folder hourly and processes only newly added files.
+
+The proxy encoder uses a custom preset file (MTD-Proxy-HB-Preset.json), optimised by Jof to:
+- Retain acceptable visual clarity for editing.
+- Reduce file size substantially for remote transfer.
+- Standardise format across all editors.
+- Maintain colour consistency and predictable decoding behaviour in Premiere Pro.
+
+This automation eliminates manual transcoding, ensures consistent proxy output, and supports the global remote editor network efficiently.
+
+CHUNK012: ID: mastercv-mtdcnc-livestream-012
+Source: master-cv
+Section: livestream-engineering
+Text:
+Jof Davies regularly directs and engineers multicamera livestreams for MTDCNC. Responsibilities span technical setup, operation, and live fault management.
+
+Core competencies include:
+- Operation of BMPCC, Sony, and Panasonic cameras.
+- Switching and routing using ATEM hardware and vMix.
+- Networked video transport with NDI, SDI, RTMP-mini servers, and SRT.
+- Wireless AV systems including Hollyland, LiveU, Teradek, and Vaxis.
+- Remote guest management and two-way communication using vMix Call.
+- Complete control of talkback, monitoring, audio mix, levels, and redundancy.
+
+Jof covers every technical role except presenting: director, operator, camera, audio, encoder, and systems engineer. Livestreams often involve receiving signals from multiple countries, routing them into a unified show structure, and broadcasting to MTDCNC channels.
+
+CHUNK013: ID: mastercv-mtdcnc-podcast-013
+Source: master-cv
+Section: podcast-techcorner
+Text:
+Jof Davies engineered and operated MTDCNC’s podcast and Tech Corner production workflows.
+
+For podcasts:
+- Multicamera recording with ATEM-controlled switching.
+- Live-to-tape production or continuous recording for later assembly.
+- Audio capture, cleaning, tone balancing, and monitoring.
+- Rapid turnaround workflows for editors.
+
+For Tech Corners:
+- Jof typically performs the roles of camera operator, vision mixer, audio technician, and editor.
+- Close-up sequences are captured separately and reintegrated during editing.
+- Content is structured for clarity, consistent branding, and technical accuracy.
+- Jof completes 12–20 Tech Corner productions per year currently, previously handling far more volume during earlier years.
+
+These workflows combine AV engineering, editing, structure, and brand consistency.
+
+CHUNK014: ID: mastercv-mtdcnc-crm-014
+Source: master-cv
+Section: crm-architecture
+Text:
+Jof Davies played a major role in MTDCNC's CRM architecture across FiveCRM, HubSpot, and Genie.AI. He implemented lead qualification processes, nurturing sequences, and sales workflows.
+
+Capabilities demonstrated:
+- Designing intelligent routing rules for sales.
+- Implementing automated lead tagging and scoring.
+- Integrating LinkedIn, Google Sheets, and scraping tools with CRM workflows.
+- Creating dashboards for sales activity visibility.
+- Achieving a 75% conversion rate where hot leads were correctly identified.
+
+CRM_Automation_workflow.png (text extracted separately) represents a large-scale, multi-branch automation designed to standardise data, enrich records, prioritise leads, and create predictable follow-up actions for sales teams.
+
+CHUNK015: ID: mastercv-mtdcnc-linkedin-015
+Source: master-cv
+Section: automation-linkedin
+Text:
+Jof Davies built an advanced LinkedIn-to-WordPress automation system using Zapier, Webhooks, Google Sheets, Formatter, and ChatGPT.
+
+Capabilities include:
+- Scraping LinkedIn post URLs from Phantombuster into Google Sheets.
+- Cleaning, validating, and filtering content for automation.
+- Using Webhooks to extract post data including body text and media.
+- Passing content to ChatGPT to produce full editorial-style articles.
+- Posting both the image and the rewritten article to WordPress.
+- Updating spreadsheets with status and metadata.
+- Using fallback logic for failed rewrites and republished posts.
+
+This automation replaced an entire manual editorial workflow and produced consistent, formatted site-ready content with minimal human input.
+
+CHUNK016: ID: mastercv-mtdcnc-youtube-016
+Source: master-cv
+Section: automation-youtube
+Text:
+The YouTube publishing automation (Ultimate Video Uploader v30-2) handles metadata creation, thumbnail processing, conditional branching, and automated upload.
+
+Capabilities include:
+- Trigger-driven automation for uploading YouTube content.
+- Formatter steps for titles, descriptions, tags, and categories.
+- Conditional branches for short-form (<2 min) vs long-form video.
+- Automated thumbnail ingestion and WordPress publishing.
+- Multi-step YouTube API interaction for scheduling and upload.
+- Final verification steps, status logging, and automated notifications on success or failure.
+
+This system consolidates the work of multiple staff roles into a single-button publishing workflow.
+
+CHUNK017: ID: mastercv-mtdcnc-email-017
+Source: master-cv
+Section: email-development
+Text:
+Jof Davies engineered MTDCNC’s email marketing framework, sending approximately one million emails per month. Responsibilities include:
+
+- Building reusable boilerplate HTML templates with extensive VML support for Outlook.
+- Ensuring cross-client responsive behaviour across iOS Mail, Gmail, Outlook desktop, and mobile clients.
+- Implementing fallback strategies for non-supporting clients.
+- Monitoring deliverability through SPF, DKIM, DMARC, MX reputation, and blacklist checks.
+- Maintaining clean email lists through automated unsubscription, suppression, and tagging systems.
+- Performing detailed engagement analysis using the MTDCNC_Engagement_Report_Package.
+
+This domain represents one of Jof’s strongest technical specialisms.
+
+CHUNK018: ID: mastercv-mtdcnc-training-018
+Source: master-cv
+Section: training-mentoring
+Text:
+Jof Davies provided training across multiple technical domains at MTDCNC.
+
+Training responsibilities:
+- Coaching 4 staff members in camera operation and video editing.
+- Training 5–10 camera staff over several years in livestream workflows, file management, and technical setups.
+- Delivering CRM training to stakeholders and staff across multiple platforms.
+- Mentoring junior editors informally in organisation, editing structure, technical hygiene, and workflow reliability.
+
+Training outputs emphasise process clarity, system understanding, and professional discipline.
+
+CHUNK019: ID: mastercv-github-019
+Source: master-cv
+Section: github-repositories
+Text:
+Repository: render-youtube-uploader
+Purpose: Automates the publishing process for YouTube content by integrating metadata handling, JSON packaging, and workflow automation.
+
+Functions:
+- Generates structured metadata for YouTube uploads.
+- Formats data for Zapier or webhook-based automation triggers.
+- Works with thumbnail generation, tags, descriptions, categories, and scheduled publishing.
+- Supports the Ultimate Video Uploader workflow by delivering consistent, machine-readable metadata to automation systems.
+
+Technologies: JavaScript, JSON, API interaction, task automation.
+
+CHUNK020: ID: mastercv-github-020
+Source: master-cv
+Section: github-repositories
+Text:
+Repository: public-monday-images
+Purpose: Handles image processing and storage routines for Monday.com integrations.
+
+Capabilities:
+- Acts as a public endpoint for temporary image hosting or transformation.
+- Processes images into formats compatible with Zapier, Monday.com, or CMS platforms.
+- Routinely used in automated workflows requiring placeholder images, thumbnails, or temporary assets.
+
+Technologies: Node.js, API routing, cloud storage integration.
+
+CHUNK021: ID: mastercv-github-021
+Source: master-cv
+Section: github-repositories
+Text:
+Repository: bunny-temp-storage
+Purpose: Provides temporary asset storage using BunnyCDN for workflows requiring fast-access public URLs.
+
+Capabilities:
+- Accepts upload requests via API calls.
+- Returns short-lived public URLs for consumption by automation tools.
+- Supports image-based automations, redirects, and content preview workflows.
+- Designed to integrate with Zapier and Monday.com.
+
+Technologies: JavaScript, BunnyCDN API, HTTP upload handling, automation compatibility.
+
+CHUNK022: ID: mastercv-github-022
+Source: master-cv
+Section: github-repositories
+Text:
+Repository: linkedin-image-processor
+Purpose: Processes LinkedIn post images into WordPress-ready media assets as part of the LinkedIn → WordPress automation workflow.
+
+Capabilities:
+- Fetches remote LinkedIn-hosted media.
+- Converts, resizes, or renames assets to meet CMS requirements.
+- Outputs clean, automation-ready URLs and metadata.
+
+Technologies: Node.js, HTTP media handling, image processing, REST integration.
+
+CHUNK023: ID: mastercv-json-023
+Source: master-cv
+Section: json-configurations
+Text:
+The file MTD-Proxy-HB-Preset.json defines the HandBrake preset used for automated proxy creation within the MTDCNC ingest pipeline. The profile is optimised for low file size, fast encoding, and consistent playback across remote editor systems.
+
+Characteristics:
+- Constant framerate and resolution targets to ensure editing stability.
+- H.264 video encoding tuned for high-speed processing.
+- Audio stream handling optimised for minimal file overhead.
+- Template works reliably in HBBatchBeast’s automated environment.
+
+Purpose: Standardises all proxy outputs and ensures uniform quality for remote editing teams.
+
+CHUNK024: ID: mastercv-html-024
+Source: master-cv
+Section: html-email-templates
+Text:
+The file Responsive-master660.html is a master HTML email boilerplate engineered for cross-client compatibility. It includes legacy VML structures for Outlook desktop, responsive table-based layout methods, conditional comments, mobile overrides, and fallback-safe image handling.
+
+The template supports:
+- Outlook-specific rendering paths.
+- Cross-device responsive scaling.
+- Dynamic content insertion for marketing campaigns.
+- High deliverability with minimal client rendering issues.
+
+Purpose: Forms the foundation of MTDCNC’s high-volume email campaigns.
+
+CHUNK025: ID: mastercv-workflows-crm-025
+Source: master-cv
+Section: workflows
+Text:
+The CRM automation workflow represents a multi-branch enrichment, scoring, and routing system for incoming leads. The process handles email validation, enrichment, qualification, sales notifications, nurturing sequences, and CRM updates.
+
+Core functions:
+- Structured enrichment paths.
+- Lead scoring logic.
+- Routing to hot-lead or nurture workflows.
+- Integration with sales and marketing triggers.
+- Automatic data hygiene, tagging, and prioritisation.
+
+Purpose: Ensures consistent, automated, and efficient lead handling for MTDCNC.
+
+CHUNK026: ID: mastercv-workflows-linkedin-026
+Source: master-cv
+Section: workflows
+Text:
+This automation converts LinkedIn posts into editorial articles. Steps include scraping, cleaning, formatting, image extraction, AI rewriting, WordPress publishing, and spreadsheet status updates.
+
+Capabilities:
+- Automated daily processing.
+- AI rewriting into article format.
+- Automated media posting.
+- Success and failure branching with notification logic.
+
+Purpose: Transforms social content into publish-ready website articles with minimal manual effort.
+
+CHUNK027: ID: mastercv-workflows-youtube-027
+Source: master-cv
+Section: workflows
+Text:
+The YouTube automation workflow controls upload triggers, metadata formatting, thumbnail handling, conditional logic for short vs long videos, API scheduling, and notifications. It significantly reduces manual labour in publishing MTDCNC’s video content.
+
+Capabilities:
+- Automated API upload.
+- Dynamic metadata generation.
+- Thumbnail ingestion and media handling.
+- Condition-based branching and scheduled publishing.
+
+Purpose: Full automation of YouTube content publishing.
+
+CHUNK028: ID: mastercv-workflows-ingest-028
+Source: master-cv
+Section: workflows
+Text:
+This workflow describes the MTDCNC ingest architecture: QNAP Office for primary ingest, Dropbox for global sync, QNAP Remote for redundancy, MTD Studio for proxy creation, and AWS Glacier for nightly archival.
+
+Functions:
+- Worldwide operator uploads to QNAP.
+- Automatic replication to Dropbox and QNAP Remote.
+- Hourly proxy generation for editors.
+- Nightly archival to Glacier (~100 TB).
+
+Purpose: Enables global editing capability, fault tolerance, and cost-efficiency.
+
+CHUNK029: ID: mastercv-skills-technical-029
+Source: master-cv
+Section: skills-technical
+Text:
+This section records Jof Davies’s technical skill ratings (1–5 scale).
+
+Web Development:
+- HTML: 5
+- CSS: 5
+- JavaScript: 4
+- PHP: 4
+- Node.js: 3
+- JSON: 5
+- Regex: 3
+
+Programming:
+- Python: 4
+- SQL: 5
+- MySQL/MariaDB: 4
+- T-SQL: 5
+- VBA: 4
+- PowerShell: 3
+- Bash/Shell: 3
+- ASP.NET/Classic ASP: 2
+- JSP: 2
+
+Automation:
+- Zapier Automation: 5
+- Monday.com Automation: 5
+- REST API Integration: 5
+- CLI Tools: 4
+- Git/GitHub: 4
+
+Infrastructure and Ops:
+- Cloudflare: 4
+- AWS (Glacier/S3 concepts): 4
+- Linux Administration: 3
+- Networking Fundamentals: 4
+- Virtualisation/Containers: 2
+
+Email Development:
+- HTML Email Development: 5
+- Email Deliverability: 5
+- ESP Platforms: 4
+- Marketing Automation: 5
+
+Video and Audio:
+- Premiere Pro: 5
+- After Effects: 3
+- Livestream Engineering: 5
+- Audio Engineering: 4
+
+CRM:
+- CRM Architecture: 5
+- CRM Migrations: 5
+- Data Modelling: 5
+- Reporting & Dashboards: 4
+
+CHUNK030: ID: mastercv-skills-soft-030
+Source: master-cv
+Section: skills-soft
+Text:
+Soft skills audit results (1–5):
+
+Communication:
+- Written Communication: 5
+- Verbal Communication: 5
+- Technical Translation: 5
+
+Leadership:
+- Team Leadership: 4
+- Mentoring & Coaching: 5
+- Stakeholder Management: 5
+
+Problem Solving:
+- Troubleshooting: 5
+- Analytical Thinking: 5
+- Root Cause Analysis: 5
+
+Planning:
+- Project Management: 4
+- Prioritisation: 5
+- Process Design: 5
+
+Creativity:
+- System Design Creativity: 5
+- Content Creativity: 4
+- Innovation: 5
+
+Interpersonal:
+- Collaboration: 5
+- Client Interaction: 5
+- Conflict Resolution: 4
+
+Adaptability:
+- Learning Agility: 5
+- Change Management: 5
+- Resilience: 5
+
+Professionalism:
+- Time Management: 5
+- Attention to Detail: 5
+- Integrity: 5
+- Work Ethic: 5
+
+CHUNK031: ID: mastercv-attributes-031
+Source: master-cv
+Section: professional-attributes
+Text:
+Jof Davies demonstrates strong discipline in both technical and operational domains. Attributes include:
+
+- Systems thinking: designs workflows end-to-end with long-term stability.
+- Reliability: maintains consistent execution across high-throughput workloads.
+- Documentation: produces clear explanations, templates, diagrams, and SOPs.
+- Adaptability: rapidly learns new systems, APIs, tools, and workflows.
+- Communication: translates technical concepts into accessible explanations.
+- Initiative: proactively identifies inefficiencies and builds automated solutions.
+- Precision: emphasises accuracy in data work, email coding, and video processing.
+
+CHUNK032: ID: mastercv-architecture-032
+Source: master-cv
+Section: system-architecture
+Text:
+Jof Davies has architected multi-system solutions combining AV engineering, automation, cloud storage, CRM integration, and data processing. Key architectural competencies include:
+
+- Distributed ingest workflows across QNAP, Dropbox, and AWS Glacier.
+- Multi-step automation pipelines involving Zapier, Monday.com, Google Sheets, and Webhooks.
+- Email marketing infrastructures capable of handling ~1 million emails monthly.
+- CRM ecosystems linking FiveCRM, HubSpot, and Genie.AI.
+- Distributed remote editing architecture enabling 20+ editors worldwide.
+- API-driven systems for content publishing, scraping, and data cleanup.
+
+Jof integrates diverse technologies into cohesive, scalable systems that reduce cost and operational load.
+
+CHUNK033: ID: mastercv-video-production-033
+Source: master-cv
+Section: video-production
+Text:
+MTDCNC’s core video production workflow integrates planning, multicamera field filming, ingest, proxy generation, editing, client review, and final publication.
+
+Key workflow elements:
+- Pre-production coordination with manufacturers and engineering teams.
+- Multicamera filming: run-and-gun coverage, interviews, factory tours, product demonstrations.
+- Acquisition with BMPCC, Sony, and Panasonic cameras, supported by wireless AV transmitters such as Hollyland, Teradek, LiveU, and Vaxis.
+- In-field backup and content organisation using structured folder naming and checksum verification.
+- Immediate upload to QNAP Office for ingestion and replication.
+- Editors work exclusively from automatically generated proxy files to accelerate turnaround.
+- Final renders include compression pass, metadata tagging, thumbnail creation, and publication through automated pipelines.
+
+Jof operates as camera operator, lighting technician, audio handler, and on occasion as director, depending on production type.
+
+CHUNK034: ID: mastercv-editing-034
+Source: master-cv
+Section: editing-workflows
+Text:
+Jof Davies has over 20 years of experience with Adobe Premiere Pro. His editing workflow includes:
+
+- Structured timeline organisation using markers, sub-sequences, and nested compositions.
+- Efficient proxy/offline editing using globally consistent proxy formats.
+- Colour adjustment and exposure correction for factory and studio environments.
+- Audio enhancement using EQ, noise reduction, level matching, and compression.
+- Multicamera sync and switching for podcast and Tech Corner projects.
+- Rapid editing workflows enabling high output volume during peak periods.
+
+Jof historically edited up to eight videos per week and currently handles primarily Tech Corners and livestream-related post-production (12–20 annually).
+
+CHUNK035: ID: mastercv-streaming-035
+Source: master-cv
+Section: streaming-architecture
+Text:
+Jof Davies maintains complex livestream architecture involving local and remote video transport.
+
+Technical components:
+- ATEM Production Studio and ATEM Mini Extreme for hardware switching.
+- vMix for live switching, encode management, guest intake, audio mixing, and network routing.
+- SDI and NDI connectivity for long-distance or local IP-based camera feeds.
+- RTMP Mini Server for custom ingest routing.
+- SRT links for robust long-distance contribution feeds.
+- Wireless links for mobile, roaming, or audience-restricted camera positions.
+
+Jof routinely integrates live signals from USA, India, Mexico, mainland Europe, and the UK into cohesive broadcast outputs. Responsibilities include talkback, IFB, failover switching, and encoding stability under variable network conditions.
+
+CHUNK036: ID: mastercv-podcast-036
+Source: master-cv
+Section: podcast-engineering
+Text:
+Podcast production responsibilities include:
+
+- Multi-camera switching via ATEM during live-to-tape capture.
+- Dedicated audio capture with clean gain structure and treatment.
+- Live monitoring of levels, noise, room tone, and compression thresholds.
+- Marker placement and metadata notes for post-production efficiency.
+- Delivering isolated camera angles for editors when needed.
+- Ensuring consistent branding, framing, and lighting across episodes.
+
+This workflow combines AV engineering precision with editorial awareness.
+
+CHUNK037: ID: mastercv-training-037
+Source: master-cv
+Section: training-systems
+Text:
+Jof Davies has delivered structured internal training at MTDCNC across the following domains:
+
+Camera and Filming:
+- Training four MTDCNC staff in professional camera operation.
+- Instruction in exposure, composition, colour balance, and shot sequencing.
+- Demonstrating wireless AV systems and signal routing practices.
+
+Editing:
+- Teaching Premiere Pro fundamentals and advanced workflow optimisation.
+- Coaching junior staff on timeline management, proxy workflows, and organisational structure.
+
+CRM Systems:
+- Training teams on FiveCRM, HubSpot, and Genie.AI.
+- Educating stakeholders on deal flow, activity logging, list segmentation, and automation triggers.
+
+Training focuses on practical competence, operational confidence, and reduced dependency on senior technical staff.
+
+CHUNK038: ID: mastercv-tools-038
+Source: master-cv
+Section: tools-software
+Text:
+The following tools have been used extensively across audiovisual, marketing, CRM, data, and automation roles:
+
+AV & Editing:
+- Adobe Premiere Pro, Adobe After Effects, DaVinci Resolve
+- ATEM Studio, ATEM Mini Extreme
+- vMix, OBS Studio
+- BMPCC cameras, Sony line, Panasonic Lumix
+- Hollyland, LiveU, Teradek, Vaxis wireless systems
+
+Marketing / Web:
+- HTML, CSS, JavaScript, PHP
+- WordPress, Drupal, Squarespace
+- HandBrake, HBBatchBeast, ffmpeg
+- Genie.AI, HubSpot, FiveCRM
+- Zapier, Phantombuster, Monday.com, ActiveCampaign
+
+Data / IT:
+- SQL, MySQL, T-SQL, Access, VBA
+- Powershell, Windows Server administration
+- Cloudflare (Workers, Pages, DNS, Vectorize)
+- AWS Glacier, Dropbox sync systems
+- Git, GitHub
+
+Jof demonstrates end-to-end capability across multiple disciplines and platforms.
+
+CHUNK039: ID: mastercv-clients-039
+Source: master-cv
+Section: notable-clients
+Text:
+Notable clients and engineering organisations served through MTDCNC include:
+
+- Mazak
+- DMG Mori
+- Haas
+- FANUC
+- XYZ Machine Tools
+- Starrag
+- Hurco
+- Siemens
+- Autodesk
+- Renishaw
+- Heidenhain
+- Ward Hi-Tech
+- Engineering Technology Group
+
+These relationships represent significant exposure to advanced manufacturing technologies, automation systems, robotics, and CNC engineering environments.
+
+CHUNK040: ID: mastercv-achievements-040
+Source: master-cv
+Section: achievements
+Text:
+Key achievements across MTDCNC and previous roles include:
+
+1. Designed and delivered a global ingest and backup architecture using QNAP, Dropbox, and AWS Glacier, enabling worldwide content creation at half the cost of competing systems.
+
+2. Built a remote-first content production pipeline during the pandemic using vMix, talkback systems, and studio infrastructure, ensuring uninterrupted video output.
+
+3. Engineered CRM automations producing a 75% conversion rate for hot leads and providing clean, actionable sales workflows.
+
+4. Created a full-scale LinkedIn → WordPress publishing automation, rewriting posts into SEO-friendly articles using AI, and automating media handling.
+
+5. Developed the Ultimate YouTube Upload Automation, drastically reducing manual labour around thumbnails, metadata, and scheduling.
+
+6. Constructed reusable HTML email frameworks enabling ~1M emails/month with consistent rendering and high deliverability.
+
+7. Built structured timesheet and transport systems for prior employers, replacing manual spreadsheets with automated Access/VBA applications.
+
+8. Migrated multiple insurance CRMs with zero data loss, implementing renewal workflows and advanced cleansing routines.
+
+CHUNK041: ID: mastercv-hardware-041
+Source: master-cv
+Section: hardware
+Text:
+Jof Davies has deep hands-on expertise managing and deploying audiovisual and IT hardware in production environments.
+
+Hardware experience includes:
+- Blackmagic Pocket Cinema Cameras and associated rigs.
+- Sony and Panasonic professional camcorder lines.
+- Tripods, sliders, lighting rigs, and audio capture devices.
+- ATEM switchers, SDI/HDMI converters, NDI encoders.
+- Wireless systems from Hollyland, Teradek, LiveU, and Vaxis.
+- QNAP NAS systems, VLAN setups, and cross-site sync environments.
+- Windows and macOS systems for production and engineering work.
+
+This hardware capability underpins Jof's ability to build stable, scalable production systems.
+
+CHUNK042: ID: mastercv-compression-042
+Source: master-cv
+Section: video-compression
+Text:
+Jof Davies has in-depth understanding of video compression, codecs, and delivery formats.
+
+Capabilities:
+- Encoding optimisation using HandBrake, ffmpeg, and custom presets.
+- Bitrate targeting for web, mobile, livestream, and archival delivery.
+- Codec selection including H.264, H.265/HEVC, and ProRes offline workflows.
+- Creating automation-friendly presets for consistent proxy generation.
+- Structuring final deliverables to meet platform-specific requirements.
+
+This skill supports high-volume content production with minimal delivery issues.
+
+CHUNK043: ID: mastercv-crm-data-043
+Source: master-cv
+Section: crm-data
+Text:
+Jof demonstrates advanced capability in CRM and data engineering:
+
+- Designing relational schemas for customer, product, and renewal data.
+- Cleaning, normalising, deduplicating, and enriching large datasets.
+- Building migration routines that preserve referential integrity.
+- Implementing marketing and sales automation across multiple CRM platforms.
+- Creating analytical reports for engagement, activity tracking, and performance evaluation.
+- Writing SQL queries, views, and stored procedures for operational reporting.
+
+These abilities support consistent, scalable, and maintainable CRM ecosystems.
+
+CHUNK044: ID: mastercv-summary-044
+Source: master-cv
+Section: summary
+Text:
+Jof Davies is a multidisciplinary technical professional with expertise in video production, livestream engineering, automation development, CRM architecture, email engineering, data systems, and workflow optimisation. He integrates creative, operational, and engineering skillsets to deliver scalable, low-cost, high-efficiency systems.
+
+Core strengths include:
+- Engineering distributed ingest and proxy pipelines.
+- Designing end-to-end automation for content publishing and CRM.
+- Managing large-scale email marketing infrastructure.
+- Delivering multicamera livestreams and studio productions.
+- Training staff and mentoring junior technical roles.
+- Writing reliable, maintainable code and system documentation.
+
+Jof's depth spans both low-level technical detail and high-level system architecture, enabling him to design performant solutions across departments and technologies.
+
+CHUNK045: ID: mastercv-index-045
+Source: master-cv
+Section: index
+Text:
+This index lists all Master CV Encyclopaedia chunks with their IDs and sections.
+
+001 early-life-foundations
+002 education
+003 early-career-roles
+004 moulton-college
+005 integrity-business-connections
+006 mak-media
+007 super-rad-data-management
+008 mtdcnc-overview
+009 mtdcnc-summary
+010 mtdcnc-ingest-pipeline
+011 mtdcnc-proxy-generation
+012 mtdcnc-livestream-engineering
+013 mtdcnc-podcast-techcorner
+014 mtdcnc-crm-architecture
+015 mtdcnc-linkedin-automation
+016 mtdcnc-youtube-automation
+017 mtdcnc-email-engineering
+018 mtdcnc-training-mentoring
+019 github-render-youtube-uploader
+020 github-public-monday-images
+021 github-bunny-temp-storage
+022 github-linkedin-image-processor
+023 json-mtd-proxy-preset
+024 html-responsive-template
+025 workflow-crm
+026 workflow-linkedin-wordpress
+027 workflow-youtube
+028 workflow-ingest-architecture
+029 skills-technical
+030 skills-soft
+031 professional-attributes
+032 system-architecture
+033 video-production
+034 editing-workflows
+035 streaming-architecture
+036 podcast-engineering
+037 training-systems
+038 tools-software
+039 notable-clients
+040 achievements
+041 hardware-expertise
+042 video-compression
+043 crm-data-engineering
+044 professional-summary
+045 master-index (this document)
+
+CHUNK046: ID: mastercv-index-046
+Source: master-cv
+Section: ingestion-order
+Text:
+Recommended ingestion order for optimal semantic clustering in Vectorize:
+
+1. Foundational sections: 001–003
+2. Early career / previous roles: 004–007
+3. MTDCNC overview and details: 008–018
+4. Repositories and configuration files: 019–024
+5. Workflow diagrams: 025–028
+6. Technical and soft skills matrices: 029–030
+7. Attributes, architecture, personal capabilities: 031–033
+8. Video/AV/Production-specific chunks: 033–036
+9. Tools, clients, achievements: 038–040
+10. Hardware, compression, CRM engineering: 041–043
+11. Final professional summary: 044
+12. Index chunks: 045–046
+
+This order ensures:
+- Correct grouping of related content
+- High retrieval accuracy
+- Lower semantic noise during question answering
+
+CHUNK047: ID: mastercv-index-047
+Source: master-cv
+Section: retrieval-metadata
+Text:
+Each chunk contains metadata fields including:
+
+source: "master-cv"
+section: <domain-name>
+text: <the content>
+
+Recommended sections:
+- early-life, education
+- employment-history
+- mtdcnc
+- workflows
+- github
+- html-json
+- skills-technical
+- skills-soft
+- attributes
+- systems-architecture
+- production-video
+- livestream
+- crm-data
+
+Your LLM should prefer:
+- section-matching first
+- semantic similarity second
+- completeness over brevity
+
+This improves deterministic behaviour when user queries span multiple domains.
+
+CHUNK048: ID: mastercv-index-048
+Source: master-cv
+Section: retrieval-rules
+Text:
+Rules for generating answers using this dataset:
+
+1. The LLM must answer only from retrieved context. No speculation is permitted.
+2. If a query spans multiple domains, the LLM should retrieve multiple chunks (topK ≥ 8).
+3. If relevant context is missing, the LLM must respond: “This is not documented in the reference files.”
+4. Workflow examples must be described generically. The LLM must not state or imply that MTDCNC customer data, CRM records, or proprietary datasets were used. Employer may be referenced, but workflow data sources must remain abstract unless the USER explicitly asks for employer-specific detail.
+5. No exaggeration or embellishment is permitted.
+6. All answers must maintain a formal tone and align strictly with the role-specialisation output requirements.
+7. The LLM may reference MTDCNC as the employer from 2016–Present in factual statements regarding responsibilities, systems, tasks, and achievements.
+8. Process descriptions must emphasise method, architecture, and logic, not proprietary datasets.
+9. In all outputs, factual consistency and safety take precedence over verbosity or interpretation.
+
+CHUNK049: ID: mastercv-index-049
+Source: master-cv
+Section: ingestion-commands
+Text:
+To ingest any chunk into Cloudflare Vectorize via your Worker:
+
+Use this single-line command in Windows CMD:
+
+curl -X POST "https://app.joffad.workers.dev/api/ingest" -H "Content-Type: application/json" -d "{\"id\":\"<CHUNK-ID>\",\"text\":\"<ESCAPED-TEXT>\",\"metadata\":{\"source\":\"master-cv\",\"section\":\"<SECTION>\"}}"
+
+Notes:
+- Escape all quotes inside text with \"
+- Replace line breaks with \n
+- For long chunks, place JSON into a file and use --data-binary "@file.json"
+
+Example using file-based ingestion:
+
+curl -X POST "https://app.joffad.workers.dev/api/ingest" -H "Content-Type: application/json" --data-binary "@mastercv-001.json"
+
+CHUNK050: ID: mastercv-index-050
+Source: master-cv
+Section: validation
+Text:
+After ingestion, validate the dataset using the following test questions:
+
+1. "Summarise Jof Davies’s video production experience."
+2. "Describe the MTDCNC global ingest pipeline."
+3. "What automation workflows has Jof created?"
+4. "List Jof’s CRM engineering capabilities."
+5. "What are Jof’s strongest soft skills?"
+6. "Which industries has Jof served through MTDCNC?"
+7. "What GitHub repositories has Jof built and what do they do?"
+8. "Explain Jof’s knowledge of email development."
+
+Expected behaviour:
+- Answers should be specific, factual, and reference chunk content.
+- No hallucination or invented detail.
+- No missing-domain errors if ingestion is complete.
+- Retrieval should consistently return the same content for similar queries.
+
+CHUNK051: ID: mastercv-index-051
+Source: master-cv
+Section: llm-response-template
+Text:
+The LLM should use the following internal prompt structure:
+
+SYSTEM:
+You are an information agent that answers questions strictly using the provided context. You must not speculate. If the answer is not documented, state: "This is not documented in Jof's reference files."
+
+USER:
+<Question>
+
+CONTEXT:
+<Retrieved chunks joined by --- separators>
+
+ASSISTANT:
+<Answer derived solely from context>
+
+CHUNK052: ID: mastercv-index-052
+Source: master-cv
+Section: frontend-api
+Text:
+Frontend queries to your Worker endpoint:
+
+POST /api/chat
+{
+  "question": "<user question>"
+}
+
+Response:
+{
+  "answer": "<model output>"
+}
+
+Ensure:
+- Debounce user input for rapid queries.
+- Handle network timeouts and retry.
+- Display "Based on available records..." to user for transparency.
+
+CHUNK053: ID: mastercv-index-053
+Source: master-cv
+Section: maintenance
+Text:
+The Master CV Encyclopaedia should be updated whenever:
+
+- A new project or automation is built.
+- A new repository is published.
+- A new workflow diagram is created.
+- Major job responsibilities change.
+- New certifications or skill advancements occur.
+
+Each update should be added as:
+- A new chunk, or
+- A replacement of an existing chunk by re-ingesting the updated version.
+
+Avoid modifying chunks inside Vectorize directly; always update by re-ingesting via the Worker.
+

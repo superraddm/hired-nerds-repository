@@ -1,0 +1,8 @@
+{
+  "id": "mastercv-github-021",
+  "text": "Repository: bunny-temp-storage\nPurpose: Provides temporary asset storage using BunnyCDN for workflows requiring fast-access public URLs.\n\nCapabilities:\n- Accepts upload requests via API calls.\n- Returns short-lived public URLs for consumption by automation tools.\n- Supports image-based automations, redirects, and content preview workflows.\n- Designed to integrate with Zapier and Monday.com.\n\nTechnologies: JavaScript, BunnyCDN API, HTTP upload handling, automation compatibility.",
+  "metadata": {
+    "source": "master-cv",
+    "section": "github-repositories"
+  }
+}
