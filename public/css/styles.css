@@ -479,6 +479,8 @@ body {
     line-height: 1.6;
 }
 
+
+
 .competencies-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -600,7 +602,9 @@ body {
 }
 
 .achievement-number {
-    font-size: 3rem;
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+  line-height: 1.1;
+  white-space: nowrap;
     color: #4a9eff;
     font-weight: bold;
     margin-bottom: 0.5rem;
