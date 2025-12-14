@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Work Examples</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/openseadragon.min.js"></script>
+</head>
+
+<body>
+
+<main class="page-container">
+
+    <header class="page-header">
+        <h1>Work Examples</h1>
+        <p class="page-intro">
+            Selected case studies demonstrating complex workflows, systems design,
+            and production solutions across video, automation, and distributed teams.
+        </p>
+    </header>
+
+    <!-- CASE STUDY 1 -->
+    <section class="case-study" id="case-insurance-crm">
+    <div class="case-study-content">
+        <h2>Insurance CRM Transformation & Sales Enablement</h2>
+
+        <p>
+            <strong>The Client:</strong> A group of UK insurance brokers and employee benefits
+            providers operating in highly regulated, high-volume sales environments. Clients
+            included Consilium Employee Benefits, Chase Templeton, Towergate Insurance, Square Mile
+            Broking, and Clear Insurance, operating across multiple ownership changes and business
+            structures.
+        </p>
+
+        <p>
+            <strong>The Challenge:</strong> The organisations relied on a fragmented mix of legacy
+            CRM platforms, spreadsheets, and manual processes. This resulted in duplicated data,
+            limited reporting, poor sales visibility, and operational risk during mergers and
+            acquisitions. The requirement was to design and implement a scalable CRM system capable
+            of supporting telemarketing, renewals, and compliant client communication while
+            preserving data integrity through business transitions.
+        </p>
+
+        <p>
+            <strong>The Solution &amp; Result:</strong> I led the specification, migration, and
+            deployment of a CallPro-based CRM solution, tailored specifically for insurance sales
+            and telemarketing workflows. This included structured data hierarchies, automated email
+            and call campaigns driven by renewal and prospect status, and real-time reporting for
+            management. The solution delivered seamless data continuity across multiple acquisitions,
+            improved lead conversion and retention, and provided leadership teams with clear,
+            actionable insight into pipeline value and sales performance.
+        </p>
+    </div>
+
+    <div class="case-study-media">
+        <!-- YouTube poster thumbnail -->
+        <button
+            class="yt-poster"
+            type="button"
+            data-youtube-id="fZEWGMCCtCI"
+            aria-label="Play Insurance CRM case study video">
+            <img
+                src="https://i.ytimg.com/vi/fZEWGMCCtCI/hqdefault.jpg"
+                alt="Insurance CRM implementation case study video thumbnail"
+                loading="lazy">
+            <span class="yt-play" aria-hidden="true"></span>
+        </button>
+
+        <noscript>
+            <div class="video-embed">
+                <iframe
+                    src="https://www.youtube.com/embed/fZEWGMCCtCI"
+                    title="Insurance CRM implementation case study"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </noscript>
+    </div>
+</section>
+
+
+
+
+    <!-- CASE STUDY 3 -->
+   <section class="case-study" id="case-video-ingest">
+    <div class="case-study-content">
+        <h2>Global Video Ingest, Proxy & Archive System</h2>
+
+        <p>
+            <strong>The Client:</strong> A global video marketing agency within the manufacturing
+            sector, producing and managing large volumes of high-resolution video content across
+            multiple editors and geographic locations.
+        </p>
+
+        <p>
+            <strong>The Challenge:</strong> Video files were fragmented across individual editing
+            workstations, posted physical media, and dozens of consumer-grade external hard drives.
+            There was no central archive, no reliable backup strategy, and no effective way to search
+            or retrieve historical content. Data loss was common, ingest was slow, and accessing
+            specific footage could take weeks—or be impossible entirely.
+        </p>
+
+        <p>
+            <strong>Research &amp; Cost Analysis:</strong> An extensive review was conducted across
+            commercial SaaS media management platforms, bespoke vendor solutions, and enterprise
+            storage providers. Many off-the-shelf systems carried annual costs in the tens of
+            thousands of pounds while still lacking core requirements such as flexible ingest,
+            proxy workflows, or true ownership of the data. Bespoke vendor proposals were
+            significantly higher again, often requiring long-term contracts and ongoing licence
+            fees.
+        </p>
+
+        <p>
+            <strong>The Solution:</strong> Rather than adopting an expensive and inflexible platform,
+            I designed and deployed a self-hosted system built around two high-capacity QNAP storage
+            units, each providing approximately 100&nbsp;TB of storage. One system was deployed
+            on-site, with a second installed at a remote location for full failover. Using QNAP HBS3,
+            the primary system synchronises continuously with Dropbox, enabling global ingest while
+            maintaining high-speed local access via a 10&nbsp;Gb internal network and a 1&nbsp;Gb
+            leased line.
+        </p>
+
+        <p>
+            <strong>The Workflow:</strong> Media can be ingested from anywhere worldwide or directly
+            within the office. An automated batch process monitors new files hourly and generates
+            proxy media at approximately 5&nbsp;% of the original file size. Remote editors can begin
+            work immediately on low-bandwidth connections while full-resolution assets continue
+            downloading in the background. Nightly replication to the secondary QNAP provides
+            full-system redundancy. Long-term archive is handled via Amazon S3 Glacier, selected
+            following cost modelling that showed retrieval costs of only fractions of a penny per
+            file.
+        </p>
+
+        <p>
+            <strong>The Result &amp; Cost Impact:</strong> The complete system was delivered for
+            approximately £7,000 in capital expenditure, with no ongoing SaaS licensing costs.
+            Ongoing operational costs are limited to around £100 per month for cold archive storage
+            in S3 Glacier and £216 per year for Dropbox. Compared to the nearest commercially viable
+            off-the-shelf solution, this represented an estimated 70–80&nbsp;% reduction in annual
+            cost. When compared to the higher-end bespoke and enterprise solutions evaluated, the
+            system was over 90&nbsp;% cheaper while delivering greater flexibility, faster ingest,
+            and full ownership of the data.
+        </p>
+
+        <p>
+            Beyond cost savings, the impact on operations was transformative. Editing throughput
+            increased immediately, data loss was eliminated, and any project can now be accessed by
+            any editor worldwide at any time. The system removed reliance on physical media, local
+            storage, and manual file transfers, fundamentally changing how the business operates.
+        </p>
+    </div>
+
+    <div class="case-study-media">
+        <div class="workflow-grid">
+            <div class="workflow-item">
+                <h3>Ingest → Proxy → Archive Pipeline</h3>
+                <div class="workflow-viewer" id="viewer5"></div>
+                <button class="fullscreen-btn" onclick="toggleFullscreen('viewer5')">
+                    View Fullscreen
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+    <!-- CASE STUDY 4 -->
+<section class="case-study" id="case-efb">
+    <div class="case-study-content">
+        <h2>Eurofood Brands — Corporate Promo / Sales Outreach Video</h2>
+
+        <p>
+            <strong>The Client:</strong> Eurofood Brands (EFB) is a UK-based importer and distributor established in 1991,
+            specialising in bringing global food and beverage brands to the UK &amp; Ireland. Their portfolio includes
+            brands such as Barilla, illy, Hershey&#39;s, and Peppadew, with a focus on brand building, marketing, sales,
+            and supply chain delivery across supermarkets, food service, and private label.
+        </p>
+
+        <p>
+            <strong>The Task:</strong> Create a promotional video showcasing EFB&#39;s reach, capabilities, customers, markets,
+            and vendor relationships. The objective was to support new partnership outreach beyond the UK &amp; Ireland,
+            targeting customers across Europe and internationally.
+        </p>
+
+        <p>
+            <strong>The Execution &amp; Result:</strong> From initial planning through delivery, I coordinated with the
+            Brand Director to develop the script and storyboard, combining repurposed supplier footage with newly created
+            assets. This included leveraging existing content relating to illy and Hershey&#39;s, including a shoot day
+            directing Hershey&#39;s-branded black cabs across major London landmarks. The final video exceeded expectations
+            as both a sales outreach tool and corporate explainer, and was used in sales presentations and prospect follow-ups.
+        </p>
+    </div>
+
+    <div class="case-study-media">
+        <!-- Poster thumbnail (loads instantly); iframe inserted only on click -->
+        <button
+            class="yt-poster"
+            type="button"
+            data-youtube-id="pisvhbM_ybE"
+            aria-label="Play Eurofood Brands promotional video">
+            <img
+                src="https://i.ytimg.com/vi/pisvhbM_ybE/hqdefault.jpg"
+                alt="Eurofood Brands promotional video thumbnail"
+                loading="lazy">
+            <span class="yt-play" aria-hidden="true"></span>
+        </button>
+
+        <noscript>
+            <div class="video-embed">
+                <iframe
+                    src="https://www.youtube.com/embed/pisvhbM_ybE"
+                    title="Eurofood Brands promotional video"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </noscript>
+    </div>
+</section>
+
+
+
+
+</main>
+    <footer class="site-footer">
+        <p>© <span class="year">2025</span> HiredNerds.com | Multiple Skills, One Person</p>
+    </footer>
+
+    <script>
+        // OpenSeadragon initialization for workflow viewers
+        function initializeViewers() {
+            // Example viewer 3
+            const viewer5 = OpenSeadragon({
+                id: "viewer5",
+                prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/images/",
+                tileSources: "/assets/workflows/remote-ingest-fileserver.dzi",
+                showNavigationControl: true,
+                navigationControlAnchor: OpenSeadragon.ControlAnchor.TOP_RIGHT,
+                showNavigator: true,
+                navigatorPosition: "BOTTOM_RIGHT",
+                minZoomLevel: 0.5,
+                maxZoomLevel: 10,
+                visibilityRatio: 1,
+                constrainDuringPan: true,
+                placeholderFillStyle: "#0f1e32",
+                timeout: 120000
+            });
+        }
+
+        function toggleFullscreen(viewerId) {
+            const element = document.getElementById(viewerId);
+            if (!document.fullscreenElement) {
+                element.requestFullscreen().catch(err => {
+                    console.error('Error attempting to enable fullscreen:', err);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Initialize viewers on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Only initialize if workflow viewers exist on page
+            if (document.querySelector('.workflow-viewer')) {
+                // Add error handling for missing .dzi files
+                try {
+                    initializeViewers();
+                } catch (error) {
+                    console.warn('Workflow viewers not yet configured. Add .dzi files to assets/workflows/');
+                }
+            }
+
+            // Update footer year
+            const yearSpan = document.querySelector('.year');
+            if (yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+        });
+    </script>
+</body>
+</html>
