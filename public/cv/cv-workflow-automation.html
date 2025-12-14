@@ -129,13 +129,34 @@
 
             <section class="cv-section workflow-section">
                 <h2>Workflow Examples</h2>
-                <p class="section-description">Below are detailed workflow diagrams showing email marketing processes. Use the deep-zoom viewer to explore the full detail.</p>
+                <p class="section-description">Below are detailed workflow diagrams various automation processes. Use the deep-zoom viewer to explore the full detail.</p>
                 
+                <div class="workflow-grid">
+                    <div class="workflow-item">
+                        <h3>Project Management Board → Temporary Hosting → YouTube/WordPress Release</h3>
+                        <div class="workflow-viewer" id="viewer1"></div>
+                        <button class="fullscreen-btn" onclick="toggleFullscreen('viewer1')">VIEW FULLSCREEN</button>
+                    </div>
+                </div>
+                <div class="workflow-grid">
+                    <div class="workflow-item">
+                        <h3>CRM Mail Campaign → Landing Page → Follow Up Messaging → Prospect Tagging</h3>
+                        <div class="workflow-viewer" id="viewer2"></div>
+                        <button class="fullscreen-btn" onclick="toggleFullscreen('viewer2')">VIEW FULLSCREEN</button>
+                    </div>
+                </div>
                 <div class="workflow-grid">
                     <div class="workflow-item">
                         <h3>Ingest → proxy → archive pipeline</h3>
                         <div class="workflow-viewer" id="viewer3"></div>
                         <button class="fullscreen-btn" onclick="toggleFullscreen('viewer3')">VIEW FULLSCREEN</button>
+                    </div>
+                </div>
+                <div class="workflow-grid">
+                    <div class="workflow-item">
+                        <h3>Social Post Scraper → AI Article Rewrite → WordPress Tagging → Site Upload</h3>
+                        <div class="workflow-viewer" id="viewer4"></div>
+                        <button class="fullscreen-btn" onclick="toggleFullscreen('viewer4')">VIEW FULLSCREEN</button>
                     </div>
                 </div>
             </section>
@@ -175,11 +196,12 @@
     <script>
         // OpenSeadragon initialization for workflow viewers
         function initializeViewers() {
-            // Example viewer 1 - Replace with actual .dzi path
+           
+            // Example viewer 1
             const viewer1 = OpenSeadragon({
                 id: "viewer1",
                 prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/images/",
-                tileSources: "assets/workflows/ingest-proxy-archive.dzi",
+                tileSources: "/assets/workflows/site-video-uploader.dzi",
                 showNavigationControl: true,
                 navigationControlAnchor: OpenSeadragon.ControlAnchor.TOP_RIGHT,
                 showNavigator: true,
@@ -192,11 +214,11 @@
                 timeout: 120000
             });
 
-            // Example viewer 2
+            // Example viewer 3
             const viewer2 = OpenSeadragon({
                 id: "viewer2",
                 prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/images/",
-                tileSources: "assets/workflows/automation-workflow.dzi",
+                tileSources: "/assets/workflows/crm-automation.dzi",
                 showNavigationControl: true,
                 navigationControlAnchor: OpenSeadragon.ControlAnchor.TOP_RIGHT,
                 showNavigator: true,
@@ -213,7 +235,24 @@
             const viewer3 = OpenSeadragon({
                 id: "viewer3",
                 prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/images/",
-                tileSources: "assets/workflows/template-development.dzi",
+                tileSources: "/assets/workflows/remote-ingest-fileserver.dzi",
+                showNavigationControl: true,
+                navigationControlAnchor: OpenSeadragon.ControlAnchor.TOP_RIGHT,
+                showNavigator: true,
+                navigatorPosition: "BOTTOM_RIGHT",
+                minZoomLevel: 0.5,
+                maxZoomLevel: 10,
+                visibilityRatio: 1,
+                constrainDuringPan: true,
+                placeholderFillStyle: "#0f1e32",
+                timeout: 120000
+            });
+
+            // Example viewer 4
+            const viewer4 = OpenSeadragon({
+                id: "viewer4",
+                prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/images/",
+                tileSources: "/assets/workflows/social-post-scraper.dzi",
                 showNavigationControl: true,
                 navigationControlAnchor: OpenSeadragon.ControlAnchor.TOP_RIGHT,
                 showNavigator: true,

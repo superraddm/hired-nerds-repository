@@ -657,7 +657,6 @@ body {
 }
 
 .workflow-viewer:after {
-    content: "DEEP ZOOM VIEWER";
     position: absolute;
     top: 50%;
     left: 50%;

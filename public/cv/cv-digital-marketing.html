@@ -124,19 +124,6 @@
                 </div>
             </section>
 
-            <section class="cv-section workflow-section">
-                <h2>Workflow Examples</h2>
-                <p class="section-description">Below are detailed workflow diagrams showing email marketing processes. Use the deep-zoom viewer to explore the full detail.</p>
-                
-                <div class="workflow-grid">
-                    <div class="workflow-item">
-                        <h3>YouTube upload &amp; verification</h3>
-                        <div class="workflow-viewer" id="viewer3"></div>
-                        <button class="fullscreen-btn" onclick="toggleFullscreen('viewer3')">VIEW FULLSCREEN</button>
-                    </div>
-                </div>
-            </section>
-
             <section class="cv-section">
                 <h2>Tools & Platforms</h2>
                 <div class="tools-list">
@@ -164,74 +151,11 @@
     </main>
 
     <footer class="site-footer">
-        <p>© <span class="year">2024</span> HiredNerds.com | Multiple Skills, One Person</p>
+        <p>© <span class="year">2025</span> HiredNerds.com | Multiple Skills, One Person</p>
     </footer>
 
     <script>
-        // OpenSeadragon initialization for workflow viewers
-        function initializeViewers() {
-            // Example viewer 1 - Replace with actual .dzi path
-            const viewer1 = OpenSeadragon({
-                id: "viewer1",
-                prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/images/",
-                tileSources: "assets/workflows/youtube-upload-verification.dzi",
-                showNavigationControl: true,
-                navigationControlAnchor: OpenSeadragon.ControlAnchor.TOP_RIGHT,
-                showNavigator: true,
-                navigatorPosition: "BOTTOM_RIGHT",
-                minZoomLevel: 0.5,
-                maxZoomLevel: 10,
-                visibilityRatio: 1,
-                constrainDuringPan: true,
-                placeholderFillStyle: "#0f1e32",
-                timeout: 120000
-            });
-
-            // Example viewer 2
-            const viewer2 = OpenSeadragon({
-                id: "viewer2",
-                prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/images/",
-                tileSources: "assets/workflows/automation-workflow.dzi",
-                showNavigationControl: true,
-                navigationControlAnchor: OpenSeadragon.ControlAnchor.TOP_RIGHT,
-                showNavigator: true,
-                navigatorPosition: "BOTTOM_RIGHT",
-                minZoomLevel: 0.5,
-                maxZoomLevel: 10,
-                visibilityRatio: 1,
-                constrainDuringPan: true,
-                placeholderFillStyle: "#0f1e32",
-                timeout: 120000
-            });
-
-            // Example viewer 3
-            const viewer3 = OpenSeadragon({
-                id: "viewer3",
-                prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/images/",
-                tileSources: "assets/workflows/template-development.dzi",
-                showNavigationControl: true,
-                navigationControlAnchor: OpenSeadragon.ControlAnchor.TOP_RIGHT,
-                showNavigator: true,
-                navigatorPosition: "BOTTOM_RIGHT",
-                minZoomLevel: 0.5,
-                maxZoomLevel: 10,
-                visibilityRatio: 1,
-                constrainDuringPan: true,
-                placeholderFillStyle: "#0f1e32",
-                timeout: 120000
-            });
-        }
-
-        function toggleFullscreen(viewerId) {
-            const element = document.getElementById(viewerId);
-            if (!document.fullscreenElement) {
-                element.requestFullscreen().catch(err => {
-                    console.error('Error attempting to enable fullscreen:', err);
-                });
-            } else {
-                document.exitFullscreen();
-            }
-        }
+     
 
         function downloadCV() {
             // Replace with actual PDF path
@@ -243,15 +167,7 @@
 
         // Initialize viewers on page load
         document.addEventListener('DOMContentLoaded', () => {
-            // Only initialize if workflow viewers exist on page
-            if (document.querySelector('.workflow-viewer')) {
-                // Add error handling for missing .dzi files
-                try {
-                    initializeViewers();
-                } catch (error) {
-                    console.warn('Workflow viewers not yet configured. Add .dzi files to assets/workflows/');
-                }
-            }
+           
 
             // Update footer year
             const yearSpan = document.querySelector('.year');
