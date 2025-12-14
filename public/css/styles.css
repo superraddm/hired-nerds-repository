@@ -1028,6 +1028,21 @@ body {
     background: rgba(0,0,0,0.25);
 }
 
+.video-embed {
+    position: relative;
+    width: 100%;
+    background: #000;
+}
+
+.video-embed iframe {
+    width: 100%;
+    height: auto;
+    aspect-ratio: auto;
+    min-height: 300px;
+    display: block;
+}
+
+
 .play-btn {
     position: absolute;
     top: 50%;
