@@ -3,29 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HiredNerds - Select Your Jof</title>
+    <title>Jof Davies - Hire Me Today</title>
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <nav class="main-nav">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">HIREDNERDS</a>
-            <ul class="nav-links">
-                <li><a href="/work-examples.html">Work Examples</a></li>
-                <li><a href="/testimonials.html">Testimonials</a></li>
-                <li><a href="/videos.html">Videos</a></li>
-                <li><a href="/about.html">About Me</a></li>
-            </ul>
-        </div>
-    </nav>
+    <header class="site-header">
+        <div><a href="index.html"class="nav-logo">Jof Davies</a></div>
+
+        <button class="nav-toggle" aria-label="Toggle navigation" style="color: #e0e0e0;">
+            ☰
+        </button>
+
+        <nav class="nav-menu nav-links">
+            <a href="/work-examples.html">Work Examples</a>
+            <a href="/testimonials.html">Testimonials</a>
+            <a href="/videos.html">Videos</a>
+            <a href="/about.html">About Me</a>
+        </nav>
+    </header>
 
     <main class="character-select">
         <header class="select-header">
-            <h1>HIREDNERDS — HIRE A JOF TODAY</h1>
+            <h1>JOF DAVIES - HIRE ME TODAY</h1>
             <div class="ethos-section">
                 <h2>STATEMENT: Multiple Skills, One Person</h2>
                 <p>Welcome. I'm Jof Davies, and this is my portfolio website. I designed and built it as a practical way to present the range of work I have carried out across my career. I've done lots of things, and I'm always learning new skills. This site is designed to showcase the different 'characters' I can play in a professional environment, from Email Marketing Developer to Video Production Expert.
-So go ahead, pick your Jof below.<br /><br />
+So go ahead, pick a me below.<br /><br />
 — J.</p>
             </div>
         </header>
@@ -54,7 +57,7 @@ So go ahead, pick your Jof below.<br /><br />
         <div class="carousel-indicators" id="indicators"></div>
 
         <footer class="select-footer">
-            <p>Press a Jof to view custom CV — hirednerds.com</p>
+            <p>Press a Jof to view custom CV — JofDavies.com</p>
         </footer>
     </main>
 
@@ -190,6 +193,11 @@ So go ahead, pick your Jof below.<br /><br />
             handleSwipe();
         });
 
+        document.querySelector('.nav-toggle').addEventListener('click', () => {
+        document.querySelector('.nav-menu')
+            .classList.toggle('open');
+        });
+
         updateIndicators(0);
         
         const footer = document.querySelector('footer');
@@ -201,6 +209,7 @@ So go ahead, pick your Jof below.<br /><br />
         }
     </script>
     <script src="/js/chat-widget.js" defer></script>
+        
 
 </body>
 </html>

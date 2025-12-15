@@ -9,17 +9,21 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <nav>
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">HIRED NERDS</a>
-            <ul class="nav-links">
-                <li><a href="index.html">Character Select</a></li>
-                <li><a href="about.html" class="active">About</a></li>
-                <li><a href="#" onclick="openContactModal(); return false;">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
+    <header class="site-header">
+        <div><a href="index.html"class="nav-logo">Jof Davies</a></div>
 
+        <button class="nav-toggle" aria-label="Toggle navigation" style="color: #e0e0e0;">
+            ☰
+        </button>
+
+        <nav class="nav-menu nav-links">
+            <a href="/work-examples.html">Work Examples</a>
+            <a href="/testimonials.html">Testimonials</a>
+            <a href="/videos.html">Videos</a>
+            <a href="#" onclick="openContactModal(); return false;">Contact</a>
+        </nav>
+    </header>
+    
     <main class="about-container">
         <div class="about-header">
             <h1>About Jof Davies</h1>
@@ -46,7 +50,12 @@
                 </div>
             </div>
         </div>
-
+        <div class="cta-section" style="padding-bottom:30px;">
+                <button class="contact-btn" onclick="openContactModal()">CONTACT ME</button>
+                <button class="download-cv-btn" onclick="downloadCV()">
+                            <span>⬇</span> DOWNLOAD CV (PDF)
+                        </button>
+            </div>
         <div class="about-content">
             <div class="profile-images">
                 <div class="image-box childhood-image">
@@ -130,11 +139,24 @@
         </div>
     </div>
 
-    <footer>
-        <p>&copy; <span id="year"></span> Hired Nerds. All rights reserved.</p>
+    <footer class="site-footer">
+        <p>© <span class="year">2025</span> JofDavies.com | Multiple Skills, One Person</p>
     </footer>
 
     <script>
+        function downloadCV() {
+            // Replace with actual PDF path
+            const link = document.createElement('a');
+            link.href = '/assets/cv/pdf/Jof_Davies_Master_Executive_CV.pdf';
+            link.download = 'Jof_Davies_Master_Executive_CV.pdf';
+            link.click();
+        }
+
+        document.querySelector('.nav-toggle').addEventListener('click', () => {
+        document.querySelector('.nav-menu')
+        .classList.toggle('open');
+        });
+
         // Footer year
         document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -166,8 +188,10 @@
                 message: document.getElementById('message').value
             };
 
+        
+
             // Construct mailto link
-            const mailtoLink = `mailto:jof@hirednerds.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
+            const mailtoLink = `mailto:jof@jofdavies.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
                 `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
             )}`;
 
@@ -178,6 +202,8 @@
             closeContactModal();
             document.getElementById('contactForm').reset();
         }
+
+        
     </script>
 </body>
 </html>

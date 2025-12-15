@@ -2,8 +2,8 @@
     const widgetStyle = `
         #hn-chat-launcher {
             position: fixed; bottom: 20px; right: 20px;
-            width: 56px; height: 56px;
-            border-radius: 50%;
+            width: 120px; height: 80px;
+            border-radius: 15%;
             background: #202020;
             color: #fff;
             display: flex; align-items: center; justify-content: center;
@@ -76,7 +76,7 @@
 
     const launcher = document.createElement("div");
     launcher.id = "hn-chat-launcher";
-    launcher.textContent = "💬";
+    launcher.textContent = "💬 Ask the AI";
     document.body.appendChild(launcher);
 
     const win = document.createElement("div");
