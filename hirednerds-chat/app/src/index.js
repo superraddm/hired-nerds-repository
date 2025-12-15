@@ -3,10 +3,120 @@ const corsHeaders = {
           "Access-Control-Allow-Methods": "POST, OPTIONS",
           "Access-Control-Allow-Headers": "Content-Type",
         };
+
+const CV_FILES = {
+  "crm-data": "Jof_Davies_CRM_Data_Specialist_CV.pdf",
+  "digital-marketing": "Jof_Davies_Digital_Marketing_Director_CV.pdf",
+  "email-marketing": "Jof_Davies_Email_Marketing_CV.pdf",
+  "executive": "Jof_Davies_Master_Executive_CV.pdf",
+  "systems": "Jof_Davies_Technical_Systems_Specialist_CV.pdf",
+  "video-producer": "Jof_Davies_Video_Producer_CV.pdf",
+  "workflow-automation": "Jof_Davies_Workflow_Automation_CV.pdf"
+};
+
+async function handlePdfRequest(request, env) {
+  const formData = await request.formData();
+
+  const email = formData.get("email");
+  const cvKey = formData.get("cv");
+
+  if (!email || !email.includes("@")) {
+    return new Response("Invalid email address", { status: 400 });
+  }
+
+  const fileName = CV_FILES[cvKey];
+
+  if (!fileName) {
+    return new Response("Invalid CV request", { status: 400 });
+  }
+
+  const token = crypto.randomUUID();
+
+  await env.PDF_REQUESTS.put(
+    token,
+    JSON.stringify({
+      email: email,
+      fileName: fileName,
+      expires: Date.now() + (24 * 60 * 60 * 1000)
+    })
+  );
+
+  const downloadUrl =
+    `https://jofdavies.com/download/cv?token=${token}`;
+
+  await sendDownloadEmail(env, email, downloadUrl, fileName);
+
+  return new Response(
+    JSON.stringify({ status: "sent" }),
+    { headers: { "Content-Type": "application/json" } }
+  );
+}
+
+async function handlePdfDownload(request, env) {
+  const url = new URL(request.url);
+  const token = url.searchParams.get("token");
+
+  if (!token) {
+    return new Response("Missing token", { status: 400 });
+  }
+
+  const record = await env.PDF_REQUESTS.get(token, { type: "json" });
+
+  if (!record || record.expires < Date.now()) {
+    return new Response("Link expired or invalid", { status: 403 });
+  }
+
+  await env.PDF_REQUESTS.delete(token);
+
+  const pdfUrl =
+    `https://jofdavies.com/cv/pdf/${record.fileName}`;
+
+  return fetch(pdfUrl);
+}
+
+async function sendDownloadEmail(env, to, downloadUrl, fileName) {
+  const bodyText =
+    "You requested access to the following document:\n\n" +
+    fileName + "\n\n" +
+    "Download link (expires in 24 hours):\n" +
+    downloadUrl;
+
+  const response = await fetch(
+    "https://api.postmarkapp.com/email",
+    {
+      method: "POST",
+      headers: {
+        "X-Postmark-Server-Token": env.POSTMARK_API_TOKEN,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        From: "Jof Davies <downloads@jofdavies.com>",
+        To: to,
+        Subject: "Jof Davies CV Download Link",
+        TextBody: bodyText
+      })
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to send email via Postmark");
+  }
+}
+
+
         
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+
+    if (url.pathname === "/api/request-pdf") {
+      return handlePdfRequest(request, env);
+    }
+
+    if (url.pathname === "/download/cv") {
+      return handlePdfDownload(request, env);
+    }
+
 
     // CORS preflight
     if (request.method === "OPTIONS") {
@@ -274,6 +384,9 @@ ${CONTEXT}
     return jsonError("Chat failed: " + err.message, 500);
   }
 }
+
+
+
 
 //
 // UTILITIES
