@@ -1,5 +1,42 @@
+export default {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+
+    if (url.pathname === "/api/request-pdf" && request.method === "POST") {
+      return handlePdfRequest(request, env);
+    }
+
+    if (url.pathname === "/download/cv" && request.method === "GET") {
+      return handlePdfDownload(request, env);
+    }
+
+
+    // CORS preflight
+    if (request.method === "OPTIONS") {
+      return new Response(null, { headers: corsHeaders });
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/ingest") {
+      return handleIngest(request, env);
+    }
+
+    if (request.method === "POST" && url.pathname === "/api/chat") {
+      return handleChat(request, env);
+    }
+
+    return new Response("Not found", {
+      status: 404,
+      headers: corsHeaders,
+    });
+  },
+};
+
+
+//
+// INGEST ENDPOINT
+
 const corsHeaders = {
-          "Access-Control-Allow-Origin": "https://hirednerds.com",
+          "Access-Control-Allow-Origin": "https://jofdavies.com",
           "Access-Control-Allow-Methods": "POST, OPTIONS",
           "Access-Control-Allow-Headers": "Content-Type",
         };
@@ -103,44 +140,6 @@ async function sendDownloadEmail(env, to, downloadUrl, fileName) {
   }
 }
 
-
-        
-export default {
-  async fetch(request, env, ctx) {
-    const url = new URL(request.url);
-
-    if (url.pathname === "/api/request-pdf") {
-      return handlePdfRequest(request, env);
-    }
-
-    if (url.pathname === "/download/cv") {
-      return handlePdfDownload(request, env);
-    }
-
-
-    // CORS preflight
-    if (request.method === "OPTIONS") {
-      return new Response(null, { headers: corsHeaders });
-    }
-
-    if (request.method === "POST" && url.pathname === "/api/ingest") {
-      return handleIngest(request, env);
-    }
-
-    if (request.method === "POST" && url.pathname === "/api/chat") {
-      return handleChat(request, env);
-    }
-
-    return new Response("Not found", {
-      status: 404,
-      headers: corsHeaders,
-    });
-  },
-};
-
-
-//
-// INGEST ENDPOINT
 // Accepts: { id, text, metadata }
 // Stores embedding + metadata into Vectorize
 //
@@ -176,7 +175,7 @@ async function handleIngest(request, env) {
     const embedData = await embedResponse.json();
     const vector = embedData.data[0].embedding;
     const corsHeaders = {
-          "Access-Control-Allow-Origin": "https://hirednerds.com",
+          "Access-Control-Allow-Origin": "https://jofdavies.com",
           "Access-Control-Allow-Methods": "POST, OPTIONS",
           "Access-Control-Allow-Headers": "Content-Type",
         };
