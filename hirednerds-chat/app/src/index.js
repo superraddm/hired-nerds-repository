@@ -1,20 +1,38 @@
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-
-    if (url.pathname === "/api/request-pdf" && request.method === "POST") {
-      return handlePdfRequest(request, env);
-    }
-
-    if (url.pathname === "/download/cv" && request.method === "GET") {
-      return handlePdfDownload(request, env);
-    }
-
-
+    
     // CORS preflight
     if (request.method === "OPTIONS") {
       return new Response(null, { headers: corsHeaders });
     }
+
+    // ---- PDF REQUEST ROUTE ----
+    if (url.pathname === "/api/request-pdf") {
+      if (request.method === "POST") {
+        return handlePdfRequest(request, env);
+      }
+
+      // Explicitly reject other methods
+      return new Response("Method Not Allowed", {
+        status: 405,
+        headers: corsHeaders,
+      });
+    }
+
+
+    // ---- PDF DOWNLOAD ROUTE ----
+    if (url.pathname === "/download/cv") {
+      if (request.method === "GET") {
+        return handlePdfDownload(request, env);
+      }
+
+      return new Response("Method Not Allowed", {
+        status: 405,
+        headers: corsHeaders,
+      });
+    }
+
 
     if (request.method === "POST" && url.pathname === "/api/ingest") {
       return handleIngest(request, env);
@@ -37,7 +55,7 @@ export default {
 
 const corsHeaders = {
           "Access-Control-Allow-Origin": "https://jofdavies.com",
-          "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
           "Access-Control-Allow-Headers": "Content-Type",
         };
 
@@ -100,16 +118,36 @@ async function handlePdfDownload(request, env) {
   const record = await env.PDF_REQUESTS.get(token, { type: "json" });
 
   if (!record || record.expires < Date.now()) {
-    return new Response("Link expired or invalid", { status: 403 });
+    return new Response("Link expired or invalid", { status: 410 });
   }
 
+  await notifyCvDownload(
+  env,
+  record.email,
+  record.fileName
+);
+
+
+  // single-use token
   await env.PDF_REQUESTS.delete(token);
 
-  const pdfUrl =
-    `https://jofdavies.com/cv/pdf/${record.fileName}`;
+  const pdfResponse = await fetch(
+    `https://jofdavies.com/cv/pdf/${record.fileName}`
+  );
 
-  return fetch(pdfUrl);
+  if (!pdfResponse.ok) {
+    return new Response("File unavailable", { status: 500 });
+  }
+
+  return new Response(pdfResponse.body, {
+    headers: {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": `attachment; filename="${record.fileName}"`,
+      "Cache-Control": "no-store",
+    },
+  });
 }
+
 
 async function sendDownloadEmail(env, to, downloadUrl, fileName) {
   const bodyText =
@@ -118,26 +156,31 @@ async function sendDownloadEmail(env, to, downloadUrl, fileName) {
     "Download link (expires in 24 hours):\n" +
     downloadUrl;
 
-  const response = await fetch(
-    "https://api.postmarkapp.com/email",
-    {
-      method: "POST",
-      headers: {
-        "X-Postmark-Server-Token": env.POSTMARK_API_TOKEN,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        From: "Jof Davies <downloads@jofdavies.com>",
-        To: to,
-        Subject: "Jof Davies CV Download Link",
-        TextBody: bodyText
-      })
-    }
-  );
+  const response = await fetch("https://api.postmarkapp.com/email", {
+  method: "POST",
+  headers: {
+    "X-Postmark-Server-Token": env.POSTMARK_API_TOKEN,
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+  },
+  body: JSON.stringify({
+    From: "jof@jofdavies.com",
+    To: to,
+    Subject: "Your requested CV",
+    TextBody: bodyText,
+    MessageStream: "outbound"
+  })
+});
 
-  if (!response.ok) {
-    throw new Error("Failed to send email via Postmark");
-  }
+const responseText = await response.text();
+
+console.log("Postmark status:", response.status);
+console.log("Postmark response:", responseText);
+
+if (!response.ok) {
+  throw new Error("Postmark rejected request");
+}
+
 }
 
 // Accepts: { id, text, metadata }
@@ -174,11 +217,7 @@ async function handleIngest(request, env) {
 
     const embedData = await embedResponse.json();
     const vector = embedData.data[0].embedding;
-    const corsHeaders = {
-          "Access-Control-Allow-Origin": "https://jofdavies.com",
-          "Access-Control-Allow-Methods": "POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type",
-        };
+
 
 
     // ---- 2. STORE IN VECTORIZE ----
@@ -390,6 +429,33 @@ ${CONTEXT}
 //
 // UTILITIES
 //
+
+async function notifyCvDownload(env, email, fileName) {
+  const timestamp = new Date().toISOString();
+
+  const body =
+    `CV Downloaded\n\n` +
+    `Email: ${email}\n` +
+    `CV: ${fileName}\n` +
+    `Time: ${timestamp}\n`;
+
+  await fetch("https://api.postmarkapp.com/email", {
+    method: "POST",
+    headers: {
+      "X-Postmark-Server-Token": env.POSTMARK_API_TOKEN,
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify({
+      From: "jof@jofdavies.com",
+      To: "jof@jofdavies.com",
+      Subject: "CV downloaded",
+      TextBody: body,
+      MessageStream: "outbound"
+    })
+  });
+}
+
 function jsonResponse(obj, status = 200) {
   return new Response(JSON.stringify(obj), {
     status,

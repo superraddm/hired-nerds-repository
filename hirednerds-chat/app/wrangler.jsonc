@@ -9,6 +9,20 @@
   "main": "src/index.js",
   "compatibility_date": "2025-12-11",
 
+  "routes": [
+    {
+      "pattern": "jofdavies.com/api*",
+      "zone_name": "jofdavies.com"
+    }
+  ],
+
+   "kv_namespaces": [
+    {
+      "binding": "PDF_REQUESTS",
+      "id": "dd88bd4a3be34411a98198ca1b284214"
+    }
+  ],
+
   // Observability (optional)
   "observability": {
     "enabled": true
@@ -28,6 +42,11 @@
     "OPENAI_EMBEDDING_MODEL": "text-embedding-3-small",
     "OPENAI_CHAT_MODEL": "gpt-4.1-mini"
   }
+
+
+
+
+
 
 
 	/**
