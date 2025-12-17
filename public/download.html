@@ -68,23 +68,7 @@
             linkElement.href = downloadUrl;
 
             // Attempt automatic download
-            fetch(downloadUrl, { method: 'HEAD' })
-                .then(response => {
-                    if (response.ok) {
-                        // Token is valid, trigger download
-                        window.location.href = downloadUrl;
-                    } else if (response.status === 410) {
-                        // Token expired
-                        showExpired();
-                    } else {
-                        // Other error, but allow manual retry
-                        console.warn('Download check failed:', response.status);
-                    }
-                })
-                .catch(err => {
-                    console.error('Download check error:', err);
-                    // Allow manual download attempt on network error
-                });
+     
 
             // Update footer year
             const yearSpan = document.querySelector('.year');
