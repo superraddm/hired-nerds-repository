@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Download - Jof Davies</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <div><a href="index.html" class="nav-logo">Jof Davies</a></div>
+
+        <button class="nav-toggle" aria-label="Toggle navigation" style="color: #e0e0e0;">
+            ☰
+        </button>
+
+        <nav class="nav-menu nav-links">
+            <a href="/work-examples.html">Work Examples</a>
+            <a href="/testimonials.html">Testimonials</a>
+            <a href="/about.html">About Me</a>
+        </nav>
+    </header>
+
+    <main class="cv-page">
+        <div class="cv-container" style="text-align: center; padding: 4rem 2rem;">
+            
+            <div id="downloadMessage">
+                <h1>Preparing Your Download...</h1>
+                <p style="font-size: 1.2rem; margin: 2rem 0;">
+                    Your download should start immediately.
+                </p>
+                <p style="font-size: 1.2rem;">
+                    If not, click <a href="#" id="downloadLink" style="color: #00d9ff; text-decoration: underline;">here</a>
+                </p>
+            </div>
+
+            <div id="expiredMessage" style="display: none;">
+                <h1>Download Link Expired</h1>
+                <p style="font-size: 1.2rem; margin: 2rem 0;">
+                    This download link has expired, please return to Jof Select to download again.
+                </p>
+                <a href="/index.html" class="back-btn" style="display: inline-block; margin-top: 2rem;">
+                    ← BACK TO JOF SELECT
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>© <span class="year">2025</span> JofDavies.com | Multiple Skills, One Person</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get token from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+
+            if (!token) {
+                showExpired();
+                return;
+            }
+
+            // Construct download URL
+            const downloadUrl = `/download/cv?token=${token}`;
+            const linkElement = document.getElementById('downloadLink');
+            linkElement.href = downloadUrl;
+
+            // Attempt automatic download
+            fetch(downloadUrl, { method: 'HEAD' })
+                .then(response => {
+                    if (response.ok) {
+                        // Token is valid, trigger download
+                        window.location.href = downloadUrl;
+                    } else if (response.status === 410) {
+                        // Token expired
+                        showExpired();
+                    } else {
+                        // Other error, but allow manual retry
+                        console.warn('Download check failed:', response.status);
+                    }
+                })
+                .catch(err => {
+                    console.error('Download check error:', err);
+                    // Allow manual download attempt on network error
+                });
+
+            // Update footer year
+            const yearSpan = document.querySelector('.year');
+            if (yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
+
+            // Mobile nav toggle
+            document.querySelector('.nav-toggle').addEventListener('click', () => {
+                document.querySelector('.nav-menu').classList.toggle('open');
+            });
+        });
+
+        function showExpired() {
+            document.getElementById('downloadMessage').style.display = 'none';
+            document.getElementById('expiredMessage').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
