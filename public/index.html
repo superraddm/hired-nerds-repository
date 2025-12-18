@@ -208,14 +208,8 @@ So go ahead, pick a me below.<br /><br />
             }
         }
     </script>
+    <script src="/js/modal-functions.js"></script>
     <script src="/js/chat-widget.js" defer></script>
-     <script>
-fetch("/partials/contact-modal.html")
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById("contact-modal-root").innerHTML = html;
-  });
-</script>
         
 
 </body>

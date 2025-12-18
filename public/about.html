@@ -161,13 +161,7 @@
     <footer class="site-footer">
         <p>© <span class="year">2025</span> JofDavies.com | Multiple Skills, One Person</p>
     </footer>
-    <script>
-        fetch("/partials/contact-modal.html")
-        .then(res => res.text())
-        .then(html => {
-            document.getElementById("contact-modal-root").innerHTML = html;
-        });
-    </script>
+    <script src="/js/modal-functions.js"></script>
     <script>
 
         document.querySelector('.nav-toggle').addEventListener('click', () => {
