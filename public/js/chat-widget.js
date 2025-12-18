@@ -136,6 +136,34 @@
         botMsg.className = "hn-bot-message";
         botMsg.textContent = "AI Bot: " + data.answer;
         messages.appendChild(botMsg);
+
+        // --- OPTIONAL ACTION: CONTACT FORM ---
+        if (data.action === "open-contact-form") {
+            const contactBtn = document.createElement("button");
+            contactBtn.textContent = "Contact Jof";
+            contactBtn.style.marginTop = "6px";
+            contactBtn.style.padding = "6px 10px";
+            contactBtn.style.borderRadius = "6px";
+            contactBtn.style.border = "1px solid #444";
+            contactBtn.style.background = "#222";
+            contactBtn.style.color = "#fff";
+            contactBtn.style.cursor = "pointer";
+            contactBtn.style.fontSize = "13px";
+
+            contactBtn.addEventListener("click", () => {
+                // OPTION A: if you already have a global function
+                if (typeof window.openContactModal === "function") {
+                    window.openContactModal();
+                    return;
+                }
+
+                // OPTION B: event-based modal trigger
+                document.dispatchEvent(new Event("open-contact-form"));
+            });
+
+            messages.appendChild(contactBtn);
+        }
+
     } catch (err) {
         thinkingMsg.remove();
 
