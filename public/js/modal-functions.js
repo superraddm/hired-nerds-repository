@@ -24,23 +24,35 @@ window.addEventListener("click", function (event) {
 });
 
 // Contact form handler
-function handleContactSubmit(event) {
+async function handleContactSubmit(event) {
     event.preventDefault();
-    
-    const formData = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        subject: document.getElementById('subject').value,
-        message: document.getElementById('message').value
+
+    const form = document.getElementById("contactForm");
+
+    const payload = {
+        name: form.name.value,
+        email: form.email.value,
+        subject: form.subject.value,
+        message: form.message.value
     };
 
-    const mailtoLink = `mailto:jof@jofdavies.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
-        `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-    )}`;
+    try {
+        const res = await fetch("/api/contact", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
 
-    window.location.href = mailtoLink;
-    closeContactModal();
-    document.getElementById('contactForm').reset();
+        if (!res.ok) {
+            throw new Error("Failed to send message");
+        }
+
+        alert("Message sent successfully.");
+        form.reset();
+        closeContactModal();
+    } catch (err) {
+        alert("There was a problem sending your message. Please try again.");
+    }
 }
 
 // Load contact modal HTML
