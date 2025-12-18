@@ -210,33 +210,12 @@ So go ahead, pick a me below.<br /><br />
     </script>
     <script src="/js/chat-widget.js" defer></script>
      <script>
-        document.addEventListener("DOMContentLoaded", () => {
-
-        const modal = document.getElementById("cvModal");
-        const openBtn = document.getElementById("openCvModal");
-        const closeBtn = document.getElementById("closeCvModal");
-
-        if (!modal || !openBtn || !closeBtn) {
-            console.warn("CV modal elements not found on page.");
-            return;
-        }
-
-        openBtn.addEventListener("click", () => {
-            modal.hidden = false;
-        });
-
-        closeBtn.addEventListener("click", () => {
-            modal.hidden = true;
-        });
-
-        modal.addEventListener("click", (e) => {
-            if (e.target === modal) {
-            modal.hidden = true;
-            }
-        });
-
-        });
-        </script>
+fetch("/partials/contact-modal.html")
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById("contact-modal-root").innerHTML = html;
+  });
+</script>
         
 
 </body>
