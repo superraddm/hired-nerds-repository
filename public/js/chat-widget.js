@@ -121,7 +121,7 @@
     messages.appendChild(thinkingMsg);
     messages.scrollTop = messages.scrollHeight;
     try {
-        const res = await fetch("https://app.joffad.workers.dev/api/chat", {
+        const res = await fetch("https://jofdavies.com/api/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ question: query }),
