@@ -33,7 +33,7 @@
                     <h1>DIGITAL / PRODUCT MARKETING SPECIALIST</h1>
                     <p class="cv-tagline">Multi-Channel Publishing • Automation • Technical Content Systems</p>
                     <div class="cv-actions">
-                        <button class="download-cv-btn" onclick="downloadCV()">
+                        <button class="download-cv-btn" id="openCvModal">
                             <span>⬇</span> DOWNLOAD CV (PDF)
                         </button>
                         <a href="/index.html" class="back-btn">← BACK TO JOF SELECT</a>
@@ -152,6 +152,47 @@
                 </div>
             </section>
         </div>
+        
+    <div class="cv-modal-overlay" id="cvModal" hidden>
+        <div class="cv-modal">
+
+            <button class="cv-modal-close" id="closeCvModal" aria-label="Close">
+            ×
+            </button>
+
+            <h3>Get this CV</h3>
+
+            <p class="cv-modal-copy">
+            Enter your email address to receive a copy of this CV.
+            <br />
+            <small>Your email will not be used for any marketing purposes.</small>
+            </p>
+
+            <form class="cv-download-form">
+
+            <input
+                type="email"
+                name="email"
+                required
+                placeholder="Email address"
+            />
+
+            <input
+                type="hidden"
+                name="cv"
+                value="digital-marketing"
+            />
+
+            <button type="submit" class="download-cv-btn">
+                Send CV
+            </button>
+
+            </form>
+
+            <p class="cv-modal-status" hidden></p>
+
+        </div>
+    </div>
     </main>
 
     <footer class="site-footer">
@@ -159,15 +200,6 @@
     </footer>
 
     <script>
-     
-
-        function downloadCV() {
-            // Replace with actual PDF path
-            const link = document.createElement('a');
-            link.href = '/assets/cv/pdf/Jof_Davies_Digital_Marketing_Director_CV.pdf';
-            link.download = 'Jof_Davies_Digital_Marketing_Director_CV.pdf';
-            link.click();
-        }
 
         document.querySelector('.nav-toggle').addEventListener('click', () => {
         document.querySelector('.nav-menu')
@@ -185,5 +217,60 @@
             }
         });
     </script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+        const modal = document.getElementById("cvModal");
+        const openBtn = document.getElementById("openCvModal");
+        const closeBtn = document.getElementById("closeCvModal");
+
+        if (!modal || !openBtn || !closeBtn) {
+            console.warn("CV modal elements not found on page.");
+            return;
+        }
+
+        openBtn.addEventListener("click", () => {
+            modal.hidden = false;
+        });
+
+        closeBtn.addEventListener("click", () => {
+            modal.hidden = true;
+        });
+
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+            modal.hidden = true;
+            }
+        });
+
+        });
+        </script>
+
+    <script>
+        document.querySelectorAll(".cv-download-form").forEach(form => {
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const status = form
+            .closest(".cv-modal")
+            .querySelector(".cv-modal-status");
+
+            const response = await fetch("/api/request-pdf", {
+            method: "POST",
+            body: new FormData(form)
+            });
+
+            if (response.ok) {
+            status.textContent = "The CV has been sent to your email address.";
+            status.hidden = false;
+            form.reset();
+            } else {
+            status.textContent = "There was a problem. Please try again.";
+            status.hidden = false;
+            }
+        });
+        });
+        </script>
 </body>
 </html>

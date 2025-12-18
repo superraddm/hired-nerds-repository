@@ -52,9 +52,9 @@
         </div>
         <div class="cta-section" style="padding-bottom:30px;">
                 <button class="contact-btn" onclick="openContactModal()">CONTACT ME</button>
-                <button class="download-cv-btn" onclick="downloadCV()">
-                            <span>⬇</span> DOWNLOAD CV (PDF)
-                        </button>
+                <button class="download-cv-btn" id="openCvModal">
+                    <span>⬇</span> DOWNLOAD CV (PDF)
+                </button>
             </div>
         <div class="about-content">
             <div class="profile-images">
@@ -107,7 +107,9 @@
 
             <div class="cta-section">
                 <button class="contact-btn" onclick="openContactModal()">CONTACT ME</button>
-                <a href="#" class="download-cv-btn">DOWNLOAD CV</a>
+                <button class="download-cv-btn" id="openCvModal">
+                    <span>⬇</span> DOWNLOAD CV (PDF)
+                </button>
             </div>
         </div>
     </main>
@@ -138,19 +140,53 @@
             </form>
         </div>
     </div>
+    
+    <div class="cv-modal-overlay" id="cvModal" hidden>
+        <div class="cv-modal">
+
+            <button class="cv-modal-close" id="closeCvModal" aria-label="Close">
+            ×
+            </button>
+
+            <h3>Get this CV</h3>
+
+            <p class="cv-modal-copy">
+            Enter your email address to receive a copy of this CV.
+            <br />
+            <small>Your email will not be used for any marketing purposes.</small>
+            </p>
+
+            <form class="cv-download-form">
+
+            <input
+                type="email"
+                name="email"
+                required
+                placeholder="Email address"
+            />
+
+            <input
+                type="hidden"
+                name="cv"
+                value="executive"
+            />
+
+            <button type="submit" class="download-cv-btn">
+                Send CV
+            </button>
+
+            </form>
+
+            <p class="cv-modal-status" hidden></p>
+
+        </div>
+    </div>
 
     <footer class="site-footer">
         <p>© <span class="year">2025</span> JofDavies.com | Multiple Skills, One Person</p>
     </footer>
 
     <script>
-        function downloadCV() {
-            // Replace with actual PDF path
-            const link = document.createElement('a');
-            link.href = '/assets/cv/pdf/Jof_Davies_Master_Executive_CV.pdf';
-            link.download = 'Jof_Davies_Master_Executive_CV.pdf';
-            link.click();
-        }
 
         document.querySelector('.nav-toggle').addEventListener('click', () => {
         document.querySelector('.nav-menu')
