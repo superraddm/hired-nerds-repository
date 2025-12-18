@@ -13,7 +13,11 @@
     {
       "pattern": "jofdavies.com/api*",
       "zone_name": "jofdavies.com"
-    }
+    },
+    {
+    "pattern": "jofdavies.com/download/cv*",
+    "zone_name": "jofdavies.com"
+  }
   ],
 
    "kv_namespaces": [
