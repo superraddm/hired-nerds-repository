@@ -2,10 +2,6 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
-     // Serve static HTML files
-    if (url.pathname === '/download.html') {
-      return env.ASSETS.fetch(request);
-    }
     
     // CORS preflight
     if (request.method === "OPTIONS") {
