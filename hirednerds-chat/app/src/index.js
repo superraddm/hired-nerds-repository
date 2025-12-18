@@ -43,6 +43,11 @@ export default {
       return handleChat(request, env);
     }
 
+    // -- Send Contact form info --
+    if (request.method === "POST" && url.pathname === "/api/contact") {
+      return handleContact(request, env);
+    }
+
     return new Response("Not found", {
       status: 404,
       headers: corsHeaders,
@@ -239,6 +244,44 @@ async function notifyCvDownload(env, email, fileName) {
     })
   });
 }
+
+// Send Contact form Email //
+async function handleContact(request, env) {
+  const { name, email, subject, message } = await request.json();
+
+  if (!name || !email || !subject || !message) {
+    return jsonError("All fields are required.", 400);
+  }
+
+  const body =
+    `New contact form submission\n\n` +
+    `Name: ${name}\n` +
+    `Email: ${email}\n\n` +
+    `Message:\n${message}`;
+
+  const response = await fetch("https://api.postmarkapp.com/email", {
+    method: "POST",
+    headers: {
+      "X-Postmark-Server-Token": env.POSTMARK_API_TOKEN,
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify({
+      From: "jof@jofdavies.com",
+      To: "jof@jofdavies.com",
+      Subject: `[Contact] ${subject}`,
+      TextBody: body,
+      MessageStream: "outbound"
+    })
+  });
+
+  if (!response.ok) {
+    return jsonError("Email service rejected request", 500);
+  }
+
+  return jsonResponse({ success: true });
+}
+
 
 
 //

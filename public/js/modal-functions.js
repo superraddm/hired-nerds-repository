@@ -24,6 +24,7 @@ window.addEventListener("click", function (event) {
 });
 
 // Contact form handler
+
 async function handleContactSubmit(event) {
     event.preventDefault();
 
