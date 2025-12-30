@@ -134,10 +134,19 @@
         // Remove thinking indicator
         thinkingMsg.remove();
 
-        const botMsg = document.createElement("div");
-        botMsg.className = "hn-bot-message";
-        botMsg.textContent = "AI Bot: " + data.answer;
-        messages.appendChild(botMsg);
+        if (data.action === "open-contact-form") {
+            const botMsg = document.createElement("div");
+            botMsg.className = "hn-bot-message";
+            botMsg.textContent =
+                "You can use this popup contact form. If you close it, click below to open it again.";
+            messages.appendChild(botMsg);
+        } else {
+            const botMsg = document.createElement("div");
+            botMsg.className = "hn-bot-message";
+            botMsg.textContent = "AI Bot: " + data.answer;
+            messages.appendChild(botMsg);
+        }
+
 
         // --- ACTION: OPEN CONTACT MODAL ---
 if (data.action === "open-contact-form") {
