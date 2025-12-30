@@ -134,7 +134,21 @@
         // Remove thinking indicator
         thinkingMsg.remove();
 
-        if (data.action === "open-contact-form") {
+        // ---- NEW: token parsing (added) ----
+        let answerText = (data.answer || "").trim();
+
+        // Detect model action token
+        const hasOpenContactToken = /(^|\n)ACTION:\s*OPEN_CONTACT(\n|$)/i.test(answerText);
+
+        // Strip token from visible output
+        answerText = answerText.replace(/(^|\n)ACTION:\s*OPEN_CONTACT(\n|$)/ig, "\n").trim();
+
+        // Unified trigger (legacy action OR model token)
+        const shouldOpenContact =
+            data.action === "open-contact-form" || hasOpenContactToken;
+
+        // ---- MESSAGE RENDERING ----
+        if (shouldOpenContact) {
             const botMsg = document.createElement("div");
             botMsg.className = "hn-bot-message";
             botMsg.textContent =
@@ -143,60 +157,62 @@
         } else {
             const botMsg = document.createElement("div");
             botMsg.className = "hn-bot-message";
-            botMsg.textContent = "AI Bot: " + data.answer;
+            botMsg.textContent = "AI Bot: " + answerText;
             messages.appendChild(botMsg);
         }
 
-
-        // --- ACTION: OPEN CONTACT MODAL ---
-if (data.action === "open-contact-form") {
-    // Attempt immediate open
-    const tryOpen = () => {
-        if (typeof window.openContactModal === "function") {
-            window.openContactModal();
-            return true;
-        }
-        if (typeof openContactModal === "function") {
-            openContactModal();
-            return true;
-        }
-        return false;
-    };
-
-    // Modal HTML is injected on DOMContentLoaded; if not ready, retry briefly.
-        if (!tryOpen()) {
-            let attempts = 0;
-            const timer = setInterval(() => {
-                attempts++;
-                if (tryOpen() || attempts >= 10) {
-                    clearInterval(timer);
-                    if (attempts >= 10) {
-                        console.error("Contact modal not available (openContactModal missing or modal not loaded).");
-                    }
+        // ---- ACTION: OPEN CONTACT MODAL ----
+        if (shouldOpenContact) {
+            // Attempt immediate open
+            const tryOpen = () => {
+                if (typeof window.openContactModal === "function") {
+                    window.openContactModal();
+                    return true;
                 }
-            }, 150);
+                if (typeof openContactModal === "function") {
+                    openContactModal();
+                    return true;
+                }
+                return false;
+            };
+
+            // Modal HTML is injected on DOMContentLoaded; retry briefly if not ready
+            if (!tryOpen()) {
+                let attempts = 0;
+                const timer = setInterval(() => {
+                    attempts++;
+                    if (tryOpen() || attempts >= 10) {
+                        clearInterval(timer);
+                        if (attempts >= 10) {
+                            console.error(
+                                "Contact modal not available (openContactModal missing or modal not loaded)."
+                            );
+                        }
+                    }
+                }, 150);
+            }
+
+            // Fallback reopen button (unchanged)
+            const contactBtn = document.createElement("button");
+            contactBtn.textContent = "Contact Jof";
+            contactBtn.style.marginTop = "6px";
+            contactBtn.style.padding = "6px 10px";
+            contactBtn.style.borderRadius = "6px";
+            contactBtn.style.border = "1px solid #444";
+            contactBtn.style.background = "#222";
+            contactBtn.style.color = "#fff";
+            contactBtn.style.cursor = "pointer";
+            contactBtn.style.fontSize = "13px";
+
+            contactBtn.addEventListener("click", () => {
+                if (!tryOpen()) {
+                    console.error("Contact modal not available on click.");
+                }
+            });
+
+            messages.appendChild(contactBtn);
         }
 
-        // Optional: still show a manual button as fallback
-        const contactBtn = document.createElement("button");
-        contactBtn.textContent = "Contact Jof";
-        contactBtn.style.marginTop = "6px";
-        contactBtn.style.padding = "6px 10px";
-        contactBtn.style.borderRadius = "6px";
-        contactBtn.style.border = "1px solid #444";
-        contactBtn.style.background = "#222";
-        contactBtn.style.color = "#fff";
-        contactBtn.style.cursor = "pointer";
-        contactBtn.style.fontSize = "13px";
-
-        contactBtn.addEventListener("click", () => {
-            if (!tryOpen()) {
-                console.error("Contact modal not available on click.");
-            }
-        });
-
-        messages.appendChild(contactBtn);
-    }
 
 
     } catch (err) {

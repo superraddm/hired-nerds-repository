@@ -91,7 +91,9 @@ async function handleDebugIndex(request, env) {
       "how old is Jof",
       "birth year",
       "born 1984",
-      "Jof Davies age"
+      "Jof Davies age",
+      "openContactModal",
+      "contact modal opens when openContactModal is called"
     ];
     
     const results = {};
@@ -390,7 +392,7 @@ async function handleIngest(request, env) {
       text, // store the original text
     };
 
-    const insertResult = await env.DOC_INDEX.insert([
+    const insertResult = await env.DOC_INDEX.upsert([
       {
         id,
         values: vector,
