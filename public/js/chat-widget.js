@@ -115,6 +115,24 @@
     userMsg.textContent = "USER: " + query;
     messages.appendChild(userMsg);
 
+    //Make CONTact Button
+    function makeContactButton(label, onClick) {
+    const btn = document.createElement("button");
+    btn.textContent = label;
+
+    btn.style.marginTop = "6px";
+    btn.style.padding = "6px 10px";
+    btn.style.borderRadius = "6px";
+    btn.style.border = "1px solid #444";
+    btn.style.background = "#222";
+    btn.style.color = "#fff";
+    btn.style.cursor = "pointer";
+    btn.style.fontSize = "13px";
+
+    btn.addEventListener("click", onClick);
+    return btn;
+}
+    
     // THINKING indicator (NEW)
     const thinkingMsg = document.createElement("div");
     thinkingMsg.className = "hn-thinking";
@@ -144,8 +162,7 @@
         answerText = answerText.replace(/(^|\n)ACTION:\s*OPEN_CONTACT(\n|$)/ig, "\n").trim();
 
         // Unified trigger (legacy action OR model token)
-        const shouldOpenContact =
-            data.action === "open-contact-form" || hasOpenContactToken;
+       const shouldSuggestContact = (data.action === "suggest-contact");
 
         // ---- MESSAGE RENDERING ----
         if (shouldOpenContact) {
@@ -193,25 +210,28 @@
             }
 
             // Fallback reopen button (unchanged)
-            const contactBtn = document.createElement("button");
-            contactBtn.textContent = "Contact Jof";
-            contactBtn.style.marginTop = "6px";
-            contactBtn.style.padding = "6px 10px";
-            contactBtn.style.borderRadius = "6px";
-            contactBtn.style.border = "1px solid #444";
-            contactBtn.style.background = "#222";
-            contactBtn.style.color = "#fff";
-            contactBtn.style.cursor = "pointer";
-            contactBtn.style.fontSize = "13px";
-
-            contactBtn.addEventListener("click", () => {
+            const contactBtn = makeContactButton("Contact Jof", () => {
                 if (!tryOpen()) {
                     console.error("Contact modal not available on click.");
                 }
             });
+            messages.appendChild(contactBtn);
 
+        }
+
+        if (shouldSuggestContact) {
+            const contactBtn = makeContactButton("Contact Jof", () => {
+                if (typeof window.openContactModal === "function") {
+                    window.openContactModal();
+                } else if (typeof openContactModal === "function") {
+                    openContactModal();
+                } else {
+                    console.error("Contact modal not available on click.");
+                }
+            });
             messages.appendChild(contactBtn);
         }
+
 
 
 
