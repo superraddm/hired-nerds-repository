@@ -612,13 +612,31 @@ ${CONTEXT}
     const data = await chatResponse.json();
     const answer = data.choices?.[0]?.message?.content || "";
 
-    const needsContact =
-      answer === "Jof doesn't say. You can contact him to clarify.";
+    // Intent from the user question
+    const lowerQ = question.toLowerCase();
+    const isContactIntent =
+      /\b(contact|email|message|get in touch|reach|reach out|hire|enquir|inquiry|enquiry)\b/.test(lowerQ);
+
+    // “Unknown / missing info” signal from the model answer
+    const lowerA = answer.toLowerCase();
+    const looksLikeUnknown =
+      lowerA.includes("doesn't say") ||
+      lowerA.includes("does not say") ||
+      lowerA.includes("does not include") ||
+      lowerA.includes("not in my dataset") ||
+      lowerA.includes("not in context") ||
+      lowerA.includes("not provided") ||
+      lowerA.includes("no relevant context");
+
+    // Final decision
+    const shouldOpenContact = isContactIntent || looksLikeUnknown;
 
     return jsonResponse({
       answer,
-      action: needsContact ? "open-contact-form" : null
+      action: shouldOpenContact ? "open-contact-form" : null
     });
+
+
   } catch (err) {
     return jsonError("Chat failed: " + err.message, 500);
   }

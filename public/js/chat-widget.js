@@ -9,6 +9,7 @@
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; z-index: 9999;
             font-size: 24px; user-select: none;
+            z-index: 2000;
         }
         #hn-chat-window {
             position: fixed; bottom: 90px; right: 20px;
@@ -18,6 +19,7 @@
             border-radius: 12px;
             display: none; flex-direction: column;
             z-index: 9999; overflow: hidden;
+            z-index: 2000;
         }
         #hn-chat-messages {
             flex: 1; padding: 12px; overflow-y: auto;
@@ -137,32 +139,56 @@
         botMsg.textContent = "AI Bot: " + data.answer;
         messages.appendChild(botMsg);
 
-        // --- OPTIONAL ACTION: CONTACT FORM ---
-        if (data.action === "open-contact-form") {
-            const contactBtn = document.createElement("button");
-            contactBtn.textContent = "Contact Jof";
-            contactBtn.style.marginTop = "6px";
-            contactBtn.style.padding = "6px 10px";
-            contactBtn.style.borderRadius = "6px";
-            contactBtn.style.border = "1px solid #444";
-            contactBtn.style.background = "#222";
-            contactBtn.style.color = "#fff";
-            contactBtn.style.cursor = "pointer";
-            contactBtn.style.fontSize = "13px";
-
-            contactBtn.addEventListener("click", () => {
-                // OPTION A: if you already have a global function
-                if (typeof window.openContactModal === "function") {
-                    window.openContactModal();
-                    return;
-                }
-
-                // OPTION B: event-based modal trigger
-                document.dispatchEvent(new Event("open-contact-form"));
-            });
-
-            messages.appendChild(contactBtn);
+        // --- ACTION: OPEN CONTACT MODAL ---
+if (data.action === "open-contact-form") {
+    // Attempt immediate open
+    const tryOpen = () => {
+        if (typeof window.openContactModal === "function") {
+            window.openContactModal();
+            return true;
         }
+        if (typeof openContactModal === "function") {
+            openContactModal();
+            return true;
+        }
+        return false;
+    };
+
+    // Modal HTML is injected on DOMContentLoaded; if not ready, retry briefly.
+        if (!tryOpen()) {
+            let attempts = 0;
+            const timer = setInterval(() => {
+                attempts++;
+                if (tryOpen() || attempts >= 10) {
+                    clearInterval(timer);
+                    if (attempts >= 10) {
+                        console.error("Contact modal not available (openContactModal missing or modal not loaded).");
+                    }
+                }
+            }, 150);
+        }
+
+        // Optional: still show a manual button as fallback
+        const contactBtn = document.createElement("button");
+        contactBtn.textContent = "Contact Jof";
+        contactBtn.style.marginTop = "6px";
+        contactBtn.style.padding = "6px 10px";
+        contactBtn.style.borderRadius = "6px";
+        contactBtn.style.border = "1px solid #444";
+        contactBtn.style.background = "#222";
+        contactBtn.style.color = "#fff";
+        contactBtn.style.cursor = "pointer";
+        contactBtn.style.fontSize = "13px";
+
+        contactBtn.addEventListener("click", () => {
+            if (!tryOpen()) {
+                console.error("Contact modal not available on click.");
+            }
+        });
+
+        messages.appendChild(contactBtn);
+    }
+
 
     } catch (err) {
         thinkingMsg.remove();
