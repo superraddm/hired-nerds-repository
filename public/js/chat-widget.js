@@ -162,8 +162,11 @@
         answerText = answerText.replace(/(^|\n)ACTION:\s*OPEN_CONTACT(\n|$)/ig, "\n").trim();
 
         // Unified trigger (legacy action OR model token)
-       const shouldSuggestContact = (data.action === "suggest-contact");
+        const shouldOpenContact =
+        (data.action === "open-contact-form") || hasOpenContactToken;
 
+        const shouldSuggestContact =
+            (data.action === "suggest-contact");
         // ---- MESSAGE RENDERING ----
         if (shouldOpenContact) {
             const botMsg = document.createElement("div");

@@ -630,7 +630,10 @@ ${CONTEXT}
     // Intent from the user question
     const lowerQ = question.toLowerCase();
     const isContactIntent =
-      /\b(contact|email|message|get in touch|reach|reach out|hire|enquir|inquiry|enquiry)\b/.test(lowerQ);
+      /\b(contact|get in touch|reach out|reach me|hire|enquir(?:e|y)|inquir(?:y|e))\b/.test(lowerQ) ||
+      /\b(email|message)\b/.test(lowerQ) && /\b(jof|you|him|me)\b/.test(lowerQ) ||
+      /\b(jof'?s|your)\s+(email|e-mail)\b/.test(lowerQ) ||
+      /\b(email)\s+(jof|you)\b/.test(lowerQ);
 
     // “Unknown / missing info” signal from the model answer
     const lowerA = answer.toLowerCase();
