@@ -23,7 +23,8 @@ A 4-year-old, on a phone or tablet, probably holding it herself.
 She loves *K-Pop Demon Hunters*. We don't use its characters, names, logos or songs. We borrow the *vibe*: a three-girl idol group, neon pink / violet / cyan, lightsticks, a giant stage, and mischievous shadow creatures that light-magic turns friendly.
 
 Our original cast and the story:
-- **The Glow Girls** — three chibi idols (pink, violet, cyan) on the stage. They are the good guys. They bounce to the beat and throw their arms up every time a firework bursts. Drawn from simple shapes; no faces to fall into uncanny territory.
+- **The Glow Girls** — three chibi K-pop idols (pink, violet, cyan) on the stage, unmistakably a girl group: crop tops, pleated skirts and white boots in their colour, signature hair (high ponytail with a star clip / space buns / bob with a pink streak and headset mic), gold earrings, big smiles and blush. They cycle through dance poses every two beats (arms in a V, singing into a handheld mic, pointing to the sky, hands on hips), kick on the beat, and jump when a firework bursts. They are the good guys.
+- **The stage** — a neon **GLOW GIRLS** sign (with 글로우 걸즈 · WORLD TOUR underneath) on a lighting truss with par cans chasing to the beat, an LED wall with a rainbow equaliser, speaker stacks with pumping woofers, footlights, sweeping spotlights and a crowd of lightsticks.
 - **The Giant Lightstick** — the thing they protect. A huge glowing idol lightstick planted centre-stage behind them, with a golden star in its head. It lights the whole concert. Its brightness is the only "health" in the game, and it is always visible, never a number.
 - **The Boo-Bops** — the "demons". Round, bouncy, bubblegum-coloured blobs with tiny pastel nub horns, huge sparkly eyes, rosy cheeks and an enormous grin, waving their little arms as they float in. They are silly, not scary — their only crime is wanting to *borrow* the Giant Lightstick's glow for their own party. They float down from the sky towards the lightstick, hover next to it giggling, pinch a little ball of glow (the lightstick dims a step), then drift off carrying it.
 - **How you stop them** — fireworks. A firework bursting near a Boo-Bop (or a rocket flying straight through one) pops it, and it turns into either a cloud of soap bubbles that float up and pip away, or a mini firework of its own. If it was carrying stolen glow, the glow flies back to the lightstick with a bonus. Every pop earns a star. No blood, no hurt faces, no "dead" anything — it's a pop, a giggle, and bubbles.
@@ -31,11 +32,12 @@ Our original cast and the story:
 - **The crowd** — silhouettes waving lightsticks in the potion colours. They cheer harder for bigger fireworks and when Boo-Bops get close.
 
 ## 4. Core loop (what she actually does)
-1. **Tap a potion.** It glugs into the cauldron. The cauldron liquid swirls to the new colour and bubbles.
-2. **Tap more potions** (up to 3 in the mix). Little bubble icons above the cauldron show what's in it.
-3. **Launch** — either tap the giant GO! button, or **tap anywhere in the sky** and the firework flies to that exact spot. Multi-touch works: three fingers, three fireworks.
-4. **Watch** it whistle up, burst, sparkle, and slowly fade (4–8 s, longer for glitter). Crowd cheers, Glow Girls jump.
-5. **Repeat.** The mix stays in the cauldron so she can spam the same firework. A 4th potion pushes out the oldest. A small 🗑 button empties the cauldron.
+1. **Tap a potion.** It glugs into the cauldron. The cauldron liquid swirls to the new colour and bubbles. The bottle shows a count badge (1, 2, 3).
+2. **Tap more potions** (up to 3 in the mix, **repeats allowed** — three golds makes one big gold). Little bubble icons above the cauldron show what's in it.
+3. **Aim and fire the potion cannon.** A glowing cannon sits in the cauldron and swings to follow the mouse (hover) or the last finger. **Tap anywhere in the sky** and it fires to that exact spot (a dotted arc shows the aim briefly); the giant GO! button fires at the last aim point. Multi-touch works: three fingers, three fireworks.
+4. **The cannon refuses to fire when the cauldron is empty** — it shakes, says "ADD A POTION!", and all the bottles hop to show what to do. No random freebies.
+5. **Watch** it whistle up, burst, sparkle, and slowly fade (4–8 s, longer for glitter). Crowd cheers, Glow Girls dance.
+6. **Repeat.** The mix stays in the cauldron so she can spam the same firework. A 4th potion pushes out the oldest. A small 🗑 button empties the cauldron.
 
 ## 5. Potions
 Two shelves. **Colour potions** on the left / bottom-left, **Magic potions** on the right / bottom-right. Each bottle is a fat rounded flask with a big icon on the label and blinking eyes (bottles have faces — kids adore this).
@@ -52,7 +54,9 @@ Two shelves. **Colour potions** on the left / bottom-left, **Magic potions** on 
 | 🤍 | Silver Sparkle | White with a silver twinkle |
 | 🌈 | Rainbow Fandom | Every particle a different hue |
 
-Multiple colours in the mix → the burst alternates particles between them (a 2- or 3-tone firework). No colour at all → a random one is picked, so an empty cauldron still launches something.
+Every colour potion also has a personality, so every combination fires differently: Pink = wide and full · Violet = slow and floaty (low gravity, long life) · Blue = fast and tall · Gold = crackly twinkle · Lime = lots of tiny sparks · Orange = short punchy pop · Silver = strobe · Rainbow = every hue. Personalities multiply when stacked, and three of a kind gets a size bonus.
+
+Multiple colours in the mix → the burst shows them as clear **bands** (concentric rings for round bursts, alternating segments around hearts/stars) so both colours read at a glance. A magic potion with no colour → a random colour is picked.
 
 ### Magic potions (8)
 | Icon | Name | Effect |

@@ -18,7 +18,7 @@
 :root{
   --pink:#ff3fa4; --violet:#a855ff; --cyan:#33e6ff; --gold:#ffd23f; --lime:#7dff4a; --orange:#ff7a2f;
   --ink:#12002b; --panel:rgba(18,0,43,.55);
-  --bs: clamp(44px, min(8.6dvh, 15vw), 96px);           /* bottle size: 8 per rail must fit the height, 2 rails must fit the width */
+  --bs: clamp(44px, min(8dvh, 15vw), 96px);           /* bottle size: 8 per rail + label must fit the height, 2 rails must fit the width */
   --cauldron-w: min(17dvh, 24vw, 150px); --go: min(14dvh, 20vw, 124px); --clear: min(7dvh, 10vw, 64px);
   --round: clamp(44px, min(8dvh, 11vw), 72px);
   --font: "Baloo 2","Fredoka","Nunito","Varela Round",-apple-system,"Segoe UI",system-ui,sans-serif;
@@ -62,12 +62,23 @@ button:focus{outline:none}
 
 /* ---------- shelves ---------- */
 .shelf{display:grid;grid-auto-flow:row;grid-template-columns:repeat(var(--cols,1),auto);align-content:space-evenly;justify-items:center;
-  gap:4px;padding:6px 4px;border-radius:22px;background:var(--panel);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-#left{grid-area:left}#right{grid-area:right}
+  gap:4px;padding:6px 4px;border-radius:22px;background:var(--panel);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);overflow:hidden}
+#left{grid-area:left;--lc:#ff3fa4}#right{grid-area:right;--lc:#a855ff}
+.shelf .lbl{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;color:#fff;font-weight:900;
+  background:var(--lc);border-radius:14px;padding:3px 6px;line-height:1;text-shadow:0 1px 0 rgba(0,0,0,.45);box-shadow:0 0 14px var(--lc),0 0 0 2px rgba(255,255,255,.35) inset;
+  white-space:nowrap;max-width:100%}
+.shelf .lbl i{font-style:normal;font-size:calc(var(--bs)*.3)}
+.shelf .lbl b{font-size:clamp(9px,calc(var(--bs)*.17),14px);letter-spacing:.6px}
 @media (orientation:landscape){
-  :root{--bs: clamp(44px, min(15.5dvh, 9vw), 92px)}
+  :root{--bs: clamp(44px, min(14.5dvh, 9vw), 92px)}
   .shelf{--cols:2;align-content:center;gap:2px}
+  .shelf .lbl{flex-direction:row;gap:5px;border-radius:999px;padding:3px 10px;margin-bottom:2px}
 }
+.bottle .n{position:absolute;top:-2px;right:-3px;z-index:3;display:none;place-items:center;min-width:1.5em;height:1.5em;padding:0 .2em;border-radius:999px;
+  background:#fff;color:#1a0630;font-weight:900;font-size:calc(var(--bs)*.24);box-shadow:0 0 10px var(--c),0 2px 0 rgba(0,0,0,.3)}
+.bottle.in-mix .n{display:grid}
+.bottle.hint{animation:hint .45s ease-in-out 2}
+#cauldron.nope{animation:nope .4s ease-in-out}
 
 .bottle{position:relative;width:var(--bs);height:calc(var(--bs)*1.22);background:none;padding:0;display:grid;place-items:end center;
   filter:drop-shadow(0 0 6px color-mix(in srgb,var(--c) 70%,transparent));transition:transform .15s}
@@ -170,7 +181,10 @@ button:focus{outline:none}
 @keyframes popin{from{transform:scale(0)}to{transform:scale(1)}}
 @keyframes hue{to{filter:hue-rotate(360deg) drop-shadow(0 0 18px rgba(255,63,164,.7))}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-@media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important}}
+@keyframes hint{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px) scale(1.08)}}
+@keyframes nope{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+/* OS "reduce motion": let looping animations play once and stop (never speed them up) */
+@media (prefers-reduced-motion:reduce){*{animation-iteration-count:1!important}}
 </style>
 </head>
 <body>
@@ -207,7 +221,7 @@ button:focus{outline:none}
     <h1>K-POP<br>BOOM!</h1>
     <p>✨ Firework Stage ✨</p>
     <button id="play">TAP TO PLAY</button>
-    <small>Help the Glow Girls guard the Giant Lightstick!<br>Mix potions · tap the sky · pop the giggly Boo-Bops into bubbles<br>No ads · no tracking · works offline once loaded</small>
+    <small>Help the Glow Girls guard the Giant Lightstick!<br>Mix potions in the cauldron · tap the sky to fire the cannon · pop the giggly Boo-Bops into bubbles<br>No ads · no tracking · works offline once loaded</small>
   </div>
 </div>
 
@@ -230,25 +244,26 @@ const pick = a => a[(Math.random()*a.length)|0];
 const TAU = Math.PI*2;
 
 /* ================= POTIONS ================= */
+// Every potion carries a "personality" (mod) so any combination — including the same potion twice — fires differently.
 const COLOURS = [
-  {id:'pink',   icon:'💗', name:'Pink Bias',       css:'#ff3fa4', h:330,s:100,l:62},
-  {id:'violet', icon:'💜', name:'Violet Encore',   css:'#a855ff', h:272,s:100,l:68},
-  {id:'blue',   icon:'💙', name:'Lightstick Blue', css:'#33e6ff', h:190,s:100,l:60},
-  {id:'gold',   icon:'💛', name:'Gold Debut',      css:'#ffd23f', h:48, s:100,l:60},
-  {id:'lime',   icon:'💚', name:'Lime Fan Chant',  css:'#7dff4a', h:108,s:100,l:60},
-  {id:'orange', icon:'🧡', name:'Sunset Stage',    css:'#ff7a2f', h:20, s:100,l:58},
-  {id:'silver', icon:'🤍', name:'Silver Sparkle',  css:'#f4f4ff', h:230,s:30, l:94, twinkle:true},
-  {id:'rainbow',icon:'🌈', name:'Rainbow Fandom',  css:'linear-gradient(160deg,#ff3fa4,#ffd23f,#7dff4a,#33e6ff,#a855ff)', rainbow:true},
+  {id:'pink',   icon:'💗', name:'Pink Bias — wide & full',      css:'#ff3fa4', h:330,s:100,l:62, mod:{count:1.25,speed:1.05}},
+  {id:'violet', icon:'💜', name:'Violet Encore — slow & floaty', css:'#a855ff', h:272,s:100,l:68, mod:{grav:0.4,life:1.5,speed:0.8}},
+  {id:'blue',   icon:'💙', name:'Lightstick Blue — fast & tall', css:'#33e6ff', h:190,s:100,l:60, mod:{speed:1.35,life:0.85}, fast:true},
+  {id:'gold',   icon:'💛', name:'Gold Debut — crackly twinkle',  css:'#ffd23f', h:48, s:100,l:60, mod:{count:1.1,life:1.15}, twinkle:true},
+  {id:'lime',   icon:'💚', name:'Lime Fan Chant — lots of tiny', css:'#7dff4a', h:108,s:100,l:60, mod:{count:1.6,size:0.65}},
+  {id:'orange', icon:'🧡', name:'Sunset Stage — punchy pop',     css:'#ff7a2f', h:20, s:100,l:58, mod:{speed:1.3,life:0.6,size:1.3}},
+  {id:'silver', icon:'🤍', name:'Silver Sparkle — strobe',       css:'#f4f4ff', h:230,s:30, l:94, mod:{life:1.3,size:0.9}, twinkle:true},
+  {id:'rainbow',icon:'🌈', name:'Rainbow Fandom — every colour', css:'linear-gradient(160deg,#ff3fa4,#ffd23f,#7dff4a,#33e6ff,#a855ff)', rainbow:true, mod:{count:1.15}},
 ];
 const MAGICS = [
-  {id:'heart',  icon:'💖', name:'Heart Beat',        css:'#ff5ab8', shape:'heart'},
-  {id:'star',   icon:'⭐', name:'Star Debut',        css:'#ffe066', shape:'star'},
-  {id:'glitter',icon:'✨', name:'Glitter Comeback',  css:'#fff2b3', glitter:true},
-  {id:'bass',   icon:'💥', name:'Bass Drop',         css:'#ff4d4d', big:true},
-  {id:'high',   icon:'🚀', name:'High Note',         css:'#66b3ff', high:true},
-  {id:'willow', icon:'🌊', name:'Ballad Willow',     css:'#4dd2ff', willow:true},
-  {id:'spin',   icon:'🌀', name:'Spin Dance',        css:'#b48cff', shape:'spiral'},
-  {id:'chorus', icon:'🎵', name:'Chorus',            css:'#ff9ad1', shape:'notes', chord:true},
+  {id:'heart',  icon:'💖', name:'Heart Beat — heart shape',      css:'#ff5ab8', shape:'heart', mod:{}},
+  {id:'star',   icon:'⭐', name:'Star Debut — star shape',       css:'#ffe066', shape:'star', mod:{}},
+  {id:'glitter',icon:'✨', name:'Glitter Comeback — crackles',   css:'#fff2b3', glitter:true, mod:{life:1.4}},
+  {id:'bass',   icon:'💥', name:'Bass Drop — HUGE',              css:'#ff4d4d', big:true, mod:{size:1.5,speed:1.35,count:1.3,grav:0.7}},
+  {id:'high',   icon:'🚀', name:'High Note — sky high',          css:'#66b3ff', high:true, mod:{speed:1.1,size:0.9}},
+  {id:'willow', icon:'🌊', name:'Ballad Willow — drooping trails', css:'#4dd2ff', willow:true, mod:{}},
+  {id:'spin',   icon:'🌀', name:'Spin Dance — spiral',           css:'#b48cff', shape:'spiral', mod:{speed:1.05}},
+  {id:'chorus', icon:'🎵', name:'Chorus — music notes',          css:'#ff9ad1', shape:'notes', chord:true, mod:{}},
 ];
 const ALL = [...COLOURS, ...MAGICS];
 const byId = Object.fromEntries(ALL.map(p=>[p.id,p]));
@@ -367,7 +382,7 @@ const cv = $('#sky'), ctx = cv.getContext('2d', {alpha:false});
 const stars = Array.from({length:140}, () => ({x:Math.random(), y:Math.random()*0.75, r:rnd(0.6,1.8), p:rnd(TAU), s:rnd(1,3)}));
 const crowd = Array.from({length:80}, (_,i) => ({x:(i+rnd(0.1,0.9))/80, row:i%2, h:rnd(0.75,1.05), p:rnd(TAU), c:pick(COLOURS.slice(0,6)), w:rnd(0.6,1.4)}));
 const skyline = Array.from({length:26}, (_,i) => ({x:i/26, w:rnd(0.025,0.045), h:rnd(0.03,0.11), win:rnd()<0.8}));
-const GIRLS = [{c:'#ff3fa4', hair:'#ff9ad1'},{c:'#a855ff', hair:'#d9b3ff'},{c:'#33e6ff', hair:'#b3f5ff'}];
+const GIRLS = [{c:'#ff3fa4', skirt:'#ffb1dc', hair:'#ff5db8', style:0},{c:'#a855ff', skirt:'#d9b3ff', hair:'#c084ff', style:1},{c:'#33e6ff', skirt:'#b3f5ff', hair:'#6fefff', style:2}];
 let ctlTop = 0; // y where the DOM controls begin (stage sits above)
 
 function resize(){
@@ -412,21 +427,33 @@ function explode(x, y, m, small){
   const colours = m.filter(p=>p.h!==undefined||p.rainbow);
   const shapeP = [...m].reverse().find(p=>p.shape);
   const shape = shapeP ? shapeP.shape : 'peony';
-  const glitter = m.some(p=>p.glitter), big = m.some(p=>p.big), willow = m.some(p=>p.willow), high = m.some(p=>p.high), chord = m.some(p=>p.chord);
-  const scale = (big?1.7:1)*(high?0.9:1)*(small?0.5:1);
-  let n = Math.round((shape==='notes'?70:shape==='peony'?110:120) * (big?1.35:1) * (willow?0.8:1) * (small?0.45:1));
+  const glitter = m.some(p=>p.glitter), willow = m.some(p=>p.willow), chord = m.some(p=>p.chord);
+  // combine every potion's personality; repeats multiply, three-of-a-kind gets a bonus
+  const M = {speed:1,size:1,count:1,life:1,grav:1};
+  for (const p of m) if (p.mod) for (const k in p.mod) M[k] *= p.mod[k];
+  const same = m.length===3 && m[0]===m[1] && m[1]===m[2];
+  const potions = 0.8 + 0.2*m.length;
+  const scale = clamp(M.speed * potions * (same?1.35:1), 0.5, 2.6) * (small?0.5:1);
+  const big = scale > 1.45;
+  const sizeM = clamp(M.size * (same?1.3:1), 0.5, 2.2);
+  let n = Math.round((shape==='notes'?70:shape==='peony'?110:120) * M.count * potions * (same?1.3:1) * (willow?0.8:1) * (small?0.45:1));
+  n = Math.min(n, 460);
   const S = (willow?250:shape==='peony'?230:260) * U * scale;
-  const drag = willow?2.6:glitter?1.9:1.5, grav = (willow?230:big?120:170)*U;
-  const life = willow?rnd(4,6.5):glitter?rnd(2.6,4):rnd(1.6,2.6);
+  const drag = willow?2.6:glitter?1.9:1.5, grav = (willow?230:170)*U*M.grav;
+  const lifeBase = willow?rnd(4,6.5):glitter?rnd(2.6,4):rnd(1.6,2.6), life = clamp(lifeBase*M.life, 0.6, 8);
   const spin = shape==='spiral' ? 1.6 : 0;
   const twinkleAll = glitter || colours.some(c=>c.twinkle);
+  const nc = colours.length;
   for (let k=0;k<n;k++){
     const [dx,dy] = shapePoint(shape==='notes'?'peony':shape, k, n);
     const jitter = shape==='peony' ? 1 : rnd(0.94,1.06);
-    const c = colourFor(colours, k);
+    // mixed colours show as clear bands: concentric rings for peonies, segments around the outline for shapes
+    let band = 0;
+    if (nc > 1) band = shape==='peony' || shape==='notes' ? Math.min(nc-1, Math.floor((Math.hypot(dx,dy)-0.35)/0.65*nc)) : Math.floor(k/n*nc*3) % nc;
+    const c = colourFor(colours, band);
     const speed = S*jitter*(shape==='peony'?1:0.95);
     spawn({x, y, vx:dx*speed, vy:dy*speed, life, max:life, h:c.h, s:c.s, l:willow?Math.min(90,c.l+14):c.l,
-      sz:(big?3.6:2.8)*U, drag, grav, spin, tw:!!(c.tw||twinkleAll), glit:glitter, willow, tx:x, ty:y, tx2:x, ty2:y});
+      sz:2.8*U*sizeM, drag, grav, spin, tw:!!(c.tw||twinkleAll), glit:glitter, willow, tx:x, ty:y, tx2:x, ty2:y});
   }
   if (shape==='notes'){
     for (let k=0;k<16;k++){ const a = rnd(TAU), c = colourFor(colours,k);
@@ -437,30 +464,74 @@ function explode(x, y, m, small){
       spawn({x,y,vx:Math.cos(a)*S*r,vy:Math.sin(a)*S*r,life:rnd(4,6),max:5,h:48,s:100,l:72,sz:2.2*U,drag:2.6,grav:230*U,spin:0,willow:true,tw:true,tx:x,ty:y,tx2:x,ty2:y}); }
   }
   const c0 = colourFor(colours, 0);
-  FLASHES.push({x,y,r:(big?260:170)*U*scale,h:c0.h,s:c0.s,a:1});
+  FLASHES.push({x,y,r:170*U*scale,h:c0.h,s:c0.s,a:1});
   flashA = Math.max(flashA, small?0.06:big?0.28:0.14); flashH = c0.h; shake = Math.max(shake, small?0:big?9:3);
   cheer = Math.min(1, cheer + (big?0.6:0.3));
   if (AC){ sfxBoom(big && !small, x); if (glitter && !small) sfxCrackle(x); if (chord) sfxChord(); if (big && !small) sfxCheer(); }
   // Boo-Bops caught in the light pop into bubbles
-  const R = (big?260:180)*U*scale;
+  const R = 180*U*scale;
   for (const b of BOOBOPS){ if (!b.dead && Math.hypot(b.x-x, b.y-y) < R + b.r) popBooBop(b); }
 }
 
+/* ================= POTION CANNON ================= */
+// The cannon sits in the cauldron and swings to follow the mouse / last finger; it only fires when there is a potion mix.
+const aim = {x:0, y:0, a:-Math.PI/2, show:0}; let cannonKick = 0, mixCss = [];
+function cannonGeom(){
+  const cr = $('#cauldron').getBoundingClientRect();
+  const px = cr.width ? cr.left + cr.width/2 : W/2, py = cr.height ? cr.top + cr.height*0.12 : H*0.85;
+  const L = Math.max(64*U, (cr.width||100)*0.62), w = Math.max(22*U, (cr.width||100)*0.3);
+  return {px, py, L, w};
+}
+function aimAngle(px, py, x, y){ return clamp(Math.atan2(y-py, x-px), -Math.PI+0.3, -0.3); }
+function nope(){
+  const c = $('#cauldron'); c.classList.remove('nope'); void c.offsetWidth; c.classList.add('nope');
+  document.querySelectorAll('#ui .bottle').forEach(b => { b.classList.remove('hint'); void b.offsetWidth; b.classList.add('hint'); });
+  toast('🧪 ADD A POTION!'); lastTouch = performance.now();
+  if (AC){ const t=now(); tone(240,t,0.28,{type:'triangle',vol:0.25,glide:110}); tone(180,t+0.12,0.25,{type:'triangle',vol:0.2,glide:90}); }
+}
+
 function launch(tx, ty, ids){
+  if (!ids && !mix.length){ nope(); return; }
   if (tx===undefined){ tx = rnd(W*0.15, W*0.85); ty = rnd(H*0.12, H*0.5); }
   const m = (ids||mix).map(id=>byId[id]);
-  const high = m.some(p=>p.high);
-  const cr = $('#cauldron').getBoundingClientRect();
-  const x0 = cr.width ? cr.left + cr.width/2 : W/2, y0 = cr.height ? cr.top + cr.height*0.15 : H*0.85;
+  const high = m.some(p=>p.high), fast = high || m.some(p=>p.fast);
+  const {px, py, L} = cannonGeom();
   if (high) ty = Math.min(ty, H*0.22);
-  ty = clamp(ty, H*0.06, y0 - 80*U);
-  const T = high ? 0.55 : clamp(0.7 + Math.hypot(tx-x0, ty-y0)/(900*U), 0.7, 1.15);
+  ty = clamp(ty, H*0.06, py - 80*U);
+  const a = aimAngle(px, py, tx, ty); aim.x = tx; aim.y = ty; aim.a = a; cannonKick = 1;
+  const x0 = px + Math.cos(a)*L, y0 = py + Math.sin(a)*L;
+  const T = high ? 0.55 : fast ? 0.62 : clamp(0.7 + Math.hypot(tx-x0, ty-y0)/(900*U), 0.7, 1.15);
   const g = 500*U;
   ROCKETS.push({x:x0, y:y0, vx:(tx-x0)/T, vy:(ty-y0)/T - 0.5*g*T, g, t:0, T, m, h:(m.find(p=>p.h!==undefined)||{h:48}).h, high});
-  if (AC) sfxLaunch(high);
+  for (let k=0;k<10;k++){ const ang = a + rnd(-0.5,0.5), sp = rnd(80,260)*U;   // muzzle flash sparks
+    spawn({x:x0,y:y0,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp,life:rnd(0.2,0.45),max:0.4,h:(m.find(p=>p.h!==undefined)||{h:48}).h,s:100,l:80,sz:2*U,drag:3,grav:200*U,spin:0,tx:x0,ty:y0,tx2:x0,ty2:y0}); }
+  if (AC) sfxLaunch(fast);
   launches++; lastTouch = performance.now();
   if (launches % 10 === 0) addStar();
   cheer = Math.min(1, cheer+0.1);
+}
+function drawCannon(t, dt){
+  const {px, py, L, w} = cannonGeom();
+  if (aim.x || aim.y){ const ta = aimAngle(px, py, aim.x, aim.y); aim.a += (ta-aim.a)*Math.min(1, dt*12); }
+  cannonKick = Math.max(0, cannonKick - dt*5); aim.show = Math.max(0, aim.show - dt);
+  const c1 = mixCss[0] || '#7b3fe4', c2 = mixCss[1] || mixCss[0] || '#3a1866';
+  ctx.save(); ctx.translate(px, py); ctx.rotate(aim.a); ctx.translate(-cannonKick*10*U, 0);
+  // barrel
+  const grd = ctx.createLinearGradient(0,-w/2,0,w/2); grd.addColorStop(0,'#ffffff'); grd.addColorStop(0.18,c1); grd.addColorStop(0.7,c2); grd.addColorStop(1,'#1a0630');
+  ctx.fillStyle = grd; ctx.shadowColor = c1; ctx.shadowBlur = mix.length ? 16 : 0;
+  ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(-w*0.3, -w/2, L+w*0.3, w, w*0.35); else ctx.rect(-w*0.3, -w/2, L+w*0.3, w); ctx.fill();
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.fillRect(L*0.35, -w/2, w*0.22, w); ctx.fillRect(L*0.72, -w/2, w*0.22, w);   // bands
+  ctx.fillStyle = '#fff'; ctx.fillRect(L*0.1, -w*0.36, L*0.2, w*0.1);                                                  // shine
+  // muzzle ring + glow
+  ctx.fillStyle = '#2a1440'; ctx.beginPath(); ctx.ellipse(L, 0, w*0.16, w*0.55, 0, 0, TAU); ctx.fill();
+  ctx.fillStyle = mix.length ? c1 : '#3a1866'; ctx.beginPath(); ctx.ellipse(L, 0, w*0.1, w*0.4, 0, 0, TAU); ctx.fill();
+  if (mix.length){ ctx.globalCompositeOperation = 'lighter'; const mg = ctx.createRadialGradient(L,0,0,L,0,w*(1+0.3*Math.sin(t*6)));
+    mg.addColorStop(0,'rgba(255,255,255,0.7)'); mg.addColorStop(0.4,c1+'99'); mg.addColorStop(1,'rgba(0,0,0,0)'); ctx.fillStyle = mg; ctx.beginPath(); ctx.arc(L,0,w*1.4,0,TAU); ctx.fill(); }
+  ctx.restore();
+  // aim guide dots
+  if (aim.show > 0 && mix.length){ const mx = px+Math.cos(aim.a)*L, my = py+Math.sin(aim.a)*L; ctx.fillStyle = `rgba(255,255,255,${0.7*Math.min(1,aim.show)})`;
+    for (let k=1;k<=8;k++){ const f=k/9; ctx.beginPath(); ctx.arc(mx+(aim.x-mx)*f, my+(aim.y-my)*f - Math.sin(f*Math.PI)*40*U, (4-2*f)*U, 0, TAU); ctx.fill(); } }
 }
 
 /* ================= BOO-BOPS (fun smiley demons) & BUBBLES ================= */
@@ -612,8 +683,71 @@ function draw(t, dt){
   ctx.globalCompositeOperation = 'source-over';
   for (const b of BOOBOPS){ drawBooBop(b, t); }
   drawBubbles(t);
-  // stage + girls + crowd
+  // stage + girls + crowd + cannon
   drawStage(t);
+  drawCannon(t, dt);
+  ctx.restore();
+}
+// A chibi K-pop idol: crop top + pleated skirt + boots, signature hair, mic, dance poses that change every two beats.
+function drawGirl(gi, i, x, y, gh, t){
+  const skin = '#ffd9c2', dark = '#2a1440', beatT = t*BPM/60;
+  const pose = cheer > 0.8 ? 0 : (Math.floor(beatT/2) + i) % 4;
+  const sway = Math.sin(beatT*Math.PI + i) * 0.05 * (0.5+cheer);
+  const legUp = ((Math.floor(beatT) + i) % 2) * Math.pow(1-beat, 2) * gh*0.08;
+  ctx.save(); ctx.translate(x, y); ctx.rotate(sway); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.shadowColor = gi.c; ctx.shadowBlur = 14;
+  const rr = (rx, ry, w, h, r) => { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(rx, ry, w, h, r); else ctx.rect(rx, ry, w, h); ctx.fill(); };
+  // legs + boots
+  ctx.strokeStyle = skin; ctx.lineWidth = gh*0.085;
+  ctx.beginPath(); ctx.moveTo(-gh*0.09, -gh*0.4); ctx.lineTo(-gh*0.11, -gh*0.12 - legUp); ctx.moveTo(gh*0.09, -gh*0.4); ctx.lineTo(gh*0.11, -gh*0.12); ctx.stroke();
+  ctx.fillStyle = '#fff'; rr(-gh*0.19, -gh*0.17 - legUp, gh*0.16, gh*0.17, gh*0.04); rr(gh*0.03, -gh*0.17, gh*0.16, gh*0.17, gh*0.04);
+  ctx.fillStyle = gi.c; ctx.fillRect(-gh*0.19, -gh*0.05 - legUp, gh*0.16, gh*0.03); ctx.fillRect(gh*0.03, -gh*0.05, gh*0.16, gh*0.03);
+  // pleated skirt
+  ctx.fillStyle = gi.skirt; ctx.beginPath(); ctx.moveTo(-gh*0.15, -gh*0.46); ctx.lineTo(gh*0.15, -gh*0.46); ctx.lineTo(gh*0.27, -gh*0.26); ctx.lineTo(-gh*0.27, -gh*0.26); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = gi.c; ctx.lineWidth = gh*0.018; ctx.beginPath(); for (let k=-2;k<=2;k++){ ctx.moveTo(k*gh*0.06, -gh*0.45); ctx.lineTo(k*gh*0.105, -gh*0.27); } ctx.stroke();
+  // crop top + belt + collar
+  ctx.fillStyle = gi.c; rr(-gh*0.15, -gh*0.66, gh*0.3, gh*0.2, gh*0.05);
+  ctx.fillStyle = skin; ctx.fillRect(-gh*0.13, -gh*0.485, gh*0.26, gh*0.025);
+  ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.moveTo(-gh*0.09, -gh*0.66); ctx.lineTo(0, -gh*0.58); ctx.lineTo(gh*0.09, -gh*0.66); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#ffd23f'; ctx.beginPath(); ctx.arc(0, -gh*0.5, gh*0.03, 0, TAU); ctx.fill();
+  // arms by pose (hands positions), mic in the singing hand
+  const wig = Math.sin(t*8+i)*2*U;
+  const L = [[-gh*0.36,-gh*0.98],[-gh*0.42,-gh*0.62],[-gh*0.06,-gh*0.78],[-gh*0.27,-gh*0.44]][pose];
+  const R = [[gh*0.36,-gh*0.98],[gh*0.06,-gh*0.78],[gh*0.22,-gh*1.04],[gh*0.27,-gh*0.44]][pose];
+  ctx.strokeStyle = skin; ctx.lineWidth = gh*0.075;
+  ctx.beginPath(); ctx.moveTo(-gh*0.14, -gh*0.62); ctx.quadraticCurveTo(-gh*0.3, -gh*0.7, L[0], L[1]+wig); ctx.moveTo(gh*0.14, -gh*0.62); ctx.quadraticCurveTo(gh*0.3, -gh*0.7, R[0], R[1]-wig); ctx.stroke();
+  ctx.strokeStyle = gi.c; ctx.lineWidth = gh*0.09; ctx.beginPath(); ctx.moveTo(-gh*0.15, -gh*0.64); ctx.lineTo(-gh*0.2, -gh*0.6); ctx.moveTo(gh*0.15, -gh*0.64); ctx.lineTo(gh*0.2, -gh*0.6); ctx.stroke(); // sleeves
+  const micHand = pose===1 ? R : pose===2 ? L : null;
+  if (micHand){ ctx.strokeStyle = '#555'; ctx.lineWidth = gh*0.035; ctx.beginPath(); ctx.moveTo(micHand[0], micHand[1]); ctx.lineTo(micHand[0]*0.6, micHand[1]-gh*0.1); ctx.stroke();
+    ctx.fillStyle = '#ff3fa4'; ctx.beginPath(); ctx.arc(micHand[0]*0.6, micHand[1]-gh*0.12, gh*0.05, 0, TAU); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.beginPath(); ctx.arc(micHand[0]*0.6-gh*0.015, micHand[1]-gh*0.135, gh*0.018, 0, TAU); ctx.fill(); }
+  else { ctx.fillStyle = '#fff'; ctx.shadowColor = '#fff'; ctx.shadowBlur = 12; ctx.beginPath(); ctx.arc(R[0], R[1]-wig-gh*0.05, gh*0.045, 0, TAU); ctx.fill(); ctx.shadowColor = gi.c; ctx.shadowBlur = 14; } // lightstick
+  // head
+  ctx.fillStyle = skin; ctx.beginPath(); ctx.arc(0, -gh*0.8, gh*0.16, 0, TAU); ctx.fill();
+  // hair by style
+  ctx.fillStyle = gi.hair;
+  if (gi.style===0){ // high ponytail
+    ctx.beginPath(); ctx.arc(0, -gh*0.83, gh*0.175, Math.PI*1.05, Math.PI*1.95); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(-gh*0.02, -gh*0.9, gh*0.18, gh*0.1, 0, Math.PI, TAU); ctx.fill();
+    const sw = Math.sin(beatT*Math.PI)*0.35; ctx.save(); ctx.translate(-gh*0.14, -gh*0.95); ctx.rotate(-0.6+sw); ctx.beginPath(); ctx.ellipse(0, gh*0.16, gh*0.07, gh*0.2, 0, 0, TAU); ctx.fill(); ctx.restore();
+    ctx.fillStyle = '#ffd23f'; ctx.beginPath(); ctx.arc(-gh*0.13, -gh*0.95, gh*0.03, 0, TAU); ctx.fill();
+  } else if (gi.style===1){ // space buns
+    ctx.beginPath(); ctx.arc(0, -gh*0.83, gh*0.175, Math.PI*1.05, Math.PI*1.95); ctx.fill();
+    ctx.beginPath(); ctx.arc(-gh*0.15, -gh*0.97, gh*0.075, 0, TAU); ctx.arc(gh*0.15, -gh*0.97, gh*0.075, 0, TAU); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(-gh*0.15, -gh*0.97, gh*0.025, 0, TAU); ctx.arc(gh*0.15, -gh*0.97, gh*0.025, 0, TAU); ctx.fill();
+  } else { // bob with fringe + streak
+    ctx.beginPath(); ctx.arc(0, -gh*0.82, gh*0.185, Math.PI, TAU); ctx.fill(); ctx.fillRect(-gh*0.185, -gh*0.82, gh*0.06, gh*0.18); ctx.fillRect(gh*0.125, -gh*0.82, gh*0.06, gh*0.18);
+    ctx.fillStyle = '#ff3fa4'; ctx.fillRect(gh*0.14, -gh*0.82, gh*0.025, gh*0.16);
+    ctx.strokeStyle = '#333'; ctx.lineWidth = gh*0.012; ctx.beginPath(); ctx.arc(0, -gh*0.8, gh*0.16, 0.1, 0.9); ctx.stroke(); // headset mic
+    ctx.fillStyle = '#333'; ctx.beginPath(); ctx.arc(gh*0.1, -gh*0.7, gh*0.02, 0, TAU); ctx.fill();
+  }
+  // face
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = dark; ctx.beginPath(); ctx.ellipse(-gh*0.06, -gh*0.8, gh*0.022, gh*0.032, 0, 0, TAU); ctx.ellipse(gh*0.06, -gh*0.8, gh*0.022, gh*0.032, 0, 0, TAU); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(-gh*0.052, -gh*0.812, gh*0.009, 0, TAU); ctx.arc(gh*0.068, -gh*0.812, gh*0.009, 0, TAU); ctx.fill();
+  ctx.strokeStyle = dark; ctx.lineWidth = gh*0.014; ctx.beginPath(); ctx.arc(0, -gh*0.755, gh*0.045, 0.25, Math.PI-0.25); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,120,170,0.55)'; ctx.beginPath(); ctx.arc(-gh*0.11, -gh*0.755, gh*0.028, 0, TAU); ctx.arc(gh*0.11, -gh*0.755, gh*0.028, 0, TAU); ctx.fill();
+  ctx.fillStyle = '#ffd23f'; ctx.beginPath(); ctx.arc(-gh*0.16, -gh*0.76, gh*0.018, 0, TAU); ctx.arc(gh*0.16, -gh*0.76, gh*0.018, 0, TAU); ctx.fill(); // earrings
   ctx.restore();
 }
 function drawBooBop(b, t){
@@ -653,21 +787,47 @@ function drawBubbles(t){
     ctx.restore(); }
 }
 function drawStage(t){
-  const top = ctlTop - 4*U, bounce = Math.pow(1-beat, 3) * (6+cheer*14) * U;
-  // LED wall glow behind girls
+  const top = ctlTop - 4*U, beatF = Math.pow(1-beat, 3), bounce = beatF * (6+cheer*14) * U, hh = (t*40)%360;
+  const gh = 92*U, spread = Math.min(W*0.18, 120*U);
+  lsx = W/2; lsy = top - gh*1.35 - 34*U;
+  // LED wall with equaliser bars
+  const lw = Math.min(W*0.62, 560*U), lx = W/2 - lw/2, lh = 150*U;
+  ctx.fillStyle = '#0c0322'; ctx.fillRect(lx, top-lh, lw, lh);
   ctx.globalCompositeOperation = 'lighter';
-  const lw = W*0.5, lx = W/2 - lw/2, lh = 120*U;
-  const lg = ctx.createLinearGradient(lx,0,lx+lw,0); const hh = (t*40)%360;
-  lg.addColorStop(0, hsl(hh,100,60,0.15+cheer*0.15)); lg.addColorStop(0.5, hsl((hh+120)%360,100,60,0.2+cheer*0.2)); lg.addColorStop(1, hsl((hh+240)%360,100,60,0.15+cheer*0.15));
+  const bars = 16, bw = lw/bars;
+  for (let i=0;i<bars;i++){ const e = 0.25+0.75*Math.abs(Math.sin(t*3.1+i*0.75))*(0.7+0.3*beatF) * (0.7+0.3*cheer); const bh = lh*0.82*e;
+    ctx.fillStyle = hsl((hh+i*22)%360,100,60,0.55); ctx.fillRect(lx+i*bw+bw*0.15, top-bh, bw*0.7, bh); }
+  const lg = ctx.createLinearGradient(lx,0,lx+lw,0);
+  lg.addColorStop(0, hsl(hh,100,60,0.12+cheer*0.12)); lg.addColorStop(0.5, hsl((hh+120)%360,100,60,0.16+cheer*0.16)); lg.addColorStop(1, hsl((hh+240)%360,100,60,0.12+cheer*0.12));
   ctx.fillStyle = lg; ctx.fillRect(lx, top-lh, lw, lh);
   ctx.globalCompositeOperation = 'source-over';
+  ctx.strokeStyle = '#33e6ff'; ctx.lineWidth = 2*U; ctx.shadowColor = '#33e6ff'; ctx.shadowBlur = 10; ctx.strokeRect(lx, top-lh, lw, lh); ctx.shadowBlur = 0;
+  // lighting truss + neon sign above the lightstick
+  const sy = lsy - 44*U, tx0 = Math.max(lx, W*0.08), tx1 = Math.min(lx+lw, W*0.92);
+  ctx.fillStyle = '#1a0a2c'; ctx.fillRect(tx0, sy - 30*U, tx1-tx0, 6*U);
+  ctx.strokeStyle = '#2a1440'; ctx.lineWidth = 2*U; ctx.beginPath(); for (let x=tx0; x<tx1; x+=14*U){ ctx.moveTo(x, sy-30*U); ctx.lineTo(x+7*U, sy-24*U); ctx.lineTo(x+14*U, sy-30*U); } ctx.stroke();
+  const parCols = ['#ff3fa4','#33e6ff','#ffd23f','#a855ff'];
+  for (let i=0;i<7;i++){ const x = tx0 + (tx1-tx0)*(i+0.5)/7, on = 0.35 + 0.65*Math.pow(1-((beat + i*0.25)%1), 2), col = parCols[i%4];
+    ctx.fillStyle = '#0b0318'; ctx.beginPath(); ctx.arc(x, sy-19*U, 6*U, 0, TAU); ctx.fill();
+    ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 18*on; ctx.globalAlpha = on; ctx.beginPath(); ctx.arc(x, sy-19*U, 4*U, 0, TAU); ctx.fill(); ctx.globalAlpha = 1; ctx.shadowBlur = 0; }
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  ctx.font = `900 ${Math.min(30*U, (tx1-tx0)*0.11)}px "Arial Black","Arial Rounded MT Bold","Segoe UI",system-ui,sans-serif`;
+  ctx.lineWidth = 6*U; ctx.strokeStyle = '#ff3fa4'; ctx.shadowColor = '#ff3fa4'; ctx.shadowBlur = 22; ctx.lineJoin = 'round'; ctx.strokeText('GLOW GIRLS', W/2, sy);
+  ctx.fillStyle = '#fff'; ctx.shadowBlur = 0; ctx.fillText('GLOW GIRLS', W/2, sy);
+  ctx.font = `800 ${11*U}px "Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif`; ctx.fillStyle = '#33e6ff'; ctx.shadowColor = '#33e6ff'; ctx.shadowBlur = 10;
+  ctx.fillText('글로우 걸즈  ✦  WORLD TOUR', W/2, sy + 13*U); ctx.shadowBlur = 0;
   // platform
   ctx.fillStyle = '#1a0836'; ctx.beginPath(); ctx.moveTo(W*0.12, top); ctx.lineTo(W*0.88, top); ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.fill();
   ctx.strokeStyle = '#ff3fa4'; ctx.lineWidth = 3*U; ctx.shadowColor='#ff3fa4'; ctx.shadowBlur = 14; ctx.beginPath(); ctx.moveTo(W*0.12, top); ctx.lineTo(W*0.88, top); ctx.stroke();
   ctx.strokeStyle = '#33e6ff'; ctx.shadowColor='#33e6ff'; ctx.beginPath(); ctx.moveTo(W*0.12, top+6*U); ctx.lineTo(W*0.88, top+6*U); ctx.stroke(); ctx.shadowBlur = 0;
+  for (let i=0;i<12;i++){ const x = W*0.14 + (W*0.72)*i/11, col = parCols[i%4], on = 0.4+0.6*Math.pow(1-((beat + i*0.125)%1),2);   // footlights
+    ctx.fillStyle = col; ctx.globalAlpha = on; ctx.beginPath(); ctx.arc(x, top+3*U, 3*U, 0, TAU); ctx.fill(); ctx.globalAlpha = 1; }
+  // speaker stacks
+  for (const sx of [W*0.2, W*0.8]){ for (let k=0;k<2;k++){ const bx = sx-20*U, by = top-34*U*(k+1);
+    ctx.fillStyle = '#0b0318'; ctx.fillRect(bx, by, 40*U, 33*U); ctx.strokeStyle = '#33e6ff88'; ctx.lineWidth = 1.5*U; ctx.strokeRect(bx, by, 40*U, 33*U);
+    ctx.fillStyle = '#2a1440'; ctx.beginPath(); ctx.arc(sx, by+16*U, 11*U*(1+0.12*beatF), 0, TAU); ctx.fill();
+    ctx.fillStyle = '#5c3f80'; ctx.beginPath(); ctx.arc(sx, by+16*U, 4*U, 0, TAU); ctx.fill(); } }
   // Giant Lightstick (the thing the Glow Girls protect)
-  const gh = 78*U, spread = Math.min(W*0.16, 110*U);
-  lsx = W/2; lsy = top - gh*1.35 - 34*U;
   { const gl = 0.15 + 0.85*glow, headR = 26*U;
     ctx.save();
     ctx.fillStyle = '#2a1440'; ctx.fillRect(lsx-5*U, lsy, 10*U, top-lsy);           // handle
@@ -683,23 +843,7 @@ function drawStage(t){
     ctx.closePath(); ctx.fill();
     ctx.restore(); }
   // Glow Girls
-  GIRLS.forEach((gi,i) => { const x = W/2 + (i-1)*spread, y = top - bounce*(i===1?1.2:1) - (cheer>0.5?Math.sin(t*9+i)*6*U:0);
-    ctx.save(); ctx.translate(x,y); ctx.shadowColor = gi.c; ctx.shadowBlur = 18;
-    ctx.fillStyle = gi.c; // body
-    ctx.beginPath(); ctx.moveTo(-gh*0.22,0); ctx.lineTo(gh*0.22,0); ctx.lineTo(gh*0.17,-gh*0.55); ctx.lineTo(-gh*0.17,-gh*0.55); ctx.fill();
-    // legs
-    ctx.strokeStyle = gi.c; ctx.lineWidth = gh*0.09; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(-gh*0.1,0); ctx.lineTo(-gh*0.12,gh*0.02); ctx.moveTo(gh*0.1,0); ctx.lineTo(gh*0.12,gh*0.02); ctx.stroke();
-    // arms (up when cheering)
-    const up = cheer; const ay = -gh*0.5, ax = gh*0.2;
-    ctx.beginPath(); ctx.moveTo(-ax,ay); ctx.lineTo(-ax-gh*0.22, ay - up*gh*0.35 + (1-up)*gh*0.2 + Math.sin(t*6+i)*4*U);
-    ctx.moveTo(ax,ay); ctx.lineTo(ax+gh*0.22, ay - up*gh*0.35 + (1-up)*gh*0.2 + Math.cos(t*6+i)*4*U); ctx.stroke();
-    // lightstick in right hand
-    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(ax+gh*0.22, ay - up*gh*0.35 + (1-up)*gh*0.2 + Math.cos(t*6+i)*4*U - gh*0.06, gh*0.06, 0, TAU); ctx.fill();
-    // head + hair
-    ctx.fillStyle = '#ffd9c2'; ctx.beginPath(); ctx.arc(0,-gh*0.72,gh*0.17,0,TAU); ctx.fill();
-    ctx.fillStyle = gi.hair; ctx.beginPath(); ctx.arc(0,-gh*0.76,gh*0.19,Math.PI,TAU); ctx.fill();
-    ctx.beginPath(); ctx.ellipse(gh*0.2*(i===1?0:i-1||1)*-1,-gh*0.62,gh*0.09,gh*0.24,0.3*(i-1),0,TAU); ctx.fill();
-    ctx.restore(); });
+  GIRLS.forEach((gi,i) => { const x = W/2 + (i-1)*spread, y = top - bounce*(i===1?1.2:1) - (cheer>0.5?Math.abs(Math.sin(t*9+i))*10*U:0); drawGirl(gi, i, x, y, gh, t); });
   // crowd (in front, bottom band)
   const band = H - top; const baseY = H + 6*U;
   for (const c of crowd){ const cx = c.x*W, ch = (band*0.55 + 30*U) * c.h * (c.row?0.85:1), bob = Math.pow(1-((beat+c.p/TAU)%1),2)*(4+cheer*10)*U;
@@ -720,27 +864,27 @@ function drawStage(t){
 function bottleHTML(p){
   return `<button class="bottle" data-id="${p.id}" style="--c:${p.css.startsWith('linear')?'#ff7ad9':p.css}" aria-label="${p.name}">
     <span class="cork"></span><span class="neck"></span>
-    <span class="glass" ${p.rainbow?`style="background:${p.css}"`:''}><span class="eyes"><i></i><i></i></span><span class="icon">${p.icon}</span></span></button>`;
+    <span class="glass" ${p.rainbow?`style="background:${p.css}"`:''}><span class="eyes"><i></i><i></i></span><span class="icon">${p.icon}</span></span><span class="n"></span></button>`;
 }
-$('#left').innerHTML = COLOURS.map(bottleHTML).join('');
-$('#right').innerHTML = MAGICS.map(bottleHTML).join('');
+$('#left').innerHTML = '<span class="lbl"><i>🎨</i><b>COLOURS</b></span>' + COLOURS.map(bottleHTML).join('');
+$('#right').innerHTML = '<span class="lbl"><i>✨</i><b>MAGIC</b></span>' + MAGICS.map(bottleHTML).join('');
 $('#splashBottles').innerHTML = [COLOURS[0],COLOURS[2],MAGICS[0],COLOURS[3],MAGICS[1]].map(bottleHTML).join('');
 
 function renderMix(){
   const chips = $('#chips'); chips.innerHTML = mix.map(id => { const p=byId[id]; return `<span style="--c:${p.css.startsWith('linear')?'#ff7ad9':p.css}">${p.icon}</span>`; }).join('');
-  document.querySelectorAll('#ui .bottle').forEach(b => b.classList.toggle('in-mix', mix.includes(b.dataset.id)));
-  const cols = mix.map(id=>byId[id]).filter(p=>p.css && !p.shape && !p.glitter && !p.big && !p.high && !p.willow);
+  const counts = {}; mix.forEach(id => counts[id] = (counts[id]||0)+1);
+  document.querySelectorAll('#ui .bottle').forEach(b => { const n = counts[b.dataset.id]||0; b.classList.toggle('in-mix', n>0); b.querySelector('.n').textContent = n; });
+  const cols = mix.map(id=>byId[id]).filter(p=>p.h!==undefined||p.rainbow);
   const c = $('#cauldron');
-  if (!mix.length){ c.style.removeProperty('--liq'); c.style.removeProperty('--glow'); return; }
+  if (!mix.length){ c.style.removeProperty('--liq'); c.style.removeProperty('--glow'); mixCss = []; return; }
   const stops = (cols.length?cols:mix.map(id=>byId[id])).map(p=>p.rainbow?'#ff3fa4,#ffd23f,#7dff4a,#33e6ff,#a855ff':p.css);
-  const list = stops.join(',');
+  const list = stops.join(','); mixCss = list.split(',');
   c.style.setProperty('--liq', `linear-gradient(90deg,${list},${list.split(',')[0]})`);
   c.style.setProperty('--glow', list.split(',')[0]);
 }
 function addPotion(id, btn){
   initAudio(); lastTouch = performance.now();
-  if (mix.includes(id)) { mix.splice(mix.indexOf(id),1); }
-  mix.push(id); while (mix.length>3) mix.shift();
+  mix.push(id); while (mix.length>3) mix.shift();   // repeats allowed: three golds = one big gold
   renderMix(); if (AC) sfxPour(ALL.findIndex(p=>p.id===id));
   if (btn){ btn.classList.remove('pour'); void btn.offsetWidth; btn.classList.add('pour'); }
   const c = $('#cauldron'); c.classList.remove('slosh'); void c.offsetWidth; c.classList.add('slosh');
@@ -749,7 +893,8 @@ document.querySelectorAll('#ui .bottle').forEach(b => b.addEventListener('pointe
 $('#clear').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); mix.length=0; renderMix(); if (AC){ const t=now(); tone(500,t,0.15,{type:'sine',vol:0.2,glide:150}); } lastTouch=performance.now(); });
 $('#cauldron').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); const c=$('#cauldron'); c.classList.remove('slosh'); void c.offsetWidth; c.classList.add('slosh'); if (AC){ const t=now(); for(let k=0;k<3;k++) tone(rnd(300,600),t+k*0.06,0.1,{type:'sine',vol:0.15,glide:200}); } lastTouch=performance.now(); });
 $('#go').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); launch(); });
-cv.addEventListener('pointerdown', e => { e.preventDefault(); if (!started) return; initAudio(); launch(e.clientX, e.clientY); });
+cv.addEventListener('pointerdown', e => { e.preventDefault(); if (!started) return; initAudio(); aim.x = e.clientX; aim.y = e.clientY; launch(e.clientX, e.clientY); });
+cv.addEventListener('pointermove', e => { if (!started) return; aim.x = e.clientX; aim.y = e.clientY; aim.show = e.pointerType==='mouse' ? 0.5 : 0.8; });
 $('#finale').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); if (performance.now() < finaleUntil) return; finaleUntil = performance.now()+10000; nextFinaleShot = 0; $('#finale').classList.add('busy'); toast('🎆 FINALE! 🎆'); cheer = 1; lastTouch = performance.now(); });
 $('#music').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); setMusic(!musicOn); });
 document.addEventListener('contextmenu', e => { if (e.target.id!=='shot') e.preventDefault(); });
