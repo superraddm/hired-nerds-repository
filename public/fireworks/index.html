@@ -443,11 +443,11 @@ const skyline = Array.from({length:26}, (_,i) => ({x:i/26, w:rnd(0.025,0.045), h
 /* ================= CHARACTERS & WARDROBE ================= */
 // Three Korean idols. `face` shapes them apart: rx/ry head size, cheek fullness, jaw width, chin width, eye width/height, liner wing, brow tilt.
 const CHARS = [
-  {id:'sol',  name:'SOL',  skin:'#f7dfcd', eyes:'#3a2418', face:{rx:0.076,ry:0.09, cheek:1.0, jaw:0.5, chinW:0.008,eyeW:1.05,eyeH:0.6, wing:1.3,brow:-0.12},   // heart-shaped face, pointed chin, cat-eye
+  {id:'sol',  name:'SOL',  skin:'#f7dfcd', eyes:'#3a2418', face:{rx:0.076,ry:0.09, cheek:1.0, jaw:0.5, chinW:0.008,eyeW:1.05,eyeH:0.78,wing:1.1,brow:-0.05},   // heart-shaped face, pointed chin, cat-eye
     def:{hair:{style:'ponytail',color:'#1b1026'}, top:{style:'jacket',color:'#a855ff'}, bottom:{style:'shorts',color:'#1b1026'}, shoes:{style:'boots',color:'#1b1026'},   face:['earrings'],     faceColor:'#33e6ff'}},
-  {id:'hana', name:'HANA', skin:'#f2d0b3', eyes:'#5a2d1a', face:{rx:0.083,ry:0.084,cheek:1.18,jaw:0.78,chinW:0.03, eyeW:1.0, eyeH:0.85,wing:0.6,brow:0.12},   // rounder, softer face, big eyes
+  {id:'hana', name:'HANA', skin:'#f2d0b3', eyes:'#5a2d1a', face:{rx:0.083,ry:0.084,cheek:1.18,jaw:0.78,chinW:0.03, eyeW:1.0, eyeH:1.0, wing:0.5,brow:0.1},    // rounder, softer face, big eyes
     def:{hair:{style:'wavy',color:'#ff3fa4'},     top:{style:'crop',color:'#ffd23f'},   bottom:{style:'skirt',color:'#ff3fa4'},  shoes:{style:'platform',color:'#ffffff'}, face:['starsticker'],  faceColor:'#ffd23f'}},
-  {id:'jia',  name:'JIA',  skin:'#e6bb97', eyes:'#2a1a12', face:{rx:0.07, ry:0.095,cheek:0.94,jaw:0.88,chinW:0.036,eyeW:1.15,eyeH:0.48,wing:0.9,brow:0.0},    // longer face, defined jaw, narrow eyes
+  {id:'jia',  name:'JIA',  skin:'#e6bb97', eyes:'#2a1a12', face:{rx:0.07, ry:0.095,cheek:0.94,jaw:0.88,chinW:0.036,eyeW:1.15,eyeH:0.7, wing:0.7,brow:0.05},   // longer face, defined jaw, almond eyes
     def:{hair:{style:'buns',color:'#2a1440'},     top:{style:'tank',color:'#33e6ff'},   bottom:{style:'cargo',color:'#1b1026'},  shoes:{style:'hightops',color:'#7dff4a'}, face:['heartglasses'], faceColor:'#ff3fa4'}},
 ];
 const WARDROBE = {
@@ -852,12 +852,13 @@ function drawGirl(ch, look, i, x, y, gh, t, still){
     ctx.fillStyle = ch.eyes; ctx.beginPath(); ctx.arc(ex+X(s*0.04), ey, eh*0.9, 0, TAU); ctx.fill();
     ctx.fillStyle = dark; ctx.beginPath(); ctx.arc(ex+X(s*0.04), ey+eh*0.1, eh*0.5, 0, TAU); ctx.fill();
     ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(ex+X(s*0.04)-eh*0.35, ey-eh*0.35, eh*0.28, 0, TAU); ctx.fill();
-    ctx.strokeStyle = dark; ctx.lineWidth = X(0.075); ctx.beginPath(); ctx.moveTo(ex-s*ew, ey-eh*0.2); ctx.quadraticCurveTo(ex, ey-eh*1.7, ex+s*ew*1.05, ey-eh*0.4); ctx.lineTo(ex+s*ew*(1.05+0.35*F.wing), ey-eh*(0.4+0.9*F.wing)); ctx.stroke();   // liner + wing
-    ctx.lineWidth = X(0.05); ctx.beginPath(); ctx.moveTo(ex-s*X(0.3), Y(-0.5+F.brow*0.3)); ctx.quadraticCurveTo(ex+s*X(0.05), Y(-0.68-F.brow*0.6), ex+s*X(0.42), Y(-0.5)); ctx.stroke();   // soft arched brow
+    ctx.strokeStyle = dark; ctx.lineWidth = X(0.05); ctx.beginPath(); ctx.moveTo(ex-s*ew*0.95, ey-eh*0.3); ctx.quadraticCurveTo(ex, ey-eh*1.25, ex+s*ew*1.02, ey-eh*0.45); ctx.lineTo(ex+s*ew*(1.02+0.28*F.wing), ey-eh*(0.45+0.7*F.wing)); ctx.stroke();   // fine liner + wing
+    ctx.lineWidth = X(0.03); ctx.beginPath(); ctx.moveTo(ex+s*ew*0.9, ey-eh*0.6); ctx.lineTo(ex+s*ew*1.1, ey-eh*1.1); ctx.moveTo(ex+s*ew*0.6, ey-eh*0.95); ctx.lineTo(ex+s*ew*0.7, ey-eh*1.45); ctx.stroke();   // lashes
+    ctx.strokeStyle = 'rgba(42,20,64,0.75)'; ctx.lineWidth = X(0.04); ctx.beginPath(); ctx.moveTo(ex-s*X(0.28), Y(-0.6+F.brow*0.3)); ctx.quadraticCurveTo(ex+s*X(0.08), Y(-0.78-F.brow*0.5), ex+s*X(0.42), Y(-0.6)); ctx.stroke();   // soft arched brow, lifted
   }
   ctx.strokeStyle = 'rgba(0,0,0,0.22)'; ctx.lineWidth = X(0.05); ctx.beginPath(); ctx.moveTo(X(0.02), Y(0.3)); ctx.lineTo(X(0.09), Y(0.46)); ctx.stroke();   // nose
-  ctx.fillStyle = '#ff5f8a'; ctx.beginPath(); ctx.arc(X(-0.11), Y(0.66), X(0.13), 0, TAU); ctx.arc(X(0.11), Y(0.66), X(0.13), 0, TAU); ctx.fill(); ctx.beginPath(); ctx.moveTo(X(-0.24), Y(0.68)); ctx.quadraticCurveTo(0, Y(1.0), X(0.24), Y(0.68)); ctx.fill();   // lips
-  ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.beginPath(); ctx.arc(X(-0.08), Y(0.62), X(0.04), 0, TAU); ctx.fill();   // gloss
+  ctx.fillStyle = '#ff5f8a'; ctx.beginPath(); ctx.moveTo(X(-0.3), Y(0.58)); ctx.quadraticCurveTo(X(-0.1), Y(0.66), 0, Y(0.64)); ctx.quadraticCurveTo(X(0.1), Y(0.66), X(0.3), Y(0.58)); ctx.quadraticCurveTo(0, Y(0.98), X(-0.3), Y(0.58)); ctx.fill();   // soft closed smile
+  ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.beginPath(); ctx.ellipse(X(-0.06), Y(0.76), X(0.09), X(0.04), 0, 0, TAU); ctx.fill();   // gloss
   ctx.fillStyle = 'rgba(255,100,150,0.28)'; ctx.beginPath(); ctx.ellipse(X(-0.6), Y(0.42), X(0.2), X(0.12), 0, 0, TAU); ctx.ellipse(X(0.6), Y(0.42), X(0.2), X(0.12), 0, 0, TAU); ctx.fill();   // blush
   // --- face accessories ---
   for (const id of look.face) drawFaceAcc(id, gh, accC);
