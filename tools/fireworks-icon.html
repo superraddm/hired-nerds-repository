@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>icon</title>
+<style>
+html,body{margin:0;width:100vw;height:100vh;overflow:hidden;background:#12002b}
+.bg{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,#5a1590 0%,#1a0640 55%,#0a0020 100%)}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+</style></head><body>
+<div class="bg"></div>
+<canvas id="c"></canvas>
+<script>
+const c=document.getElementById('c'),S=Math.min(innerWidth,innerHeight);c.width=innerWidth;c.height=innerHeight;const x=c.getContext('2d');
+const cx=innerWidth/2,cy=innerHeight/2;
+function burst(px,py,r,col,n,w){x.strokeStyle=col;x.lineCap='round';x.lineWidth=w;x.shadowColor=col;x.shadowBlur=r*0.25;
+ for(let i=0;i<n;i++){const a=i/n*Math.PI*2;x.beginPath();x.moveTo(px+Math.cos(a)*r*0.25,py+Math.sin(a)*r*0.25);x.lineTo(px+Math.cos(a)*r,py+Math.sin(a)*r);x.stroke();
+ x.fillStyle=col;x.beginPath();x.arc(px+Math.cos(a)*r,py+Math.sin(a)*r,w*0.9,0,7);x.fill();}}
+burst(cx,cy-S*0.04,S*0.36,'#ff3fa4',18,S*0.03);
+burst(cx-S*0.25,cy+S*0.2,S*0.16,'#33e6ff',12,S*0.02);
+burst(cx+S*0.26,cy+S*0.18,S*0.14,'#ffd23f',12,S*0.02);
+x.shadowBlur=0;
+// glowing star core
+x.fillStyle='#fff';x.shadowColor='#ffe066';x.shadowBlur=S*0.08;x.beginPath();
+for(let k=0;k<10;k++){const rr=k%2?S*0.05:S*0.11,a=-Math.PI/2+k*Math.PI/5;x.lineTo(cx+Math.cos(a)*rr,cy-S*0.04+Math.sin(a)*rr);}x.closePath();x.fill();
+</script></body></html>
