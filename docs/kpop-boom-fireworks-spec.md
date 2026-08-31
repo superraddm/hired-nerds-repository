@@ -31,6 +31,18 @@ Our original cast and the story:
 - **What if the lightstick goes dark?** It can't stay dark. When the last bit of glow is taken, the Glow Girls do a **POWER UP**: the sky goes rainbow, three giant fireworks launch on their own, every Boo-Bop on screen pops into bubbles at once, and the lightstick relights to full. The worst case is the best show. There is no game over.
 - **The crowd** — silhouettes waving lightsticks in the potion colours. They cheer harder for bigger fireworks and when Boo-Bops get close.
 
+## 3b. The Dressing Room (before the show)
+After TAP TO PLAY she lands in the dressing room — a vanity mirror with bulbs and one girl at a time, big.
+
+- **The three Glow Girls** (all original): **Sol** — long dark hair, East Asian; **Vi** — purple hair in a high bun, white; **Jaz** — Black/mixed heritage with natural afro puffs. Skin tones and eye colours are fixed per girl; everything else is hers to change. Swipe the mirror or use ◀ ▶ to move between them; dots show which of the three you're on.
+- **Five categories** as big icon tabs: 💇 Hair (10 styles: ponytail, space buns, bob, long straight, long wavy, big braid, afro puffs, high bun, pigtails, pixie) · 😎 Face (sunglasses, heart glasses, star sticker tattoo, heart sticker, lollipop, cat ears, crown, headphones, hair bow, earrings — several at once, but only one pair of glasses and one headpiece) · 👚 Top (crop top, T-shirt, jacket, hoodie, sparkle blazer, tank top) · 👖 Bottoms (pleated skirt, shorts, cargo pants, tutu, plaid skirt, leggings) · 👟 Shoes (boots, sneakers, platform boots, Mary Janes, high tops).
+- **Item tiles are live previews** — each tile is the current girl wearing that item, zoomed to the relevant body part, so a 4-year-old doesn't need to read.
+- **Tap or drag.** Tapping a tile puts it on. Dragging lifts a ghost of the tile; dropping it on the mirror puts it on (the mirror glows green when you're over it); dropping it anywhere else just snaps back. Both paths make sparkles and a glug sound.
+- **Colour swatches** (12: black, brown, blonde, white, pink, baby pink, purple, cyan, gold, lime, orange, red) recolour whatever category is open — hair colour on the Hair tab, top colour on the Top tab, and the accent colour of face accessories on the Face tab.
+- **🎲 SURPRISE!** randomises the current girl's whole outfit.
+- **TO THE STAGE! 🎤** is the one big green button. It closes the room and starts the show (the opening three fireworks fire on the first visit). A 👗 button in the game's top bar brings her back any time — Boo-Bops freeze while the room is open, so nothing is stolen behind her back.
+- Looks are saved on the device (`localStorage`) and drive the very same drawing code used on stage, so what she dresses is exactly what dances.
+
 ## 4. Core loop (what she actually does)
 1. **Tap a potion.** It glugs into the cauldron. The cauldron liquid swirls to the new colour and bubbles. The bottle shows a count badge (1, 2, 3).
 2. **Tap more potions** (up to 3 in the mix, **repeats allowed** — three golds makes one big gold). Little bubble icons above the cauldron show what's in it.
