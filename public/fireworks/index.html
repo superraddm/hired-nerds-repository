@@ -234,7 +234,9 @@ button:focus{outline:none}
 .arrow{width:clamp(44px,9vmin,72px);height:clamp(44px,9vmin,72px);border-radius:50%;font-size:clamp(18px,4vmin,32px);display:grid;place-items:center;
   background:linear-gradient(160deg,#4a1a86,#1f0644);box-shadow:0 0 0 3px rgba(255,255,255,.18) inset,0 5px 14px rgba(0,0,0,.45)}
 .arrow:active{transform:scale(.9)}
-.dname{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-weight:900;font-size:clamp(15px,3.4vmin,28px);letter-spacing:1px;
+#dname{cursor:pointer}
+#dname::after{content:" \270E";opacity:.75;font-size:.8em}
+.dname{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-weight:900;font-size:clamp(15px,3.4vmin,28px);letter-spacing:1px;max-width:86%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   background:var(--pink);padding:2px 16px;border-radius:999px;box-shadow:0 0 16px rgba(255,255,255,.4),0 0 0 2px rgba(255,255,255,.4) inset;text-shadow:0 1px 0 rgba(0,0,0,.4);pointer-events:none}
 .charstrip{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:7px;padding:5px;border-radius:999px;background:rgba(22,7,38,.72);backdrop-filter:blur(8px)}
 .charpick{min-width:clamp(54px,9vmin,82px);height:clamp(38px,6vmin,48px);padding:0 9px;border-radius:999px;background:rgba(255,255,255,.12);font-weight:900;font-size:clamp(10px,1.8vmin,14px);box-shadow:inset 0 0 0 2px rgba(255,255,255,.16)}
@@ -265,6 +267,27 @@ button:focus{outline:none}
   background:linear-gradient(160deg,#ff3fa4,#a855ff);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 5px 0 #5b0d9a}
 #signature{background:linear-gradient(160deg,#33e6ff,#6757dc);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 5px 0 #30479b}
 #surprise:active,#signature:active{transform:translateY(4px);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 1px 0 #5b0d9a}
+/* ---------- naming ---------- */
+#names{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:calc(var(--sat) + 8px) 10px calc(var(--sab) + 8px);
+  background:rgba(10,0,28,.86);backdrop-filter:blur(6px)}
+#names[hidden]{display:none}
+.namecard{width:min(560px,100%);max-height:100%;overflow:auto;overscroll-behavior:contain;border-radius:24px;padding:14px;
+  background:radial-gradient(ellipse at 50% 0%,#4a0d7a,#1a0640 70%);box-shadow:0 0 0 3px rgba(255,255,255,.18) inset,0 18px 50px rgba(0,0,0,.6)}
+.namecard h3{margin:0 0 10px;text-align:center;font-size:clamp(17px,3.6vmin,26px);text-shadow:0 0 14px #ff3fa4}
+.nrow{margin-bottom:12px}
+.nrow>label{display:block;font-weight:900;font-size:clamp(11px,2.1vmin,15px);color:#e9d7ff;margin-bottom:4px;letter-spacing:.5px}
+.nrow input{width:100%;font:inherit;font-weight:900;font-size:clamp(15px,3vmin,22px);letter-spacing:1px;text-align:center;
+  padding:.42em .5em;border-radius:14px;border:0;background:rgba(255,255,255,.94);color:#1a0630;text-transform:uppercase}
+.nrow input:focus{outline:3px solid var(--gold)}
+.picks{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:6px}
+.pick{padding:.34em .7em;border-radius:999px;background:rgba(255,255,255,.14);font-weight:900;font-size:clamp(10px,1.9vmin,14px);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.18)}
+.pick:active{transform:scale(.93)}
+.nactions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.nactions button{font-weight:900;font-size:clamp(13px,2.6vmin,20px);padding:.5em .7em;border-radius:999px}
+#nameOk{background:linear-gradient(160deg,#7dff4a,#12b886);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 5px 0 #0a6b4a}
+#nameCancel{background:linear-gradient(160deg,#6b4a92,#33184f);box-shadow:0 0 0 3px rgba(255,255,255,.2) inset,0 5px 0 #1d0b33}
+#nameOk:active,#nameCancel:active{transform:translateY(4px)}
 .ghost{position:fixed;width:84px;height:84px;transform:translate(-50%,-60%) scale(1.15) rotate(-6deg);pointer-events:none;z-index:50;filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))}
 
 @keyframes hint{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px) scale(1.08)}}
@@ -310,7 +333,7 @@ button:focus{outline:none}
     <h1>K-POP<br>BOOM!</h1>
     <p>✨ Firework Stage ✨</p>
     <button id="play">TAP TO PLAY</button>
-    <small>Help the Glow Girls guard the Giant Lightstick!<br>Mix potions in the cauldron · tap the sky to fire the cannon · pop the giggly Boo-Bops into bubbles<br>No ads · no tracking · works offline once loaded</small>
+    <small id="splashTip">Help the Glow Girls guard the Giant Lightstick!<br>Mix potions in the cauldron · tap the sky to fire the cannon · pop the giggly Boo-Bops into bubbles<br>No ads · no tracking · works offline once loaded</small>
   </div>
 </div>
 
@@ -335,6 +358,16 @@ button:focus{outline:none}
       <div class="swatches" id="dswatches"></div>
       <div class="dactions"><button id="signature">⭐ STAR LOOK</button><button id="surprise">🎲 SURPRISE!</button></div>
     </div>
+  </div>
+</div>
+<div id="names" hidden>
+  <div class="namecard">
+    <h3>✨ NAME YOUR BAND ✨</h3>
+    <div class="nrow"><label>Band name</label><input id="nBand" maxlength="14" autocomplete="off" spellcheck="false" aria-label="Band name"><div class="picks" id="pBand"></div></div>
+    <div class="nrow"><label id="lG0">Girl 1</label><input id="nG0" maxlength="9" autocomplete="off" spellcheck="false"><div class="picks" id="pG0"></div></div>
+    <div class="nrow"><label id="lG1">Girl 2</label><input id="nG1" maxlength="9" autocomplete="off" spellcheck="false"><div class="picks" id="pG1"></div></div>
+    <div class="nrow"><label id="lG2">Girl 3</label><input id="nG2" maxlength="9" autocomplete="off" spellcheck="false"><div class="picks" id="pG2"></div></div>
+    <div class="nactions"><button id="nameCancel">✕ CANCEL</button><button id="nameOk">✓ DONE</button></div>
   </div>
 </div>
 <div id="map" hidden>
@@ -500,31 +533,48 @@ const CHARS = [
 // One shared wardrobe: every item is a layer registered to that same puppet, so any
 // piece fits any girl. Names are what the tiles announce to a screen reader.
 const WARDROBE = {
-  looks: [['A','Approved look A'],['B','Approved look B'],['C','Approved look C']],
+  looks: [['A','Approved look A'],['B','Approved look B'],['C','Approved look C'],['D','Aurora Pulse preview']],
   hair:  [['moonpony','Moonlit ponytail'],['starbraid','Star ribbon braid'],['cometbraid','Comet braid'],['silverwaves','Pearl silver waves'],['neonbuns','Neon twin buns']],
   face:  [['moondrops','Moon drop earrings'],['cheekcrystal','Cheek crystals'],['starbow','Couture star bow'],['tiara','Moon crystal tiara'],['headset','Crystal stage headset'],['visor','Performance visor']],
-  top:   [['moonmoto','Moonlit moto jacket'],['petaljacket','Petal couture jacket'],['neonmoto','Neon asymmetric jacket'],['tailcoat','Star ribbon tailcoat']],
-  bottom:[['moonshorts','Moon tailored shorts'],['petalskort','Petal layered skort'],['silvershorts','Crystal silver shorts'],['cargoshorts','Iridescent cargo shorts']],
-  shoes: [['moonboots','Moon lace boots'],['petalboots','Petal couture boots'],['neonboots','Neon combat boots']],
+  top:   [['moonmoto','Moonlit moto jacket'],['petaljacket','Petal couture jacket'],['neonmoto','Neon asymmetric jacket'],['tailcoat','Star ribbon tailcoat'],['auroratop','Aurora Pulse halter']],
+  bottom:[['moonshorts','Moon tailored shorts'],['petalskort','Petal layered skort'],['silvershorts','Crystal silver shorts'],['cargoshorts','Iridescent cargo shorts'],['auroraskort','Aurora Pulse skort']],
+  shoes: [['moonboots','Moon lace boots'],['petalboots','Petal couture boots'],['neonboots','Neon combat boots'],['aurorakicks','Aurora Pulse platforms']],
 };
+/* Names are the child's to change; everything that draws one reads through here.
+   Suggestions exist so she can rename the band without being able to type yet. */
+const DEFAULT_BAND='GLOW GIRLS', BAND_SUB='글로우 걸즈';
+const BAND_PICKS=['GLOW GIRLS','STAR BLOOM','NEON MOON','SUPER SPARKLE','COSMIC CANDY','DREAM POP'];
+const GIRL_PICKS=['SOL','HANA','JIA','MIMI','LUNA','RUBY','KIKI','NOVA','BOO','PIXIE'];
+const NAME_OK=/[^A-Za-z0-9 &!'\-]/g;
+function cleanName(v,max){ return String(v||'').replace(NAME_OK,'').replace(/\s+/g,' ').trim().slice(0,max).toUpperCase(); }
+let NAMES={band:DEFAULT_BAND,girls:['SOL','HANA','JIA']};
+try{ const n=JSON.parse(localStorage.getItem('kb_names_v1')||'null');
+  if(n&&typeof n==='object'){ NAMES.band=cleanName(n.band,14)||DEFAULT_BAND;
+    if(Array.isArray(n.girls)) NAMES.girls=NAMES.girls.map((d,i)=>cleanName(n.girls[i],9)||d); } }catch(e){}
+function saveNames(){ try{ localStorage.setItem('kb_names_v1',JSON.stringify(NAMES)); }catch(e){} }
+const girlName=i=>NAMES.girls[i]||['SOL','HANA','JIA'][i];
+const bandName=()=>NAMES.band||DEFAULT_BAND;
 const CATS = [['looks','✨','LOOKS'],['hair','💇','HAIR'],['face','💎','EXTRAS'],['top','🧥','TOP'],['bottom','🩳','BOTTOMS'],['shoes','🥾','SHOES']];
 const PALETTE = ['#101820','#573022','#f4cf77','#ffffff','#d83f8d','#ff91c2','#7740a8','#29dbe3','#168e99','#ffd060','#f36b5f','#ad263e'];
 const EXCL = [['starbow','tiara'],['headset','visor']];
-// The three approved concept outfits per girl (FABLE-HANDOFF: variants A/B/C are presets).
+// The three approved concept outfits plus the Aurora Pulse review set.
 // null colour = the garment's own artwork colour, which is what the studio signed off.
 const LOOK_PRESETS={
   sol:{
     A:{preset:'A',hair:{style:'moonpony',color:null},top:{style:'moonmoto',color:null},bottom:{style:'moonshorts',color:null},shoes:{style:'moonboots',color:null},face:['moondrops'],faceColor:null},
     B:{preset:'B',hair:{style:'starbraid',color:null},top:{style:'tailcoat',color:null},bottom:{style:'silvershorts',color:null},shoes:{style:'moonboots',color:null},face:['starbow'],faceColor:null},
-    C:{preset:'C',hair:{style:'cometbraid',color:null},top:{style:'neonmoto',color:'#e43e92'},bottom:{style:'silvershorts',color:null},shoes:{style:'neonboots',color:null},face:['moondrops'],faceColor:null}},
+    C:{preset:'C',hair:{style:'cometbraid',color:null},top:{style:'neonmoto',color:'#e43e92'},bottom:{style:'silvershorts',color:null},shoes:{style:'neonboots',color:null},face:['moondrops'],faceColor:null},
+    D:{preset:'D',hair:{style:'moonpony',color:null},top:{style:'auroratop',color:null},bottom:{style:'auroraskort',color:null},shoes:{style:'aurorakicks',color:null},face:['moondrops'],faceColor:null}},
   hana:{
     A:{preset:'A',hair:{style:'silverwaves',color:'#ff91c2'},top:{style:'petaljacket',color:null},bottom:{style:'petalskort',color:null},shoes:{style:'petalboots',color:null},face:['cheekcrystal'],faceColor:null},
     B:{preset:'B',hair:{style:'moonpony',color:'#d83f8d'},top:{style:'neonmoto',color:'#29dbe3'},bottom:{style:'silvershorts',color:null},shoes:{style:'petalboots',color:null},face:['tiara'],faceColor:null},
-    C:{preset:'C',hair:{style:'cometbraid',color:'#ff91c2'},top:{style:'petaljacket',color:'#7740a8'},bottom:{style:'petalskort',color:'#7740a8'},shoes:{style:'petalboots',color:null},face:['starbow'],faceColor:null}},
+    C:{preset:'C',hair:{style:'cometbraid',color:'#ff91c2'},top:{style:'petaljacket',color:'#7740a8'},bottom:{style:'petalskort',color:'#7740a8'},shoes:{style:'petalboots',color:null},face:['starbow'],faceColor:null},
+    D:{preset:'D',hair:{style:'silverwaves',color:'#ff91c2'},top:{style:'auroratop',color:null},bottom:{style:'auroraskort',color:null},shoes:{style:'aurorakicks',color:null},face:['cheekcrystal'],faceColor:null}},
   jia:{
     A:{preset:'A',hair:{style:'neonbuns',color:null},top:{style:'neonmoto',color:'#168e99'},bottom:{style:'silvershorts',color:null},shoes:{style:'neonboots',color:null},face:['moondrops'],faceColor:null},
     B:{preset:'B',hair:{style:'starbraid',color:'#168e99'},top:{style:'moonmoto',color:'#29dbe3'},bottom:{style:'cargoshorts',color:null},shoes:{style:'neonboots',color:null},face:['visor'],faceColor:null},
-    C:{preset:'C',hair:{style:'silverwaves',color:'#29dbe3'},top:{style:'tailcoat',color:'#168e99'},bottom:{style:'cargoshorts',color:'#101820'},shoes:{style:'neonboots',color:null},face:['headset'],faceColor:null}}
+    C:{preset:'C',hair:{style:'silverwaves',color:'#29dbe3'},top:{style:'tailcoat',color:'#168e99'},bottom:{style:'cargoshorts',color:'#101820'},shoes:{style:'neonboots',color:null},face:['headset'],faceColor:null},
+    D:{preset:'D',hair:{style:'neonbuns',color:null},top:{style:'auroratop',color:null},bottom:{style:'auroraskort',color:null},shoes:{style:'aurorakicks',color:null},face:['moondrops'],faceColor:null}}
 };
 for(const c of CHARS) c.def = LOOK_PRESETS[c.id].A;
 function wardrobeFor(cat){ return WARDROBE[cat]; }
@@ -554,7 +604,7 @@ function saveLooks(){ try { localStorage.setItem('kb_looks_v4', JSON.stringify(L
 // at (0,0,1) - selecting an item is a layer substitution, never a scaling guess.
 // Same compositor for the dressing room, the thumbnails and the stage.
 const GG_W=1024, GG_H=1536, GG_TOP=63, GG_FOOT=1408, GG_SPAN=GG_FOOT-GG_TOP;
-const GG_SRC='assets/glowgirls/sol/', GG_V='?v=20260902a';
+const GG_SRC='assets/glowgirls/sol/', GG_V='?v=20260902b';
 const REDUCED_MOTION=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const GG={ready:false,img:{},error:null};
 function ggLoad(src){return new Promise(ok=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>ok(null);i.src=src})}
@@ -1684,10 +1734,17 @@ function drawStage(t){
     ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 18*on; ctx.globalAlpha = on; ctx.beginPath(); ctx.arc(x, sy-19*U, 4*U, 0, TAU); ctx.fill(); ctx.globalAlpha = 1; ctx.shadowBlur = 0; }
   ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
   ctx.font = `900 ${Math.min(30*U, (tx1-tx0)*0.11)}px "Arial Black","Arial Rounded MT Bold","Segoe UI",system-ui,sans-serif`;
-  ctx.lineWidth = 6*U; ctx.strokeStyle = '#ff3fa4'; ctx.shadowColor = '#ff3fa4'; ctx.shadowBlur = 22; ctx.lineJoin = 'round'; ctx.strokeText('GLOW GIRLS', W/2, sy);
-  ctx.fillStyle = '#fff'; ctx.shadowBlur = 0; ctx.fillText('GLOW GIRLS', W/2, sy);
+  // A long band name has to shrink to stay inside the sign rather than overflow it.
+  const bandTxt = bandName(), signW = (tx1-tx0)*0.86;
+  let fs = Math.min(30*U, (tx1-tx0)*0.11);
+  ctx.font = `900 ${fs}px "Arial Black","Arial Rounded MT Bold","Segoe UI",system-ui,sans-serif`;
+  const bandW = ctx.measureText(bandTxt).width;
+  if (bandW > signW){ fs *= signW/bandW; ctx.font = `900 ${fs}px "Arial Black","Arial Rounded MT Bold","Segoe UI",system-ui,sans-serif`; }
+  ctx.lineWidth = 6*U; ctx.strokeStyle = '#ff3fa4'; ctx.shadowColor = '#ff3fa4'; ctx.shadowBlur = 22; ctx.lineJoin = 'round'; ctx.strokeText(bandTxt, W/2, sy);
+  ctx.fillStyle = '#fff'; ctx.shadowBlur = 0; ctx.fillText(bandTxt, W/2, sy);
   ctx.font = `800 ${11*U}px "Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif`; ctx.fillStyle = '#33e6ff'; ctx.shadowColor = '#33e6ff'; ctx.shadowBlur = 10;
-  ctx.fillText('글로우 걸즈  ✦  WORLD TOUR', W/2, sy + 13*U); ctx.shadowBlur = 0;
+  // the Korean line transliterates the default name, so it only belongs to that one
+  ctx.fillText(bandTxt===DEFAULT_BAND ? BAND_SUB+'  ✦  WORLD TOUR' : '✦  WORLD TOUR  ✦', W/2, sy + 13*U); ctx.shadowBlur = 0;
   // platform
   ctx.fillStyle = '#1a0836'; ctx.beginPath(); ctx.moveTo(W*0.12, top); ctx.lineTo(W*0.88, top); ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.fill();
   ctx.strokeStyle = '#ff3fa4'; ctx.lineWidth = 3*U; ctx.shadowColor='#ff3fa4'; ctx.shadowBlur = 14; ctx.beginPath(); ctx.moveTo(W*0.12, top); ctx.lineTo(W*0.88, top); ctx.stroke();
@@ -1734,9 +1791,9 @@ function drawStage(t){
     else { if (en < 0.35){ ctx.save(); ctx.globalAlpha = 0.85; drawGirl(ch, LOOKS[i], i, x, top, gh*0.98, t*0.4, false); ctx.restore(); }
       else drawGirl(ch, LOOKS[i], i, x, top, gh, t, false); } });
   // crowd (in front, bottom band)
-  const band = H - top; const baseY = H + 6*U;
-  for (const c of crowd){ const cx = c.x*W, ch = (band*0.55 + 30*U) * c.h * (c.row?0.85:1), bob = Math.pow(1-((beat+c.p/TAU)%1),2)*(4+cheer*10)*U;
-    const y = baseY - (c.row?band*0.22:0) - bob; const bw = 18*U*c.w;
+  const crowdBand = H - top; const baseY = H + 6*U;
+  for (const c of crowd){ const cx = c.x*W, ch = (crowdBand*0.55 + 30*U) * c.h * (c.row?0.85:1), bob = Math.pow(1-((beat+c.p/TAU)%1),2)*(4+cheer*10)*U;
+    const y = baseY - (c.row?crowdBand*0.22:0) - bob; const bw = 18*U*c.w;
     ctx.fillStyle = c.row ? '#150627' : '#0b0318';
     ctx.beginPath(); ctx.arc(cx, y-ch, bw*0.55, 0, TAU); ctx.fill();
     ctx.beginPath(); ctx.moveTo(cx-bw, y); ctx.quadraticCurveTo(cx-bw, y-ch*0.85, cx, y-ch*0.8); ctx.quadraticCurveTo(cx+bw, y-ch*0.85, cx+bw, y); ctx.fill();
@@ -1840,8 +1897,8 @@ function paintTargetName(look){
   return w ? w[1] : curCat;
 }
 function renderDress(){
-  $('#dname').textContent = CHARS[curChar].name; $('#dname').style.background = topHue(LOOKS[curChar]); $('#dname').style.color = topHue(LOOKS[curChar])==='#ffffff' ? '#1a0630' : '#fff';
-  $('#dchars').innerHTML = CHARS.map((c,i) => `<button class="charpick ${i===curChar?'on':''}" data-i="${i}" aria-label="Dress ${c.name}">${c.name}</button>`).join('');
+  $('#dname').textContent = girlName(curChar); $('#dname').style.background = topHue(LOOKS[curChar]); $('#dname').style.color = topHue(LOOKS[curChar])==='#ffffff' ? '#1a0630' : '#fff';
+  $('#dchars').innerHTML = CHARS.map((c,i) => `<button class="charpick ${i===curChar?'on':''}" data-i="${i}" aria-label="Dress ${girlName(i)}">${girlName(i)}</button>`).join('');
   $('#dchars').querySelectorAll('.charpick').forEach(b => b.addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); selectChar(+b.dataset.i); }));
   $('#dtabs').innerHTML = CATS.map(([id,ic,lb]) => `<button class="tab ${id===curCat?'on':''}" data-cat="${id}"><i>${ic}</i>${lb}</button>`).join('');
   $('#dtabs').querySelectorAll('.tab').forEach(b => b.addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); setCat(b.dataset.cat); }));
@@ -1934,6 +1991,29 @@ $('#surprise').addEventListener('pointerdown', e => { e.preventDefault(); initAu
 $('#signature').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); signature(); });
 $('#toStage').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); toStage(); });
 $('#wardrobe').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); openDress(); });
+/* Naming sheet: typed by a grown-up, or tapped from the suggestions by the child. */
+function openNames(){
+  $('#nBand').value = bandName();
+  for(let i=0;i<3;i++){ $('#nG'+i).value = girlName(i); $('#lG'+i).textContent = 'Girl '+(i+1); }
+  const chips=(box,list,onPick)=>{ box.innerHTML = list.map(v=>`<button class="pick" data-v="${v}">${v}</button>`).join('');
+    box.querySelectorAll('.pick').forEach(b=>b.addEventListener('pointerdown',e=>{e.preventDefault();initAudio();onPick(b.dataset.v);
+      if(AC){const t0=now();tone(880,t0,0.07,{type:'triangle',vol:0.12})}})); };
+  chips($('#pBand'),BAND_PICKS,v=>{$('#nBand').value=v});
+  for(let i=0;i<3;i++) chips($('#pG'+i),GIRL_PICKS,v=>{$('#nG'+i).value=v});
+  $('#names').hidden=false; lastTouch=performance.now();
+}
+function closeNames(save){
+  if(save){
+    NAMES.band = cleanName($('#nBand').value,14) || DEFAULT_BAND;
+    for(let i=0;i<3;i++) NAMES.girls[i] = cleanName($('#nG'+i).value,9) || ['SOL','HANA','JIA'][i];
+    saveNames(); renderDress(); renderLives();
+    toast('✨ ' + bandName() + '! ✨'); dressSparkle(); if (AC) sfxChord();
+  }
+  $('#names').hidden=true; lastTouch=performance.now();
+}
+$('#dname').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); openNames(); });
+$('#nameOk').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); closeNames(true); });
+$('#nameCancel').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); closeNames(false); });
 function dressSparkle(){ const r = dcv.getBoundingClientRect(); for (let k=0;k<40;k++){ const a = rnd(TAU), sp = rnd(40,220); DSPARK.push({x:r.width/2, y:r.height*0.55, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp-60, life:rnd(0.5,1.1), h:(Math.random()*360)|0}); } }
 function drawDress(t, dt){
   const r = dcv.getBoundingClientRect(); if (!r.width) return; const pw = Math.round(r.width), ph = Math.round(r.height);
@@ -1986,7 +2066,7 @@ setMusic(musicOn); renderStars(); renderMix(); resize();
 requestAnimationFrame(frame);
 if (location.search.includes('auto=1')){ window.__kb = {P, ROCKETS, BOOBOPS, BUBBLES, DROPS, launch, spawnBooBop, spawnDemon, spawnDrop, collectDrop, hitDemon, explode, addPotion, mix, ammo, PLAY, LEVELS, BOSSES, PROG,
     startLevel, freePlay, openMap, levelWon, levelLost, get playfield(){return [playL, playR];}, get mode(){return MODE}, get glow(){return glow}, get stars(){return starsTotal}, byId, get ac(){return AC},
-    LOOKS, CHARS, WARDROBE, LOOK_PRESETS, GG, TINT_MIX, isSkin, ggComposite, applyItem, setColor, resetColor, setCat, switchChar, surprise, signature, openDress, toStage, get curChar(){return curChar}, get curCat(){return curCat}, get dressOpen(){return dressOpen}};
+    LOOKS, CHARS, WARDROBE, LOOK_PRESETS, GG, TINT_MIX, isSkin, ggComposite, NAMES, openNames, closeNames, cleanName, applyItem, setColor, resetColor, setCat, switchChar, surprise, signature, openDress, toStage, get curChar(){return curChar}, get curCat(){return curCat}, get dressOpen(){return dressOpen}};
   start().then(() => {   // start() is async (asset load) and ends by opening the dressing room — sequence after it
     if (!location.search.includes('dress=1')){
       const lm = location.search.match(/level=(\d)/);
