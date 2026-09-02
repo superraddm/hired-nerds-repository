@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Glow Girls Lab — Sol</title>
+<style>
+  :root{--bg1:#160726;--bg2:#2a0f4a;--panel:rgba(28,10,48,.85);--pink:#ff69b5;--aqua:#29dbe3}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;background:linear-gradient(160deg,var(--bg1),var(--bg2));color:#fff;
+    font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}
+  #app{display:flex;min-height:100dvh;gap:10px;padding:10px}
+  #stageWrap{flex:1.1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0}
+  #stage{position:relative;width:min(46vw,58dvh);aspect-ratio:2/3;border-radius:20px;overflow:hidden;
+    background:radial-gradient(ellipse 90% 55% at 50% 88%, #6b2fae55, transparent 60%),
+               radial-gradient(ellipse 120% 80% at 50% -10%, #ff69b522, transparent 55%),
+               linear-gradient(180deg,#1b0833,#341058 78%,#1f0a3a);
+    box-shadow:0 10px 40px #0008, inset 0 0 0 2px #ffffff14}
+  #stage::after{content:"";position:absolute;left:8%;right:8%;bottom:7.5%;height:3px;border-radius:99px;
+    background:linear-gradient(90deg,transparent,#ff69b599,#29dbe399,transparent)}
+  #cv{position:absolute;inset:0;width:100%;height:100%}
+  #marquee{margin-top:10px;font-weight:900;letter-spacing:3px;font-size:clamp(14px,2.2vmin,20px);
+    background:linear-gradient(90deg,#ff69b5,#c58cff,#29dbe3);-webkit-background-clip:text;background-clip:text;color:transparent}
+  #panel{flex:1;max-width:480px;background:var(--panel);border-radius:20px;padding:14px;overflow-y:auto;
+    backdrop-filter:blur(10px);box-shadow:inset 0 0 0 1px #ffffff12}
+  h2{font-size:12px;letter-spacing:2px;color:#c9a7ff;margin:14px 0 6px;text-transform:uppercase}
+  .row{display:flex;flex-wrap:wrap;gap:8px}
+  button{border:0;cursor:pointer;font:inherit;color:#fff}
+  .item{width:64px;height:64px;border-radius:14px;background:#3c1d63;padding:0;overflow:hidden;position:relative;
+    box-shadow:inset 0 0 0 2px #ffffff14;transition:transform .12s}
+  .item:active{transform:scale(.93)}
+  .item.sel{box-shadow:inset 0 0 0 3px var(--pink),0 0 14px #ff69b566}
+  .item.off{opacity:.28;pointer-events:none}
+  .item canvas{position:absolute;inset:6px;width:calc(100% - 12px);height:calc(100% - 12px)}
+  .preset{width:auto;padding:10px 18px;border-radius:14px;font-weight:900;letter-spacing:1px;background:#3c1d63;
+    box-shadow:inset 0 0 0 2px #ffffff14}
+  .preset.sel{background:linear-gradient(135deg,#ff69b5,#8a4fd8);box-shadow:0 0 16px #ff69b577}
+  .sw{width:34px;height:34px;border-radius:50%;box-shadow:inset 0 0 0 2px #ffffffaa,0 2px 6px #0006}
+  .sw.sel{outline:3px solid var(--aqua);outline-offset:2px}
+  #matrixBtn{margin:18px 0 6px;padding:12px 18px;border-radius:14px;font-weight:900;width:100%;
+    background:linear-gradient(135deg,#29dbe3,#4d6df0);letter-spacing:1px}
+  #matrix{display:none;padding:10px}
+  #matrix.show{display:block}
+  #matrix img,#matrix canvas{max-width:100%}
+  #loading{position:fixed;inset:0;display:grid;place-items:center;background:#160726;z-index:9;font-weight:900;letter-spacing:2px}
+  @media (max-width:760px){#app{flex-direction:column}#stage{width:min(88vw,52dvh)}#panel{max-width:none}}
+  @media (prefers-reduced-motion:reduce){.item{transition:none}}
+</style>
+</head>
+<body>
+<div id="loading">✨ WARMING UP THE STAGE…</div>
+<div id="app">
+  <div id="stageWrap">
+    <div id="stage"><canvas id="cv" width="1024" height="1536"></canvas></div>
+    <div id="marquee">GLOW GIRLS · SOL · REGISTRATION LAB</div>
+  </div>
+  <div id="panel">
+    <h2>Approved looks</h2><div class="row" id="presets"></div>
+    <h2>Hair</h2><div class="row" id="hair"></div>
+    <h2>Tops</h2><div class="row" id="top"></div>
+    <h2>Bottoms</h2><div class="row" id="bottom"></div>
+    <h2>Shoes</h2><div class="row" id="shoes"></div>
+    <h2>Extras (tap to toggle)</h2><div class="row" id="face"></div>
+    <h2>Colour</h2><div class="row" id="palette"></div>
+    <button id="adjBtn">🎯 ADJUST MODE: OFF</button>
+    <div id="adjHud" style="display:none;margin:8px 0;padding:10px;border-radius:12px;background:#0007;font-size:13px;line-height:1.5">
+      Select an item, then: <b>arrow keys</b> move 1px (<b>Shift</b>=5px) · <b>[ ]</b> scale · <b>0</b> reset item<br>
+      <span id="adjInfo" style="color:#7dffc7">no item selected</span><br>
+      <button id="adjCopy" style="margin-top:6px;padding:6px 12px;border-radius:8px;background:#29dbe3;color:#000;font-weight:700">COPY ADJUSTMENTS</button>
+      <button id="adjClear" style="margin-top:6px;padding:6px 12px;border-radius:8px;background:#f36b5f;font-weight:700">CLEAR ALL</button>
+    </div>
+    <button id="matrixBtn">🧪 BUILD ACCEPTANCE MATRIX</button>
+    <div id="matrix"></div>
+  </div>
+</div>
+<script>
+window.onerror=(m,s,l,c)=>{const el=document.getElementById('loading');if(el)el.textContent='ERR: '+m+' @'+l+':'+c};
+const A='assets/glowgirls/sol/';
+const V='?v='+Date.now(); // cache-bust: local server sends no cache headers
+const ROSTER={
+  hair:['moonpony','starbraid','cometbraid','silverwaves','neonbuns'],
+  top:['moonmoto','petaljacket','neonmoto','tailcoat'],
+  bottom:['moonshorts','petalskort','silvershorts','cargoshorts'],
+  shoes:['moonboots','petalboots','neonboots'],
+  face:['moondrops','cheekcrystal','starbow','tiara','headset','visor'],
+};
+const EXCL=[['starbow','tiara'],['headset','visor']];
+const PALETTE=['#101820','#573022','#f4cf77','#ffffff','#d83f8d','#ff91c2','#7740a8','#29dbe3','#168e99','#ffd060','#f36b5f','#ad263e','#9b7be8','#e5e7ef'];
+const PRESETS={
+  A:{hair:{style:'moonpony',color:null},top:{style:'moonmoto',color:null},bottom:{style:'moonshorts',color:null},shoes:{style:'moonboots',color:null},face:['moondrops']},
+  B:{hair:{style:'starbraid',color:null},top:{style:'tailcoat',color:null},bottom:{style:'silvershorts',color:null},shoes:{style:'moonboots',color:null},face:['starbow']},
+  C:{hair:{style:'cometbraid',color:null},top:{style:'neonmoto',color:'#e43e92'},bottom:{style:'silvershorts',color:null},shoes:{style:'neonboots',color:null},face:['moondrops']},
+};
+const QP=new URLSearchParams(location.search);
+/* human-eye alignment: per-item {dx,dy,s}, applied at draw time, baked later */
+let ADJ={};try{ADJ=JSON.parse(localStorage.getItem('kb_glowlab_adj')||'{}')}catch(e){}
+let adjMode=false,selItem=null;
+const itemCenter={};
+function saveAdj(){try{localStorage.setItem('kb_glowlab_adj',JSON.stringify(ADJ))}catch(e){}eraseCache.clear();updateAdjHud()}
+function updateAdjHud(){
+  const el=document.getElementById('adjInfo');if(!el)return;
+  if(!selItem){el.textContent='no item selected';return}
+  const a=ADJ[selItem]||{dx:0,dy:0,s:1};
+  el.textContent=selItem+'  dx:'+(a.dx||0)+'  dy:'+(a.dy||0)+'  scale:'+((a.s||1)*100).toFixed(1)+'%';
+}
+let preset=['A','B','C'].includes(QP.get('look'))?QP.get('look'):'A';
+let look=QP.get('look')?structuredClone(PRESETS[preset]):
+  (JSON.parse(localStorage.getItem('kb_glowlab_sol')||'null')||structuredClone(PRESETS.A));
+let selCat='hair';
+
+const IMGS={}; // name -> Image or null
+function loadImg(src){return new Promise(res=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src})}
+async function loadAll(){
+  const jobs=[['master',A+'master.png'+V],['blink',A+'final/anim-blink-front.png'+V]];
+  for(const cat in ROSTER)for(const id of ROSTER[cat]){
+    jobs.push([cat+'-'+id+'-rear',A+'final/'+cat+'-'+id+'-rear.png'+V]);
+    jobs.push([cat+'-'+id+'-front',A+'final/'+cat+'-'+id+'-front.png'+V]);
+  }
+  await Promise.all(jobs.map(async([k,src])=>{IMGS[k]=await loadImg(src)}));
+}
+
+/* selective recolour: tint saturated or dark pixels, keep white trim / silver / skin.
+   METAL items are white/silver overall, so they tint everything except highlights. */
+const METAL=new Set(['bottom-silvershorts','shoes-moonboots','shoes-petalboots']);
+const tintCache=new Map();
+function tinted(key,color){
+  const img=IMGS[key]; if(!img) return null;
+  if(!color) return img;
+  const ck=key+'|'+color;
+  if(tintCache.has(ck)) return tintCache.get(ck);
+  const c=document.createElement('canvas');c.width=img.width;c.height=img.height;
+  const x=c.getContext('2d');x.drawImage(img,0,0);
+  const d=x.getImageData(0,0,c.width,c.height),p=d.data;
+  const tr=parseInt(color.slice(1,3),16),tg=parseInt(color.slice(3,5),16),tb=parseInt(color.slice(5,7),16);
+  for(let i=0;i<p.length;i+=4){
+    if(p[i+3]<8)continue;
+    const r=p[i],g=p[i+1],b=p[i+2];
+    const mx=Math.max(r,g,b),mn=Math.min(r,g,b);
+    const lum=(r*.299+g*.587+b*.114)/255, sat=mx?(mx-mn)/mx:0;
+    const metal=METAL.has(key.replace(/-(rear|front)$/,''));
+    if(metal?(lum<0.93):(sat>0.16||lum<0.4)){
+      const sh=Math.pow(lum,0.82)*1.25;
+      p[i]=Math.min(255,tr*sh);p[i+1]=Math.min(255,tg*sh);p[i+2]=Math.min(255,tb*sh);
+    }
+  }
+  x.putImageData(d,0,0);
+  if(tintCache.size>40)tintCache.delete(tintCache.keys().next().value);
+  tintCache.set(ck,c);return c;
+}
+
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+let blinkT=0,winking=false,nextBlink=performance.now()+2500;
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const sparks=Array.from({length:14},()=>({x:Math.random(),y:Math.random(),s:.4+Math.random()*.8,ph:Math.random()*7}));
+
+/* per-shoe erase mask: the FRONT boot layer's alpha only (the rear layer is
+   the shaft interior the leg must stay visible against), dilated 2px, so the
+   master's feet vanish only where the boot front actually covers them */
+const eraseCache=new Map();
+function shoeErase(style){
+  if(eraseCache.has(style))return eraseCache.get(style);
+  const c=document.createElement('canvas');c.width=1024;c.height=1536;
+  const x=c.getContext('2d');
+  const img=IMGS['shoes-'+style+'-front'];
+  const aj=ADJ['shoes-'+style],ic=itemCenter['shoes-'+style]||[512,768],sc=(aj&&aj.s)||1;
+  if(img)for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++){
+    x.save();
+    if(aj){x.translate(ic[0]+(aj.dx||0),ic[1]+(aj.dy||0));x.scale(sc,sc);x.translate(-ic[0],-ic[1])}
+    x.drawImage(img,dx,dy);x.restore();
+  }
+  x.fillStyle='#000';x.fillRect(0,1240,1024,296); // feet always live inside boots
+  eraseCache.set(style,c);return c;
+}
+function stack(lk){
+  const L=[];
+  const put=(key,color)=>{const t=tinted(key,color);if(t)L.push({img:t,item:key.replace(/-(rear|front)$/,'')})};
+  put('hair-'+lk.hair.style+'-rear',lk.hair.color);
+  for(const f of lk.face)put('face-'+f+'-rear',null);
+  put('top-'+lk.top.style+'-rear',lk.top.color);
+  put('bottom-'+lk.bottom.style+'-rear',lk.bottom.color);
+  L.push(IMGS.master);
+  L.push('BLINKSLOT');
+  const hasShoes=IMGS['shoes-'+lk.shoes.style+'-front']||IMGS['shoes-'+lk.shoes.style+'-rear'];
+  if(hasShoes)L.push({footErase:lk.shoes.style});
+  put('bottom-'+lk.bottom.style+'-front',lk.bottom.color);
+  put('top-'+lk.top.style+'-front',lk.top.color);
+  put('shoes-'+lk.shoes.style+'-rear',lk.shoes.color);
+  put('shoes-'+lk.shoes.style+'-front',lk.shoes.color);
+  put('hair-'+lk.hair.style+'-front',lk.hair.color);
+  for(const f of lk.face)put('face-'+f+'-front',null);
+  return L;
+}
+function drawLook(c2,lk,t){
+  const x=c2.getContext('2d');x.clearRect(0,0,1024,1536);
+  x.save();
+  if(!RM){const br=1+0.004*Math.sin((t||0)/1500*Math.PI);x.translate(0,1405*(1-br));x.scale(1,br)}
+  for(const lay of stack(lk)){
+    if(lay==='BLINKSLOT'){
+      if(blinkT>0&&IMGS.blink){
+        if(winking){x.save();x.beginPath();x.rect(512,0,512,1536);x.clip();x.drawImage(IMGS.blink,0,0);x.restore()}
+        else x.drawImage(IMGS.blink,0,0);
+      }
+      continue;
+    }
+    if(lay&&lay.footErase!==undefined){
+      x.save();x.globalCompositeOperation='destination-out';
+      x.drawImage(shoeErase(lay.footErase),0,0);x.restore();
+      continue;
+    }
+    if(lay&&lay.img){
+      const a=ADJ[lay.item];
+      if(a&&(a.dx||a.dy||(a.s&&a.s!==1))){
+        const c=itemCenter[lay.item]||[512,768],s=a.s||1;
+        x.save();
+        x.translate(c[0]+(a.dx||0),c[1]+(a.dy||0));x.scale(s,s);x.translate(-c[0],-c[1]);
+        x.drawImage(lay.img,0,0);x.restore();
+      } else x.drawImage(lay.img,0,0);
+      continue;
+    }
+    x.drawImage(lay,0,0);
+  }
+  x.restore();
+}
+function frame(t){
+  if(t>nextBlink){blinkT=140;winking=Math.random()<0.15;nextBlink=t+(RM?6000:2800)+Math.random()*3500}
+  if(blinkT>0)blinkT-=16.7;
+  drawLook(cv,look,RM?0:t);
+  if(!RM){
+    ctx.save();
+    for(const s of sparks){
+      const a=.25+.35*Math.abs(Math.sin(t/900+s.ph));
+      ctx.globalAlpha=a;ctx.fillStyle='#ffe9ff';
+      const px=s.x*1024,py=(s.y+Math.sin(t/2400+s.ph)*0.01)*1536,r=3.4*s.s;
+      ctx.beginPath();
+      for(let k=0;k<4;k++){const an=k*Math.PI/2+t/2600;ctx.lineTo(px+Math.cos(an)*r*2.6,py+Math.sin(an)*r*2.6);ctx.lineTo(px+Math.cos(an+Math.PI/4)*r,py+Math.sin(an+Math.PI/4)*r)}
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+  requestAnimationFrame(frame);
+}
+
+function save(){localStorage.setItem('kb_glowlab_sol',JSON.stringify(look))}
+function thumb(cat,id){
+  const c=document.createElement('canvas');
+  const r=IMGS[cat+'-'+id+'-rear'],f=IMGS[cat+'-'+id+'-front'];
+  if(!r&&!f)return null;
+  const t=document.createElement('canvas');t.width=1024;t.height=1536;
+  const x=t.getContext('2d');if(r)x.drawImage(r,0,0);if(f)x.drawImage(f,0,0);
+  const d=x.getImageData(0,0,1024,1536).data;
+  let x0=1024,y0=1536,x1=0,y1=0;
+  for(let y=0;y<1536;y+=4)for(let xx=0;xx<1024;xx+=4){
+    if(d[(y*1024+xx)*4+3]>24){if(xx<x0)x0=xx;if(xx>x1)x1=xx;if(y<y0)y0=y;if(y>y1)y1=y}
+  }
+  if(x1<=x0)return null;
+  itemCenter[cat+'-'+id]=[(x0+x1)/2,(y0+y1)/2];
+  const w=x1-x0+16,h=y1-y0+16,S=116;c.width=S;c.height=S;
+  const sc=Math.min(S/w,S/h),dw=w*sc,dh=h*sc;
+  c.getContext('2d').drawImage(t,x0-8,y0-8,w,h,(S-dw)/2,(S-dh)/2,dw,dh);
+  return c;
+}
+function buildUI(){
+  const pr=document.getElementById('presets');
+  for(const k of ['A','B','C']){
+    const b=document.createElement('button');b.className='preset'+(k===preset?' sel':'');b.textContent='LOOK '+k;
+    b.onclick=()=>{preset=k;look=structuredClone(PRESETS[k]);save();refresh()};pr.appendChild(b);
+  }
+  for(const cat of ['hair','top','bottom','shoes','face']){
+    const box=document.getElementById(cat);
+    for(const id of ROSTER[cat]){
+      const b=document.createElement('button');b.className='item';b.dataset.cat=cat;b.dataset.id=id;
+      const th=thumb(cat,id);
+      if(th)b.appendChild(th);else b.classList.add('off');
+      b.onclick=()=>{
+        selCat=cat;selItem=cat+'-'+id;updateAdjHud();
+        if(cat==='face'){
+          const i=look.face.indexOf(id);
+          if(i>=0)look.face.splice(i,1);
+          else{for(const [a,bb] of EXCL){if(id===a)look.face=look.face.filter(v=>v!==bb);if(id===bb)look.face=look.face.filter(v=>v!==a)}look.face.push(id)}
+        } else look[cat].style=id;
+        save();refresh();
+      };
+      box.appendChild(b);
+    }
+  }
+  const pal=document.getElementById('palette');
+  for(const col of PALETTE){
+    const b=document.createElement('button');b.className='sw';b.style.background=col;
+    b.onclick=()=>{if(selCat!=='face'){look[selCat].color=col;save();refresh()}};
+    pal.appendChild(b);
+  }
+  document.getElementById('matrixBtn').onclick=buildMatrix;
+  document.getElementById('adjBtn').onclick=()=>{
+    adjMode=!adjMode;
+    document.getElementById('adjBtn').textContent='🎯 ADJUST MODE: '+(adjMode?'ON':'OFF');
+    document.getElementById('adjHud').style.display=adjMode?'block':'none';
+    updateAdjHud();
+  };
+  document.getElementById('adjCopy').onclick=()=>{
+    const j=JSON.stringify(ADJ,null,1);
+    navigator.clipboard&&navigator.clipboard.writeText(j).catch(()=>{});
+    prompt('Adjustments (copy this and paste it to Claude):',JSON.stringify(ADJ));
+  };
+  document.getElementById('adjClear').onclick=()=>{ADJ={};saveAdj()};
+  addEventListener('keydown',e=>{
+    if(!adjMode||!selItem)return;
+    const step=e.shiftKey?5:1;
+    const a=ADJ[selItem]=ADJ[selItem]||{dx:0,dy:0,s:1};
+    if(e.key==='ArrowLeft')a.dx-=step;
+    else if(e.key==='ArrowRight')a.dx+=step;
+    else if(e.key==='ArrowUp')a.dy-=step;
+    else if(e.key==='ArrowDown')a.dy+=step;
+    else if(e.key==='[')a.s=Math.round(((a.s||1)-0.005)*1000)/1000;
+    else if(e.key===']')a.s=Math.round(((a.s||1)+0.005)*1000)/1000;
+    else if(e.key==='0'){delete ADJ[selItem];saveAdj();e.preventDefault();return}
+    else return;
+    e.preventDefault();saveAdj();
+  });
+}
+function refresh(){
+  document.querySelectorAll('.preset').forEach((b,i)=>b.classList.toggle('sel','ABC'[i]===preset));
+  document.querySelectorAll('.item').forEach(b=>{
+    const{cat,id}=b.dataset;
+    b.classList.toggle('sel',cat==='face'?look.face.includes(id):look[cat].style===id);
+  });
+}
+function buildMatrix(){
+  const box=document.getElementById('matrix');box.innerHTML='';box.classList.add('show');
+  const base=structuredClone(PRESETS.A);
+  const combos=[];
+  for(const cat of ['hair','top','bottom','shoes'])for(const id of ROSTER[cat]){
+    const lk=structuredClone(base);lk[cat].style=id;lk[cat].color=null;combos.push([cat+'·'+id,lk]);
+  }
+  for(const id of ROSTER.face){const lk=structuredClone(base);lk.face=[id];combos.push(['extra·'+id,lk])}
+  for(const k of ['A','B','C'])combos.push(['LOOK '+k,structuredClone(PRESETS[k])]);
+  const cols=4,cw=250,ch=400;
+  const sheet=document.createElement('canvas');
+  sheet.width=cols*cw;sheet.height=Math.ceil(combos.length/cols)*(ch+22);
+  const sx=sheet.getContext('2d');sx.fillStyle='#1d0b36';sx.fillRect(0,0,sheet.width,sheet.height);
+  const tmp=document.createElement('canvas');tmp.width=1024;tmp.height=1536;
+  const savedBlink=blinkT;blinkT=0;
+  combos.forEach(([label,lk],i)=>{
+    drawLook(tmp,lk,0);
+    const x=(i%cols)*cw,y=Math.floor(i/cols)*(ch+22);
+    sx.drawImage(tmp,0,0,1024,1536,x+(cw-ch*2/3)/2,y,ch*2/3,ch);
+    sx.fillStyle='#fff';sx.font='bold 13px system-ui';sx.textAlign='center';
+    sx.fillText(label,x+cw/2,y+ch+15);
+  });
+  blinkT=savedBlink;
+  box.appendChild(sheet);
+  sheet.scrollIntoView({behavior:'smooth'});
+}
+(async()=>{
+  await loadAll();
+  document.getElementById('loading').remove();
+  buildUI();refresh();
+  if(QP.get('matrix'))buildMatrix();
+  requestAnimationFrame(frame);
+  window.__gl={IMGS,look:()=>look,drawLook,stack,ROSTER};
+})();
+</script>
+</body>
+</html>

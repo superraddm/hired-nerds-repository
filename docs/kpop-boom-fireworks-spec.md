@@ -43,6 +43,25 @@ After TAP TO PLAY she lands in the dressing room — a vanity mirror with bulbs 
 - **TO THE STAGE! 🎤** is the one big green button. It closes the room and starts the show (the opening three fireworks fire on the first visit). A 👗 button in the game's top bar brings her back any time — Boo-Bops freeze while the room is open, so nothing is stolen behind her back.
 - Looks are saved on the device (`localStorage`) and drive the very same drawing code used on stage, so what she dresses is exactly what dances.
 
+## 3c. Show Mode — the game proper (6 levels)
+After the dressing room comes the **show map**: six level buttons (locked ones show 🔒, cleared ones show 1–3 ⭐) plus **✨ FREE PLAY** (the original sandbox, unchanged) and **👗 DRESS UP**. Progress persists on the device.
+
+**The loop** (Space Invaders × Guitar Hero, tuned for age 4):
+- Smiley demons float down from the sky toward the stage. The sky playfield sits strictly **between the two potion rails** in both orientations — nothing spawns or flies behind the UI.
+- **The cannon is empty after EVERY shot** — tap a potion to reload, then tap the sky (or GO!) to fire.
+- **Colour potions are unlimited**; any single shot pops a basic demon. **Magic potions are ammo** (a gold badge on the bottle shows how many you hold, starting at 2 each); more falls from the sky as ✨ potion bubbles you shoot to collect (+2).
+- **Special demons can only be popped by the exact combo shown in the bubble above their head** (e.g. 💗+💖) — the Guitar-Hero bit: read the recipe, build it, fire. Recipes are **random per demon**, never fixed per type. A wrong shot just bounces off with a boing and a "MATCH THE POTIONS! 👀" — no penalty.
+- **The girls are the lives.** Each has an energy bar (🎤 chips in the top bar). A demon that reaches the stage tickles the nearest girl for a few seconds (draining her) and then floats off giggling. At zero energy a girl sits down asleep with a 💤 — she never dies. All three asleep = the show ends ("The girls fell asleep! Try again!") and the map returns.
+- **Junk-food power-ups** parachute in periodically — shoot them to collect: 🥤 slushie (+45% energy to the sleepiest girl), 🌭 hot dog (fully wakes one girl), 🍿 popcorn (pops every basic demon on screen), 🍩 donut (slow motion for 7 s). They get rarer each level.
+
+**The demon family (7):** Boo-Bop (basic) · Zoomie (small, fast, zigzags on wings) · Bloomp (big softie, two pops) · Grump (sunglasses, needs its 2-potion combo) · Twirlie (spins, needs its combo) · Mega (huge, needs a 3-potion combo) · and one **boss per level**.
+
+**Bosses are learnable:** always exactly **8 hits**, and each boss uses the **same fixed recipe sequence every time** (🧪 = any basic shot): The Yawn King, DJ Grumbles, Disco Dozer, Puddle Prince, Balloonzilla, The Snooze Moon. The current requirement shows above the boss's crown; 8 pips under it track progress. Bosses hover and occasionally invite a couple of basic demons down. Beating the boss ends the level with a firework salute and 1–3 stars (one per girl still awake).
+
+**Difficulty curve:** waves 8 → 16, demon speed ×0.75 → ×1.3, spawn gaps 5–6.8 s → 2.8–4.4 s, more special types each level, power-ups spaced further apart. Level 1 is deliberately gentle: only Boo-Bops, no ammo pressure.
+
+**Six stage designs:** 🌅 *Sunset Soundcheck* (dusk sky, low sun, birds) · 🌃 *Neon Night* (the classic) · 🪩 *Moonlight Ball* (big moon, giant disco ball with sweeping beams) · ☔ *Rainy Encore* (teal rain streaks) · 🎡 *Sunrise Festival* (dawn sky, turning ferris wheel, rising balloons) · 🪐 *Galaxy Finale* (ringed planet, aurora ribbons). Show mode also adds two backup-dancer silhouettes grooving beside the girls.
+
 ## 4. Core loop (what she actually does)
 1. **Tap a potion.** It glugs into the cauldron. The cauldron liquid swirls to the new colour and bubbles. The bottle shows a count badge (1, 2, 3).
 2. **Tap more potions** (up to 3 in the mix, **repeats allowed** — three golds makes one big gold). Little bubble icons above the cauldron show what's in it.

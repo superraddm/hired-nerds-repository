@@ -62,7 +62,7 @@ button:focus{outline:none}
 
 /* ---------- shelves ---------- */
 .shelf{display:grid;grid-auto-flow:row;grid-template-columns:repeat(var(--cols,1),auto);align-content:space-evenly;justify-items:center;
-  gap:4px;padding:6px 4px;border-radius:22px;background:var(--panel);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);overflow:hidden}
+  gap:4px;padding:6px 4px;border-radius:22px;background:rgba(22,6,44,.94);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);overflow:hidden}
 #left{grid-area:left;--lc:#ff3fa4}#right{grid-area:right;--lc:#a855ff}
 .shelf .lbl{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;color:#fff;font-weight:900;
   background:var(--lc);border-radius:14px;padding:3px 6px;line-height:1;text-shadow:0 1px 0 rgba(0,0,0,.45);box-shadow:0 0 14px var(--lc),0 0 0 2px rgba(255,255,255,.35) inset;
@@ -181,6 +181,40 @@ button:focus{outline:none}
 @keyframes popin{from{transform:scale(0)}to{transform:scale(1)}}
 @keyframes hue{to{filter:hue-rotate(360deg) drop-shadow(0 0 18px rgba(255,63,164,.7))}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+/* ---------- show map & level HUD ---------- */
+#map{position:fixed;inset:0;z-index:14;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;gap:10px;place-items:center;text-align:center;color:#fff;
+  padding:calc(var(--sat) + 14px) 16px calc(var(--sab) + 14px);background:radial-gradient(ellipse at 50% 20%,#4a0d7a 0%,#1a0640 55%,#0a0020 100%)}
+#map[hidden]{display:none}
+#map h2{margin:0;font-size:clamp(22px,5vmin,42px);letter-spacing:1px;text-shadow:0 0 18px #ff3fa4}
+#mapBanner{min-height:1em;font-weight:900;font-size:clamp(16px,3.6vmin,30px)}
+#mapBanner .mwin{color:#7dff4a;text-shadow:0 0 16px #7dff4a;animation:pulse 1s ease-in-out infinite}
+#mapBanner .mlose{color:#ffb1dc;text-shadow:0 0 12px #ff3fa4}
+#mapGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;width:min(94vw,760px);align-content:center;min-height:0}
+@media (orientation:portrait){#mapGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.lvl{display:grid;place-items:center;gap:2px;padding:10px 6px;border-radius:20px;color:#fff;min-height:clamp(84px,16vmin,130px);
+  background:linear-gradient(160deg,#4a1a86,#1f0644);box-shadow:0 0 0 3px rgba(255,255,255,.18) inset,0 6px 0 rgba(0,0,0,.35),0 0 18px rgba(168,85,255,.4);transition:transform .1s}
+.lvl:active{transform:scale(.94)}
+.lvl i{font-style:normal;font-size:clamp(26px,6vmin,44px);line-height:1}
+.lvl b{font-size:clamp(10px,2vmin,15px);line-height:1.15}
+.lvl span{font-size:clamp(10px,2vmin,14px);color:#ffd23f;min-height:1.1em}
+.lvl.locked{filter:grayscale(.9) opacity(.55)}
+.mapRow{display:flex;gap:12px}
+#freePlayBtn,#mapDress{font-weight:900;font-size:clamp(15px,3.2vmin,24px);padding:.5em 1.1em;border-radius:999px;
+  box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 6px 0 rgba(0,0,0,.35)}
+#freePlayBtn{background:linear-gradient(160deg,#7dff4a,#12b886)}
+#mapDress{background:linear-gradient(160deg,#ff3fa4,#a855ff)}
+#freePlayBtn:active,#mapDress:active{transform:translateY(4px)}
+#lives{display:flex;align-items:center;gap:6px;background:var(--panel);border-radius:999px;padding:6px 10px;min-height:44px}
+#lives[hidden]{display:none}
+.life{display:grid;grid-template-columns:auto auto;align-items:center;gap:3px}
+.life i{font-style:normal;font-size:clamp(16px,3.4dvh,26px);line-height:1}
+.life b{width:clamp(26px,7vw,56px);height:clamp(8px,1.6dvh,12px);border-radius:999px;background:rgba(255,255,255,.18);overflow:hidden;display:block}
+.life b u{display:block;height:100%;border-radius:999px;transition:width .3s}
+.life.zzz i{animation:bob 1.6s ease-in-out infinite}
+.bottle .ammo{position:absolute;bottom:-2px;left:-3px;z-index:3;display:none;place-items:center;min-width:1.5em;height:1.5em;padding:0 .2em;border-radius:999px;
+  background:#ffd23f;color:#1a0630;font-weight:900;font-size:calc(var(--bs)*.24);box-shadow:0 0 10px #ffd23f,0 2px 0 rgba(0,0,0,.3)}
+.bottle.out{filter:grayscale(.85) opacity(.55)}
+
 /* ---------- dressing room ---------- */
 #dress{position:fixed;inset:0;z-index:15;display:grid;grid-template-rows:auto minmax(0,1fr);gap:6px;color:#fff;
   padding:calc(var(--sat) + 6px) calc(var(--sar) + 8px) calc(var(--sab) + 8px) calc(var(--sal) + 8px);
@@ -202,23 +236,35 @@ button:focus{outline:none}
 .arrow:active{transform:scale(.9)}
 .dname{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-weight:900;font-size:clamp(15px,3.4vmin,28px);letter-spacing:1px;
   background:var(--pink);padding:2px 16px;border-radius:999px;box-shadow:0 0 16px rgba(255,255,255,.4),0 0 0 2px rgba(255,255,255,.4) inset;text-shadow:0 1px 0 rgba(0,0,0,.4);pointer-events:none}
-.dots{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:7px;pointer-events:none}
-.dots i{width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.3)}.dots i.on{background:#fff;box-shadow:0 0 8px #fff}
+.charstrip{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:7px;padding:5px;border-radius:999px;background:rgba(22,7,38,.72);backdrop-filter:blur(8px)}
+.charpick{min-width:clamp(54px,9vmin,82px);height:clamp(38px,6vmin,48px);padding:0 9px;border-radius:999px;background:rgba(255,255,255,.12);font-weight:900;font-size:clamp(10px,1.8vmin,14px);box-shadow:inset 0 0 0 2px rgba(255,255,255,.16)}
+.charpick.on{background:linear-gradient(135deg,var(--pink),var(--violet));box-shadow:inset 0 0 0 3px #fff,0 0 16px var(--pink);transform:scale(1.06)}
 .dpanel{display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;gap:8px;min-height:0;border-radius:22px;background:var(--panel);padding:8px;overflow:hidden}
 .tabs{display:flex;gap:5px}
 .tab{flex:1 1 0;min-width:0;display:grid;place-items:center;padding:5px 2px;border-radius:14px;background:rgba(255,255,255,.08);font-weight:900;font-size:clamp(8px,1.8vmin,13px);letter-spacing:.3px}
 .tab i{font-style:normal;font-size:clamp(18px,4vmin,30px);line-height:1.1}
 .tab.on{background:var(--violet);box-shadow:0 0 14px var(--violet),0 0 0 2px rgba(255,255,255,.35) inset}
-.items{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;align-content:start;min-height:0}
+.items{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;align-content:start;min-height:0;overflow:auto;overscroll-behavior:contain;padding:2px}
 .tile{width:100%;height:auto;aspect-ratio:1;border-radius:16px;background:rgba(255,255,255,.08);touch-action:none;cursor:grab;transition:transform .1s}
 .tile:active{transform:scale(.92)}
 .tile.on{box-shadow:0 0 0 4px #fff inset,0 0 14px #fff;background:rgba(255,255,255,.18)}
-.swatches{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}
+/* the item the swatch row is pointing at: a coloured halo + a paint chip drawn on the canvas */
+.tile.paint{background:rgba(255,255,255,.2);box-shadow:0 0 0 4px #fff inset,0 0 0 3px var(--pc,#ffd23f),0 0 18px var(--pc,#ffd23f);animation:paintpulse 1.5s ease-in-out infinite}
+@keyframes paintpulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.15)}}
+.swatches{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;align-items:center}
+.swlabel{flex:0 0 100%;text-align:center;font-size:clamp(9px,1.9vmin,13px);font-weight:700;color:#e9d7ff;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px}
+.swlabel b{color:#fff}
 .sw{width:clamp(32px,5vmin,44px);height:clamp(32px,5vmin,44px);border-radius:50%;background:var(--c);box-shadow:0 0 0 2px rgba(255,255,255,.4) inset,0 2px 6px rgba(0,0,0,.4);transition:transform .1s}
 .sw.on{box-shadow:0 0 0 4px #fff inset,0 0 12px #fff;transform:scale(1.15)}
-#surprise{font-weight:900;font-size:clamp(14px,3vmin,22px);padding:.4em 1.1em;border-radius:999px;justify-self:center;
+.sw.reset{display:grid;place-items:center;font-size:clamp(17px,3vmin,24px);font-weight:900;line-height:1;
+  background:linear-gradient(160deg,#5a2b8f,#2a0d50);box-shadow:0 0 0 2px rgba(255,255,255,.55) inset,0 2px 6px rgba(0,0,0,.4)}
+.sw.reset.on{box-shadow:0 0 0 3px #fff inset,0 0 12px #fff;transform:scale(1.12)}
+.dactions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#surprise,#signature{font-weight:900;font-size:clamp(12px,2.5vmin,20px);padding:.48em .7em;border-radius:999px;
   background:linear-gradient(160deg,#ff3fa4,#a855ff);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 5px 0 #5b0d9a}
-#surprise:active{transform:translateY(4px);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 1px 0 #5b0d9a}
+#signature{background:linear-gradient(160deg,#33e6ff,#6757dc);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 5px 0 #30479b}
+#surprise:active,#signature:active{transform:translateY(4px);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 1px 0 #5b0d9a}
 .ghost{position:fixed;width:84px;height:84px;transform:translate(-50%,-60%) scale(1.15) rotate(-6deg);pointer-events:none;z-index:50;filter:drop-shadow(0 8px 12px rgba(0,0,0,.5))}
 
 @keyframes hint{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px) scale(1.08)}}
@@ -233,8 +279,10 @@ button:focus{outline:none}
 <div id="ui" class="hidden">
   <div id="top">
     <div id="stars" aria-label="stars collected"></div>
+    <div id="lives" aria-label="girl energy" hidden></div>
     <div id="topbtns">
       <button id="wardrobe" class="round" aria-label="Dressing room">👗</button>
+      <button id="mapBtn" class="round" aria-label="Show map" hidden>🎪</button>
       <button id="finale" class="round" aria-label="Finale show">🎆</button>
       <button id="snap" class="round" aria-label="Take a photo">📸</button>
       <button id="music" class="round" aria-label="Music on or off">🔊</button>
@@ -278,16 +326,22 @@ button:focus{outline:none}
   <div class="dbody">
     <div class="dstage">
       <button class="arrow" id="prevChar" aria-label="Previous girl">◀</button>
-      <div id="cvwrap"><canvas id="dressCv"></canvas><div class="dname" id="dname">SOL</div><div class="dots" id="ddots"></div></div>
+      <div id="cvwrap"><canvas id="dressCv"></canvas><div class="dname" id="dname">SOL</div><div class="charstrip" id="dchars"></div></div>
       <button class="arrow" id="nextChar" aria-label="Next girl">▶</button>
     </div>
     <div class="dpanel">
       <div class="tabs" id="dtabs"></div>
       <div class="items" id="ditems"></div>
       <div class="swatches" id="dswatches"></div>
-      <button id="surprise">🎲 SURPRISE!</button>
+      <div class="dactions"><button id="signature">⭐ STAR LOOK</button><button id="surprise">🎲 SURPRISE!</button></div>
     </div>
   </div>
+</div>
+<div id="map" hidden>
+  <div id="mapBanner"></div>
+  <h2>🎤 PICK A SHOW!</h2>
+  <div id="mapGrid"></div>
+  <div class="mapRow"><button id="freePlayBtn">✨ FREE PLAY</button><button id="mapDress">👗 DRESS UP</button></div>
 </div>
 <div id="toast"></div>
 
@@ -301,26 +355,19 @@ const pick = a => a[(Math.random()*a.length)|0];
 const TAU = Math.PI*2;
 
 /* ================= POTIONS ================= */
-// Every potion carries a "personality" (mod) so any combination — including the same potion twice — fires differently.
+// Slimmed to 4 colours + 4 magics for show mode: combos stay readable for a 4-year-old.
+// Every potion still carries a "personality" (mod) so any combination fires differently.
 const COLOURS = [
   {id:'pink',   icon:'💗', name:'Pink Bias — wide & full',      css:'#ff3fa4', h:330,s:100,l:62, mod:{count:1.25,speed:1.05}},
-  {id:'violet', icon:'💜', name:'Violet Encore — slow & floaty', css:'#a855ff', h:272,s:100,l:68, mod:{grav:0.4,life:1.5,speed:0.8}},
   {id:'blue',   icon:'💙', name:'Lightstick Blue — fast & tall', css:'#33e6ff', h:190,s:100,l:60, mod:{speed:1.35,life:0.85}, fast:true},
   {id:'gold',   icon:'💛', name:'Gold Debut — crackly twinkle',  css:'#ffd23f', h:48, s:100,l:60, mod:{count:1.1,life:1.15}, twinkle:true},
   {id:'lime',   icon:'💚', name:'Lime Fan Chant — lots of tiny', css:'#7dff4a', h:108,s:100,l:60, mod:{count:1.6,size:0.65}},
-  {id:'orange', icon:'🧡', name:'Sunset Stage — punchy pop',     css:'#ff7a2f', h:20, s:100,l:58, mod:{speed:1.3,life:0.6,size:1.3}},
-  {id:'silver', icon:'🤍', name:'Silver Sparkle — strobe',       css:'#f4f4ff', h:230,s:30, l:94, mod:{life:1.3,size:0.9}, twinkle:true},
-  {id:'rainbow',icon:'🌈', name:'Rainbow Fandom — every colour', css:'linear-gradient(160deg,#ff3fa4,#ffd23f,#7dff4a,#33e6ff,#a855ff)', rainbow:true, mod:{count:1.15}},
 ];
 const MAGICS = [
   {id:'heart',  icon:'💖', name:'Heart Beat — heart shape',      css:'#ff5ab8', shape:'heart', mod:{}},
   {id:'star',   icon:'⭐', name:'Star Debut — star shape',       css:'#ffe066', shape:'star', mod:{}},
-  {id:'glitter',icon:'✨', name:'Glitter Comeback — crackles',   css:'#fff2b3', glitter:true, mod:{life:1.4}},
   {id:'bass',   icon:'💥', name:'Bass Drop — HUGE',              css:'#ff4d4d', big:true, mod:{size:1.5,speed:1.35,count:1.3,grav:0.7}},
-  {id:'high',   icon:'🚀', name:'High Note — sky high',          css:'#66b3ff', high:true, mod:{speed:1.1,size:0.9}},
-  {id:'willow', icon:'🌊', name:'Ballad Willow — drooping trails', css:'#4dd2ff', willow:true, mod:{}},
-  {id:'spin',   icon:'🌀', name:'Spin Dance — spiral',           css:'#b48cff', shape:'spiral', mod:{speed:1.05}},
-  {id:'chorus', icon:'🎵', name:'Chorus — music notes',          css:'#ff9ad1', shape:'notes', chord:true, mod:{}},
+  {id:'glitter',icon:'✨', name:'Glitter Comeback — crackles',   css:'#fff2b3', glitter:true, mod:{life:1.4}},
 ];
 const ALL = [...COLOURS, ...MAGICS];
 const byId = Object.fromEntries(ALL.map(p=>[p.id,p]));
@@ -443,26 +490,154 @@ const skyline = Array.from({length:26}, (_,i) => ({x:i/26, w:rnd(0.025,0.045), h
 /* ================= CHARACTERS & WARDROBE ================= */
 // Three Korean idols. `face` shapes them apart: rx/ry head size, cheek fullness, jaw width, chin width, eye width/height, liner wing, brow tilt.
 const CHARS = [
-  {id:'sol',  name:'SOL',  skin:'#f7dfcd', eyes:'#3a2418', face:{rx:0.076,ry:0.09, cheek:1.0, jaw:0.5, chinW:0.008,eyeW:1.05,eyeH:0.78,wing:1.1,brow:-0.05},   // heart-shaped face, pointed chin, cat-eye
-    def:{hair:{style:'ponytail',color:'#1b1026'}, top:{style:'jacket',color:'#a855ff'}, bottom:{style:'shorts',color:'#1b1026'}, shoes:{style:'boots',color:'#1b1026'},   face:['earrings'],     faceColor:'#33e6ff'}},
-  {id:'hana', name:'HANA', skin:'#f2d0b3', eyes:'#5a2d1a', face:{rx:0.083,ry:0.084,cheek:1.18,jaw:0.78,chinW:0.03, eyeW:1.0, eyeH:1.0, wing:0.5,brow:0.1},    // rounder, softer face, big eyes
-    def:{hair:{style:'wavy',color:'#ff3fa4'},     top:{style:'crop',color:'#ffd23f'},   bottom:{style:'skirt',color:'#ff3fa4'},  shoes:{style:'platform',color:'#ffffff'}, face:['starsticker'],  faceColor:'#ffd23f'}},
-  {id:'jia',  name:'JIA',  skin:'#e6bb97', eyes:'#2a1a12', face:{rx:0.07, ry:0.095,cheek:0.94,jaw:0.88,chinW:0.036,eyeW:1.15,eyeH:0.7, wing:0.7,brow:0.05},   // longer face, defined jaw, almond eyes
-    def:{hair:{style:'buns',color:'#2a1440'},     top:{style:'tank',color:'#33e6ff'},   bottom:{style:'cargo',color:'#1b1026'},  shoes:{style:'hightops',color:'#7dff4a'}, face:['heartglasses'], faceColor:'#ff3fa4'}},
+  {id:'sol',  name:'SOL',  skin:'#f1c9b7', eyes:'#3b2847', face:{rx:0.076,ry:0.091,cheek:1.02,jaw:0.58,chinW:0.012,eyeW:1.06,eyeH:0.76,wing:1.15,brow:-0.05},
+    def:{preset:'A',hair:{style:'moonpony',color:'#171522'},top:{style:'moonmoto',color:'#9b7be8'},bottom:{style:'moonshorts',color:'#171522'},shoes:{style:'moonboots',color:'#eeeaf8'},face:['moondrops'],faceColor:'#6ee8ed'}},
+  {id:'hana', name:'HANA', skin:'#edc2a9', eyes:'#63382f', face:{rx:0.082,ry:0.087,cheek:1.15,jaw:0.76,chinW:0.027,eyeW:1.04,eyeH:0.94,wing:0.68,brow:0.08},
+    def:{preset:'A',hair:{style:'rosewaves',color:'#d83f8d'},top:{style:'petaljacket',color:'#ef69a4'},bottom:{style:'petalskort',color:'#f17bb0'},shoes:{style:'petalboots',color:'#ffffff'},face:['cheekcrystal'],faceColor:'#ffd060'}},
+  {id:'jia',  name:'JIA',  skin:'#dca989', eyes:'#2b2528', face:{rx:0.071,ry:0.095,cheek:0.96,jaw:0.9,chinW:0.034,eyeW:1.16,eyeH:0.68,wing:1.0,brow:0.02},
+    def:{preset:'A',hair:{style:'neonbuns',color:'#101820'},top:{style:'neonmoto',color:'#168e99'},bottom:{style:'silvershorts',color:'#dce6ee'},shoes:{style:'neonboots',color:'#101820'},face:['moondrops'],faceColor:'#bdf34b'}},
 ];
 const WARDROBE = {
-  hair:  [['ponytail','Ponytail'],['buns','Space buns'],['bob','Bob'],['long','Long & straight'],['wavy','Long & wavy'],['braid','Big braid'],['puffs','Afro puffs'],['highbun','High bun'],['pigtails','Pigtails'],['pixie','Pixie']],
-  face:  [['sunglasses','Sunglasses'],['heartglasses','Heart glasses'],['starsticker','Star sticker'],['heartsticker','Heart sticker'],['lollipop','Lollipop'],['catears','Cat ears'],['crown','Crown'],['headphones','Headphones'],['bow','Hair bow'],['earrings','Earrings']],
-  top:   [['crop','Crop top'],['tee','T-shirt'],['jacket','Jacket'],['hoodie','Hoodie'],['blazer','Sparkle blazer'],['tank','Tank top']],
-  bottom:[['skirt','Pleated skirt'],['shorts','Shorts'],['cargo','Cargo pants'],['tutu','Tutu'],['plaid','Plaid skirt'],['leggings','Leggings']],
-  shoes: [['boots','Boots'],['sneakers','Sneakers'],['platform','Platform boots'],['maryjanes','Mary Janes'],['hightops','High tops']],
+  looks: [['A','Approved look A'],['B','Approved look B'],['C','Approved look C']],
+  hair:  [['moonpony','Moonlit ponytail'],['rosewaves','Strawberry waves'],['neonbuns','Neon twin buns'],['cometbraid','Comet braid'],['crystaltails','Crystal twin tails'],['starbraid','Star ribbon braid'],['bubblebob','Bubblegum bob'],['aquabraids','Aqua crown braids'],['wolfcut','Sunset wolf cut'],['silverwaves','Pearl silver waves']],
+  face:  [['moondrops','Moon drop earrings'],['cheekcrystal','Cheek crystals'],['starbow','Couture star bow'],['tiara','Moon crystal tiara'],['headset','Crystal stage headset'],['visor','Performance visor']],
+  top:   [['moonmoto','Moonlit moto jacket'],['petaljacket','Petal couture jacket'],['neonmoto','Neon asymmetric jacket'],['tailcoat','Star ribbon tailcoat']],
+  bottom:[['moonshorts','Moon tailored shorts'],['petalskort','Petal layered skort'],['silvershorts','Crystal silver shorts'],['cargoshorts','Iridescent cargo shorts']],
+  shoes: [['moonboots','Moon lace boots'],['petalboots','Petal couture boots'],['neonboots','Neon combat boots']],
 };
-const CATS = [['hair','💇','HAIR'],['face','😎','FACE'],['top','👚','TOP'],['bottom','👖','BOTTOMS'],['shoes','👟','SHOES']];
-const PALETTE = ['#1b1026','#5a3320','#f5d67a','#ffffff','#ff3fa4','#ff9ad1','#a855ff','#33e6ff','#ffd23f','#7dff4a','#ff7a2f','#ff4d4d'];
-const EXCL = [['sunglasses','heartglasses'], ['catears','crown','headphones','bow']];   // only one of each group at a time
+// Skin tone is its own asset: a curated range rather than the stage palette, so the
+// girls always look like people even when everything else has gone neon.
+const SKIN_TONES=[['porcelain','#f7dccb','Porcelain'],['ivory','#f0cdb4','Ivory'],['honey','#e2b28c','Honey'],['amber','#c69066','Amber'],['umber','#966446','Umber'],['espresso','#65402d','Espresso']];
+const SKIN_BY_ID=Object.fromEntries(SKIN_TONES.map(t=>[t[0],t[1]]));
+WARDROBE.skin=SKIN_TONES.map(t=>[t[0],t[2]]);
+const HAIR_BY_CHAR={sol:['moonpony','starbraid','cometbraid','silverwaves','neonbuns'],hana:['rosewaves','bubblebob','crystaltails','silverwaves','moonpony'],jia:['neonbuns','aquabraids','wolfcut','silverwaves','cometbraid']};
+const CATS = [['looks','✨','LOOKS'],['skin','😊','SKIN'],['hair','💇','HAIR'],['face','💎','EXTRAS'],['top','🧥','TOP'],['bottom','🩳','BOTTOMS'],['shoes','🥾','SHOES']];
+const PALETTE = ['#101820','#573022','#f4cf77','#ffffff','#d83f8d','#ff91c2','#7740a8','#29dbe3','#168e99','#ffd060','#f36b5f','#ad263e'];
+const EXCL = [['starbow','tiara'],['headset','visor']];
+const LOOK_PRESETS={
+  sol:{
+    A:{preset:'A',hair:{style:'moonpony',color:'#171522'},top:{style:'moonmoto',color:'#9b7be8'},bottom:{style:'moonshorts',color:'#171522'},shoes:{style:'moonboots',color:'#eeeaf8'},face:['moondrops'],faceColor:'#6ee8ed'},
+    B:{preset:'B',hair:{style:'starbraid',color:'#18213c'},top:{style:'tailcoat',color:'#252654'},bottom:{style:'silvershorts',color:'#e5e7ef'},shoes:{style:'moonboots',color:'#20213c'},face:['starbow'],faceColor:'#ff69b5'},
+    C:{preset:'C',hair:{style:'cometbraid',color:'#45183f'},top:{style:'neonmoto',color:'#e43e92'},bottom:{style:'silvershorts',color:'#e7e7ef'},shoes:{style:'neonboots',color:'#171522'},face:['moondrops'],faceColor:'#2edbe6'}},
+  hana:{
+    A:{preset:'A',hair:{style:'rosewaves',color:'#d83f8d'},top:{style:'petaljacket',color:'#ef69a4'},bottom:{style:'petalskort',color:'#f17bb0'},shoes:{style:'petalboots',color:'#ffffff'},face:['cheekcrystal'],faceColor:'#ffd060'},
+    B:{preset:'B',hair:{style:'bubblebob',color:'#ed5ea7'},top:{style:'neonmoto',color:'#75d4de'},bottom:{style:'silvershorts',color:'#76d5df'},shoes:{style:'petalboots',color:'#ffffff'},face:['cheekcrystal'],faceColor:'#ff80bb'},
+    C:{preset:'C',hair:{style:'crystaltails',color:'#b95492'},top:{style:'petaljacket',color:'#9b61e8'},bottom:{style:'petalskort',color:'#a569e6'},shoes:{style:'petalboots',color:'#e8dcff'},face:['tiara'],faceColor:'#ff91c2'}},
+  jia:{
+    A:{preset:'A',hair:{style:'neonbuns',color:'#101820'},top:{style:'neonmoto',color:'#168e99'},bottom:{style:'silvershorts',color:'#dce6ee'},shoes:{style:'neonboots',color:'#101820'},face:['moondrops'],faceColor:'#bdf34b'},
+    B:{preset:'B',hair:{style:'aquabraids',color:'#24396f'},top:{style:'neonmoto',color:'#315fc5'},bottom:{style:'cargoshorts',color:'#182033'},shoes:{style:'neonboots',color:'#254aa4'},face:['visor'],faceColor:'#29dbe3'},
+    C:{preset:'C',hair:{style:'wolfcut',color:'#482039'},top:{style:'neonmoto',color:'#ed7167'},bottom:{style:'silvershorts',color:'#eee8e6'},shoes:{style:'petalboots',color:'#f3eee9'},face:['moondrops'],faceColor:'#ffd060'}}
+};
+function wardrobeFor(cat){if(cat==='hair'){const ids=HAIR_BY_CHAR[CHARS[curChar].id];return WARDROBE.hair.filter(x=>ids.includes(x[0]))}return WARDROBE[cat]}
 let LOOKS = CHARS.map(c => JSON.parse(JSON.stringify(c.def)));
-try { const s = JSON.parse(localStorage.getItem('kb_looks')||'null'); if (Array.isArray(s) && s.length===3) LOOKS = s.map((l,i) => ({...LOOKS[i], ...l})); } catch(e){}
-function saveLooks(){ try { localStorage.setItem('kb_looks', JSON.stringify(LOOKS)); } catch(e){} }
+try { const s = JSON.parse(localStorage.getItem('kb_looks_v3')||'null'); if (Array.isArray(s) && s.length===3) LOOKS = s.map((l,i) => ({...LOOKS[i], ...l})); } catch(e){}
+function saveLooks(){ try { localStorage.setItem('kb_looks_v3', JSON.stringify(LOOKS)); } catch(e){} }
+
+/* ================= LAYERED PAPER-DOLL ASSETS ================= */
+const PD={ready:false,sheets:{},cache:new Map(),error:null};
+const PD_FILES={
+  base:['assets/paperdoll/bases-v1.png',3,'checker'],hair1:['assets/paperdoll/hair-v1.png',5,'green'],hair2:['assets/paperdoll/hair-v2.png',5,'green'],
+  top:['assets/paperdoll/tops-v1.png',4,'green'],bottom:['assets/paperdoll/bottoms-v1.png',4,'green'],shoes:['assets/paperdoll/shoes-v1.png',3,'green'],face:['assets/paperdoll/accessories-v1.png',6,'green']
+};
+const PD_ITEM={
+  moonpony:['hair1',0],rosewaves:['hair1',1],neonbuns:['hair1',2],cometbraid:['hair1',3],crystaltails:['hair1',4],
+  starbraid:['hair2',0],bubblebob:['hair2',1],aquabraids:['hair2',2],wolfcut:['hair2',3],silverwaves:['hair2',4],
+  moonmoto:['top',0],petaljacket:['top',1],neonmoto:['top',2],tailcoat:['top',3],
+  moonshorts:['bottom',0],petalskort:['bottom',1],silvershorts:['bottom',2],cargoshorts:['bottom',3],
+  moonboots:['shoes',0],petalboots:['shoes',1],neonboots:['shoes',2],
+  moondrops:['face',0],cheekcrystal:['face',1],starbow:['face',2],tiara:['face',3],headset:['face',4],visor:['face',5]
+};
+// Registration is measured against the base figure's full height. Hair is aligned
+// by its face opening; garments are aligned to anatomical landmarks, not artwork bounds.
+const PD_HAIR={
+  moonpony:{w:.28,face:.19},rosewaves:{w:.30,face:.27},neonbuns:{w:.31,face:.23},cometbraid:{w:.23,face:.22},crystaltails:{w:.31,face:.22},
+  starbraid:{w:.27,face:.225},bubblebob:{w:.22,face:.40},aquabraids:{w:.31,face:.205},wolfcut:{w:.29,face:.22},silverwaves:{w:.28,face:.205}
+};
+const PD_REG={
+  top:{
+    moonmoto:{x:0,y:.14,w:.335,h:.405},petaljacket:{x:0,y:.14,w:.34,h:.405},neonmoto:{x:0,y:.14,w:.335,h:.41},tailcoat:{x:0,y:.135,w:.345,h:.665}
+  },
+  bottom:{
+    moonshorts:{x:0,y:.425,w:.275,h:.225},petalskort:{x:0,y:.42,w:.29,h:.255},silvershorts:{x:0,y:.425,w:.275,h:.225},cargoshorts:{x:0,y:.42,w:.29,h:.25}
+  },
+  shoes:{
+    moonboots:{x:0,y:.60,w:.235,h:.385},petalboots:{x:0,y:.60,w:.235,h:.385},neonboots:{x:0,y:.675,w:.225,h:.31}
+  },
+  face:{
+    moondrops:{x:0,y:.073,w:.064},cheekcrystal:{x:0,y:.09,w:.075},starbow:{x:.075,y:-.005,w:.17},tiara:{x:0,y:.004,w:.145},headset:{x:0,y:.025,w:.15},visor:{x:0,y:.067,w:.135}
+  }
+};
+function loadImage(src){return new Promise((ok,no)=>{const im=new Image();im.onload=()=>ok(im);im.onerror=no;im.src=src})}
+function keyGreen(data){for(let p=0;p<data.length;p+=4){const r=data[p],g=data[p+1],b=data[p+2],ex=g-Math.max(r,b);if(g>105&&ex>42){if(ex>82)data[p+3]=0;else data[p+3]=Math.round(data[p+3]*(82-ex)/40);data[p+1]=Math.min(g,Math.round((r+b)*.55))}}}
+function keyChecker(data,w,h){
+  const seen=new Uint8Array(w*h),stack=new Int32Array(w*h);let n=0;
+  const bg=i=>{const p=i*4,r=data[p],g=data[p+1],b=data[p+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b);return mn>218&&mx-mn<20};
+  const push=i=>{if(!seen[i]&&bg(i)){seen[i]=1;stack[n++]=i}};
+  for(let x=0;x<w;x++){push(x);push((h-1)*w+x)}for(let y=0;y<h;y++){push(y*w);push(y*w+w-1)}
+  while(n){const i=stack[--n],p=i*4;data[p+3]=0;const x=i%w;if(x)push(i-1);if(x<w-1)push(i+1);if(i>=w)push(i-w);if(i<w*(h-1))push(i+w)}
+}
+function findCells(canvas,count){const c=canvas.getContext('2d'),d=c.getImageData(0,0,canvas.width,canvas.height).data,out=[];for(let i=0;i<count;i++){const x0=Math.round(i*canvas.width/count),x1=Math.round((i+1)*canvas.width/count);let l=x1,t=canvas.height,r=x0,b=0;for(let y=0;y<canvas.height;y++)for(let x=x0;x<x1;x++)if(d[(y*canvas.width+x)*4+3]>12){if(x<l)l=x;if(x>r)r=x;if(y<t)t=y;if(y>b)b=y}out.push(r>=l?{x:l,y:t,w:r-l+1,h:b-t+1}:{x:x0,y:0,w:x1-x0,h:canvas.height})}return out}
+async function loadPDSheet(name,[src,count,key]){const im=await loadImage(src),c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(im,0,0);const id=x.getImageData(0,0,c.width,c.height);if(key==='green')keyGreen(id.data);else keyChecker(id.data,c.width,c.height);x.putImageData(id,0,0);PD.sheets[name]={canvas:c,cells:findCells(c,count)}}
+async function loadPaperDollAssets(){try{await Promise.all(Object.entries(PD_FILES).map(([n,v])=>loadPDSheet(n,v)));PD.ready=true;if(dressOpen)renderDress()}catch(e){PD.error=e;console.warn('Paper-doll assets could not load',e)}}
+// Tint strength per layer. Hair and trimmed boots take a strong wash; large flat
+// garment panels take a gentler one, so the artwork's own shading and print survive
+// instead of turning into one block of colour.
+const TINT={hair:.58,shoes:.58,face:.58,top:.34,bottom:.34,skin:.7};
+function pdCache(key,out){PD.cache.set(key,out);if(PD.cache.size>96)PD.cache.delete(PD.cache.keys().next().value);return out}
+function cropCell(sh,b){const c=document.createElement('canvas');c.width=b.w;c.height=b.h;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(sh.canvas,b.x,b.y,b.w,b.h,0,0,b.w,b.h);return{c,x}}
+function tintedItem(id,color,mix=.58){
+  const [sn,ix]=PD_ITEM[id],sh=PD.sheets[sn],b=sh.cells[ix],key=`${id}|${color||''}|${mix}`;
+  if(PD.cache.has(key))return PD.cache.get(key);
+  const {c,x}=cropCell(sh,b);
+  if(color){
+    const im=x.getImageData(0,0,b.w,b.h),d=im.data,tr=rgbOf(color);
+    for(let p=0;p<d.length;p+=4){
+      if(d[p+3]<4)continue;
+      const r=d[p],g=d[p+1],bl=d[p+2],mx=Math.max(r,g,bl),mn=Math.min(r,g,bl),lum=(r*.2126+g*.7152+bl*.0722)/255;
+      if(lum>.88)continue;              // leave specular highlights alone so satin still reads as satin
+      if(mx-mn<18&&lum>.66)continue;    // leave white trims and pearl detail neutral
+      const k=.2+lum*1.05;
+      d[p]=Math.min(255,r*(1-mix)+tr[0]*k*mix);d[p+1]=Math.min(255,g*(1-mix)+tr[1]*k*mix);d[p+2]=Math.min(255,bl*(1-mix)+tr[2]*k*mix);
+    }
+    x.putImageData(im,0,0);
+  }
+  return pdCache(key,{canvas:c,w:b.w,h:b.h});
+}
+// Skin tone repaints only the warm mid-tones of the base figure, so the dark
+// bodysuit, brows, lashes and lips keep their own colour.
+function tintedBase(i,color){
+  const sh=PD.sheets.base,b=sh.cells[i],key=`base${i}|${color||''}`;
+  if(PD.cache.has(key))return PD.cache.get(key);
+  const {c,x}=cropCell(sh,b);
+  if(color){
+    const im=x.getImageData(0,0,b.w,b.h),d=im.data,tr=rgbOf(color),mix=TINT.skin;
+    for(let p=0;p<d.length;p+=4){
+      if(d[p+3]<4)continue;
+      const r=d[p],g=d[p+1],bl=d[p+2];
+      if(!(r>g&&g>=bl&&r-bl>10&&r>70))continue;
+      const lum=(r*.2126+g*.7152+bl*.0722)/255,k=.35+lum*.85;
+      d[p]=Math.min(255,r*(1-mix)+tr[0]*k*mix);d[p+1]=Math.min(255,g*(1-mix)+tr[1]*k*mix);d[p+2]=Math.min(255,bl*(1-mix)+tr[2]*k*mix);
+    }
+    x.putImageData(im,0,0);
+  }
+  return pdCache(key,{canvas:c,w:b.w,h:b.h});
+}
+function drawPaperItem(id,color,x,y,w,h){const a=tintedItem(id,color),hh=h===undefined?w*a.h/a.w:h;ctx.drawImage(a.canvas,x-w/2,y,w,hh)}
+function drawPaperDoll(ch,look,i,x,y,h,t,still){
+  const base=tintedBase(i,look.skin),top=y-h,faceY=top+h*.066,breath=still?0:Math.sin((t||0)*.9+i*1.8)*.0025,sway=still?0:Math.sin((t||0)*.55+i)*h*.0015;
+  ctx.save();ctx.translate(x+sway,y);ctx.scale(1-breath*.2,1+breath);ctx.translate(-x,-y);const bw=base.w*(h/base.h);ctx.drawImage(base.canvas,x-bw/2,top,bw,h);
+  for(const cat of ['bottom','top','shoes']){const part=look[cat],a=tintedItem(part.style,part.color,TINT[cat]),m=PD_REG[cat][part.style],dw=h*m.w,dh=h*m.h;ctx.drawImage(a.canvas,x+h*m.x-dw/2,top+h*m.y,dw,dh)}
+  const hm=PD_HAIR[look.hair.style],hair=tintedItem(look.hair.style,look.hair.color,TINT.hair),hairW=h*hm.w,hairH=hairW*hair.h/hair.w;ctx.drawImage(hair.canvas,x-hairW/2,faceY-hairH*hm.face,hairW,hairH);
+  for(const id of look.face){const a=tintedItem(id,look.faceColor,TINT.face),m=PD_REG.face[id],aw=h*m.w,ah=aw*a.h/a.w;ctx.drawImage(a.canvas,x+h*m.x-aw/2,top+h*m.y,aw,ah)}
+  ctx.restore();
+}
+function drawPaperThumb(cat,id,look){
+  ctx.fillStyle='rgba(255,255,255,.08)';ctx.beginPath();ctx.arc(64,64,61,0,TAU);ctx.fill();
+  if(cat==='looks'){const p=LOOK_PRESETS[CHARS[curChar].id][id];drawPaperDoll(CHARS[curChar],{...p,skin:look.skin},curChar,64,124,116,0,true);return}
+  // Skin tiles zoom to head and shoulders — at thumbnail size a whole figure hides the tone.
+  if(cat==='skin'){const bs=tintedBase(curChar,SKIN_BY_ID[id]),sw=bs.w*.68,sh=bs.h*.255,dw=sw*(124/sh);ctx.drawImage(bs.canvas,(bs.w-sw)/2,0,sw,sh,64-dw/2,4,dw,124);return}
+  const color=cat==='face'?look.faceColor:look[cat].color,a=tintedItem(id,color,TINT[cat]),max=cat==='hair'?112:cat==='shoes'?108:100,sc=Math.min(max/a.w,max/a.h),w=a.w*sc,h=a.h*sc;ctx.drawImage(a.canvas,64-w/2,64-h/2,w,h)
+}
 let ctlTop = 0; // y where the DOM controls begin (stage sits above)
 
 function resize(){
@@ -473,6 +648,10 @@ function resize(){
   ctx.setTransform(DPR,0,0,DPR,0,0);
   U = Math.min(W,H)/720;
   const r = $('#ctl').getBoundingClientRect(); ctlTop = r.height ? r.top : H*0.8;
+  // demons, drops and shots live in the open sky between the two potion rails
+  const lr = $('#left').getBoundingClientRect(), rr = $('#right').getBoundingClientRect();
+  playL = lr.width ? lr.right + 6 : 0; playR = rr.width ? rr.left - 6 : W;
+  if (playR - playL < W*0.4){ playL = 0; playR = W; }
 }
 addEventListener('resize', resize); addEventListener('orientationchange', () => setTimeout(resize, 200));
 
@@ -550,7 +729,9 @@ function explode(x, y, m, small){
   if (AC){ sfxBoom(big && !small, x); if (glitter && !small) sfxCrackle(x); if (chord) sfxChord(); if (big && !small) sfxCheer(); }
   // Boo-Bops caught in the light pop into bubbles
   const R = 180*U*scale;
-  for (const b of BOOBOPS){ if (!b.dead && Math.hypot(b.x-x, b.y-y) < R + b.r) popBooBop(b); }
+  for (const b of BOOBOPS){ if (b.dead || Math.hypot(b.x-x, b.y-y) >= R + b.r) continue;
+    if (b.mode==='level') hitDemon(b, m); else popBooBop(b); }
+  for (let i=DROPS.length-1;i>=0;i--){ const d = DROPS[i]; if (Math.hypot(d.x-x, d.y-y) < R + d.r){ DROPS.splice(i,1); collectDrop(d); } }
 }
 
 /* ================= POTION CANNON ================= */
@@ -573,6 +754,7 @@ function nope(){
 function launch(tx, ty, ids){
   if (!ids && !mix.length){ nope(); return; }
   if (tx===undefined){ tx = rnd(W*0.15, W*0.85); ty = rnd(H*0.12, H*0.5); }
+  if (MODE==='level') tx = clamp(tx, playL+24*U, playR-24*U);   // keep shots inside the playfield
   const m = (ids||mix).map(id=>byId[id]);
   const high = m.some(p=>p.high), fast = high || m.some(p=>p.fast);
   const {px, py, L} = cannonGeom();
@@ -589,6 +771,10 @@ function launch(tx, ty, ids){
   launches++; lastTouch = performance.now();
   if (launches % 10 === 0) addStar();
   cheer = Math.min(1, cheer+0.1);
+  if (!ids && MODE==='level'){   // show mode: the cannon empties after EVERY shot; magic potions are spent
+    for (const p of m) if (ammo[p.id]!==undefined) ammo[p.id] = Math.max(0, ammo[p.id]-1);
+    mix.length = 0; renderMix(); renderAmmo();
+  }
 }
 function drawCannon(t, dt){
   const {px, py, L, w} = cannonGeom();
@@ -624,7 +810,7 @@ function spawnBooBop(){
 }
 function popBooBop(b){
   if (b.dead) return; b.dead = true; addStar(); if (AC) sfxGiggle();
-  if (b.state==='flee'){ glowTarget = Math.min(1, glowTarget + 0.2 + 0.2); } else glowTarget = Math.min(1, glowTarget + 0.15);
+  if (b.mode!=='level'){ if (b.state==='flee'){ glowTarget = Math.min(1, glowTarget + 0.2 + 0.2); } else glowTarget = Math.min(1, glowTarget + 0.15); }
   if (Math.random() < 0.55){ // soap bubbles
     for (let k=0;k<14;k++){ const a=rnd(TAU), sp=rnd(30,110)*U;
       BUBBLES.push({x:b.x+Math.cos(a)*b.r*0.4, y:b.y+Math.sin(a)*b.r*0.4, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp-40*U, r:rnd(7,20)*U, life:rnd(1.6,3.4), hue:b.hue, p:rnd(TAU)}); }
@@ -632,14 +818,318 @@ function popBooBop(b){
       spawn({x:b.x,y:b.y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:rnd(0.8,1.4),max:1.2,h:b.hue,s:90,l:80,sz:2.5*U,drag:2.5,grav:40*U,spin:0,tw:true,tx:b.x,ty:b.y,tx2:b.x,ty2:b.y}); }
     toast(pick(['BUBBLES!','✨ POP! ✨','TEE-HEE!','💖']));
   } else { // mini firework
-    explode(b.x, b.y, [byId[pick(COLOURS).id], byId[pick(['glitter','heart','star','spin'])]], true);
+    explode(b.x, b.y, [byId[pick(COLOURS).id], byId[pick(['glitter','heart','star'])]], true);
     toast(pick(['POP!','BOOM-BOP!','YAY!','⭐']));
   }
 }
 function powerUp(){
   toast('⭐ POWER UP! ⭐'); rainbowSky = 1.8; cheer = 1; if (AC) sfxTenStars();
-  setTimeout(()=>launch(W*0.25,H*0.22,['pink','bass','glitter']),150); setTimeout(()=>launch(W*0.5,H*0.14,['rainbow','bass','heart']),500); setTimeout(()=>launch(W*0.75,H*0.22,['blue','bass','star']),850);
+  setTimeout(()=>launch(W*0.25,H*0.22,['pink','bass','glitter']),150); setTimeout(()=>launch(W*0.5,H*0.14,['gold','bass','heart']),500); setTimeout(()=>launch(W*0.75,H*0.22,['blue','bass','star']),850);
   setTimeout(()=>{ for (const b of BOOBOPS) popBooBop(b); glowTarget = 1; }, 1400);
+}
+
+/* ================= SHOW MODE (6 levels, bosses, lives, power-ups) ================= */
+// MODE 'free' = the original sandbox. MODE 'level' = wave defense: demons descend on the stage,
+// the girls' energy is the lives, the cannon empties after every shot, magic potions are limited ammo.
+let MODE = 'free';
+const AMMO_MAX = 9, ammo = {heart:2, star:2, bass:2, glitter:2};
+let PROG = {unlocked:1, stars:[0,0,0,0,0,0]};
+try { const s = JSON.parse(localStorage.getItem('kb_prog')||'null'); if (s && Array.isArray(s.stars)) PROG = s; } catch(e){}
+function saveProg(){ try { localStorage.setItem('kb_prog', JSON.stringify(PROG)); } catch(e){} }
+
+const DKIND = {   // the demon family — all smiley, all pop into bubbles
+  boo:    {r:27, hue:300, speed:26},                             // classic bouncy Boo-Bop
+  zoomie: {r:20, hue:185, speed:46, zig:true, wings:true},       // small, fast, zigzags on little wings
+  bloomp: {r:38, hue:265, speed:16, hp:2},                       // big softie, takes two pops
+  grump:  {r:28, hue:215, speed:21, combo:2, shades:true},       // too-cool: only the shown 2-potion combo pops it
+  twirlie:{r:24, hue:150, speed:26, combo:2, spinny:true},       // spins side to side, needs its combo
+  mega:   {r:44, hue:330, speed:13, combo:3, horns:true},        // huge, slow, needs a 3-potion combo
+};
+const C2 = () => [pick(COLOURS).id, pick(MAGICS).id];
+const C3 = () => { const m1 = pick(MAGICS).id; let m2 = pick(MAGICS).id; while (m2===m1) m2 = pick(MAGICS).id; return [pick(COLOURS).id, m1, m2]; };
+const LEVELS = [
+  {name:'Sunset Soundcheck', icon:'🌅', theme:0, waves:8,  kinds:['boo'],                                            sp:0.75, gap:[5000,6800], maxUp:2, food:8000,  ammoT:10000},
+  {name:'Neon Night',        icon:'🌃', theme:1, waves:10, kinds:['boo','boo','zoomie'],                             sp:0.85, gap:[4300,6000], maxUp:2, food:9500,  ammoT:12000},
+  {name:'Moonlight Ball',    icon:'🪩', theme:2, waves:12, kinds:['boo','boo','zoomie','grump'],                     sp:0.95, gap:[3900,5600], maxUp:3, food:10500, ammoT:10000},
+  {name:'Rainy Encore',      icon:'☔', theme:3, waves:13, kinds:['boo','zoomie','bloomp','grump','grump'],          sp:1.05, gap:[3500,5200], maxUp:3, food:11500, ammoT:9500},
+  {name:'Sunrise Festival',  icon:'🎡', theme:4, waves:15, kinds:['boo','zoomie','bloomp','grump','twirlie','twirlie'], sp:1.15, gap:[3100,4800], maxUp:4, food:13000, ammoT:9000},
+  {name:'Galaxy Finale',     icon:'🪐', theme:5, waves:16, kinds:['boo','zoomie','bloomp','grump','twirlie','mega'], sp:1.3,  gap:[2800,4400], maxUp:4, food:14500, ammoT:8500},
+];
+// Boss fights are LEARNABLE: always 8 hits, and each boss uses the same fixed recipe list every time.
+// 0 = any basic potion shot; arrays = the exact combo shown above the boss's head.
+const BOSSES = [
+  {name:'THE YAWN KING',   seq:[0,0,['pink','heart'],0,['pink','heart'],0,['blue','star'],['pink','heart']]},
+  {name:'DJ GRUMBLES',     seq:[0,['blue','star'],0,['blue','star'],['gold','glitter'],0,['blue','star'],['gold','glitter']]},
+  {name:'DISCO DOZER',     seq:[0,['gold','star'],0,['pink','glitter'],0,['gold','star'],['pink','glitter'],['gold','star']]},
+  {name:'PUDDLE PRINCE',   seq:[0,['blue','heart'],['blue','heart'],0,['lime','glitter'],0,['blue','heart'],['lime','glitter']]},
+  {name:'BALLOONZILLA',    seq:[0,['lime','star'],0,['pink','bass'],['lime','star'],0,['pink','bass'],['lime','star']]},
+  {name:'THE SNOOZE MOON', seq:[['pink','heart'],0,['blue','star'],['gold','glitter'],0,['pink','heart'],['blue','star'],['gold','glitter']]},
+];
+const PLAY = {on:false, idx:0, phase:'', left:0, nextSpawn:0, foodT:0, ammoT:0, slowUntil:0, energy:[1,1,1]};
+const DROPS = [], FOOD_ICON = {slushie:'🥤', hotdog:'🌭', popcorn:'🍿', donut:'🍩'};
+let playL = 0, playR = 0, girlXs = [0,0,0], lastBounceT = 0, livesKey = '';
+
+function sfxSnore(){ if (!AC) return; const t = now(); tone(300,t,0.5,{type:'triangle',vol:0.2,glide:150}); tone(280,t+0.6,0.55,{type:'triangle',vol:0.16,glide:130}); }
+function sfxYum(){ if (!AC) return; const t = now(); [0,4,7].forEach((d,i)=>tone(PENTA[d%8], t+i*0.05, 0.18, {type:'triangle',vol:0.18})); }
+function sfxBounce(){ if (!AC) return; const t = now(); tone(220,t,0.16,{type:'square',vol:0.14,glide:120}); }
+
+/* ---- map / level select ---- */
+function openMap(banner){
+  PLAY.on = false; BOOBOPS.length = 0; DROPS.length = 0;
+  dressOpen = false; $('#dress').hidden = true;
+  $('#ui').classList.add('hidden'); const m = $('#map'); m.hidden = false;
+  $('#mapBanner').innerHTML = banner || '';
+  $('#mapGrid').innerHTML = LEVELS.map((l,i) => { const locked = i+1 > PROG.unlocked, st = PROG.stars[i]||0;
+    return `<button class="lvl ${locked?'locked':''}" data-i="${i}" ${locked?'disabled':''}><i>${locked?'🔒':l.icon}</i><b>${l.name}</b><span>${st?'⭐'.repeat(st):(locked?'':'NEW!')}</span></button>`; }).join('');
+  m.querySelectorAll('.lvl:not(.locked)').forEach(b => b.addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); startLevel(+b.dataset.i); }));
+  lastTouch = performance.now();
+}
+function closeMapUI(){ dressOpen = false; $('#dress').hidden = true; $('#map').hidden = true; $('#ui').classList.remove('hidden');
+  $('#finale').hidden = MODE==='level'; $('#mapBtn').hidden = MODE!=='level';
+  $('#stars').style.display = MODE==='level' ? 'none' : ''; renderLives(); renderAmmo();
+  lastTouch = performance.now(); setTimeout(resize, 50); }
+function startLevel(i){
+  MODE = 'level'; const cfg = LEVELS[i];
+  Object.assign(PLAY, {on:true, idx:i, phase:'waves', left:cfg.waves, nextSpawn:performance.now()+2600,
+    foodT:performance.now()+cfg.food*0.6, ammoT:performance.now()+cfg.ammoT*0.5, slowUntil:0, energy:[1,1,1]});
+  ammo.heart = ammo.star = ammo.bass = ammo.glitter = 2;
+  BOOBOPS.length = 0; DROPS.length = 0; ROCKETS.length = 0; mix.length = 0; renderMix();
+  closeMapUI(); toast(`${cfg.icon} ${cfg.name}!`); cheer = 1; if (AC) sfxCheer();
+}
+function freePlay(){ MODE = 'free'; PLAY.on = false; BOOBOPS.length = 0; DROPS.length = 0; closeMapUI(); toast('✨ FREE PLAY! ✨'); }
+function levelWon(){
+  if (PLAY.phase==='won') return; PLAY.on = false; PLAY.phase = 'won';
+  const st = Math.max(1, PLAY.energy.filter(e=>e>0).length);
+  PROG.stars[PLAY.idx] = Math.max(PROG.stars[PLAY.idx]||0, st);
+  PROG.unlocked = Math.max(PROG.unlocked, Math.min(6, PLAY.idx+2)); saveProg();
+  rainbowSky = 2; cheer = 1; if (AC) sfxTenStars();
+  setTimeout(()=>launch(W*0.3,H*0.22,['pink','heart','glitter']),200); setTimeout(()=>launch(W*0.5,H*0.15,['gold','bass','star']),600); setTimeout(()=>launch(W*0.7,H*0.22,['blue','star','glitter']),1000);
+  setTimeout(()=>openMap(`<div class="mwin">🏆 ${LEVELS[PLAY.idx].icon} ${LEVELS[PLAY.idx].name} CLEAR! ${'⭐'.repeat(st)}</div>`), 3000);
+}
+function levelLost(){
+  if (PLAY.phase==='lost') return; PLAY.on = false; PLAY.phase = 'lost'; sfxSnore();
+  setTimeout(()=>openMap(`<div class="mlose">😴 The girls fell asleep! One more nap, one more show — try again!</div>`), 2200);
+}
+
+/* ---- demons ---- */
+function spawnDemon(kind, boss){
+  const cfg = LEVELS[PLAY.idx], k = DKIND[kind] || DKIND.boo;
+  const b = {mode:'level', kind, x:rnd(playL+50*U, playR-50*U), y:-50*U, r:(k.r||26)*U, p:rnd(TAU), hue:k.hue||300,
+    speed:(k.speed||24)*U*cfg.sp, state:'descend', t:0, dead:false, orb:0, wave:rnd(TAU), hp:k.hp||1,
+    zig:k.zig, spinny:k.spinny, shades:k.shades, wings:k.wings, horns:k.horns, flash:0, bump:0};
+  if (k.combo) b.combo = k.combo===3 ? C3() : C2();
+  if (boss){ Object.assign(b, {boss:true, r:58*U, hue:275, speed:9*U*cfg.sp, hits:0, seq:BOSSES[PLAY.idx].seq, name:BOSSES[PLAY.idx].name, minT:performance.now()+7000, horns:true}); b.combo = null; }
+  BOOBOPS.push(b); return b;
+}
+function updateLevelDemon(b, dt, i){
+  const slow = performance.now() < PLAY.slowUntil ? 0.35 : 1;
+  const top = ctlTop - 4*U, stageY = top - 26*U;
+  b.flash = Math.max(0, b.flash - dt*3); b.bump = Math.max(0, b.bump - dt*3);
+  if (b.boss){
+    const hoverY = Math.min(H*0.3, stageY - 170*U);
+    if (b.y < hoverY) b.y += b.speed*slow*dt*3; else b.y = hoverY + Math.sin(b.p*1.6)*14*U;
+    b.x = clamp(b.x + Math.cos(b.p*0.7+b.wave)*40*U*dt, playL+b.r, playR-b.r);
+    if (performance.now() > b.minT && BOOBOPS.filter(d=>d.mode==='level'&&!d.boss&&!d.dead&&d.state!=='flee').length < 2){
+      b.minT = performance.now() + 8500/LEVELS[PLAY.idx].sp; spawnDemon(pick(['boo','zoomie'])); }
+    return;
+  }
+  if (b.state==='descend'){
+    const sway = b.zig ? Math.cos(b.p*3+b.wave)*110*U*dt : b.spinny ? Math.cos(b.p*4)*90*U*dt : Math.cos(b.p*1.5+b.wave)*24*U*dt;
+    b.x = clamp(b.x + sway, playL+b.r, playR-b.r);
+    b.y += b.speed*slow*dt;
+    if (b.y >= stageY - b.r){
+      const awake = PLAY.energy.map((e,gi)=>[e,gi]).filter(([e])=>e>0);
+      if (!awake.length){ b.state='flee'; return; }
+      let best = awake[0][1], bd = 1e9;
+      for (const [,gi] of awake){ const d = Math.abs(girlXs[gi]-b.x); if (d < bd){ bd = d; best = gi; } }
+      b.gi = best; b.state = 'tickle'; b.t = 0; toast('🚨 TICKLE ALERT!');
+    }
+  } else if (b.state==='tickle'){
+    b.x += (girlXs[b.gi]-b.x)*Math.min(1, dt*3); b.y = stageY - b.r*0.5 + Math.sin(b.t*10)*5*U;
+    PLAY.energy[b.gi] = Math.max(0, PLAY.energy[b.gi] - dt*0.085); renderLives();
+    if (Math.random() < dt*8) spawn({x:girlXs[b.gi]+rnd(-20,20)*U, y:stageY-rnd(0,60)*U, vx:rnd(-40,40)*U, vy:rnd(-80,-20)*U, life:0.5, max:0.5, h:55, s:100, l:75, sz:2*U, drag:2, grav:100*U, spin:0, tw:true, tx:0, ty:0, tx2:0, ty2:0});
+    if (PLAY.energy[b.gi] <= 0){ sfxSnore(); toast('😴 SO SLEEPY…'); b.state='flee'; b.t=0;
+      if (!PLAY.energy.some(e=>e>0)) levelLost(); }
+    else if (b.t > 3.2){ b.state='flee'; b.t=0; }
+  } else { // flee: float away giggling
+    b.x += Math.cos(b.p*2)*20*U*dt; b.y -= 70*U*dt;
+    if (b.y < -80*U) BOOBOPS.splice(i, 1);
+  }
+}
+function comboKey(a){ return a.map(p=>p.id||p).sort().join('+'); }
+function hitDemon(b, m){
+  const key = comboKey(m);
+  if (b.boss){
+    const need = b.seq[b.hits];
+    if (need && key !== comboKey(need)){ bounceDemon(b); return; }
+    b.hits++; b.flash = 1; b.r *= 0.96; addStar(); shake = Math.max(shake, 8); if (AC) sfxGiggle();
+    toast(`💥 ${b.hits} / 8!`);
+    if (b.hits >= 8){ b.combo = null; popBooBop(b); explode(b.x, b.y, [byId.gold, byId.bass, byId.star]); levelWon(); }
+    return;
+  }
+  if (b.combo){ if (key !== comboKey(b.combo)){ bounceDemon(b); return; } popBooBop(b); return; }
+  b.hp--; if (b.hp > 0){ b.r *= 0.72; b.flash = 1; b.bump = 1; if (AC) sfxGiggle(); return; }
+  popBooBop(b);
+}
+function bounceDemon(b){
+  b.bump = 1; sfxBounce();
+  if (performance.now() - lastBounceT > 1500){ lastBounceT = performance.now(); toast('MATCH THE POTIONS! 👀'); }
+}
+
+/* ---- falling power-ups & potion refills ---- */
+function neededMagics(){   // magic potions required by combo demons / the boss's current step
+  const need = new Set();
+  for (const b of BOOBOPS){ if (b.dead || b.mode!=='level') continue;
+    if (b.boss){ const s = b.seq[Math.min(b.hits,7)]; if (s) for (const id of s) if (ammo[id]!==undefined) need.add(id); }
+    else if (b.combo) for (const id of b.combo) if (ammo[id]!==undefined) need.add(id); }
+  return [...need];
+}
+function spawnDrop(kind, forceId){
+  let id = forceId;
+  if (!id){
+    if (kind==='food') id = pick(['slushie','hotdog','popcorn','donut']);
+    else { const need = neededMagics().sort((a,b)=>ammo[a]-ammo[b]);   // refill what the fight actually needs, emptiest first
+      id = need.length ? need[0] : MAGICS.map(m=>m.id).sort((a,b)=>ammo[a]-ammo[b])[0]; }
+  }
+  DROPS.push({x:rnd(playL+50*U, playR-50*U), y:-30*U, vy:rnd(26,38)*U, r:26*U, kind, id, p:rnd(TAU)});
+}
+function collectDrop(d){
+  sfxYum(); cheer = Math.min(1, cheer+0.3);
+  for (let k=0;k<24;k++){ const a = rnd(TAU), sp = rnd(40,180)*U;
+    spawn({x:d.x, y:d.y, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp, life:rnd(0.6,1.1), max:1, h:48, s:100, l:70, sz:2.5*U, drag:2, grav:80*U, spin:0, tw:true, tx:d.x, ty:d.y, tx2:d.x, ty2:d.y}); }
+  if (d.kind==='ammo'){ ammo[d.id] = Math.min(AMMO_MAX, ammo[d.id]+2); renderAmmo(); toast(`+2 ${byId[d.id].icon} POTION!`); return; }
+  const lowest = () => { let lo = 0; for (let k=1;k<3;k++) if (PLAY.energy[k] < PLAY.energy[lo]) lo = k; return lo; };
+  if (d.id==='slushie'){ const g = lowest(); PLAY.energy[g] = Math.min(1, PLAY.energy[g]+0.45); toast('🥤 SLURP! WAKE UP!'); }
+  else if (d.id==='hotdog'){ const g = lowest(); PLAY.energy[g] = 1; toast('🌭 YUM! FULL POWER!'); }
+  else if (d.id==='popcorn'){ toast('🍿 POP POP POP!'); for (const b of BOOBOPS) if (b.mode==='level' && !b.boss && !b.combo && !b.dead) popBooBop(b); }
+  else { PLAY.slowUntil = performance.now()+7000; toast('🍩 SLOW MOTION!'); }
+  renderLives();
+}
+function updateShowMode(dt, nowMs){
+  if (!PLAY.on) return;
+  renderLives();   // cheap: internally skips unless energy actually changed
+  const cfg = LEVELS[PLAY.idx];
+  const living = BOOBOPS.filter(b=>b.mode==='level' && !b.dead && !b.boss && b.state!=='flee').length;
+  if (PLAY.phase==='waves'){
+    if (PLAY.left > 0 && nowMs >= PLAY.nextSpawn && living < cfg.maxUp){
+      PLAY.left--; spawnDemon(pick(cfg.kinds)); PLAY.nextSpawn = nowMs + rnd(cfg.gap[0], cfg.gap[1]); }
+    if (PLAY.left === 0 && living === 0){ PLAY.phase = 'boss'; spawnDemon('boo', true); toast(`👑 ${BOSSES[PLAY.idx].name}!`); shake = 6; if (AC) sfxChord(); }
+  }
+  if (nowMs >= PLAY.foodT){   // snacks only once a girl has actually lost energy
+    if (PLAY.energy.some(e => e < 0.9)){ spawnDrop('food'); PLAY.foodT = nowMs + cfg.food*rnd(0.85,1.25); }
+    else PLAY.foodT = nowMs + 4000;
+  }
+  if (nowMs >= PLAY.ammoT){   // magic refills only when the fight calls for combos (or stocks run dry); never two falling at once
+    const want = neededMagics(), lowTotal = MAGICS.reduce((s,m)=>s+ammo[m.id],0) < 4;
+    if ((want.length || lowTotal) && !DROPS.some(d=>d.kind==='ammo')){
+      spawnDrop('ammo'); PLAY.ammoT = nowMs + cfg.ammoT*(PLAY.phase==='boss'?0.55:1)*rnd(0.85,1.25); }
+    else PLAY.ammoT = nowMs + 3000;
+  }
+  for (let i=DROPS.length-1;i>=0;i--){ const d = DROPS[i]; d.p += dt; d.y += d.vy*dt; d.x += Math.sin(d.p*2)*16*U*dt;
+    if (d.y > ctlTop - 40*U) DROPS.splice(i, 1); }
+}
+
+/* ---- HUD ---- */
+function renderLives(){
+  const el = $('#lives'); const on = MODE==='level';
+  el.hidden = !on; if (!on) return;
+  const key = PLAY.energy.map(e=>Math.round(e*20)).join(); if (key === livesKey) return; livesKey = key;
+  el.innerHTML = CHARS.map((c,i) => { const e = PLAY.energy[i];
+    return `<span class="life${e<=0?' zzz':''}"><i>${e<=0?'😴':'🎤'}</i><b><u style="width:${Math.round(e*100)}%;background:${e>0.35?(LOOKS[i].top.color||'#ff3fa4'):'#ff7a2f'}"></u></b></span>`; }).join('');
+}
+function renderAmmo(){
+  document.querySelectorAll('#right .bottle').forEach(b => { const id = b.dataset.id, a = b.querySelector('.ammo');
+    if (!a) return;
+    if (MODE==='level' && ammo[id]!==undefined){ a.style.display = 'grid'; a.textContent = ammo[id]; b.classList.toggle('out', ammo[id] <= 0); }
+    else { a.style.display = 'none'; b.classList.remove('out'); } });
+}
+
+/* ---- theme scenery ---- */
+const THEME_SKY = [
+  ['#2a1240','#8a2450','#ff8a3c','255,150,70'],   // 0 sunset
+  ['#04000f','#1a0640','#4a0d6e','255,63,164'],   // 1 neon night
+  ['#040c1f','#0e1e46','#28518a','120,190,255'],  // 2 moonlight ball
+  ['#081420','#123038','#1e5560','80,200,220'],   // 3 rainy encore
+  ['#1c0d3a','#83305f','#ffb056','255,190,90'],   // 4 sunrise festival
+  ['#020207','#0c0530','#320f52','168,85,255'],   // 5 galaxy finale
+];
+function themeIdx(){ return MODE==='level' ? LEVELS[PLAY.idx].theme : 1; }
+function drawThemeProps(th, t, hz){
+  ctx.save();
+  if (th===0){ // low sun + birds
+    ctx.fillStyle = '#ffce6b'; ctx.shadowColor = '#ff9a3c'; ctx.shadowBlur = 50; ctx.beginPath(); ctx.arc(W*0.22, hz-40*U, 34*U, 0, TAU); ctx.fill(); ctx.shadowBlur = 0;
+    ctx.strokeStyle = 'rgba(40,10,40,0.8)'; ctx.lineWidth = 2*U;
+    for (let k=0;k<4;k++){ const bx = W*(0.55+0.1*k) + Math.sin(t*0.4+k)*20*U, by = H*(0.16+0.04*(k%2)); ctx.beginPath(); ctx.moveTo(bx-8*U,by); ctx.quadraticCurveTo(bx-3*U,by-6*U,bx,by); ctx.quadraticCurveTo(bx+3*U,by-6*U,bx+8*U,by); ctx.stroke(); }
+  } else if (th===2){ // giant disco ball
+    const dx = W/2, dy = H*0.16, dr = 34*U;
+    ctx.strokeStyle = '#8aa5c8'; ctx.lineWidth = 2*U; ctx.beginPath(); ctx.moveTo(dx, 0); ctx.lineTo(dx, dy-dr); ctx.stroke();
+    const gr = ctx.createRadialGradient(dx-dr*0.3, dy-dr*0.3, 0, dx, dy, dr); gr.addColorStop(0,'#e8f2ff'); gr.addColorStop(1,'#7d95bb');
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(dx, dy, dr, 0, TAU); ctx.fill();
+    ctx.strokeStyle = 'rgba(30,50,90,0.5)'; ctx.lineWidth = 1.2*U;
+    for (let k=-2;k<=2;k++){ ctx.beginPath(); ctx.ellipse(dx, dy, dr*Math.cos(k*0.5), dr, 0, 0, TAU); ctx.stroke(); ctx.beginPath(); ctx.ellipse(dx, dy, dr, dr*0.35*Math.abs(k)||dr*0.05, 0, 0, TAU); ctx.stroke(); }
+    ctx.globalCompositeOperation = 'lighter';
+    for (let k=0;k<5;k++){ const a = t*0.8 + k*TAU/5; ctx.fillStyle = `hsla(${(k*70+t*40)%360},100%,75%,0.1)`; ctx.beginPath(); ctx.moveTo(dx,dy); ctx.lineTo(dx+Math.cos(a)*W, dy+Math.sin(a)*W); ctx.lineTo(dx+Math.cos(a+0.2)*W, dy+Math.sin(a+0.2)*W); ctx.fill(); }
+    ctx.globalCompositeOperation = 'source-over';
+  } else if (th===3){ // rain + umbrellas handled in crowd; here: streaks
+    ctx.strokeStyle = 'rgba(150,220,240,0.35)'; ctx.lineWidth = 1.5*U; ctx.beginPath();
+    for (let k=0;k<60;k++){ const rx = ((k*97) % 100)/100*W, ry = ((k*61)/100*H + t*(260+((k*13)%80))*U) % H; ctx.moveTo(rx, ry); ctx.lineTo(rx-4*U, ry+16*U); }
+    ctx.stroke();
+  } else if (th===4){ // ferris wheel + balloons
+    const fx = W*0.14, fy = hz - 90*U, fr = 80*U;
+    ctx.strokeStyle = 'rgba(255,180,120,0.7)'; ctx.lineWidth = 3*U; ctx.beginPath(); ctx.arc(fx, fy, fr, 0, TAU); ctx.stroke();
+    ctx.beginPath(); for (let k=0;k<8;k++){ const a = t*0.15 + k*TAU/8; ctx.moveTo(fx, fy); ctx.lineTo(fx+Math.cos(a)*fr, fy+Math.sin(a)*fr); } ctx.moveTo(fx-fr*0.5, hz); ctx.lineTo(fx, fy); ctx.lineTo(fx+fr*0.5, hz); ctx.stroke();
+    for (let k=0;k<8;k++){ const a = t*0.15 + k*TAU/8; ctx.fillStyle = ['#ff3fa4','#33e6ff','#ffd23f','#7dff4a'][k%4]; ctx.beginPath(); ctx.arc(fx+Math.cos(a)*fr, fy+Math.sin(a)*fr+5*U, 6*U, 0, TAU); ctx.fill(); }
+    for (let k=0;k<5;k++){ const bx = W*(0.55+k*0.09) + Math.sin(t*0.5+k)*14*U, by = H - ((t*24*U + k*H/5) % (H*1.1));
+      ctx.fillStyle = ['#ff3fa4','#33e6ff','#ffd23f','#7dff4a','#ff7a2f'][k]; ctx.beginPath(); ctx.ellipse(bx, by, 12*U, 15*U, 0, 0, TAU); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 1*U; ctx.beginPath(); ctx.moveTo(bx, by+15*U); ctx.lineTo(bx+3*U, by+34*U); ctx.stroke(); }
+  } else if (th===5){ // planets + aurora
+    ctx.fillStyle = '#e8a05c'; ctx.beginPath(); ctx.arc(W*0.15, H*0.14, 22*U, 0, TAU); ctx.fill();
+    ctx.strokeStyle = '#ffd9a0'; ctx.lineWidth = 3*U; ctx.beginPath(); ctx.ellipse(W*0.15, H*0.14, 38*U, 10*U, -0.35, 0, TAU); ctx.stroke();
+    ctx.fillStyle = '#7dc4ff'; ctx.beginPath(); ctx.arc(W*0.78, H*0.09, 12*U, 0, TAU); ctx.fill();
+    ctx.globalCompositeOperation = 'lighter';
+    for (let k=0;k<2;k++){ ctx.beginPath(); ctx.moveTo(0, H*0.2);
+      for (let x=0; x<=W; x+=W/24) ctx.lineTo(x, H*(0.14+k*0.07) + Math.sin(x/W*4+t*0.6+k*2)*30*U);
+      ctx.strokeStyle = `hsla(${k?150:280},100%,65%,0.12)`; ctx.lineWidth = 26*U; ctx.stroke(); }
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  ctx.restore();
+}
+function drawShowBits(t){
+  // falling snacks & potion refills
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  for (const d of DROPS){
+    const wob = Math.sin(d.p*3)*0.1;
+    ctx.save(); ctx.translate(d.x, d.y); ctx.rotate(wob);
+    ctx.fillStyle = d.kind==='ammo' ? 'rgba(168,85,255,0.3)' : 'rgba(255,210,63,0.28)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.lineWidth = 2*U;
+    ctx.beginPath(); ctx.arc(0, 0, d.r, 0, TAU); ctx.fill(); ctx.stroke();
+    ctx.font = `${Math.round(d.r*1.2)}px system-ui`; ctx.fillText(d.kind==='ammo' ? byId[d.id].icon : FOOD_ICON[d.id], 0, 2*U);
+    if (d.kind==='ammo'){ ctx.font = `900 ${Math.round(d.r*0.55)}px ${'"Baloo 2",system-ui'}`; ctx.fillStyle = '#fff'; ctx.fillText('+2', d.r*0.75, -d.r*0.75); }
+    ctx.restore();
+  }
+  // combo recipes above special demons, boss recipe + progress pips
+  for (const b of BOOBOPS){
+    if (b.dead || b.mode!=='level') continue;
+    if (b.boss){
+      const need = b.seq[Math.min(b.hits,7)], py = b.y - b.r - 34*U;
+      const icons = need ? need.map(id=>byId[id].icon) : ['🧪'];
+      const wdt = icons.length*26*U + 26*U;
+      ctx.fillStyle = 'rgba(18,0,43,0.85)'; ctx.strokeStyle = '#ffd23f'; ctx.lineWidth = 2.5*U;
+      ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(b.x-wdt/2, py-19*U, wdt, 38*U, 19*U); else ctx.rect(b.x-wdt/2, py-19*U, wdt, 38*U); ctx.fill(); ctx.stroke();
+      ctx.font = `${Math.round(22*U)}px system-ui`; ctx.fillStyle = '#fff';
+      icons.forEach((ic,k) => ctx.fillText(ic, b.x - (icons.length-1)*13*U + k*26*U, py+1*U));
+      for (let k=0;k<8;k++){ ctx.fillStyle = k < b.hits ? '#7dff4a' : 'rgba(255,255,255,0.25)'; ctx.beginPath(); ctx.arc(b.x + (k-3.5)*14*U, b.y + b.r + 16*U, 5*U, 0, TAU); ctx.fill(); }
+      ctx.font = `900 ${Math.round(13*U)}px ${'"Baloo 2",system-ui'}`; ctx.fillStyle = '#ffd23f'; ctx.fillText(b.name, b.x, py - 30*U);
+    } else if (b.combo){
+      const icons = b.combo.map(id=>byId[id].icon), py = b.y - b.r - 22*U, wdt = icons.length*24*U + 18*U;
+      const pulse = 1 + b.bump*0.15;
+      ctx.save(); ctx.translate(b.x, py); ctx.scale(pulse, pulse);
+      ctx.fillStyle = 'rgba(18,0,43,0.85)'; ctx.strokeStyle = b.bump > 0.3 ? '#ff4d4d' : '#fff';
+      ctx.lineWidth = 2*U; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(-wdt/2, -16*U, wdt, 32*U, 16*U); else ctx.rect(-wdt/2, -16*U, wdt, 32*U); ctx.fill(); ctx.stroke();
+      ctx.font = `${Math.round(19*U)}px system-ui`; ctx.fillStyle = '#fff';
+      icons.forEach((ic,k) => ctx.fillText(ic, -(icons.length-1)*12*U + k*24*U, 1*U)); ctx.restore();
+    }
+  }
 }
 
 /* ================= STARS ================= */
@@ -652,7 +1142,7 @@ function addStar(){
   starsTotal++; try { localStorage.setItem('kb_stars', starsTotal); } catch(e){}
   renderStars();
   if (starsTotal % 10 === 0){ rainbowSky = 1.6; if (AC) sfxTenStars(); toast('🌟 SUPERSTAR! 🌟'); cheer = 1;
-    setTimeout(()=>launch(W*0.3,H*0.25,['pink','star','glitter']),100); setTimeout(()=>launch(W*0.5,H*0.18,['rainbow','heart','bass']),450); setTimeout(()=>launch(W*0.7,H*0.25,['blue','star','glitter']),800); }
+    setTimeout(()=>launch(W*0.3,H*0.25,['pink','star','glitter']),100); setTimeout(()=>launch(W*0.5,H*0.18,['gold','heart','bass']),450); setTimeout(()=>launch(W*0.7,H*0.25,['blue','star','glitter']),800); }
 }
 let toastT = null;
 function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),1100); }
@@ -671,6 +1161,7 @@ function update(dt, nowMs){
   for (let i=ROCKETS.length-1;i>=0;i--){ const r=ROCKETS[i]; r.t+=dt; r.vy += r.g*dt; r.x += r.vx*dt; r.y += r.vy*dt;
     for (let k=0;k<2;k++) spawn({x:r.x,y:r.y,vx:rnd(-30,30)*U-r.vx*0.1,vy:rnd(20,80)*U,life:rnd(0.25,0.5),max:0.4,h:r.h,s:90,l:75,sz:1.6*U,drag:2,grav:100*U,spin:0,tx:r.x,ty:r.y,tx2:r.x,ty2:r.y});
     let hit = false; for (const b of BOOBOPS){ if (!b.dead && Math.hypot(b.x-r.x, b.y-r.y) < b.r*1.1){ hit = true; break; } }
+    if (!hit) for (const d of DROPS){ if (Math.hypot(d.x-r.x, d.y-r.y) < d.r*1.2){ hit = true; break; } }
     if (r.t >= r.T || hit){ ROCKETS.splice(i,1); explode(r.x, r.y, r.m); }
   }
   // particles
@@ -684,12 +1175,15 @@ function update(dt, nowMs){
   }
   for (let i=FLASHES.length-1;i>=0;i--){ FLASHES[i].a -= dt*4; if (FLASHES[i].a<=0) FLASHES.splice(i,1); }
   flashA = Math.max(0, flashA - dt*1.2); shake = Math.max(0, shake - dt*30); cheer = Math.max(0, cheer - dt*0.25); rainbowSky = Math.max(0, rainbowSky-dt);
+  // show mode scripting (spawns, drops, boss)
+  if (!dressOpen) updateShowMode(dt, nowMs);
   // boo-bops
   glow += (glowTarget-glow)*Math.min(1, dt*3);
-  if (started && !dressOpen){ nextBoo -= dt*1000;
+  if (MODE==='free' && started && !dressOpen && $('#map').hidden){ nextBoo -= dt*1000;
     if (nextBoo<=0 && BOOBOPS.filter(b=>!b.dead).length<4){ spawnBooBop(); nextBoo = rnd(4500,9000); } }
   for (let i=BOOBOPS.length-1;i>=0;i--){ if (dressOpen) break; const b=BOOBOPS[i]; b.p+=dt; b.t+=dt;
     if (b.dead){ BOOBOPS.splice(i,1); continue; }
+    if (b.mode==='level'){ updateLevelDemon(b, dt, i); continue; }
     if (b.state==='seek'){ const dx=lsx-b.x, dy=lsy-b.y, d=Math.hypot(dx,dy)||1;
       b.x += (dx/d)*b.speed*dt + Math.cos(b.p*1.7+b.wave)*30*U*dt; b.y += (dy/d)*b.speed*dt + Math.sin(b.p*2.1)*12*U*dt;
       if (d < 34*U){ b.state='steal'; b.t=0; cheer = Math.max(cheer, 0.6); } }
@@ -709,28 +1203,30 @@ function update(dt, nowMs){
     const ids = [pick(COLOURS).id]; if (Math.random()<0.6) ids.push(pick(COLOURS).id); if (Math.random()<0.85) ids.push(pick(MAGICS).id); if (Math.random()<0.4) ids.push(pick(MAGICS).id);
     launch(rnd(W*0.1,W*0.9), rnd(H*0.08,H*0.5), ids); }
   else if (finaleUntil && nowMs >= finaleUntil){ finaleUntil = 0; $('#finale').classList.remove('busy');
-    launch(W*0.25,H*0.2,['pink','bass','glitter']); setTimeout(()=>launch(W*0.5,H*0.14,['rainbow','bass','heart']),300); setTimeout(()=>launch(W*0.75,H*0.2,['blue','bass','star']),600); }
-  // idle attract
-  if (started && !dressOpen && nowMs - lastTouch > 20000 && !ROCKETS.length){ lastTouch = nowMs - 8000; launch(rnd(W*0.2,W*0.8), rnd(H*0.15,H*0.4), [pick(COLOURS).id, pick(MAGICS).id]); }
+    launch(W*0.25,H*0.2,['pink','bass','glitter']); setTimeout(()=>launch(W*0.5,H*0.14,['gold','bass','heart']),300); setTimeout(()=>launch(W*0.75,H*0.2,['blue','bass','star']),600); }
+  // idle attract (free play only)
+  if (MODE==='free' && started && !dressOpen && $('#map').hidden && nowMs - lastTouch > 20000 && !ROCKETS.length){ lastTouch = nowMs - 8000; launch(rnd(W*0.2,W*0.8), rnd(H*0.15,H*0.4), [pick(COLOURS).id, pick(MAGICS).id]); }
 }
 
 function draw(t, dt){
   ctx.globalCompositeOperation = 'source-over';
   ctx.save();
   if (shake>0.3) ctx.translate(rnd(-shake,shake), rnd(-shake,shake));
-  // sky
+  // sky (themed per level)
+  const th = themeIdx(), TS = THEME_SKY[th];
   const g = ctx.createLinearGradient(0,0,0,H);
   if (rainbowSky>0){ const hh=(t*200)%360; g.addColorStop(0,`hsl(${hh},70%,${12+rainbowSky*10}%)`); g.addColorStop(1,`hsl(${(hh+120)%360},80%,${28+rainbowSky*10}%)`); }
-  else { g.addColorStop(0,'#04000f'); g.addColorStop(0.55,'#1a0640'); g.addColorStop(1,'#4a0d6e'); }
+  else { g.addColorStop(0,TS[0]); g.addColorStop(0.55,TS[1]); g.addColorStop(1,TS[2]); }
   ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
   // horizon glow
   const hg = ctx.createRadialGradient(W/2, ctlTop, 0, W/2, ctlTop, Math.max(W,H)*0.7);
-  hg.addColorStop(0,'rgba(255,63,164,0.35)'); hg.addColorStop(0.5,'rgba(168,85,255,0.12)'); hg.addColorStop(1,'rgba(0,0,0,0)');
+  hg.addColorStop(0,`rgba(${TS[3]},0.35)`); hg.addColorStop(0.5,'rgba(168,85,255,0.12)'); hg.addColorStop(1,'rgba(0,0,0,0)');
   ctx.fillStyle = hg; ctx.fillRect(0,0,W,H);
   if (flashA>0){ ctx.fillStyle = hsl(flashH,100,70,flashA); ctx.fillRect(0,0,W,H); }
-  // moon
-  ctx.fillStyle = '#fff6d5'; ctx.shadowColor = '#ffe9a8'; ctx.shadowBlur = 30; ctx.beginPath(); ctx.arc(W*0.84, H*0.13, 22*U, 0, TAU); ctx.fill();
-  ctx.shadowBlur = 0; ctx.fillStyle = '#12052a'; ctx.beginPath(); ctx.arc(W*0.84+12*U, H*0.13-6*U, 19*U, 0, TAU); ctx.fill();
+  // moon (not at sunset / sunrise)
+  if (th!==0 && th!==4){
+    ctx.fillStyle = '#fff6d5'; ctx.shadowColor = '#ffe9a8'; ctx.shadowBlur = 30; ctx.beginPath(); ctx.arc(W*0.84, H*0.13, (th===2?34:22)*U, 0, TAU); ctx.fill();
+    ctx.shadowBlur = 0; if (th!==2){ ctx.fillStyle = '#12052a'; ctx.beginPath(); ctx.arc(W*0.84+12*U, H*0.13-6*U, 19*U, 0, TAU); ctx.fill(); } }
   // stars
   for (const s of stars){ const a = 0.4+0.6*Math.abs(Math.sin(t*s.s+s.p)); ctx.fillStyle = `rgba(255,255,255,${a})`; ctx.fillRect(s.x*W, s.y*H, s.r*U*1.5, s.r*U*1.5); }
   // skyline
@@ -738,6 +1234,7 @@ function draw(t, dt){
   ctx.fillStyle = '#0d0322';
   for (const b of skyline){ const bw=b.w*W, bh=b.h*H*0.9; ctx.fillRect(b.x*W, hz-bh, bw+1, bh+10);
     if (b.win){ ctx.fillStyle = 'rgba(255,220,120,0.55)'; for (let y=hz-bh+6*U; y<hz-6*U; y+=9*U) for (let x=b.x*W+4*U; x<b.x*W+bw-4*U; x+=8*U) if (((x*7+y*13)|0)%5<2) ctx.fillRect(x,y,3*U,4*U); ctx.fillStyle='#0d0322'; } }
+  drawThemeProps(th, t, hz);
   // spotlights
   ctx.globalCompositeOperation = 'lighter';
   for (let i=0;i<3;i++){ const sx = W*(0.2+0.3*i), ang = -Math.PI/2 + Math.sin(t*0.7+i*2.1)*0.55; const len = H*0.95;
@@ -766,17 +1263,18 @@ function draw(t, dt){
   // stage + girls + crowd + cannon
   drawStage(t);
   drawCannon(t, dt);
+  if (MODE==='level') drawShowBits(t);
   ctx.restore();
 }
 // A tall, slim K-pop idol drawn from a `look` (hair / face accessories / top / bottoms / shoes); shared by the dressing room and the stage.
 // Units: gh = full height; feet at (x,y); head centre at y-0.905gh with radius ~0.08gh (≈ 1/6 body — idol proportions, not chibi).
 const HC = -0.905, HR = 0.08;
-function drawGirl(ch, look, i, x, y, gh, t, still){
+function drawGirlLegacy(ch, look, i, x, y, gh, t, still){
   const skin = ch.skin, dark = '#2a1440', beatT = (t||0)*BPM/60, F = ch.face;
   const pose = still ? 3 : cheer > 0.8 ? 0 : (Math.floor(beatT/2) + i) % 4;
   const sway = still ? 0 : Math.sin(beatT*Math.PI + i) * 0.04 * (0.5+cheer);
   const legUp = still ? 0 : ((Math.floor(beatT) + i) % 2) * Math.pow(1-beat, 2) * 0.05;
-  const hairC = look.hair.color, topC = look.top.color, botC = look.bottom.color, shoeC = look.shoes.color, accC = look.faceColor || topC;
+  const hairC = look.hair.color||'#2a1a3a', topC = look.top.color||'#9b7be8', botC = look.bottom.color||'#3a2b5a', shoeC = look.shoes.color||'#e8e2f5', accC = look.faceColor || topC;
   const longSleeve = ['jacket','hoodie','blazer'].includes(look.top.style);
   const g = v => v*gh, X = v => v*HR*gh, Y = v => (HC + v*HR)*gh, shade = 'rgba(0,0,0,0.28)', lite = 'rgba(255,255,255,0.4)';
   ctx.save(); ctx.translate(x, y); ctx.rotate(sway); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
@@ -865,7 +1363,7 @@ function drawGirl(ch, look, i, x, y, gh, t, still){
   ctx.restore();
 }
 // Hair is drawn in head units around the head centre (X: head radii sideways, Y: head radii down from the centre).
-function drawHair(style, color, gh, phase, beatT, accC){
+function drawHairLegacy(style, color, gh, phase, beatT, accC){
   const X = v => v*HR*gh, Y = v => (HC + v*HR)*gh, sw = Math.sin(beatT*Math.PI);
   ctx.fillStyle = color;
   if (phase==='back'){
@@ -893,7 +1391,7 @@ function drawHair(style, color, gh, phase, beatT, accC){
     case 'pixie': ctx.beginPath(); ctx.ellipse(X(0.2), Y(-0.6), X(1.25), X(0.55), -0.25, Math.PI, TAU); ctx.fill(); ctx.beginPath(); ctx.moveTo(X(-1.1), Y(-0.2)); ctx.lineTo(X(-1.45), Y(-1.0)); ctx.lineTo(X(-0.5), Y(-0.75)); ctx.lineTo(X(-0.25), Y(-1.5)); ctx.lineTo(X(0.4), Y(-0.8)); ctx.lineTo(X(1.05), Y(-1.2)); ctx.lineTo(X(1.1), Y(-0.2)); ctx.closePath(); ctx.fill(); break;
   }
 }
-function drawFaceAcc(id, gh, acc){
+function drawFaceAccLegacy(id, gh, acc){
   const X = v => v*HR*gh, Y = v => (HC + v*HR)*gh;
   const heart = (hx, hy, r) => { ctx.beginPath(); ctx.moveTo(hx, hy+r*0.9); ctx.bezierCurveTo(hx-r*1.4, hy-r*0.2, hx-r*0.6, hy-r*1.1, hx, hy-r*0.4); ctx.bezierCurveTo(hx+r*0.6, hy-r*1.1, hx+r*1.4, hy-r*0.2, hx, hy+r*0.9); ctx.fill(); };
   const star = (sx, sy, r) => { ctx.beginPath(); for (let k=0;k<10;k++){ const r0 = k%2?r*0.45:r, a = -Math.PI/2+k*Math.PI/5; ctx.lineTo(sx+Math.cos(a)*r0, sy+Math.sin(a)*r0); } ctx.closePath(); ctx.fill(); };
@@ -913,17 +1411,134 @@ function drawFaceAcc(id, gh, acc){
     case 'earrings': ctx.strokeStyle = '#ffd23f'; ctx.lineWidth = X(0.07); ctx.beginPath(); ctx.moveTo(X(-1.02), Y(0.25)); ctx.lineTo(X(-1.06), Y(0.85)); ctx.moveTo(X(1.02), Y(0.25)); ctx.lineTo(X(1.06), Y(0.85)); ctx.stroke(); ctx.fillStyle = '#ffd23f'; star(X(-1.06), Y(1.0), X(0.16)); star(X(1.06), Y(1.0), X(0.16)); break;   // long drop earrings
   }
 }
+
+/* Glamour renderer — layered hair, fabric shading and smoothly tweened performance poses. */
+function rgbOf(c){
+  let s = String(c||'#888').replace('#',''); if (s.length===3) s=s.split('').map(x=>x+x).join('');
+  const n = parseInt(s,16); return Number.isFinite(n) ? [(n>>16)&255,(n>>8)&255,n&255] : [128,128,128];
+}
+function shiftColor(c, amount){
+  const a=rgbOf(c), target=amount<0?0:255, p=Math.abs(amount); return `rgb(${a.map(v=>Math.round(v+(target-v)*p)).join(',')})`;
+}
+function glossyGradient(x0,y0,x1,y1,c,light=.34,dark=.28){
+  const g=ctx.createLinearGradient(x0,y0,x1,y1); g.addColorStop(0,shiftColor(c,light)); g.addColorStop(.34,c); g.addColorStop(.72,shiftColor(c,-dark)); g.addColorStop(1,shiftColor(c,.12)); return g;
+}
+function starPath(x,y,r){ ctx.beginPath(); for(let k=0;k<10;k++){const rr=k%2?r*.42:r,a=-Math.PI/2+k*Math.PI/5;ctx.lineTo(x+Math.cos(a)*rr,y+Math.sin(a)*rr)} ctx.closePath(); }
+function drawMotif(id,x,y,r,accent){
+  ctx.save(); ctx.translate(x,y); ctx.fillStyle=accent; ctx.strokeStyle='#fff'; ctx.lineWidth=r*.12;
+  if(id==='sol'){ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(r*.4,-r*.16,r*.88,0,TAU);ctx.fill()}
+  else if(id==='hana'){for(let k=0;k<5;k++){const a=k*TAU/5-Math.PI/2;ctx.beginPath();ctx.ellipse(Math.cos(a)*r*.62,Math.sin(a)*r*.62,r*.38,r*.62,a,0,TAU);ctx.fill()}ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(0,0,r*.3,0,TAU);ctx.fill()}
+  else {ctx.beginPath();ctx.moveTo(-r*.15,-r);ctx.lineTo(r*.72,-r*.18);ctx.lineTo(r*.18,-r*.08);ctx.lineTo(r*.52,r);ctx.lineTo(-r*.72,r*.08);ctx.lineTo(-r*.12,-r*.04);ctx.closePath();ctx.fill()}
+  ctx.restore();
+}
+function drawGirl(ch, look, i, x, y, gh, t, still){
+  if(PD.ready){drawPaperDoll(ch,look,i,x,y,gh,t,still);return}
+  const skin=ch.skin,dark='#24162d',F=ch.face,beatT=(t||0)*BPM/60,g=v=>v*gh,X=v=>v*HR*gh,Y=v=>(HC+v*HR)*gh;
+  const hairC=look.hair.color||'#2a1a3a',topC=look.top.color||'#9b7be8',botC=look.bottom.color||'#3a2b5a',shoeC=look.shoes.color||'#e8e2f5',accC=look.faceColor||topC;
+  const poses=[{l:[-.23,-.98],r:[.23,-.98]},{l:[-.17,-.58],r:[.05,-.84]},{l:[-.04,-.86],r:[.2,-1.03]},{l:[-.16,-.57],r:[.16,-.57]}];
+  let L,R,pose=3;
+  if(still){L=poses[3].l;R=poses[3].r}
+  else {const ph=beatT*.5+i*.23,pi=Math.floor(ph)%4,pn=(pi+1)%4,q=ph-Math.floor(ph),e=q*q*(3-2*q),a=poses[pi],b=poses[pn];pose=e<.5?pi:pn;L=[a.l[0]+(b.l[0]-a.l[0])*e,a.l[1]+(b.l[1]-a.l[1])*e];R=[a.r[0]+(b.r[0]-a.r[0])*e,a.r[1]+(b.r[1]-a.r[1])*e];if(cheer>.75){const z=Math.min(1,(cheer-.75)*4);L=L.map((v,k)=>v+(poses[0].l[k]-v)*z);R=R.map((v,k)=>v+(poses[0].r[k]-v)*z);pose=0}}
+  const sway=still?0:Math.sin(beatT*Math.PI+i*.8)*.018*(1+cheer*.5),hip=still?0:Math.sin(beatT*TAU*.5+i)*g(.013),kick=still?0:Math.max(0,Math.sin(beatT*Math.PI+i*Math.PI))*.055;
+  const cloth=glossyGradient(g(-.2),g(-.78),g(.2),g(-.5),topC),bottomGrad=glossyGradient(g(-.18),g(-.52),g(.18),g(-.25),botC),skinGrad=glossyGradient(0,g(-1),g(.1),g(-.45),skin,.22,.12),metal=glossyGradient(0,0,g(.1),g(.1),'#e9eef8',.12,.16);
+  ctx.save();ctx.translate(x+hip,y);ctx.rotate(sway);ctx.lineCap='round';ctx.lineJoin='round';ctx.shadowColor=topC;ctx.shadowBlur=still?2:10;
+  drawHair(look.hair.style,hairC,gh,'back',beatT,accC,still);
+  // Long dancer legs with subtle dimensional light.
+  const legC=look.bottom.style==='leggings'?bottomGrad:skinGrad;ctx.strokeStyle=legC;ctx.lineWidth=g(.052);ctx.beginPath();ctx.moveTo(g(-.05),g(-.49));ctx.quadraticCurveTo(g(-.07),g(-.27),g(-.065),g(-.025-kick));ctx.moveTo(g(.05),g(-.49));ctx.quadraticCurveTo(g(.065),g(-.27),g(.062),g(-.025));ctx.stroke();
+  const shoe=(cx,lift)=>{const s=look.shoes.style,yy=-lift;ctx.save();ctx.translate(cx,yy);ctx.fillStyle=glossyGradient(g(-.05),g(-.35),g(.05),0,shoeC);
+    if(s==='boots'){rrect(g(-.046),g(-.36),g(.092),g(.34),g(.024));ctx.fillStyle=shiftColor(shoeC,-.28);rrect(g(-.055),g(-.052),g(.112),g(.052),g(.014));ctx.strokeStyle=accC;ctx.lineWidth=g(.007);for(let k=0;k<6;k++){ctx.beginPath();ctx.moveTo(g(-.032),g(-.31+k*.045));ctx.lineTo(g(.032),g(-.285+k*.045));ctx.stroke()}ctx.fillStyle='#fff9';ctx.fillRect(g(-.032),g(-.335),g(.012),g(.24));}
+    else if(s==='platform'){rrect(g(-.047),g(-.22),g(.094),g(.18),g(.025));ctx.fillStyle=shiftColor(shoeC,-.4);rrect(g(-.057),g(-.055),g(.118),g(.055),g(.013));ctx.fillStyle=accC;ctx.beginPath();ctx.moveTo(g(-.045),g(-.16));ctx.lineTo(g(.046),g(-.1));ctx.lineTo(g(.046),g(-.07));ctx.lineTo(g(-.045),g(-.13));ctx.fill();}
+    else if(s==='maryjanes'){ctx.fillStyle='#fff';rrect(g(-.038),g(-.14),g(.076),g(.1),g(.016));ctx.fillStyle=shoeC;rrect(g(-.052),g(-.06),g(.105),g(.06),g(.02));ctx.strokeStyle=accC;ctx.lineWidth=g(.012);ctx.beginPath();ctx.moveTo(g(-.04),g(-.09));ctx.lineTo(g(.04),g(-.09));ctx.stroke();}
+    else {rrect(g(-.048),g(-.13),g(.1),g(.12),g(.022));ctx.fillStyle='#fff';rrect(g(-.052),g(-.035),g(.11),g(.035),g(.01));ctx.strokeStyle=accC;ctx.lineWidth=g(.007);for(let k=0;k<3;k++){ctx.beginPath();ctx.moveTo(g(-.025),g(-.105+k*.025));ctx.lineTo(g(.03),g(-.092+k*.025));ctx.stroke()}if(s==='sneakers'){ctx.fillStyle=accC;starPath(g(.018),g(-.075),g(.018));ctx.fill()}}
+    ctx.restore()};
+  shoe(g(-.065),g(kick));shoe(g(.062),0);
+  // Arms are smooth curves, with couture sleeves layered over the skin.
+  const arm=(sx,sy,hx,hy,side)=>{const ex=(sx+hx)/2+side*g(.065),ey=(sy+hy)/2+g(.02);ctx.beginPath();ctx.moveTo(sx,sy);ctx.quadraticCurveTo(ex,ey,hx,hy);ctx.stroke();return[ex,ey]};
+  const lh=[g(L[0]),g(L[1])],rh=[g(R[0]),g(R[1])];ctx.strokeStyle=skinGrad;ctx.lineWidth=g(.04);arm(g(-.105),g(-.745),lh[0],lh[1],-1);arm(g(.105),g(-.745),rh[0],rh[1],1);
+  if(['jacket','hoodie','blazer','tee'].includes(look.top.style)){ctx.strokeStyle=cloth;ctx.lineWidth=g(.052);ctx.beginPath();ctx.moveTo(g(-.105),g(-.745));ctx.lineTo(g(-.145),g(-.66));ctx.moveTo(g(.105),g(-.745));ctx.lineTo(g(.145),g(-.66));ctx.stroke();if(look.top.style==='blazer'){ctx.beginPath();ctx.moveTo(g(-.145),g(-.66));ctx.lineTo(g(-.19),g(-.57));ctx.moveTo(g(.145),g(-.66));ctx.lineTo(g(.19),g(-.57));ctx.stroke()}}
+  // Tailored bottoms.
+  const skirtPath=(w=.17,bot=-.34)=>{ctx.beginPath();ctx.moveTo(g(-.105),g(-.515));ctx.lineTo(g(.105),g(-.515));ctx.lineTo(g(w),g(bot));ctx.lineTo(g(-w),g(bot));ctx.closePath()};ctx.fillStyle=bottomGrad;
+  if(look.bottom.style==='shorts'){ctx.beginPath();ctx.moveTo(g(-.108),g(-.515));ctx.lineTo(0,g(-.515));ctx.lineTo(g(-.008),g(-.395));ctx.lineTo(g(-.11),g(-.405));ctx.closePath();ctx.moveTo(0,g(-.515));ctx.lineTo(g(.108),g(-.515));ctx.lineTo(g(.11),g(-.405));ctx.lineTo(g(.008),g(-.395));ctx.closePath();ctx.fill();ctx.fillStyle=metal;ctx.fillRect(g(-.108),g(-.515),g(.216),g(.018));ctx.fillStyle=accC;ctx.fillRect(g(-.105),g(-.42),g(.045),g(.012));ctx.fillRect(g(.06),g(-.42),g(.045),g(.012));}
+  else if(look.bottom.style==='cargo'){rrect(g(-.105),g(-.515),g(.094),g(.485),g(.018));rrect(g(.011),g(-.515),g(.094),g(.485),g(.018));ctx.fillStyle=shiftColor(botC,-.22);rrect(g(-.112),g(-.34),g(.074),g(.07),g(.012));rrect(g(.038),g(-.34),g(.074),g(.07),g(.012));ctx.strokeStyle=accC;ctx.lineWidth=g(.008);ctx.beginPath();ctx.moveTo(g(-.09),g(-.48));ctx.lineTo(g(-.025),g(-.43));ctx.moveTo(g(.09),g(-.48));ctx.lineTo(g(.025),g(-.43));ctx.stroke();}
+  else if(look.bottom.style==='leggings'){ctx.fillStyle=bottomGrad;ctx.fillRect(g(-.105),g(-.52),g(.21),g(.04));ctx.strokeStyle=accC;ctx.lineWidth=g(.009);ctx.beginPath();ctx.moveTo(g(-.055),g(-.46));ctx.lineTo(g(-.065),g(-.11));ctx.moveTo(g(.055),g(-.46));ctx.lineTo(g(.062),g(-.11));ctx.stroke();}
+  else {const wide=look.bottom.style==='tutu'?.205:.17,bot=look.bottom.style==='tutu'?-.355:-.34;skirtPath(wide,bot);ctx.fill();ctx.fillStyle=shiftColor(botC,.35);ctx.strokeStyle=accC;ctx.lineWidth=g(.008);if(look.bottom.style==='plaid'){ctx.save();skirtPath(wide,bot);ctx.clip();for(let k=-2;k<=2;k++){ctx.beginPath();ctx.moveTo(g(k*.05),g(-.52));ctx.lineTo(g(k*.075),g(-.33));ctx.stroke()}for(let k=0;k<3;k++){ctx.beginPath();ctx.moveTo(g(-.2),g(-.49+k*.055));ctx.lineTo(g(.2),g(-.49+k*.055));ctx.stroke()}ctx.restore()}else{for(let k=-2;k<=2;k++){ctx.beginPath();ctx.moveTo(g(k*.035),g(-.505));ctx.lineTo(g(k*.06),g(bot+.012));ctx.stroke()}if(look.bottom.style==='tutu'){ctx.globalAlpha=.45;for(let k=-3;k<=3;k++){ctx.beginPath();ctx.ellipse(g(k*.055),g(-.355),g(.052),g(.025),0,0,TAU);ctx.fill()}ctx.globalAlpha=1}}}
+  // Fitted torso and high-fashion top layer.
+  ctx.fillStyle=skinGrad;ctx.beginPath();ctx.moveTo(g(-.09),g(-.77));ctx.quadraticCurveTo(0,g(-.79),g(.09),g(-.77));ctx.lineTo(g(.075),g(-.58));ctx.lineTo(g(.1),g(-.51));ctx.lineTo(g(-.1),g(-.51));ctx.lineTo(g(-.075),g(-.58));ctx.closePath();ctx.fill();
+  const top=look.top.style;ctx.fillStyle=cloth;
+  if(top==='tank'){ctx.beginPath();ctx.moveTo(g(-.075),g(-.75));ctx.lineTo(g(.075),g(-.75));ctx.lineTo(g(.078),g(-.59));ctx.lineTo(g(-.078),g(-.59));ctx.closePath();ctx.fill();ctx.strokeStyle=accC;ctx.lineWidth=g(.014);ctx.beginPath();ctx.moveTo(g(-.058),g(-.75));ctx.lineTo(g(-.073),g(-.795));ctx.moveTo(g(.058),g(-.75));ctx.lineTo(g(.073),g(-.795));ctx.stroke();}
+  else if(top==='crop'){ctx.beginPath();ctx.moveTo(g(-.1),g(-.77));ctx.quadraticCurveTo(0,g(-.735),g(.1),g(-.77));ctx.lineTo(g(.082),g(-.61));ctx.lineTo(g(-.082),g(-.61));ctx.closePath();ctx.fill();ctx.strokeStyle=accC;ctx.lineWidth=g(.011);ctx.beginPath();ctx.moveTo(g(-.09),g(-.64));ctx.lineTo(0,g(-.7));ctx.lineTo(g(.09),g(-.64));ctx.stroke();}
+  else if(top==='tee'){ctx.beginPath();ctx.moveTo(g(-.112),g(-.77));ctx.lineTo(g(.112),g(-.77));ctx.lineTo(g(.09),g(-.55));ctx.lineTo(g(-.09),g(-.55));ctx.closePath();ctx.fill();}
+  else {ctx.fillStyle='#f8f6fb';rrect(g(-.06),g(-.765),g(.12),g(.23),g(.018));ctx.fillStyle=cloth;ctx.beginPath();ctx.moveTo(g(-.12),g(-.775));ctx.lineTo(g(-.025),g(-.745));ctx.lineTo(g(-.045),g(-.52));ctx.lineTo(g(-.12),g(-.535));ctx.closePath();ctx.moveTo(g(.12),g(-.775));ctx.lineTo(g(.025),g(-.745));ctx.lineTo(g(.045),g(-.52));ctx.lineTo(g(.12),g(-.535));ctx.closePath();ctx.fill();if(top==='hoodie'){ctx.strokeStyle=accC;ctx.lineWidth=g(.008);ctx.beginPath();ctx.moveTo(g(-.02),g(-.75));ctx.lineTo(g(-.025),g(-.64));ctx.moveTo(g(.02),g(-.75));ctx.lineTo(g(.025),g(-.64));ctx.stroke()}if(top==='blazer'){ctx.beginPath();ctx.moveTo(g(-.115),g(-.55));ctx.lineTo(g(-.2),g(-.39));ctx.lineTo(g(-.06),g(-.48));ctx.moveTo(g(.115),g(-.55));ctx.lineTo(g(.2),g(-.39));ctx.lineTo(g(.06),g(-.48));ctx.fill()}}
+  ctx.strokeStyle=shiftColor(topC,-.28);ctx.lineWidth=g(.006);ctx.beginPath();ctx.moveTo(0,g(-.75));ctx.lineTo(0,g(-.535));ctx.stroke();drawMotif(ch.id,0,g(-.65),g(.025),accC);
+  // Hands, mic/lightstick and neck.
+  ctx.fillStyle=skinGrad;ctx.beginPath();ctx.arc(lh[0],lh[1],g(.023),0,TAU);ctx.arc(rh[0],rh[1],g(.023),0,TAU);ctx.fill();
+  if(!still&&(pose===1||pose===2)){const h=pose===1?rh:lh,dir=pose===1?-1:1;ctx.strokeStyle='#342b3e';ctx.lineWidth=g(.017);ctx.beginPath();ctx.moveTo(h[0],h[1]+g(.03));ctx.lineTo(h[0]+dir*g(.014),h[1]-g(.035));ctx.stroke();ctx.fillStyle=accC;ctx.beginPath();ctx.arc(h[0]+dir*g(.017),h[1]-g(.052),g(.023),0,TAU);ctx.fill()}
+  ctx.fillStyle=skinGrad;rrect(g(-.018),g(-.855),g(.036),g(.09),g(.014));
+  // Refined face shape and beauty lighting.
+  const rx=g(F.rx),ry=g(F.ry),hy=g(HC),cw=g(F.chinW),faceGrad=ctx.createRadialGradient(g(-.025),hy-ry*.35,g(.005),0,hy,rx*1.3);faceGrad.addColorStop(0,shiftColor(skin,.3));faceGrad.addColorStop(.7,skin);faceGrad.addColorStop(1,shiftColor(skin,-.1));ctx.fillStyle=faceGrad;ctx.beginPath();ctx.moveTo(0,hy-ry);ctx.bezierCurveTo(rx*1.12,hy-ry,rx*F.cheek,hy-ry*.12,rx*F.cheek*.92,hy+ry*.28);ctx.bezierCurveTo(rx*F.jaw,hy+ry*.83,cw*1.7,hy+ry,cw,hy+ry);ctx.lineTo(-cw,hy+ry);ctx.bezierCurveTo(-cw*1.7,hy+ry,-rx*F.jaw,hy+ry*.83,-rx*F.cheek*.92,hy+ry*.28);ctx.bezierCurveTo(-rx*F.cheek,hy-ry*.12,-rx*1.12,hy-ry,0,hy-ry);ctx.closePath();ctx.fill();
+  drawHair(look.hair.style,hairC,gh,'front',beatT,accC,still);ctx.shadowBlur=0;
+  const blinkPhase=((t||0)+i*1.23)%4.7,blink=blinkPhase>4.48&&blinkPhase<4.62?.12:1,ew=X(.35*F.eyeW),eh=X(.2*F.eyeH)*blink,ey=Y(.03);
+  for(const s of [-1,1]){const ex=X(s*.43);ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(ex-s*ew,ey);ctx.quadraticCurveTo(ex,ey-eh*1.45,ex+s*ew,ey);ctx.quadraticCurveTo(ex,ey+eh*.75,ex-s*ew,ey);ctx.fill();if(blink>.2){const iris=ctx.createRadialGradient(ex-s*X(.03),ey-eh*.2,0,ex,ey,eh);iris.addColorStop(0,'#fff');iris.addColorStop(.22,ch.eyes);iris.addColorStop(1,dark);ctx.fillStyle=iris;ctx.beginPath();ctx.ellipse(ex+s*X(.02),ey,eh*.88,eh,0,0,TAU);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(ex-s*eh*.28,ey-eh*.33,eh*.24,0,TAU);ctx.fill()}ctx.strokeStyle=dark;ctx.lineWidth=X(.06);ctx.beginPath();ctx.moveTo(ex-s*ew,ey);ctx.quadraticCurveTo(ex,ey-eh*1.55,ex+s*ew,ey-eh*.1);ctx.lineTo(ex+s*ew*(1+.3*F.wing),ey-eh*(.45+.55*F.wing));ctx.stroke();ctx.lineWidth=X(.03);ctx.beginPath();ctx.moveTo(ex+s*ew*.75,ey-eh*.55);ctx.lineTo(ex+s*ew*.88,ey-eh*1.1);ctx.moveTo(ex+s*ew*.48,ey-eh*.82);ctx.lineTo(ex+s*ew*.55,ey-eh*1.34);ctx.stroke();ctx.strokeStyle='rgba(50,30,55,.72)';ctx.lineWidth=X(.04);ctx.beginPath();ctx.moveTo(ex-s*X(.3),Y(-.62+F.brow*.3));ctx.quadraticCurveTo(ex,Y(-.82-F.brow*.4),ex+s*X(.4),Y(-.63));ctx.stroke()}
+  ctx.fillStyle='rgba(242,81,130,.22)';ctx.beginPath();ctx.ellipse(X(-.62),Y(.43),X(.23),X(.13),0,0,TAU);ctx.ellipse(X(.62),Y(.43),X(.23),X(.13),0,0,TAU);ctx.fill();ctx.strokeStyle='rgba(110,65,65,.26)';ctx.lineWidth=X(.045);ctx.beginPath();ctx.moveTo(X(.02),Y(.26));ctx.quadraticCurveTo(X(.02),Y(.46),X(.1),Y(.48));ctx.stroke();ctx.fillStyle=ch.id==='jia'?'#b94760':'#e2557d';ctx.beginPath();ctx.moveTo(X(-.3),Y(.64));ctx.quadraticCurveTo(0,Y(.5),X(.31),Y(.64));ctx.quadraticCurveTo(0,Y(1.0),X(-.3),Y(.64));ctx.fill();ctx.fillStyle='#fff9';ctx.beginPath();ctx.ellipse(X(-.05),Y(.72),X(.11),X(.035),0,0,TAU);ctx.fill();
+  for(const id of look.face)drawFaceAcc(id,gh,accC);ctx.restore();
+}
+function drawHair(style,color,gh,phase,beatT,accC,still){
+  const X=v=>v*HR*gh,Y=v=>(HC+v*HR)*gh,sw=still?0:Math.sin(beatT*Math.PI)*X(.18),sw2=still?0:Math.sin(beatT*Math.PI+.9)*X(.12),deep=shiftColor(color,-.4),light=shiftColor(color,.42),under=accC;
+  const grad=ctx.createLinearGradient(X(-1.4),Y(-1.6),X(1.5),Y(5.8));grad.addColorStop(0,light);grad.addColorStop(.24,color);grad.addColorStop(.72,deep);grad.addColorStop(1,shiftColor(color,-.18));ctx.fillStyle=grad;ctx.strokeStyle=light;ctx.lineCap='round';ctx.lineJoin='round';
+  const strand=(pts,w=.09,a=.34,c=light)=>{ctx.save();ctx.strokeStyle=c;ctx.globalAlpha=a;ctx.lineWidth=X(w);ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);for(let j=1;j<pts.length-1;j++){const mx=(pts[j][0]+pts[j+1][0])/2,my=(pts[j][1]+pts[j+1][1])/2;ctx.quadraticCurveTo(pts[j][0],pts[j][1],mx,my)}ctx.lineTo(pts.at(-1)[0],pts.at(-1)[1]);ctx.stroke();ctx.restore()};
+  if(phase==='back'){
+    if(style==='ponytail'){ctx.beginPath();ctx.moveTo(X(-.55),Y(-1.05));ctx.bezierCurveTo(X(-.9),Y(-1.65),X(.55),Y(-1.7),X(1.05),Y(-.85));ctx.bezierCurveTo(X(2.7)+sw,Y(.15),X(2.25)+sw,Y(2.4),X(1.2)+sw,Y(5.5));ctx.bezierCurveTo(X(.55)+sw2,Y(4.7),X(1.05),Y(2.5),X(.45),Y(.55));ctx.closePath();ctx.fill();strand([[X(.42),Y(-.9)],[X(1.8)+sw,Y(.2)],[X(1.65)+sw,Y(2.8)],[X(1.05)+sw2,Y(5.0)]],.18,.5,under);strand([[X(.12),Y(-.95)],[X(1.35)+sw,Y(.4)],[X(1.15)+sw2,Y(3.8)]],.08,.38)}
+    else if(style==='buns'||style==='pigtails'){for(const s of [-1,1]){ctx.beginPath();ctx.moveTo(X(s*.78),Y(-.85));ctx.bezierCurveTo(X(s*2.0),Y(-.35),X(s*1.7)+s*sw,Y(1.6),X(s*1.25)+s*sw2,Y(5.2));ctx.bezierCurveTo(X(s*.55)+s*sw2,Y(4.2),X(s*.95),Y(1.3),X(s*.45),Y(.1));ctx.closePath();ctx.fill();strand([[X(s*.92),Y(-.4)],[X(s*1.42)+s*sw,Y(1.6)],[X(s*1.12)+s*sw2,Y(4.7)]],.14,.48,under)}}
+    else if(style==='long'||style==='wavy'){ctx.beginPath();ctx.moveTo(X(-1.08),Y(-.82));ctx.bezierCurveTo(X(-1.65),Y(.5),X(-1.25)+sw,Y(3.5),X(-.68)+sw2,Y(5.7));ctx.quadraticCurveTo(0,Y(5.15),X(.68)+sw2,Y(5.7));ctx.bezierCurveTo(X(1.25)+sw,Y(3.5),X(1.65),Y(.5),X(1.08),Y(-.82));ctx.closePath();ctx.fill();for(const s of [-1,1]){strand([[X(s*.72),Y(-.35)],[X(s*1.12)+s*sw,Y(1.8)],[X(s*.68)+s*sw2,Y(5.25)]],style==='wavy'?.17:.1,.42,style==='wavy'?under:light);if(style==='wavy')strand([[X(s*.95),Y(.4)],[X(s*.55),Y(1.5)],[X(s*1.15)+s*sw,Y(2.7)],[X(s*.72)+s*sw2,Y(4.4)]],.12,.35)}}
+    else if(style==='braid'){for(let k=0;k<13;k++){const yy=Y(-.45+k*.7),xx=X(-.85-k*.055)+sw*k*.08,rr=X(.56-k*.015);ctx.save();ctx.translate(xx,yy);ctx.rotate((k%2?1:-1)*.24);ctx.fillStyle=grad;ctx.beginPath();ctx.ellipse(0,0,rr,rr*.72,0,0,TAU);ctx.fill();ctx.strokeStyle=k%2?under:light;ctx.globalAlpha=.42;ctx.lineWidth=X(.08);ctx.stroke();ctx.restore()}ctx.fillStyle=under;ctx.beginPath();ctx.arc(X(-1.5)+sw,Y(8.35),X(.25),0,TAU);ctx.fill()}
+    else if(style==='puffs'){for(const s of [-1,1])for(let k=0;k<8;k++){const a=k*TAU/8;ctx.beginPath();ctx.arc(X(s*1.05)+Math.cos(a)*X(.46),Y(-1.04)+Math.sin(a)*X(.46),X(.38),0,TAU);ctx.fill()}}
+    else if(style==='bob'){ctx.beginPath();ctx.moveTo(X(-1.12),Y(-.7));ctx.bezierCurveTo(X(-1.55),Y(.2),X(-1.2),Y(1.45),X(-.72),Y(1.7));ctx.quadraticCurveTo(0,Y(1.25),X(.72),Y(1.7));ctx.bezierCurveTo(X(1.2),Y(1.45),X(1.55),Y(.2),X(1.12),Y(-.7));ctx.closePath();ctx.fill();strand([[X(-.9),Y(-.4)],[X(-1.1),Y(.65)],[X(-.7),Y(1.45)]],.13,.38,under);strand([[X(.9),Y(-.4)],[X(1.1),Y(.65)],[X(.7),Y(1.45)]],.13,.38,under)}
+    else if(style==='pixie'){ctx.beginPath();ctx.moveTo(X(-1.13),Y(-.7));ctx.lineTo(X(-1.46),Y(.5));ctx.lineTo(X(-.8),Y(.26));ctx.lineTo(X(-.55),Y(1.25));ctx.lineTo(0,Y(.55));ctx.lineTo(X(.72),Y(1.3));ctx.lineTo(X(.76),Y(.3));ctx.lineTo(X(1.35),Y(.62));ctx.lineTo(X(1.1),Y(-.7));ctx.closePath();ctx.fill()}
+    return;
+  }
+  // Sculpted crown and individually separated fringe pieces.
+  ctx.beginPath();ctx.moveTo(X(-1.12),Y(-.05));ctx.bezierCurveTo(X(-1.1),Y(-1.25),X(-.45),Y(-1.65),0,Y(-1.58));ctx.bezierCurveTo(X(.55),Y(-1.66),X(1.15),Y(-1.15),X(1.12),Y(-.05));ctx.quadraticCurveTo(0,Y(-.78),X(-1.12),Y(-.05));ctx.fill();
+  ctx.beginPath();ctx.moveTo(X(-1.05),Y(-.35));ctx.quadraticCurveTo(X(-.5),Y(-1.0),X(.12),Y(-.78));ctx.quadraticCurveTo(X(-.1),Y(-.1),X(-.72),Y(.38));ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(X(1.05),Y(-.35));ctx.quadraticCurveTo(X(.62),Y(-.95),X(.12),Y(-.78));ctx.quadraticCurveTo(X(.35),Y(-.12),X(.78),Y(.3));ctx.closePath();ctx.fill();
+  strand([[X(-.72),Y(-1.0)],[X(-.2),Y(-1.35)],[X(.52),Y(-1.08)]],.15,.45);strand([[X(-.55),Y(-.55)],[X(-.28),Y(-.18)],[X(-.72),Y(.4)]],.07,.4,under);
+  if(style==='buns'){for(const s of [-1,1]){ctx.fillStyle=grad;ctx.beginPath();ctx.arc(X(s*.88),Y(-1.3),X(.48),0,TAU);ctx.fill();ctx.strokeStyle=under;ctx.lineWidth=X(.1);ctx.beginPath();ctx.arc(X(s*.88),Y(-1.3),X(.29),.2,5.5);ctx.stroke()}}
+  else if(style==='highbun'){ctx.fillStyle=grad;ctx.beginPath();ctx.ellipse(0,Y(-1.92),X(.68),X(.55),0,0,TAU);ctx.fill();ctx.strokeStyle=under;ctx.lineWidth=X(.1);ctx.beginPath();ctx.arc(0,Y(-1.88),X(.38),.2,5.6);ctx.stroke()}
+  else if(style==='puffs'){ctx.fillStyle=grad;for(const s of [-1,1])for(let k=0;k<7;k++){const a=k*TAU/7;ctx.beginPath();ctx.arc(X(s*1.02)+Math.cos(a)*X(.36),Y(-1.15)+Math.sin(a)*X(.36),X(.3),0,TAU);ctx.fill()}}
+  else if(style==='pigtails'){ctx.fillStyle=under;for(const s of [-1,1]){ctx.beginPath();ctx.moveTo(X(s*.95),Y(-.05));ctx.lineTo(X(s*1.38),Y(.06));ctx.lineTo(X(s*1.14),Y(.42));ctx.closePath();ctx.fill()}}
+  else if(style==='ponytail'||style==='braid'){ctx.fillStyle=under;ctx.beginPath();ctx.arc(X(-.48),Y(-1.42),X(.17),0,TAU);ctx.fill()}
+}
+function drawFaceAcc(id,gh,acc){
+  const X=v=>v*HR*gh,Y=v=>(HC+v*HR)*gh,heart=(x,y,r)=>{ctx.beginPath();ctx.moveTo(x,y+r*.9);ctx.bezierCurveTo(x-r*1.35,y-r*.15,x-r*.65,y-r*1.05,x,y-r*.38);ctx.bezierCurveTo(x+r*.65,y-r*1.05,x+r*1.35,y-r*.15,x,y+r*.9);ctx.fill()};
+  ctx.save();ctx.shadowColor=acc;ctx.shadowBlur=X(.2);
+  if(id==='sunglasses'){ctx.fillStyle='rgba(22,17,35,.82)';for(const s of [-1,1]){ctx.beginPath();ctx.moveTo(X(s*.08),Y(-.18));ctx.lineTo(X(s*.9),Y(-.25));ctx.lineTo(X(s*.72),Y(.32));ctx.lineTo(X(s*.18),Y(.22));ctx.closePath();ctx.fill()}ctx.strokeStyle=acc;ctx.lineWidth=X(.07);ctx.beginPath();ctx.moveTo(X(-.12),Y(-.08));ctx.lineTo(X(.12),Y(-.08));ctx.stroke()}
+  else if(id==='heartglasses'){ctx.fillStyle=acc;heart(X(-.5),Y(.02),X(.4));heart(X(.5),Y(.02),X(.4));ctx.fillStyle='rgba(255,255,255,.36)';ctx.beginPath();ctx.arc(X(-.6),Y(-.1),X(.1),0,TAU);ctx.arc(X(.4),Y(-.1),X(.1),0,TAU);ctx.fill()}
+  else if(id==='starsticker'){ctx.fillStyle=acc;starPath(X(.8),Y(.42),X(.22));ctx.fill()}
+  else if(id==='heartsticker'){ctx.fillStyle=acc;heart(X(-.78),Y(.43),X(.18))}
+  else if(id==='lollipop'){ctx.strokeStyle=acc;ctx.lineWidth=X(.07);ctx.beginPath();ctx.arc(0,Y(.08),X(1.25),Math.PI*.1,Math.PI*.6);ctx.stroke();ctx.fillStyle=acc;ctx.beginPath();ctx.arc(X(.62),Y(.72),X(.13),0,TAU);ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(X(.58),Y(.68),X(.04),0,TAU);ctx.fill()}
+  else if(id==='catears'){for(const s of [-1,1]){ctx.fillStyle=shiftColor(acc,-.35);ctx.beginPath();ctx.moveTo(X(s*.35),Y(-1.08));ctx.lineTo(X(s*.82),Y(-1.92));ctx.lineTo(X(s*1.05),Y(-.9));ctx.closePath();ctx.fill();ctx.fillStyle=acc;ctx.beginPath();ctx.moveTo(X(s*.5),Y(-1.1));ctx.lineTo(X(s*.8),Y(-1.65));ctx.lineTo(X(s*.94),Y(-.98));ctx.closePath();ctx.fill()}}
+  else if(id==='crown'){ctx.strokeStyle='#ffe07c';ctx.lineWidth=X(.12);ctx.beginPath();ctx.moveTo(X(-.75),Y(-1.08));ctx.lineTo(X(-.45),Y(-1.58));ctx.lineTo(0,Y(-1.2));ctx.lineTo(X(.46),Y(-1.68));ctx.lineTo(X(.76),Y(-1.05));ctx.stroke();ctx.fillStyle=acc;for(const p of [[-.45,-1.58],[.46,-1.68],[0,-1.2]]){ctx.beginPath();ctx.arc(X(p[0]),Y(p[1]),X(.11),0,TAU);ctx.fill()}}
+  else if(id==='headphones'){ctx.strokeStyle=acc;ctx.lineWidth=X(.17);ctx.beginPath();ctx.arc(0,Y(-.05),X(1.28),Math.PI*1.05,Math.PI*1.95);ctx.stroke();for(const s of [-1,1]){ctx.fillStyle=acc;rrect(X(s*1.05)-X(.2),Y(-.2),X(.4),X(.62),X(.16));ctx.fillStyle='#fff6';ctx.fillRect(X(s*1.05)-X(.08),Y(-.08),X(.08),X(.25))}}
+  else if(id==='bow'){ctx.fillStyle=acc;ctx.beginPath();ctx.moveTo(X(-.82),Y(-1.02));ctx.lineTo(X(-1.62),Y(-1.55));ctx.lineTo(X(-1.45),Y(-.55));ctx.closePath();ctx.moveTo(X(-.78),Y(-1.02));ctx.lineTo(X(-.12),Y(-1.6));ctx.lineTo(X(-.18),Y(-.55));ctx.closePath();ctx.fill();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(X(-.8),Y(-1.02),X(.15),0,TAU);ctx.fill()}
+  else if(id==='earrings'){ctx.strokeStyle='#edf8ff';ctx.lineWidth=X(.065);ctx.beginPath();ctx.moveTo(X(-1.02),Y(.24));ctx.lineTo(X(-1.08),Y(.9));ctx.moveTo(X(1.02),Y(.24));ctx.lineTo(X(1.08),Y(.9));ctx.stroke();ctx.fillStyle=acc;starPath(X(-1.08),Y(1.03),X(.17));ctx.fill();starPath(X(1.08),Y(1.03),X(.17));ctx.fill()}
+  ctx.restore();
+}
 function drawBooBop(b, t){
   const r = b.r, wob = Math.sin(b.p*5)*0.07, body = `hsl(${b.hue},85%,62%)`, dark = `hsl(${b.hue},70%,30%)`, light = `hsl(${b.hue},90%,80%)`;
   ctx.save(); ctx.translate(b.x, b.y); ctx.scale(1+wob, 1-wob);
+  if (b.spinny) ctx.rotate(Math.sin(b.p*3)*0.5);
+  if (b.bump) ctx.scale(1+b.bump*0.22, 1-b.bump*0.14);
   if (b.orb){ ctx.fillStyle = 'rgba(255,240,150,0.9)'; ctx.shadowColor='#ffe066'; ctx.shadowBlur=22; ctx.beginPath(); ctx.arc(r*0.9, r*0.6, r*0.32, 0, TAU); ctx.fill(); }
+  if (b.wings){ ctx.fillStyle = 'rgba(255,255,255,0.75)'; const fl = Math.sin(b.p*18)*0.4;
+    ctx.beginPath(); ctx.ellipse(-r*1.1, -r*0.2, r*0.55, r*0.25, -0.5-fl, 0, TAU); ctx.ellipse(r*1.1, -r*0.2, r*0.55, r*0.25, 0.5+fl, 0, TAU); ctx.fill(); }
   ctx.shadowColor = body; ctx.shadowBlur = 18; ctx.fillStyle = body;
   // round bouncy body
   ctx.beginPath(); ctx.ellipse(0, 0, r, r*0.95, 0, 0, TAU); ctx.fill();
   ctx.shadowBlur = 0;
-  // tiny nub horns
-  ctx.fillStyle = light; ctx.beginPath(); ctx.moveTo(-r*0.6,-r*0.7); ctx.lineTo(-r*0.45,-r*1.1); ctx.lineTo(-r*0.25,-r*0.85); ctx.fill();
-  ctx.beginPath(); ctx.moveTo(r*0.6,-r*0.7); ctx.lineTo(r*0.45,-r*1.1); ctx.lineTo(r*0.25,-r*0.85); ctx.fill();
+  if (b.flash){ ctx.strokeStyle = `rgba(255,255,255,${b.flash})`; ctx.lineWidth = r*0.14; ctx.beginPath(); ctx.ellipse(0, 0, r*1.12, r*1.07, 0, 0, TAU); ctx.stroke(); }
+  // tiny nub horns (bigger on the big demons)
+  const hs = b.horns ? 1.5 : 1;
+  ctx.fillStyle = light; ctx.beginPath(); ctx.moveTo(-r*0.6,-r*0.7); ctx.lineTo(-r*0.45,-r*(0.85+0.25*hs)); ctx.lineTo(-r*0.25,-r*0.85); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(r*0.6,-r*0.7); ctx.lineTo(r*0.45,-r*(0.85+0.25*hs)); ctx.lineTo(r*0.25,-r*0.85); ctx.fill();
+  if (b.boss){ ctx.fillStyle = '#ffd23f'; ctx.beginPath(); ctx.moveTo(-r*0.3,-r*0.95); ctx.lineTo(-r*0.3,-r*1.25); ctx.lineTo(-r*0.15,-r*1.05); ctx.lineTo(0,-r*1.3); ctx.lineTo(r*0.15,-r*1.05); ctx.lineTo(r*0.3,-r*1.25); ctx.lineTo(r*0.3,-r*0.95); ctx.closePath(); ctx.fill(); }
   // waving arms
   ctx.strokeStyle = body; ctx.lineWidth = r*0.18; ctx.lineCap='round';
   ctx.beginPath(); ctx.moveTo(-r*0.85,r*0.1); ctx.lineTo(-r*1.25, -r*0.3 + Math.sin(t*10+b.wave)*r*0.25); ctx.moveTo(r*0.85,r*0.1); ctx.lineTo(r*1.25, -r*0.3 + Math.cos(t*10+b.wave)*r*0.25); ctx.stroke();
@@ -931,6 +1546,8 @@ function drawBooBop(b, t){
   ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.ellipse(-r*0.34,-r*0.2,r*0.24,r*0.28,0,0,TAU); ctx.ellipse(r*0.34,-r*0.2,r*0.24,r*0.28,0,0,TAU); ctx.fill();
   ctx.fillStyle = dark; ctx.beginPath(); ctx.arc(-r*0.3,-r*0.15,r*0.13,0,TAU); ctx.arc(r*0.38,-r*0.15,r*0.13,0,TAU); ctx.fill();
   ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(-r*0.25,-r*0.22,r*0.05,0,TAU); ctx.arc(r*0.43,-r*0.22,r*0.05,0,TAU); ctx.fill();
+  if (b.shades){ ctx.fillStyle = '#1a0630'; rrect(-r*0.62, -r*0.42, r*0.52, r*0.4, r*0.1); rrect(r*0.1, -r*0.42, r*0.52, r*0.4, r*0.1); ctx.fillRect(-r*0.12, -r*0.3, r*0.24, r*0.08);
+    ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.fillRect(-r*0.5, -r*0.36, r*0.18, r*0.09); ctx.fillRect(r*0.2, -r*0.36, r*0.18, r*0.09); }
   // rosy cheeks
   ctx.fillStyle = 'rgba(255,120,170,0.55)'; ctx.beginPath(); ctx.arc(-r*0.62,r*0.15,r*0.14,0,TAU); ctx.arc(r*0.62,r*0.15,r*0.14,0,TAU); ctx.fill();
   // huge grin
@@ -950,8 +1567,8 @@ function drawBubbles(t){
     ctx.restore(); }
 }
 function drawStage(t){
-  const top = ctlTop - 4*U, beatF = Math.pow(1-beat, 3), bounce = beatF * (6+cheer*14) * U, hh = (t*40)%360;
-  const gh = 112*U, spread = Math.min(W*0.18, 110*U);
+  const top = ctlTop - 4*U, beatF = Math.pow(1-beat, 3), hh = (t*40)%360;
+  const gh = Math.min(top*0.34, Math.max(142*U, 86)), spread = Math.min(W*0.19, gh*0.93);
   lsx = W/2; lsy = top - gh*1.35 - 34*U;
   // LED wall with equaliser bars
   const lw = Math.min(W*0.62, 560*U), lx = W/2 - lw/2, lh = 150*U;
@@ -1005,8 +1622,25 @@ function drawStage(t){
     for (let k=0;k<10;k++){ const rr = k%2?headR*0.32:headR*0.72, a = -Math.PI/2 + k*Math.PI/5; ctx.lineTo(lsx+Math.cos(a)*rr, lsy+Math.sin(a)*rr); }
     ctx.closePath(); ctx.fill();
     ctx.restore(); }
-  // Glow Girls
-  CHARS.forEach((ch,i) => { const x = W/2 + (i-1)*spread, y = top - bounce*(i===1?1.2:1) - (cheer>0.5?Math.abs(Math.sin(t*9+i))*10*U:0); drawGirl(ch, LOOKS[i], i, x, y, gh, t, false); });
+  // backup dancers (show mode: silhouettes grooving behind the girls)
+  if (MODE==='level'){
+    for (const s of [-1,1]){ const dx = W/2 + s*spread*1.9; if (dx > W*0.14 && dx < W*0.86){
+      const bob2 = Math.pow(1-((beat+(s+1)*0.25)%1),2)*8*U;
+      ctx.fillStyle = '#241040';
+      ctx.beginPath(); ctx.arc(dx, top-72*U-bob2, 12*U, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(dx-16*U, top); ctx.quadraticCurveTo(dx-16*U, top-64*U-bob2, dx, top-60*U-bob2); ctx.quadraticCurveTo(dx+16*U, top-64*U-bob2, dx+16*U, top); ctx.fill();
+      ctx.strokeStyle = '#241040'; ctx.lineWidth = 5*U; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(dx-12*U, top-50*U-bob2); ctx.lineTo(dx-24*U, top-78*U-bob2-Math.sin(t*6+s)*6*U); ctx.moveTo(dx+12*U, top-50*U-bob2); ctx.lineTo(dx+24*U, top-78*U-bob2+Math.sin(t*6+s)*6*U); ctx.stroke();
+      ctx.fillStyle = '#33e6ff'; ctx.beginPath(); ctx.arc(dx+24*U, top-82*U-bob2+Math.sin(t*6+s)*6*U, 4*U, 0, TAU); ctx.fill(); } }
+  }
+  // Glow Girls (in show mode their energy is the lives: tired girls slump, asleep girls sit out with 💤)
+  CHARS.forEach((ch,i) => { const x = W/2 + (i-1)*spread; girlXs[i] = x;
+    const en = MODE==='level' ? PLAY.energy[i] : 1;
+    if (en <= 0){ ctx.save(); ctx.globalAlpha = 0.5; drawGirl(ch, LOOKS[i], i, x, top, gh*0.96, 0, true); ctx.restore();
+      ctx.font = `900 ${Math.round(17*U)}px system-ui`; ctx.textAlign = 'center'; ctx.fillStyle = '#c9b3e6';
+      ctx.fillText('💤', x + 22*U, top - gh*1.02 + Math.sin(t*2+i)*5*U); }
+    else { if (en < 0.35){ ctx.save(); ctx.globalAlpha = 0.85; drawGirl(ch, LOOKS[i], i, x, top, gh*0.98, t*0.4, false); ctx.restore(); }
+      else drawGirl(ch, LOOKS[i], i, x, top, gh, t, false); } });
   // crowd (in front, bottom band)
   const band = H - top; const baseY = H + 6*U;
   for (const c of crowd){ const cx = c.x*W, ch = (band*0.55 + 30*U) * c.h * (c.row?0.85:1), bob = Math.pow(1-((beat+c.p/TAU)%1),2)*(4+cheer*10)*U;
@@ -1027,7 +1661,7 @@ function drawStage(t){
 function bottleHTML(p){
   return `<button class="bottle" data-id="${p.id}" style="--c:${p.css.startsWith('linear')?'#ff7ad9':p.css}" aria-label="${p.name}">
     <span class="cork"></span><span class="neck"></span>
-    <span class="glass" ${p.rainbow?`style="background:${p.css}"`:''}><span class="eyes"><i></i><i></i></span><span class="icon">${p.icon}</span></span><span class="n"></span></button>`;
+    <span class="glass" ${p.rainbow?`style="background:${p.css}"`:''}><span class="eyes"><i></i><i></i></span><span class="icon">${p.icon}</span></span><span class="n"></span><span class="ammo"></span></button>`;
 }
 $('#left').innerHTML = '<span class="lbl"><i>🎨</i><b>COLOURS</b></span>' + COLOURS.map(bottleHTML).join('');
 $('#right').innerHTML = '<span class="lbl"><i>✨</i><b>MAGIC</b></span>' + MAGICS.map(bottleHTML).join('');
@@ -1047,6 +1681,10 @@ function renderMix(){
 }
 function addPotion(id, btn){
   initAudio(); lastTouch = performance.now();
+  if (MODE==='level' && ammo[id]!==undefined){   // magic potions are limited in show mode
+    const inMix = mix.filter(x=>x===id).length;
+    if (ammo[id] - inMix <= 0){ if (btn){ btn.classList.remove('hint'); void btn.offsetWidth; btn.classList.add('hint'); } toast('CATCH MORE ✨ POTIONS!'); sfxBounce(); return; }
+  }
   mix.push(id); while (mix.length>3) mix.shift();   // repeats allowed: three golds = one big gold
   renderMix(); if (AC) sfxPour(ALL.findIndex(p=>p.id===id));
   if (btn){ btn.classList.remove('pour'); void btn.offsetWidth; btn.classList.add('pour'); }
@@ -1060,6 +1698,9 @@ cv.addEventListener('pointerdown', e => { e.preventDefault(); if (!started) retu
 cv.addEventListener('pointermove', e => { if (!started) return; aim.x = e.clientX; aim.y = e.clientY; aim.show = e.pointerType==='mouse' ? 0.5 : 0.8; });
 $('#finale').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); if (performance.now() < finaleUntil) return; finaleUntil = performance.now()+10000; nextFinaleShot = 0; $('#finale').classList.add('busy'); toast('🎆 FINALE! 🎆'); cheer = 1; lastTouch = performance.now(); });
 $('#music').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); setMusic(!musicOn); });
+$('#mapBtn').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); openMap(); });
+$('#freePlayBtn').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); freePlay(); });
+$('#mapDress').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); $('#map').hidden = true; openDress(); });
 document.addEventListener('contextmenu', e => { if (e.target.id!=='shot') e.preventDefault(); });
 document.addEventListener('gesturestart', e => e.preventDefault());
 document.addEventListener('dblclick', e => e.preventDefault());
@@ -1088,18 +1729,29 @@ $('#back').addEventListener('click', () => { $('#photo').hidden = true; $('#ui')
 
 /* ================= DRESSING ROOM ================= */
 // Style the three Glow Girls before the show. Tap an item (or drag it onto the girl) to wear it; swatches recolour the current category.
-let dressOpen = false, curChar = 0, curCat = 'hair', dragging = null, stageOpened = false, swipeX = null;
+let dressOpen = false, curChar = 0, curCat = 'looks', dragging = null, stageOpened = false, swipeX = null;
 const dcv = $('#dressCv'), dctx = dcv.getContext('2d'), DSPARK = [];
 function openDress(){ dressOpen = true; $('#dress').hidden = false; $('#ui').classList.add('hidden'); renderDress(); lastTouch = performance.now(); }
 function toStage(){
-  dressOpen = false; $('#dress').hidden = true; $('#ui').classList.remove('hidden'); saveLooks(); setTimeout(resize, 50); lastTouch = performance.now();
-  cheer = 1; toast("🎤 LET'S GO!"); if (AC) sfxCheer();
-  if (!stageOpened){ stageOpened = true; setTimeout(()=>launch(W*0.5, H*0.25, ['pink','heart','glitter']), 600); setTimeout(()=>launch(W*0.3, H*0.3, ['blue','star']), 1200); setTimeout(()=>launch(W*0.7, H*0.3, ['gold','rainbow']), 1700); }
+  dressOpen = false; $('#dress').hidden = true; saveLooks(); lastTouch = performance.now();
+  cheer = 1; if (AC) sfxCheer();
+  openMap();   // pick a show (or free play) after dressing up
 }
-function isOn(look, cat, id){ return cat==='face' ? look.face.includes(id) : look[cat].style===id; }
+function isOn(look, cat, id){ return cat==='looks' ? look.preset===id : cat==='skin' ? look.skin===SKIN_BY_ID[id] : cat==='face' ? look.face.includes(id) : look[cat].style===id; }
+// Categories whose worn item is what the swatch row will repaint.
+const COLOURABLE = ['hair','face','top','bottom','shoes'];
+const topHue = l => l.top.color || '#7740a8';
+// Name of the thing the swatches are pointing at right now.
+function paintTargetName(look){
+  if (curCat==='skin') return 'Skin tone';
+  if (curCat==='face') return look.face.length ? look.face.map(f => (WARDROBE.face.find(w=>w[0]===f)||[,f])[1]).join(' + ') : 'Pick an extra first';
+  const w = WARDROBE[curCat].find(w => w[0]===look[curCat].style);
+  return w ? w[1] : curCat;
+}
 function renderDress(){
-  $('#dname').textContent = CHARS[curChar].name; $('#dname').style.background = LOOKS[curChar].top.color; $('#dname').style.color = LOOKS[curChar].top.color==='#ffffff' ? '#1a0630' : '#fff';
-  $('#ddots').innerHTML = CHARS.map((c,i) => `<i class="${i===curChar?'on':''}"></i>`).join('');
+  $('#dname').textContent = CHARS[curChar].name; $('#dname').style.background = topHue(LOOKS[curChar]); $('#dname').style.color = topHue(LOOKS[curChar])==='#ffffff' ? '#1a0630' : '#fff';
+  $('#dchars').innerHTML = CHARS.map((c,i) => `<button class="charpick ${i===curChar?'on':''}" data-i="${i}" aria-label="Dress ${c.name}">${c.name}</button>`).join('');
+  $('#dchars').querySelectorAll('.charpick').forEach(b => b.addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); selectChar(+b.dataset.i); }));
   $('#dtabs').innerHTML = CATS.map(([id,ic,lb]) => `<button class="tab ${id===curCat?'on':''}" data-cat="${id}"><i>${ic}</i>${lb}</button>`).join('');
   $('#dtabs').querySelectorAll('.tab').forEach(b => b.addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); setCat(b.dataset.cat); }));
   renderTiles(); renderSwatches();
@@ -1107,38 +1759,67 @@ function renderDress(){
 function setCat(cat){ curCat = cat; renderDress(); if (AC){ const t0=now(); tone(700,t0,0.08,{type:'square',vol:0.06}); } }
 function renderTiles(){
   const look = LOOKS[curChar], box = $('#ditems'); box.innerHTML = '';
-  for (const [id,name] of WARDROBE[curCat]){ const c = document.createElement('canvas'); c.className = 'tile' + (isOn(look,curCat,id)?' on':''); c.width = c.height = 128; c.dataset.id = id; c.title = name; c.setAttribute('aria-label', name); drawTile(c, look, curCat, id); box.appendChild(c); attachDrag(c, id); }
+  const paints = COLOURABLE.includes(curCat), cur = paints ? (curCat==='face' ? look.faceColor : look[curCat].color) : null;
+  for (const [id,name] of wardrobeFor(curCat)){ const worn = isOn(look,curCat,id), paint = worn && paints;
+    const c = document.createElement('canvas'); c.className = 'tile' + (worn?' on':'') + (paint?' paint':''); c.width = c.height = 128;
+    c.dataset.id = id; c.title = name; c.setAttribute('aria-label', paint ? name + ' — colouring this' : name);
+    if (paint) c.style.setProperty('--pc', cur || '#ffd23f');
+    drawTile(c, look, curCat, id, paint); box.appendChild(c); attachDrag(c, id); }
 }
-function drawTile(c, look, cat, id){
-  const tl = JSON.parse(JSON.stringify(look)); if (cat==='face') tl.face = [id]; else tl[cat] = {style:id, color:look[cat].color};
+function drawTile(c, look, cat, id, paint){
   const saved = ctx; ctx = c.getContext('2d'); ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,128,128);
-  const [gh, cy] = {hair:[115,0.92], face:[300,0.905], top:[200,0.64], bottom:[185,0.42], shoes:[170,0.16]}[cat];   // zoom on the relevant body part
-  ctx.save(); ctx.beginPath(); ctx.arc(64,64,62,0,TAU); ctx.clip(); ctx.fillStyle = 'rgba(255,255,255,0.08)'; ctx.fill();
-  drawGirl(CHARS[curChar], tl, 0, 64, 64 + cy*gh, gh, 0, true); ctx.restore(); ctx = saved;
+  ctx.save();ctx.beginPath();ctx.arc(64,64,62,0,TAU);ctx.clip();if(PD.ready)drawPaperThumb(cat,id,look);else{ctx.fillStyle='rgba(255,255,255,.12)';ctx.fill();ctx.fillStyle='#fff';ctx.font='700 13px system-ui';ctx.textAlign='center';ctx.fillText('LOADING…',64,69)}ctx.restore();
+  // A paint chip on the thumbnail says "the swatches below change this one".
+  if (paint){ const col = cat==='face' ? look.faceColor : look[cat].color;
+    ctx.beginPath(); ctx.arc(100,100,19,0,TAU); ctx.fillStyle='#1a0630'; ctx.fill();
+    ctx.beginPath(); ctx.arc(100,100,14,0,TAU);
+    if (col) ctx.fillStyle = col;
+    else { const g = ctx.createLinearGradient(86,86,114,114); g.addColorStop(0,'#ff3fa4'); g.addColorStop(.5,'#ffd23f'); g.addColorStop(1,'#33e6ff'); ctx.fillStyle = g; }
+    ctx.fill(); ctx.lineWidth=3.5; ctx.strokeStyle='#fff'; ctx.stroke(); }
+  ctx=saved;
 }
 function renderSwatches(){
-  const look = LOOKS[curChar], cur = curCat==='face' ? look.faceColor : look[curCat].color;
-  $('#dswatches').innerHTML = PALETTE.map(c => `<button class="sw ${c===cur?'on':''}" style="--c:${c}" data-c="${c}" aria-label="colour ${c}"></button>`).join('');
-  $('#dswatches').querySelectorAll('.sw').forEach(b => b.addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); setColor(b.dataset.c); }));
+  const box = $('#dswatches');
+  if(curCat==='looks'){ box.innerHTML=''; return; }
+  const look = LOOKS[curChar], cur = curCat==='skin' ? look.skin : curCat==='face' ? look.faceColor : look[curCat].color;
+  const swatches = curCat==='skin' ? '' : PALETTE.map(c => `<button class="sw ${c===cur?'on':''}" style="--c:${c}" data-c="${c}" aria-label="colour ${c}"></button>`).join('');
+  box.innerHTML = `<div class="swlabel">🎨 <b>${paintTargetName(look)}</b></div>` + swatches +
+    `<button class="sw reset ${cur?'':'on'}" data-reset="1" title="Back to this item's own colour" aria-label="Back to this item's own colour">↺</button>`;
+  box.querySelectorAll('.sw').forEach(b => b.addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); if (b.dataset.reset) resetColor(); else setColor(b.dataset.c); }));
 }
 function applyItem(cat, id){
   const look = LOOKS[curChar];
-  if (cat==='face'){ if (look.face.includes(id)) look.face = look.face.filter(f=>f!==id); else { for (const grp of EXCL) if (grp.includes(id)) look.face = look.face.filter(f=>!grp.includes(f)); look.face.push(id); } }
-  else look[cat] = {style:id, color:look[cat].color};
-  saveLooks(); renderTiles(); dressSparkle(); if (AC) sfxPour(WARDROBE[cat].findIndex(w=>w[0]===id));
+  if(cat==='looks'){const skin=look.skin;LOOKS[curChar]=JSON.parse(JSON.stringify(LOOK_PRESETS[CHARS[curChar].id][id]));LOOKS[curChar].skin=skin;}
+  else if (cat==='skin') look.skin = SKIN_BY_ID[id];
+  else if (cat==='face'){ look.preset=null; if (look.face.includes(id)) look.face = look.face.filter(f=>f!==id); else { for (const grp of EXCL) if (grp.includes(id)) look.face = look.face.filter(f=>!grp.includes(f)); look.face.push(id); } }
+  else {look.preset=null;look[cat] = {style:id, color:look[cat].color};}
+  saveLooks(); renderTiles(); renderSwatches(); $('#dname').style.background = topHue(LOOKS[curChar]); dressSparkle(); if (AC) sfxPour(WARDROBE[cat].findIndex(w=>w[0]===id));
 }
 function setColor(col){
-  const look = LOOKS[curChar]; if (curCat==='face') look.faceColor = col; else look[curCat].color = col;
-  saveLooks(); renderTiles(); renderSwatches(); $('#dname').style.background = look.top.color; dressSparkle();
+  const look = LOOKS[curChar]; if(curCat==='looks')return;
+  if (curCat==='skin') look.skin = col;
+  else { look.preset=null; if (curCat==='face') look.faceColor = col; else look[curCat].color = col; }
+  saveLooks(); renderTiles(); renderSwatches(); $('#dname').style.background = topHue(look); dressSparkle();
   if (AC){ const t0=now(); tone(900,t0,0.1,{type:'triangle',vol:0.15}); tone(1350,t0+0.06,0.12,{type:'triangle',vol:0.12}); }
 }
-function switchChar(d){ curChar = (curChar + d + 3) % 3; renderDress(); dressSparkle(); if (AC) noise(now(), 0.25, {vol:0.2, lp:3000, hp:400}); }
+// Per-asset undo: drop the tint on just this item so its own artwork colour shows again.
+function resetColor(){
+  const look = LOOKS[curChar]; if(curCat==='looks')return;
+  if (curCat==='skin') look.skin = null;
+  else if (curCat==='face') look.faceColor = null;
+  else { look.preset=null; look[curCat].color = null; }
+  saveLooks(); renderTiles(); renderSwatches(); $('#dname').style.background = topHue(look); dressSparkle();
+  if (AC){ const t0=now(); tone(1200,t0,0.1,{type:'triangle',vol:0.13}); tone(800,t0+0.07,0.14,{type:'triangle',vol:0.11}); }
+}
+function selectChar(n){ curChar = (n + 3) % 3; renderDress(); dressSparkle(); if (AC) noise(now(), 0.25, {vol:0.2, lp:3000, hp:400}); }
+function switchChar(d){ selectChar(curChar + d); }
 function surprise(){
   const look = LOOKS[curChar], rc = () => pick(PALETTE);
-  look.hair = {style:pick(WARDROBE.hair)[0], color:rc()}; look.top = {style:pick(WARDROBE.top)[0], color:rc()}; look.bottom = {style:pick(WARDROBE.bottom)[0], color:rc()}; look.shoes = {style:pick(WARDROBE.shoes)[0], color:rc()};
+  look.preset=null;look.hair = {style:pick(wardrobeFor('hair'))[0], color:rc()}; look.top = {style:pick(WARDROBE.top)[0], color:rc()}; look.bottom = {style:pick(WARDROBE.bottom)[0], color:rc()}; look.shoes = {style:pick(WARDROBE.shoes)[0], color:rc()};
   look.face = []; look.faceColor = rc(); const n = 1 + ((Math.random()*2)|0); for (let k=0;k<n;k++){ const id = pick(WARDROBE.face)[0]; for (const grp of EXCL) if (grp.includes(id)) look.face = look.face.filter(f=>!grp.includes(f)); if (!look.face.includes(id)) look.face.push(id); }
   saveLooks(); renderDress(); dressSparkle(); if (AC) sfxGiggle(); toast(pick(['✨ TA-DA! ✨','SO CUTE!','SLAY! 💅','OOH LA LA!']));
 }
+function signature(){ const skin = LOOKS[curChar].skin; LOOKS[curChar] = JSON.parse(JSON.stringify(CHARS[curChar].def)); LOOKS[curChar].skin = skin; saveLooks(); renderDress(); dressSparkle(); if (AC) sfxChord(); toast('⭐ STAR LOOK! ⭐'); }
 function overPreview(e){ const r = dcv.getBoundingClientRect(); return e.clientX>=r.left && e.clientX<=r.right && e.clientY>=r.top && e.clientY<=r.bottom; }
 function attachDrag(el, id){
   el.addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); try { el.setPointerCapture(e.pointerId); } catch(err){} dragging = {id, cat:curCat, x0:e.clientX, y0:e.clientY, moved:false, ghost:null}; });
@@ -1154,6 +1835,7 @@ dcv.addEventListener('pointerup', e => { if (swipeX===null) return; const dx = e
 $('#prevChar').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); switchChar(-1); });
 $('#nextChar').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); switchChar(1); });
 $('#surprise').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); surprise(); });
+$('#signature').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); signature(); });
 $('#toStage').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); toStage(); });
 $('#wardrobe').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); openDress(); });
 function dressSparkle(){ const r = dcv.getBoundingClientRect(); for (let k=0;k<40;k++){ const a = rnd(TAU), sp = rnd(40,220); DSPARK.push({x:r.width/2, y:r.height*0.55, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp-60, life:rnd(0.5,1.1), h:(Math.random()*360)|0}); } }
@@ -1161,17 +1843,25 @@ function drawDress(t, dt){
   const r = dcv.getBoundingClientRect(); if (!r.width) return; const pw = Math.round(r.width), ph = Math.round(r.height);
   if (dcv.width !== Math.round(pw*DPR) || dcv.height !== Math.round(ph*DPR)){ dcv.width = Math.round(pw*DPR); dcv.height = Math.round(ph*DPR); }
   const saved = ctx; ctx = dctx; ctx.setTransform(DPR,0,0,DPR,0,0);
-  const bg = ctx.createLinearGradient(0,0,0,ph); bg.addColorStop(0,'#3a0a6e'); bg.addColorStop(1,'#12002b'); ctx.fillStyle = bg; ctx.fillRect(0,0,pw,ph);
-  // vanity mirror with bulbs
-  const mw = Math.min(pw*0.78, ph*0.7), mx = pw/2, my = ph*0.5;
-  ctx.fillStyle = 'rgba(255,255,255,0.06)'; rrect(mx-mw/2, my-mw*0.55, mw, mw*1.1, mw*0.12);
-  ctx.strokeStyle = '#ffd23f'; ctx.lineWidth = 4; ctx.shadowColor = '#ffd23f'; ctx.shadowBlur = 12; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(mx-mw/2, my-mw*0.55, mw, mw*1.1, mw*0.12); else ctx.rect(mx-mw/2, my-mw*0.55, mw, mw*1.1); ctx.stroke();
-  for (let k=0;k<13;k++){ const a = Math.PI + k/12*Math.PI, bx = mx + Math.cos(a)*(mw/2+12), by = my-mw*0.15 + Math.sin(a)*(mw*0.48), on = 0.5+0.5*Math.sin(t*4+k);
-    ctx.fillStyle = `rgba(255,240,180,${0.4+0.6*on})`; ctx.shadowColor = '#ffe9a8'; ctx.shadowBlur = 14*on; ctx.beginPath(); ctx.arc(bx, by, 6, 0, TAU); ctx.fill(); }
-  ctx.shadowBlur = 0;
-  const fg = ctx.createRadialGradient(pw/2, ph*0.9, 0, pw/2, ph*0.9, mw*0.5); fg.addColorStop(0, LOOKS[curChar].top.color+'66'); fg.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle = fg; ctx.beginPath(); ctx.ellipse(pw/2, ph*0.9, mw*0.5, mw*0.12, 0, 0, TAU); ctx.fill();
-  drawGirl(CHARS[curChar], LOOKS[curChar], curChar, pw/2, ph*0.92, Math.min(ph*0.74, pw*1.1), t, false);
+  // Crystal Star Studio: warm wall panels, polished floor, a working vanity, garment rail and shoe display.
+  const wall = ctx.createLinearGradient(0,0,0,ph); wall.addColorStop(0,'#f9e8f3'); wall.addColorStop(0.72,'#e8d2e8'); wall.addColorStop(0.721,'#cbb3d3'); wall.addColorStop(1,'#8d739f'); ctx.fillStyle=wall; ctx.fillRect(0,0,pw,ph);
+  ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=2;for(let x=pw*.04;x<pw;x+=pw*.16){ctx.strokeRect(x,ph*.055,pw*.13,ph*.63)}
+  ctx.strokeStyle='rgba(255,255,255,.42)';ctx.beginPath();ctx.moveTo(0,ph*.78);ctx.lineTo(pw,ph*.7);for(let x=0;x<=pw;x+=pw*.14){ctx.moveTo(pw*.5,ph*.71);ctx.lineTo(x,ph)}ctx.stroke();
+  const mx=pw/2,mw=Math.min(pw*.62,ph*.58),mh=Math.min(ph*.7,mw*1.24),mt=Math.max(ph*.055,ph*.72-mh);
+  ctx.fillStyle='#765087';rrect(mx-mw/2-10,mt-10,mw+20,mh+20,22);ctx.fillStyle='#2c2039';rrect(mx-mw/2,mt,mw,mh,17);
+  const glass=ctx.createLinearGradient(mx-mw/2,mt,mx+mw/2,mt+mh);glass.addColorStop(0,'rgba(218,251,255,.34)');glass.addColorStop(.48,'rgba(96,70,120,.12)');glass.addColorStop(1,'rgba(255,196,226,.23)');ctx.fillStyle=glass;rrect(mx-mw/2+8,mt+8,mw-16,mh-16,13);
+  ctx.strokeStyle='rgba(255,255,255,.18)';ctx.lineWidth=10;ctx.beginPath();ctx.moveTo(mx-mw*.38,mt+mh*.14);ctx.lineTo(mx-mw*.02,mt+mh*.03);ctx.stroke();
+  const bulb=(bx,by,k)=>{const on=.72+.28*Math.sin(t*3.2+k*.8);ctx.fillStyle=`rgba(255,244,190,${on})`;ctx.shadowColor='#ffe9a8';ctx.shadowBlur=12*on;ctx.beginPath();ctx.arc(bx,by,5.5,0,TAU);ctx.fill()};let bi=0;
+  for(let bx=mx-mw/2+16;bx<=mx+mw/2-16;bx+=Math.max(28,mw/8)){bulb(bx,mt-5,bi++);bulb(bx,mt+mh+5,bi++)}for(let by=mt+24;by<mt+mh-18;by+=Math.max(30,mh/7)){bulb(mx-mw/2-5,by,bi++);bulb(mx+mw/2+5,by,bi++)}ctx.shadowBlur=0;
+  // Side furnishings appear when there is enough room, and stay behind the character.
+  if(pw>390){const lx=pw*.055,rx=pw*.82,railW=Math.max(62,pw*.13);ctx.strokeStyle='#765087';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(lx,ph*.19);ctx.lineTo(lx,ph*.69);ctx.moveTo(lx+railW,ph*.19);ctx.lineTo(lx+railW,ph*.69);ctx.moveTo(lx,ph*.2);ctx.lineTo(lx+railW,ph*.2);ctx.stroke();
+    const dresses=[['#ef69a4',.33],['#8d63d8',.39],['#21c8d3',.35]];dresses.forEach(([c,h],k)=>{const xx=lx+railW*(.18+k*.31);ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(xx,ph*.2);ctx.lineTo(xx,ph*.235);ctx.stroke();ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(xx,ph*.23);ctx.lineTo(xx-railW*.18,ph*h);ctx.lineTo(xx-railW*.25,ph*(h+.18));ctx.lineTo(xx+railW*.25,ph*(h+.18));ctx.lineTo(xx+railW*.18,ph*h);ctx.closePath();ctx.fill();ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(xx-railW*.14,ph*(h+.02),railW*.28,4)});
+    ctx.fillStyle='#f4e9f2';rrect(rx,ph*.17,pw*.14,ph*.5,12);ctx.strokeStyle='#c8a9ca';ctx.lineWidth=3;for(let k=1;k<4;k++){ctx.beginPath();ctx.moveTo(rx,ph*(.17+k*.125));ctx.lineTo(rx+pw*.14,ph*(.17+k*.125));ctx.stroke()}for(let k=0;k<4;k++){const sy=ph*(.275+k*.125);ctx.fillStyle=['#ff6fa9','#6f58c9','#29cdd6','#ffd05f'][k];ctx.beginPath();ctx.moveTo(rx+pw*.025,sy);ctx.quadraticCurveTo(rx+pw*.05,sy-ph*.04,rx+pw*.075,sy);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(rx+pw*.08,sy);ctx.quadraticCurveTo(rx+pw*.105,sy-ph*.035,rx+pw*.13,sy);ctx.closePath();ctx.fill()}}
+  ctx.fillStyle='#fff';rrect(mx-mw*.62,ph*.715,mw*1.24,ph*.045,9);ctx.fillStyle='#7b598a';ctx.fillRect(mx-mw*.55,ph*.76,10,ph*.12);ctx.fillRect(mx+mw*.55-10,ph*.76,10,ph*.12);
+  const vanity=[['#ff6fa9',-.42],['#29dbe3',-.31],['#ffd060',.34],['#8d63d8',.43]];vanity.forEach(([c,p],k)=>{ctx.fillStyle=c;ctx.beginPath();ctx.arc(mx+mw*p,ph*.705,5+k%2*2,0,TAU);ctx.fill()});
+  ctx.fillStyle='rgba(255,255,255,.82)';ctx.beginPath();ctx.ellipse(mx,ph*.925,mw*.52,ph*.055,0,0,TAU);ctx.fill();ctx.strokeStyle='#f0b2d2';ctx.lineWidth=5;ctx.stroke();ctx.fillStyle='#ffd45a';starPath(mx,ph*.925,ph*.035);ctx.fill();
+  const fg=ctx.createRadialGradient(mx,ph*.88,0,mx,ph*.88,mw*.58);fg.addColorStop(0,LOOKS[curChar].top.color+'55');fg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=fg;ctx.beginPath();ctx.ellipse(mx,ph*.89,mw*.55,ph*.12,0,0,TAU);ctx.fill();
+  drawGirl(CHARS[curChar],LOOKS[curChar],curChar,mx,ph*.94,Math.min(ph*.79,pw*.77),t,false);
   for (let i=DSPARK.length-1;i>=0;i--){ const s = DSPARK[i]; s.life -= dt; if (s.life<=0){ DSPARK.splice(i,1); continue; } s.x += s.vx*dt; s.y += s.vy*dt; s.vy += 200*dt;
     ctx.fillStyle = hsl(s.h,100,70,Math.min(1,s.life*2)); ctx.beginPath(); ctx.arc(s.x, s.y, 3+2*s.life, 0, TAU); ctx.fill(); }
   ctx = saved;
@@ -1180,7 +1870,11 @@ function drawDress(t, dt){
 /* ================= START ================= */
 async function start(){
   if (started) return; started = true;
-  initAudio(); $('#splash').classList.add('gone'); openDress();
+  initAudio();
+  const play=$('#play'), originalLabel=play.textContent;
+  if(!PD.ready){play.textContent='✨ LOADING LOOKS…';play.disabled=true;await PD_READY;}
+  if(!PD.ready){started=false;play.disabled=false;play.textContent=originalLabel;$('#splash small').textContent='The character art could not load. Please refresh and try again.';return;}
+  $('#splash').classList.add('gone'); openDress();
   const el = document.documentElement;
   try { if (el.requestFullscreen && !matchMedia('(display-mode: standalone)').matches) await el.requestFullscreen({navigationUI:'hide'}); } catch(e){}
   try { const wl = await navigator.wakeLock?.request('screen'); document.addEventListener('visibilitychange', () => { if (document.visibilityState==='visible') navigator.wakeLock?.request('screen').catch(()=>{}); }); } catch(e){}
@@ -1191,11 +1885,20 @@ $('#play').addEventListener('pointerdown', e => { e.preventDefault(); start(); }
 $('#play').addEventListener('click', start);
 document.addEventListener('visibilitychange', () => { if (AC && document.visibilityState==='visible' && AC.state==='suspended') AC.resume(); });
 
+const PD_READY=loadPaperDollAssets();
 setMusic(musicOn); renderStars(); renderMix(); resize();
 requestAnimationFrame(frame);
-if (location.search.includes('auto=1')){ window.__kb = {P, ROCKETS, BOOBOPS, BUBBLES, launch, spawnBooBop, explode, addPotion, mix, get glow(){return glow}, get stars(){return starsTotal}, byId, get ac(){return AC},
-    LOOKS, CHARS, WARDROBE, applyItem, setColor, setCat, switchChar, surprise, openDress, toStage, get curChar(){return curChar}, get dressOpen(){return dressOpen}};
-  start(); if (!location.search.includes('dress=1')) toStage(); if (location.search.includes('mix=')) location.search.match(/mix=([\w,]+)/)[1].split(',').forEach(id=>byId[id]&&addPotion(id)); if (location.search.includes('finale=1')) setTimeout(()=>{ finaleUntil = performance.now()+10000; },300); }
+if (location.search.includes('auto=1')){ window.__kb = {P, ROCKETS, BOOBOPS, BUBBLES, DROPS, launch, spawnBooBop, spawnDemon, spawnDrop, collectDrop, hitDemon, explode, addPotion, mix, ammo, PLAY, LEVELS, BOSSES, PROG,
+    startLevel, freePlay, openMap, levelWon, levelLost, get playfield(){return [playL, playR];}, get mode(){return MODE}, get glow(){return glow}, get stars(){return starsTotal}, byId, get ac(){return AC},
+    LOOKS, CHARS, WARDROBE, SKIN_TONES, TINT, applyItem, setColor, resetColor, setCat, switchChar, surprise, signature, openDress, toStage, get curChar(){return curChar}, get curCat(){return curCat}, get dressOpen(){return dressOpen}};
+  start().then(() => {   // start() is async (asset load) and ends by opening the dressing room — sequence after it
+    if (!location.search.includes('dress=1')){
+      const lm = location.search.match(/level=(\d)/);
+      if (lm){ PROG.unlocked = 6; startLevel(+lm[1]); } else freePlay();
+    }
+    if (location.search.includes('mix=')) location.search.match(/mix=([\w,]+)/)[1].split(',').forEach(id=>byId[id]&&addPotion(id));
+    if (location.search.includes('finale=1')) setTimeout(()=>{ finaleUntil = performance.now()+10000; },300);
+  }); }
 })();
 </script>
 </body>
