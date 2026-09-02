@@ -234,10 +234,12 @@ button:focus{outline:none}
 .arrow{width:clamp(44px,9vmin,72px);height:clamp(44px,9vmin,72px);border-radius:50%;font-size:clamp(18px,4vmin,32px);display:grid;place-items:center;
   background:linear-gradient(160deg,#4a1a86,#1f0644);box-shadow:0 0 0 3px rgba(255,255,255,.18) inset,0 5px 14px rgba(0,0,0,.45)}
 .arrow:active{transform:scale(.9)}
-#dname{cursor:pointer}
+#dname{cursor:pointer;pointer-events:auto;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+#dname:active{transform:translateX(-50%) scale(.94)}
 #dname::after{content:" \270E";opacity:.75;font-size:.8em}
 .dname{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-weight:900;font-size:clamp(15px,3.4vmin,28px);letter-spacing:1px;max-width:86%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-  background:var(--pink);padding:2px 16px;border-radius:999px;box-shadow:0 0 16px rgba(255,255,255,.4),0 0 0 2px rgba(255,255,255,.4) inset;text-shadow:0 1px 0 rgba(0,0,0,.4);pointer-events:none}
+  background:var(--pink);padding:2px 20px;border-radius:999px;box-shadow:0 0 16px rgba(255,255,255,.4),0 0 0 2px rgba(255,255,255,.4) inset;text-shadow:0 1px 0 rgba(0,0,0,.4);
+  display:inline-flex;align-items:center;gap:2px;min-height:clamp(40px,6.5vmin,54px)}
 .charstrip{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:7px;padding:5px;border-radius:999px;background:rgba(22,7,38,.72);backdrop-filter:blur(8px)}
 .charpick{min-width:clamp(54px,9vmin,82px);height:clamp(38px,6vmin,48px);padding:0 9px;border-radius:999px;background:rgba(255,255,255,.12);font-weight:900;font-size:clamp(10px,1.8vmin,14px);box-shadow:inset 0 0 0 2px rgba(255,255,255,.16)}
 .charpick.on{background:linear-gradient(135deg,var(--pink),var(--violet));box-shadow:inset 0 0 0 3px #fff,0 0 16px var(--pink);transform:scale(1.06)}
@@ -349,7 +351,7 @@ button:focus{outline:none}
   <div class="dbody">
     <div class="dstage">
       <button class="arrow" id="prevChar" aria-label="Previous girl">◀</button>
-      <div id="cvwrap"><canvas id="dressCv"></canvas><div class="dname" id="dname">SOL</div><div class="charstrip" id="dchars"></div></div>
+      <div id="cvwrap"><canvas id="dressCv"></canvas><div class="dname" id="dname" role="button" tabindex="0" aria-label="Change names">SOL</div><div class="charstrip" id="dchars"></div></div>
       <button class="arrow" id="nextChar" aria-label="Next girl">▶</button>
     </div>
     <div class="dpanel">
@@ -2011,7 +2013,7 @@ function closeNames(save){
   }
   $('#names').hidden=true; lastTouch=performance.now();
 }
-$('#dname').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); openNames(); });
+$('#dname').addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); initAudio(); openNames(); });
 $('#nameOk').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); closeNames(true); });
 $('#nameCancel').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); closeNames(false); });
 function dressSparkle(){ const r = dcv.getBoundingClientRect(); for (let k=0;k<40;k++){ const a = rnd(TAU), sp = rnd(40,220); DSPARK.push({x:r.width/2, y:r.height*0.55, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp-60, life:rnd(0.5,1.1), h:(Math.random()*360)|0}); } }
