@@ -489,155 +489,247 @@ const crowd = Array.from({length:80}, (_,i) => ({x:(i+rnd(0.1,0.9))/80, row:i%2,
 const skyline = Array.from({length:26}, (_,i) => ({x:i/26, w:rnd(0.025,0.045), h:rnd(0.03,0.11), win:rnd()<0.8}));
 /* ================= CHARACTERS & WARDROBE ================= */
 // Three Korean idols. `face` shapes them apart: rx/ry head size, cheek fullness, jaw width, chin width, eye width/height, liner wing, brow tilt.
+// The three girls share one registered puppet (Sol's master, pose and wardrobe) —
+// see FABLE-HANDOFF.md. Until Hana's and Jia's heads exist they differ by skin tone
+// and by the look each one starts in. `skin` null = the master's own tone.
 const CHARS = [
-  {id:'sol',  name:'SOL',  skin:'#f1c9b7', eyes:'#3b2847', face:{rx:0.076,ry:0.091,cheek:1.02,jaw:0.58,chinW:0.012,eyeW:1.06,eyeH:0.76,wing:1.15,brow:-0.05},
-    def:{preset:'A',hair:{style:'moonpony',color:'#171522'},top:{style:'moonmoto',color:'#9b7be8'},bottom:{style:'moonshorts',color:'#171522'},shoes:{style:'moonboots',color:'#eeeaf8'},face:['moondrops'],faceColor:'#6ee8ed'}},
-  {id:'hana', name:'HANA', skin:'#edc2a9', eyes:'#63382f', face:{rx:0.082,ry:0.087,cheek:1.15,jaw:0.76,chinW:0.027,eyeW:1.04,eyeH:0.94,wing:0.68,brow:0.08},
-    def:{preset:'A',hair:{style:'rosewaves',color:'#d83f8d'},top:{style:'petaljacket',color:'#ef69a4'},bottom:{style:'petalskort',color:'#f17bb0'},shoes:{style:'petalboots',color:'#ffffff'},face:['cheekcrystal'],faceColor:'#ffd060'}},
-  {id:'jia',  name:'JIA',  skin:'#dca989', eyes:'#2b2528', face:{rx:0.071,ry:0.095,cheek:0.96,jaw:0.9,chinW:0.034,eyeW:1.16,eyeH:0.68,wing:1.0,brow:0.02},
-    def:{preset:'A',hair:{style:'neonbuns',color:'#101820'},top:{style:'neonmoto',color:'#168e99'},bottom:{style:'silvershorts',color:'#dce6ee'},shoes:{style:'neonboots',color:'#101820'},face:['moondrops'],faceColor:'#bdf34b'}},
+  {id:'sol',  name:'SOL',  skin:null,      eyes:'#3b2847', face:{rx:0.076,ry:0.091,cheek:1.02,jaw:0.58,chinW:0.012,eyeW:1.06,eyeH:0.76,wing:1.15,brow:-0.05}},
+  {id:'hana', name:'HANA', skin:'#efc3a4', eyes:'#63382f', face:{rx:0.082,ry:0.087,cheek:1.15,jaw:0.76,chinW:0.027,eyeW:1.04,eyeH:0.94,wing:0.68,brow:0.08}},
+  {id:'jia',  name:'JIA',  skin:'#d8a179', eyes:'#2b2528', face:{rx:0.071,ry:0.095,cheek:0.96,jaw:0.9,chinW:0.034,eyeW:1.16,eyeH:0.68,wing:1.0,brow:0.02}},
 ];
+// One shared wardrobe: every item is a layer registered to that same puppet, so any
+// piece fits any girl. Names are what the tiles announce to a screen reader.
 const WARDROBE = {
   looks: [['A','Approved look A'],['B','Approved look B'],['C','Approved look C']],
-  hair:  [['moonpony','Moonlit ponytail'],['rosewaves','Strawberry waves'],['neonbuns','Neon twin buns'],['cometbraid','Comet braid'],['crystaltails','Crystal twin tails'],['starbraid','Star ribbon braid'],['bubblebob','Bubblegum bob'],['aquabraids','Aqua crown braids'],['wolfcut','Sunset wolf cut'],['silverwaves','Pearl silver waves']],
+  hair:  [['moonpony','Moonlit ponytail'],['starbraid','Star ribbon braid'],['cometbraid','Comet braid'],['silverwaves','Pearl silver waves'],['neonbuns','Neon twin buns']],
   face:  [['moondrops','Moon drop earrings'],['cheekcrystal','Cheek crystals'],['starbow','Couture star bow'],['tiara','Moon crystal tiara'],['headset','Crystal stage headset'],['visor','Performance visor']],
   top:   [['moonmoto','Moonlit moto jacket'],['petaljacket','Petal couture jacket'],['neonmoto','Neon asymmetric jacket'],['tailcoat','Star ribbon tailcoat']],
   bottom:[['moonshorts','Moon tailored shorts'],['petalskort','Petal layered skort'],['silvershorts','Crystal silver shorts'],['cargoshorts','Iridescent cargo shorts']],
   shoes: [['moonboots','Moon lace boots'],['petalboots','Petal couture boots'],['neonboots','Neon combat boots']],
 };
-// Skin tone is its own asset: a curated range rather than the stage palette, so the
-// girls always look like people even when everything else has gone neon.
-const SKIN_TONES=[['porcelain','#f7dccb','Porcelain'],['ivory','#f0cdb4','Ivory'],['honey','#e2b28c','Honey'],['amber','#c69066','Amber'],['umber','#966446','Umber'],['espresso','#65402d','Espresso']];
-const SKIN_BY_ID=Object.fromEntries(SKIN_TONES.map(t=>[t[0],t[1]]));
-WARDROBE.skin=SKIN_TONES.map(t=>[t[0],t[2]]);
-const HAIR_BY_CHAR={sol:['moonpony','starbraid','cometbraid','silverwaves','neonbuns'],hana:['rosewaves','bubblebob','crystaltails','silverwaves','moonpony'],jia:['neonbuns','aquabraids','wolfcut','silverwaves','cometbraid']};
-const CATS = [['looks','✨','LOOKS'],['skin','😊','SKIN'],['hair','💇','HAIR'],['face','💎','EXTRAS'],['top','🧥','TOP'],['bottom','🩳','BOTTOMS'],['shoes','🥾','SHOES']];
+const CATS = [['looks','✨','LOOKS'],['hair','💇','HAIR'],['face','💎','EXTRAS'],['top','🧥','TOP'],['bottom','🩳','BOTTOMS'],['shoes','🥾','SHOES']];
 const PALETTE = ['#101820','#573022','#f4cf77','#ffffff','#d83f8d','#ff91c2','#7740a8','#29dbe3','#168e99','#ffd060','#f36b5f','#ad263e'];
 const EXCL = [['starbow','tiara'],['headset','visor']];
+// The three approved concept outfits per girl (FABLE-HANDOFF: variants A/B/C are presets).
+// null colour = the garment's own artwork colour, which is what the studio signed off.
 const LOOK_PRESETS={
   sol:{
-    A:{preset:'A',hair:{style:'moonpony',color:'#171522'},top:{style:'moonmoto',color:'#9b7be8'},bottom:{style:'moonshorts',color:'#171522'},shoes:{style:'moonboots',color:'#eeeaf8'},face:['moondrops'],faceColor:'#6ee8ed'},
-    B:{preset:'B',hair:{style:'starbraid',color:'#18213c'},top:{style:'tailcoat',color:'#252654'},bottom:{style:'silvershorts',color:'#e5e7ef'},shoes:{style:'moonboots',color:'#20213c'},face:['starbow'],faceColor:'#ff69b5'},
-    C:{preset:'C',hair:{style:'cometbraid',color:'#45183f'},top:{style:'neonmoto',color:'#e43e92'},bottom:{style:'silvershorts',color:'#e7e7ef'},shoes:{style:'neonboots',color:'#171522'},face:['moondrops'],faceColor:'#2edbe6'}},
+    A:{preset:'A',hair:{style:'moonpony',color:null},top:{style:'moonmoto',color:null},bottom:{style:'moonshorts',color:null},shoes:{style:'moonboots',color:null},face:['moondrops'],faceColor:null},
+    B:{preset:'B',hair:{style:'starbraid',color:null},top:{style:'tailcoat',color:null},bottom:{style:'silvershorts',color:null},shoes:{style:'moonboots',color:null},face:['starbow'],faceColor:null},
+    C:{preset:'C',hair:{style:'cometbraid',color:null},top:{style:'neonmoto',color:'#e43e92'},bottom:{style:'silvershorts',color:null},shoes:{style:'neonboots',color:null},face:['moondrops'],faceColor:null}},
   hana:{
-    A:{preset:'A',hair:{style:'rosewaves',color:'#d83f8d'},top:{style:'petaljacket',color:'#ef69a4'},bottom:{style:'petalskort',color:'#f17bb0'},shoes:{style:'petalboots',color:'#ffffff'},face:['cheekcrystal'],faceColor:'#ffd060'},
-    B:{preset:'B',hair:{style:'bubblebob',color:'#ed5ea7'},top:{style:'neonmoto',color:'#75d4de'},bottom:{style:'silvershorts',color:'#76d5df'},shoes:{style:'petalboots',color:'#ffffff'},face:['cheekcrystal'],faceColor:'#ff80bb'},
-    C:{preset:'C',hair:{style:'crystaltails',color:'#b95492'},top:{style:'petaljacket',color:'#9b61e8'},bottom:{style:'petalskort',color:'#a569e6'},shoes:{style:'petalboots',color:'#e8dcff'},face:['tiara'],faceColor:'#ff91c2'}},
+    A:{preset:'A',hair:{style:'silverwaves',color:'#ff91c2'},top:{style:'petaljacket',color:null},bottom:{style:'petalskort',color:null},shoes:{style:'petalboots',color:null},face:['cheekcrystal'],faceColor:null},
+    B:{preset:'B',hair:{style:'moonpony',color:'#d83f8d'},top:{style:'neonmoto',color:'#29dbe3'},bottom:{style:'silvershorts',color:null},shoes:{style:'petalboots',color:null},face:['tiara'],faceColor:null},
+    C:{preset:'C',hair:{style:'cometbraid',color:'#ff91c2'},top:{style:'petaljacket',color:'#7740a8'},bottom:{style:'petalskort',color:'#7740a8'},shoes:{style:'petalboots',color:null},face:['starbow'],faceColor:null}},
   jia:{
-    A:{preset:'A',hair:{style:'neonbuns',color:'#101820'},top:{style:'neonmoto',color:'#168e99'},bottom:{style:'silvershorts',color:'#dce6ee'},shoes:{style:'neonboots',color:'#101820'},face:['moondrops'],faceColor:'#bdf34b'},
-    B:{preset:'B',hair:{style:'aquabraids',color:'#24396f'},top:{style:'neonmoto',color:'#315fc5'},bottom:{style:'cargoshorts',color:'#182033'},shoes:{style:'neonboots',color:'#254aa4'},face:['visor'],faceColor:'#29dbe3'},
-    C:{preset:'C',hair:{style:'wolfcut',color:'#482039'},top:{style:'neonmoto',color:'#ed7167'},bottom:{style:'silvershorts',color:'#eee8e6'},shoes:{style:'petalboots',color:'#f3eee9'},face:['moondrops'],faceColor:'#ffd060'}}
+    A:{preset:'A',hair:{style:'neonbuns',color:null},top:{style:'neonmoto',color:'#168e99'},bottom:{style:'silvershorts',color:null},shoes:{style:'neonboots',color:null},face:['moondrops'],faceColor:null},
+    B:{preset:'B',hair:{style:'starbraid',color:'#168e99'},top:{style:'moonmoto',color:'#29dbe3'},bottom:{style:'cargoshorts',color:null},shoes:{style:'neonboots',color:null},face:['visor'],faceColor:null},
+    C:{preset:'C',hair:{style:'silverwaves',color:'#29dbe3'},top:{style:'tailcoat',color:'#168e99'},bottom:{style:'cargoshorts',color:'#101820'},shoes:{style:'neonboots',color:null},face:['headset'],faceColor:null}}
 };
-function wardrobeFor(cat){if(cat==='hair'){const ids=HAIR_BY_CHAR[CHARS[curChar].id];return WARDROBE.hair.filter(x=>ids.includes(x[0]))}return WARDROBE[cat]}
-let LOOKS = CHARS.map(c => JSON.parse(JSON.stringify(c.def)));
-try { const s = JSON.parse(localStorage.getItem('kb_looks_v3')||'null'); if (Array.isArray(s) && s.length===3) LOOKS = s.map((l,i) => ({...LOOKS[i], ...l})); } catch(e){}
-function saveLooks(){ try { localStorage.setItem('kb_looks_v3', JSON.stringify(LOOKS)); } catch(e){} }
+for(const c of CHARS) c.def = LOOK_PRESETS[c.id].A;
+function wardrobeFor(cat){ return WARDROBE[cat]; }
+const STYLE_OK={hair:0,top:0,bottom:0,shoes:0};
+for(const cat in STYLE_OK) STYLE_OK[cat]=WARDROBE[cat].map(w=>w[0]);
+// A saved look from an older wardrobe can name garments that no longer exist; fall
+// back to that girl's approved look A rather than rendering a hole.
+function sanitiseLook(look,i){
+  const def=LOOK_PRESETS[CHARS[i].id].A, out=JSON.parse(JSON.stringify(def));
+  if(!look||typeof look!=='object') return out;
+  for(const cat of ['hair','top','bottom','shoes']){
+    const p=look[cat];
+    if(p&&STYLE_OK[cat].includes(p.style)) out[cat]={style:p.style,color:p.color||null};
+  }
+  const ids=WARDROBE.face.map(w=>w[0]);
+  if(Array.isArray(look.face)) out.face=look.face.filter(f=>ids.includes(f));
+  out.faceColor=look.faceColor||null;
+  out.preset=look.preset||null;
+  return out;
+}
+let LOOKS = CHARS.map((c,i) => sanitiseLook(null,i));
+try { const s = JSON.parse(localStorage.getItem('kb_looks_v4')||'null'); if (Array.isArray(s) && s.length===3) LOOKS = s.map(sanitiseLook); } catch(e){}
+function saveLooks(){ try { localStorage.setItem('kb_looks_v4', JSON.stringify(LOOKS)); } catch(e){} }
 
-/* ================= LAYERED PAPER-DOLL ASSETS ================= */
-const PD={ready:false,sheets:{},cache:new Map(),error:null};
-const PD_FILES={
-  base:['assets/paperdoll/bases-v1.png',3,'checker'],hair1:['assets/paperdoll/hair-v1.png',5,'green'],hair2:['assets/paperdoll/hair-v2.png',5,'green'],
-  top:['assets/paperdoll/tops-v1.png',4,'green'],bottom:['assets/paperdoll/bottoms-v1.png',4,'green'],shoes:['assets/paperdoll/shoes-v1.png',3,'green'],face:['assets/paperdoll/accessories-v1.png',6,'green']
-};
-const PD_ITEM={
-  moonpony:['hair1',0],rosewaves:['hair1',1],neonbuns:['hair1',2],cometbraid:['hair1',3],crystaltails:['hair1',4],
-  starbraid:['hair2',0],bubblebob:['hair2',1],aquabraids:['hair2',2],wolfcut:['hair2',3],silverwaves:['hair2',4],
-  moonmoto:['top',0],petaljacket:['top',1],neonmoto:['top',2],tailcoat:['top',3],
-  moonshorts:['bottom',0],petalskort:['bottom',1],silvershorts:['bottom',2],cargoshorts:['bottom',3],
-  moonboots:['shoes',0],petalboots:['shoes',1],neonboots:['shoes',2],
-  moondrops:['face',0],cheekcrystal:['face',1],starbow:['face',2],tiara:['face',3],headset:['face',4],visor:['face',5]
-};
-// Registration is measured against the base figure's full height. Hair is aligned
-// by its face opening; garments are aligned to anatomical landmarks, not artwork bounds.
-const PD_HAIR={
-  moonpony:{w:.28,face:.19},rosewaves:{w:.30,face:.27},neonbuns:{w:.31,face:.23},cometbraid:{w:.23,face:.22},crystaltails:{w:.31,face:.22},
-  starbraid:{w:.27,face:.225},bubblebob:{w:.22,face:.40},aquabraids:{w:.31,face:.205},wolfcut:{w:.29,face:.22},silverwaves:{w:.28,face:.205}
-};
-const PD_REG={
-  top:{
-    moonmoto:{x:0,y:.14,w:.335,h:.405},petaljacket:{x:0,y:.14,w:.34,h:.405},neonmoto:{x:0,y:.14,w:.335,h:.41},tailcoat:{x:0,y:.135,w:.345,h:.665}
-  },
-  bottom:{
-    moonshorts:{x:0,y:.425,w:.275,h:.225},petalskort:{x:0,y:.42,w:.29,h:.255},silvershorts:{x:0,y:.425,w:.275,h:.225},cargoshorts:{x:0,y:.42,w:.29,h:.25}
-  },
-  shoes:{
-    moonboots:{x:0,y:.60,w:.235,h:.385},petalboots:{x:0,y:.60,w:.235,h:.385},neonboots:{x:0,y:.675,w:.225,h:.31}
-  },
-  face:{
-    moondrops:{x:0,y:.073,w:.064},cheekcrystal:{x:0,y:.09,w:.075},starbow:{x:.075,y:-.005,w:.17},tiara:{x:0,y:.004,w:.145},headset:{x:0,y:.025,w:.15},visor:{x:0,y:.067,w:.135}
-  }
-};
-function loadImage(src){return new Promise((ok,no)=>{const im=new Image();im.onload=()=>ok(im);im.onerror=no;im.src=src})}
-function keyGreen(data){for(let p=0;p<data.length;p+=4){const r=data[p],g=data[p+1],b=data[p+2],ex=g-Math.max(r,b);if(g>105&&ex>42){if(ex>82)data[p+3]=0;else data[p+3]=Math.round(data[p+3]*(82-ex)/40);data[p+1]=Math.min(g,Math.round((r+b)*.55))}}}
-function keyChecker(data,w,h){
-  const seen=new Uint8Array(w*h),stack=new Int32Array(w*h);let n=0;
-  const bg=i=>{const p=i*4,r=data[p],g=data[p+1],b=data[p+2],mx=Math.max(r,g,b),mn=Math.min(r,g,b);return mn>218&&mx-mn<20};
-  const push=i=>{if(!seen[i]&&bg(i)){seen[i]=1;stack[n++]=i}};
-  for(let x=0;x<w;x++){push(x);push((h-1)*w+x)}for(let y=0;y<h;y++){push(y*w);push(y*w+w-1)}
-  while(n){const i=stack[--n],p=i*4;data[p+3]=0;const x=i%w;if(x)push(i-1);if(x<w-1)push(i+1);if(i>=w)push(i-w);if(i<w*(h-1))push(i+w)}
+/* ================= REGISTERED PUPPET COMPOSITOR ================= */
+// Every wardrobe layer is authored over one locked 1024x1536 master and composited
+// at (0,0,1) - selecting an item is a layer substitution, never a scaling guess.
+// Same compositor for the dressing room, the thumbnails and the stage.
+const GG_W=1024, GG_H=1536, GG_TOP=63, GG_FOOT=1408, GG_SPAN=GG_FOOT-GG_TOP;
+const GG_SRC='assets/glowgirls/sol/', GG_V='?v=20260902a';
+const REDUCED_MOTION=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const GG={ready:false,img:{},error:null};
+function ggLoad(src){return new Promise(ok=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>ok(null);i.src=src})}
+async function loadGlowGirls(){
+  const jobs=[['master',GG_SRC+'master.png'+GG_V],['blink',GG_SRC+'final/anim-blink-front.png'+GG_V]];
+  for(const cat of ['hair','top','bottom','shoes','face'])for(const [id] of WARDROBE[cat])
+    for(const side of ['rear','front']) jobs.push([cat+'-'+id+'-'+side, GG_SRC+'final/'+cat+'-'+id+'-'+side+'.png'+GG_V]);
+  const got=await Promise.all(jobs.map(async([k,src])=>[k,await ggLoad(src)]));
+  for(const [k,im] of got) GG.img[k]=im;
+  if(!GG.img.master) throw new Error('master layer missing');
+  GG.ready=true; if(dressOpen) renderDress();
 }
-function findCells(canvas,count){const c=canvas.getContext('2d'),d=c.getImageData(0,0,canvas.width,canvas.height).data,out=[];for(let i=0;i<count;i++){const x0=Math.round(i*canvas.width/count),x1=Math.round((i+1)*canvas.width/count);let l=x1,t=canvas.height,r=x0,b=0;for(let y=0;y<canvas.height;y++)for(let x=x0;x<x1;x++)if(d[(y*canvas.width+x)*4+3]>12){if(x<l)l=x;if(x>r)r=x;if(y<t)t=y;if(y>b)b=y}out.push(r>=l?{x:l,y:t,w:r-l+1,h:b-t+1}:{x:x0,y:0,w:x1-x0,h:canvas.height})}return out}
-async function loadPDSheet(name,[src,count,key]){const im=await loadImage(src),c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(im,0,0);const id=x.getImageData(0,0,c.width,c.height);if(key==='green')keyGreen(id.data);else keyChecker(id.data,c.width,c.height);x.putImageData(id,0,0);PD.sheets[name]={canvas:c,cells:findCells(c,count)}}
-async function loadPaperDollAssets(){try{await Promise.all(Object.entries(PD_FILES).map(([n,v])=>loadPDSheet(n,v)));PD.ready=true;if(dressOpen)renderDress()}catch(e){PD.error=e;console.warn('Paper-doll assets could not load',e)}}
-// Tint strength per layer. Hair and trimmed boots take a strong wash; large flat
-// garment panels take a gentler one, so the artwork's own shading and print survive
-// instead of turning into one block of colour.
-const TINT={hair:.58,shoes:.58,face:.58,top:.34,bottom:.34,skin:.7};
-function pdCache(key,out){PD.cache.set(key,out);if(PD.cache.size>96)PD.cache.delete(PD.cache.keys().next().value);return out}
-function cropCell(sh,b){const c=document.createElement('canvas');c.width=b.w;c.height=b.h;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(sh.canvas,b.x,b.y,b.w,b.h,0,0,b.w,b.h);return{c,x}}
-function tintedItem(id,color,mix=.58){
-  const [sn,ix]=PD_ITEM[id],sh=PD.sheets[sn],b=sh.cells[ix],key=`${id}|${color||''}|${mix}`;
-  if(PD.cache.has(key))return PD.cache.get(key);
-  const {c,x}=cropCell(sh,b);
-  if(color){
-    const im=x.getImageData(0,0,b.w,b.h),d=im.data,tr=rgbOf(color);
-    for(let p=0;p<d.length;p+=4){
-      if(d[p+3]<4)continue;
-      const r=d[p],g=d[p+1],bl=d[p+2],mx=Math.max(r,g,bl),mn=Math.min(r,g,bl),lum=(r*.2126+g*.7152+bl*.0722)/255;
-      if(lum>.88)continue;              // leave specular highlights alone so satin still reads as satin
-      if(mx-mn<18&&lum>.66)continue;    // leave white trims and pearl detail neutral
-      const k=.2+lum*1.05;
-      d[p]=Math.min(255,r*(1-mix)+tr[0]*k*mix);d[p+1]=Math.min(255,g*(1-mix)+tr[1]*k*mix);d[p+2]=Math.min(255,bl*(1-mix)+tr[2]*k*mix);
+
+/* Recolour. Two things are never repainted: white trim, silver and highlights; and
+   skin. The tops deliberately carry the midriff and chest (trimmed above y~550 so
+   bottoms are not covered), so a naive tint browns the body along with the jacket.
+   The import pipeline normalises baked skin to the master tone, so it sits in a
+   narrow warm band, which is what isSkin() keys on.
+   Garments blend towards the target at TINT_MIX rather than being replaced - a full
+   replace flattens a patterned piece into one block of colour. Hair and the
+   white-trimmed metal boots read well at full strength, so they stay at 1. */
+const GG_METAL=new Set(['bottom-silvershorts','shoes-moonboots','shoes-petalboots']);
+const TINT_MIX=0.6;   // signed off in the studio, 2026-09-02
+const ggItemOf=k=>k.replace(/-(rear|front)$/,'');
+function isSkin(r,g,b){
+  const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;
+  if(mx<77||d===0)return false;        // too dark to be lit skin
+  if(mx!==r||mn!==b)return false;      // warm: red highest, blue lowest
+  const sat=d/mx; if(sat<0.06||sat>0.62)return false;
+  const hue=60*(g-b)/d;                // 0..60 in this branch
+  return hue>=5&&hue<=40;
+}
+const ggTintCache=new Map();
+function ggPut(cache,key,val,cap){cache.set(key,val);if(cache.size>cap)cache.delete(cache.keys().next().value);return val}
+function ggCanvas(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c}
+function tinted(key,color){
+  const img=GG.img[key]; if(!img) return null;
+  if(!color) return img;
+  const item=ggItemOf(key), metal=GG_METAL.has(item), mix=key.startsWith('hair-')||metal?1:TINT_MIX;
+  const ck=key+'|'+color;
+  if(ggTintCache.has(ck)) return ggTintCache.get(ck);
+  const c=ggCanvas(img.width,img.height), x=c.getContext('2d',{willReadFrequently:true});
+  x.drawImage(img,0,0);
+  const d=x.getImageData(0,0,c.width,c.height), p=d.data;
+  const tr=parseInt(color.slice(1,3),16),tg=parseInt(color.slice(3,5),16),tb=parseInt(color.slice(5,7),16);
+  for(let i=0;i<p.length;i+=4){
+    if(p[i+3]<8)continue;
+    const r=p[i],g=p[i+1],b=p[i+2];
+    if(isSkin(r,g,b))continue;
+    const mx=Math.max(r,g,b),mn=Math.min(r,g,b);
+    const lum=(r*.299+g*.587+b*.114)/255, sat=mx?(mx-mn)/mx:0;
+    if(metal?(lum<0.93):(sat>0.16||lum<0.4)){
+      const sh=Math.pow(lum,0.82)*1.25;
+      p[i]=r+(Math.min(255,tr*sh)-r)*mix;
+      p[i+1]=g+(Math.min(255,tg*sh)-g)*mix;
+      p[i+2]=b+(Math.min(255,tb*sh)-b)*mix;
     }
-    x.putImageData(im,0,0);
   }
-  return pdCache(key,{canvas:c,w:b.w,h:b.h});
+  x.putImageData(d,0,0);
+  return ggPut(ggTintCache,ck,c,48);
 }
-// Skin tone repaints only the warm mid-tones of the base figure, so the dark
-// bodysuit, brows, lashes and lips keep their own colour.
-function tintedBase(i,color){
-  const sh=PD.sheets.base,b=sh.cells[i],key=`base${i}|${color||''}`;
-  if(PD.cache.has(key))return PD.cache.get(key);
-  const {c,x}=cropCell(sh,b);
-  if(color){
-    const im=x.getImageData(0,0,b.w,b.h),d=im.data,tr=rgbOf(color),mix=TINT.skin;
-    for(let p=0;p<d.length;p+=4){
-      if(d[p+3]<4)continue;
-      const r=d[p],g=d[p+1],bl=d[p+2];
-      if(!(r>g&&g>=bl&&r-bl>10&&r>70))continue;
-      const lum=(r*.2126+g*.7152+bl*.0722)/255,k=.35+lum*.85;
-      d[p]=Math.min(255,r*(1-mix)+tr[0]*k*mix);d[p+1]=Math.min(255,g*(1-mix)+tr[1]*k*mix);d[p+2]=Math.min(255,bl*(1-mix)+tr[2]*k*mix);
-    }
-    x.putImageData(im,0,0);
+
+/* Skin tone is the girl's identity, not a wardrobe slot: it repaints only the warm
+   mid-tones of the master (and of the blink overlay, or a blink would flash the
+   original tone around the eyes). */
+const ggSkinCache=new Map();
+function ggSkinned(key,tone){
+  const img=GG.img[key]; if(!img||!tone) return img;
+  const ck=key+'|'+tone;
+  if(ggSkinCache.has(ck)) return ggSkinCache.get(ck);
+  const c=ggCanvas(img.width,img.height), x=c.getContext('2d',{willReadFrequently:true});
+  x.drawImage(img,0,0);
+  const d=x.getImageData(0,0,c.width,c.height), p=d.data;
+  const tr=parseInt(tone.slice(1,3),16),tg=parseInt(tone.slice(3,5),16),tb=parseInt(tone.slice(5,7),16);
+  for(let i=0;i<p.length;i+=4){
+    if(p[i+3]<8)continue;
+    const r=p[i],g=p[i+1],b=p[i+2];
+    if(!isSkin(r,g,b))continue;
+    const lum=(r*.299+g*.587+b*.114)/255, k=.35+lum*.85, mix=.7;
+    p[i]=r+(Math.min(255,tr*k)-r)*mix;
+    p[i+1]=g+(Math.min(255,tg*k)-g)*mix;
+    p[i+2]=b+(Math.min(255,tb*k)-b)*mix;
   }
-  return pdCache(key,{canvas:c,w:b.w,h:b.h});
+  x.putImageData(d,0,0);
+  return ggPut(ggSkinCache,ck,c,8);
 }
-function drawPaperItem(id,color,x,y,w,h){const a=tintedItem(id,color),hh=h===undefined?w*a.h/a.w:h;ctx.drawImage(a.canvas,x-w/2,y,w,hh)}
-function drawPaperDoll(ch,look,i,x,y,h,t,still){
-  const base=tintedBase(i,look.skin),top=y-h,faceY=top+h*.066,breath=still?0:Math.sin((t||0)*.9+i*1.8)*.0025,sway=still?0:Math.sin((t||0)*.55+i)*h*.0015;
-  ctx.save();ctx.translate(x+sway,y);ctx.scale(1-breath*.2,1+breath);ctx.translate(-x,-y);const bw=base.w*(h/base.h);ctx.drawImage(base.canvas,x-bw/2,top,bw,h);
-  for(const cat of ['bottom','top','shoes']){const part=look[cat],a=tintedItem(part.style,part.color,TINT[cat]),m=PD_REG[cat][part.style],dw=h*m.w,dh=h*m.h;ctx.drawImage(a.canvas,x+h*m.x-dw/2,top+h*m.y,dw,dh)}
-  const hm=PD_HAIR[look.hair.style],hair=tintedItem(look.hair.style,look.hair.color,TINT.hair),hairW=h*hm.w,hairH=hairW*hair.h/hair.w;ctx.drawImage(hair.canvas,x-hairW/2,faceY-hairH*hm.face,hairW,hairH);
-  for(const id of look.face){const a=tintedItem(id,look.faceColor,TINT.face),m=PD_REG.face[id],aw=h*m.w,ah=aw*a.h/a.w;ctx.drawImage(a.canvas,x+h*m.x-aw/2,top+h*m.y,aw,ah)}
+
+/* The master's bare feet are erased wherever the FRONT boot layer covers them (the
+   rear layer is the shaft interior the leg must stay visible against), dilated 1px
+   so no seam opens, and everything below the ankle line always sits inside a boot. */
+const ggEraseCache=new Map();
+function ggShoeErase(style){
+  if(ggEraseCache.has(style))return ggEraseCache.get(style);
+  const c=ggCanvas(GG_W,GG_H), x=c.getContext('2d'), img=GG.img['shoes-'+style+'-front'];
+  if(img)for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++) x.drawImage(img,dx,dy);
+  x.fillStyle='#000'; x.fillRect(0,1240,GG_W,GG_H-1240);
+  return ggPut(ggEraseCache,style,c,4);
+}
+
+function ggStack(look){
+  const L=[];
+  const put=(key,color)=>{const t=tinted(key,color);if(t)L.push(t)};
+  put('hair-'+look.hair.style+'-rear',look.hair.color);
+  for(const f of look.face)put('face-'+f+'-rear',look.faceColor);
+  put('top-'+look.top.style+'-rear',look.top.color);
+  put('bottom-'+look.bottom.style+'-rear',look.bottom.color);
+  L.push('MASTER'); L.push('BLINK');
+  if(GG.img['shoes-'+look.shoes.style+'-front']||GG.img['shoes-'+look.shoes.style+'-rear']) L.push({erase:look.shoes.style});
+  put('bottom-'+look.bottom.style+'-front',look.bottom.color);
+  put('top-'+look.top.style+'-front',look.top.color);
+  put('shoes-'+look.shoes.style+'-rear',look.shoes.color);
+  put('shoes-'+look.shoes.style+'-front',look.shoes.color);
+  put('hair-'+look.hair.style+'-front',look.hair.color);
+  for(const f of look.face)put('face-'+f+'-front',look.faceColor);
+  return L;
+}
+// Compositing every layer each frame would be far too slow, so a finished puppet is
+// cached per girl / look / blink state / resolution and simply blitted after that.
+const ggComp=new Map();
+function ggComposite(i,look,blink,scale){
+  const tone=CHARS[i].skin;
+  const key=(tone||'0')+'|'+JSON.stringify(look)+'|'+(blink?1:0)+'|'+scale;
+  if(ggComp.has(key))return ggComp.get(key);
+  const c=ggCanvas(Math.round(GG_W*scale),Math.round(GG_H*scale)), x=c.getContext('2d');
+  x.scale(scale,scale);
+  for(const lay of ggStack(look)){
+    if(lay==='MASTER'){x.drawImage(ggSkinned('master',tone),0,0);continue}
+    if(lay==='BLINK'){if(blink&&GG.img.blink)x.drawImage(ggSkinned('blink',tone),0,0);continue}
+    if(lay&&lay.erase){x.save();x.globalCompositeOperation='destination-out';x.drawImage(ggShoeErase(lay.erase),0,0);x.restore();continue}
+    x.drawImage(lay,0,0);
+  }
+  return ggPut(ggComp,key,c,14);
+}
+// Blinks are the one animation that cannot separate clothing from the character.
+const ggBlinkAt=[0,0,0];
+function ggBlinking(i,t){
+  if(REDUCED_MOTION||t===undefined)return false;
+  const ms=t*1000;
+  if(ms>ggBlinkAt[i]+3400+i*700) ggBlinkAt[i]=ms;
+  return ms-ggBlinkAt[i]<130;
+}
+function drawPuppet(i,look,x,y,gh,t,still){
+  const scale=gh>320?1:0.5;                       // dressing-room preview vs stage
+  const c=ggComposite(i,look,ggBlinking(i,still?undefined:t),scale);
+  const s=gh/GG_SPAN, dw=GG_W*s, dh=GG_H*s;
+  const breath=still?1:1+0.004*Math.sin((t||0)*0.9+i*1.8);
+  ctx.save();
+  ctx.translate(x,y); ctx.scale(1,breath); ctx.translate(-x,-y);   // whole puppet, feet planted
+  ctx.drawImage(c,x-dw/2,y-GG_FOOT*s,dw,dh);
   ctx.restore();
 }
-function drawPaperThumb(cat,id,look){
-  ctx.fillStyle='rgba(255,255,255,.08)';ctx.beginPath();ctx.arc(64,64,61,0,TAU);ctx.fill();
-  if(cat==='looks'){const p=LOOK_PRESETS[CHARS[curChar].id][id];drawPaperDoll(CHARS[curChar],{...p,skin:look.skin},curChar,64,124,116,0,true);return}
-  // Skin tiles zoom to head and shoulders — at thumbnail size a whole figure hides the tone.
-  if(cat==='skin'){const bs=tintedBase(curChar,SKIN_BY_ID[id]),sw=bs.w*.68,sh=bs.h*.255,dw=sw*(124/sh);ctx.drawImage(bs.canvas,(bs.w-sw)/2,0,sw,sh,64-dw/2,4,dw,124);return}
-  const color=cat==='face'?look.faceColor:look[cat].color,a=tintedItem(id,color,TINT[cat]),max=cat==='hair'?112:cat==='shoes'?108:100,sc=Math.min(max/a.w,max/a.h),w=a.w*sc,h=a.h*sc;ctx.drawImage(a.canvas,64-w/2,64-h/2,w,h)
+// Item thumbnails crop to the layer's own bounds; the source stays registered.
+const ggBox=new Map();
+function ggBounds(cat,id){
+  const k=cat+'-'+id;
+  if(ggBox.has(k))return ggBox.get(k);
+  const c=ggCanvas(GG_W,GG_H), x=c.getContext('2d',{willReadFrequently:true});
+  for(const side of ['rear','front']){const im=GG.img[k+'-'+side];if(im)x.drawImage(im,0,0)}
+  const d=x.getImageData(0,0,GG_W,GG_H).data;
+  let x0=GG_W,y0=GG_H,x1=0,y1=0;
+  for(let y=0;y<GG_H;y+=3)for(let xx=0;xx<GG_W;xx+=3)
+    if(d[(y*GG_W+xx)*4+3]>24){if(xx<x0)x0=xx;if(xx>x1)x1=xx;if(y<y0)y0=y;if(y>y1)y1=y}
+  const box=x1>x0?{x:x0-8,y:y0-8,w:x1-x0+16,h:y1-y0+16}:null;
+  return ggPut(ggBox,k,box,40);
 }
+function drawItemThumb(cat,id,look,size){
+  const box=ggBounds(cat,id); if(!box)return false;
+  const color=cat==='face'?look.faceColor:look[cat]?look[cat].color:null;
+  const t=ggCanvas(GG_W,GG_H), x=t.getContext('2d');
+  for(const side of ['rear','front']){const im=tinted(cat+'-'+id+'-'+side,color);if(im)x.drawImage(im,0,0)}
+  const sc=Math.min(size/box.w,size/box.h), dw=box.w*sc, dh=box.h*sc;
+  ctx.drawImage(t,box.x,box.y,box.w,box.h,(size-dw)/2,(size-dh)/2,dw,dh);
+  return true;
+}
+
 let ctlTop = 0; // y where the DOM controls begin (stage sits above)
 
 function resize(){
@@ -1270,7 +1362,7 @@ function draw(t, dt){
 // Units: gh = full height; feet at (x,y); head centre at y-0.905gh with radius ~0.08gh (≈ 1/6 body — idol proportions, not chibi).
 const HC = -0.905, HR = 0.08;
 function drawGirlLegacy(ch, look, i, x, y, gh, t, still){
-  const skin = ch.skin, dark = '#2a1440', beatT = (t||0)*BPM/60, F = ch.face;
+  const skin = ch.skin || '#f1c9b7', dark = '#2a1440', beatT = (t||0)*BPM/60, F = ch.face;
   const pose = still ? 3 : cheer > 0.8 ? 0 : (Math.floor(beatT/2) + i) % 4;
   const sway = still ? 0 : Math.sin(beatT*Math.PI + i) * 0.04 * (0.5+cheer);
   const legUp = still ? 0 : ((Math.floor(beatT) + i) % 2) * Math.pow(1-beat, 2) * 0.05;
@@ -1432,8 +1524,8 @@ function drawMotif(id,x,y,r,accent){
   ctx.restore();
 }
 function drawGirl(ch, look, i, x, y, gh, t, still){
-  if(PD.ready){drawPaperDoll(ch,look,i,x,y,gh,t,still);return}
-  const skin=ch.skin,dark='#24162d',F=ch.face,beatT=(t||0)*BPM/60,g=v=>v*gh,X=v=>v*HR*gh,Y=v=>(HC+v*HR)*gh;
+  if(GG.ready){drawPuppet(i,look,x,y,gh,t,still);return}
+  const skin=ch.skin||'#f1c9b7',dark='#24162d',F=ch.face,beatT=(t||0)*BPM/60,g=v=>v*gh,X=v=>v*HR*gh,Y=v=>(HC+v*HR)*gh;
   const hairC=look.hair.color||'#2a1a3a',topC=look.top.color||'#9b7be8',botC=look.bottom.color||'#3a2b5a',shoeC=look.shoes.color||'#e8e2f5',accC=look.faceColor||topC;
   const poses=[{l:[-.23,-.98],r:[.23,-.98]},{l:[-.17,-.58],r:[.05,-.84]},{l:[-.04,-.86],r:[.2,-1.03]},{l:[-.16,-.57],r:[.16,-.57]}];
   let L,R,pose=3;
@@ -1737,13 +1829,12 @@ function toStage(){
   cheer = 1; if (AC) sfxCheer();
   openMap();   // pick a show (or free play) after dressing up
 }
-function isOn(look, cat, id){ return cat==='looks' ? look.preset===id : cat==='skin' ? look.skin===SKIN_BY_ID[id] : cat==='face' ? look.face.includes(id) : look[cat].style===id; }
+function isOn(look, cat, id){ return cat==='looks' ? look.preset===id : cat==='face' ? look.face.includes(id) : look[cat].style===id; }
 // Categories whose worn item is what the swatch row will repaint.
 const COLOURABLE = ['hair','face','top','bottom','shoes'];
 const topHue = l => l.top.color || '#7740a8';
 // Name of the thing the swatches are pointing at right now.
 function paintTargetName(look){
-  if (curCat==='skin') return 'Skin tone';
   if (curCat==='face') return look.face.length ? look.face.map(f => (WARDROBE.face.find(w=>w[0]===f)||[,f])[1]).join(' + ') : 'Pick an extra first';
   const w = WARDROBE[curCat].find(w => w[0]===look[curCat].style);
   return w ? w[1] : curCat;
@@ -1768,7 +1859,15 @@ function renderTiles(){
 }
 function drawTile(c, look, cat, id, paint){
   const saved = ctx; ctx = c.getContext('2d'); ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,128,128);
-  ctx.save();ctx.beginPath();ctx.arc(64,64,62,0,TAU);ctx.clip();if(PD.ready)drawPaperThumb(cat,id,look);else{ctx.fillStyle='rgba(255,255,255,.12)';ctx.fill();ctx.fillStyle='#fff';ctx.font='700 13px system-ui';ctx.textAlign='center';ctx.fillText('LOADING…',64,69)}ctx.restore();
+  ctx.save();ctx.beginPath();ctx.arc(64,64,62,0,TAU);ctx.clip();
+  let drew=false;
+  if(GG.ready){
+    ctx.fillStyle='rgba(255,255,255,.08)';ctx.fill();
+    if(cat==='looks'){drawPuppet(curChar,LOOK_PRESETS[CHARS[curChar].id][id],64,120,110,undefined,true);drew=true}
+    else drew=drawItemThumb(cat,id,look,128);
+  }
+  if(!drew){ctx.fillStyle='rgba(255,255,255,.12)';ctx.fill();ctx.fillStyle='#fff';ctx.font='700 13px system-ui';ctx.textAlign='center';ctx.fillText(GG.ready?'—':'LOADING…',64,69)}
+  ctx.restore();
   // A paint chip on the thumbnail says "the swatches below change this one".
   if (paint){ const col = cat==='face' ? look.faceColor : look[cat].color;
     ctx.beginPath(); ctx.arc(100,100,19,0,TAU); ctx.fillStyle='#1a0630'; ctx.fill();
@@ -1781,32 +1880,29 @@ function drawTile(c, look, cat, id, paint){
 function renderSwatches(){
   const box = $('#dswatches');
   if(curCat==='looks'){ box.innerHTML=''; return; }
-  const look = LOOKS[curChar], cur = curCat==='skin' ? look.skin : curCat==='face' ? look.faceColor : look[curCat].color;
-  const swatches = curCat==='skin' ? '' : PALETTE.map(c => `<button class="sw ${c===cur?'on':''}" style="--c:${c}" data-c="${c}" aria-label="colour ${c}"></button>`).join('');
+  const look = LOOKS[curChar], cur = curCat==='face' ? look.faceColor : look[curCat].color;
+  const swatches = PALETTE.map(c => `<button class="sw ${c===cur?'on':''}" style="--c:${c}" data-c="${c}" aria-label="colour ${c}"></button>`).join('');
   box.innerHTML = `<div class="swlabel">🎨 <b>${paintTargetName(look)}</b></div>` + swatches +
     `<button class="sw reset ${cur?'':'on'}" data-reset="1" title="Back to this item's own colour" aria-label="Back to this item's own colour">↺</button>`;
   box.querySelectorAll('.sw').forEach(b => b.addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); if (b.dataset.reset) resetColor(); else setColor(b.dataset.c); }));
 }
 function applyItem(cat, id){
   const look = LOOKS[curChar];
-  if(cat==='looks'){const skin=look.skin;LOOKS[curChar]=JSON.parse(JSON.stringify(LOOK_PRESETS[CHARS[curChar].id][id]));LOOKS[curChar].skin=skin;}
-  else if (cat==='skin') look.skin = SKIN_BY_ID[id];
+  if(cat==='looks')LOOKS[curChar]=JSON.parse(JSON.stringify(LOOK_PRESETS[CHARS[curChar].id][id]));
   else if (cat==='face'){ look.preset=null; if (look.face.includes(id)) look.face = look.face.filter(f=>f!==id); else { for (const grp of EXCL) if (grp.includes(id)) look.face = look.face.filter(f=>!grp.includes(f)); look.face.push(id); } }
   else {look.preset=null;look[cat] = {style:id, color:look[cat].color};}
   saveLooks(); renderTiles(); renderSwatches(); $('#dname').style.background = topHue(LOOKS[curChar]); dressSparkle(); if (AC) sfxPour(WARDROBE[cat].findIndex(w=>w[0]===id));
 }
 function setColor(col){
   const look = LOOKS[curChar]; if(curCat==='looks')return;
-  if (curCat==='skin') look.skin = col;
-  else { look.preset=null; if (curCat==='face') look.faceColor = col; else look[curCat].color = col; }
+  look.preset=null; if (curCat==='face') look.faceColor = col; else look[curCat].color = col;
   saveLooks(); renderTiles(); renderSwatches(); $('#dname').style.background = topHue(look); dressSparkle();
   if (AC){ const t0=now(); tone(900,t0,0.1,{type:'triangle',vol:0.15}); tone(1350,t0+0.06,0.12,{type:'triangle',vol:0.12}); }
 }
 // Per-asset undo: drop the tint on just this item so its own artwork colour shows again.
 function resetColor(){
   const look = LOOKS[curChar]; if(curCat==='looks')return;
-  if (curCat==='skin') look.skin = null;
-  else if (curCat==='face') look.faceColor = null;
+  if (curCat==='face') look.faceColor = null;
   else { look.preset=null; look[curCat].color = null; }
   saveLooks(); renderTiles(); renderSwatches(); $('#dname').style.background = topHue(look); dressSparkle();
   if (AC){ const t0=now(); tone(1200,t0,0.1,{type:'triangle',vol:0.13}); tone(800,t0+0.07,0.14,{type:'triangle',vol:0.11}); }
@@ -1819,7 +1915,7 @@ function surprise(){
   look.face = []; look.faceColor = rc(); const n = 1 + ((Math.random()*2)|0); for (let k=0;k<n;k++){ const id = pick(WARDROBE.face)[0]; for (const grp of EXCL) if (grp.includes(id)) look.face = look.face.filter(f=>!grp.includes(f)); if (!look.face.includes(id)) look.face.push(id); }
   saveLooks(); renderDress(); dressSparkle(); if (AC) sfxGiggle(); toast(pick(['✨ TA-DA! ✨','SO CUTE!','SLAY! 💅','OOH LA LA!']));
 }
-function signature(){ const skin = LOOKS[curChar].skin; LOOKS[curChar] = JSON.parse(JSON.stringify(CHARS[curChar].def)); LOOKS[curChar].skin = skin; saveLooks(); renderDress(); dressSparkle(); if (AC) sfxChord(); toast('⭐ STAR LOOK! ⭐'); }
+function signature(){ LOOKS[curChar] = JSON.parse(JSON.stringify(CHARS[curChar].def)); saveLooks(); renderDress(); dressSparkle(); if (AC) sfxChord(); toast('⭐ STAR LOOK! ⭐'); }
 function overPreview(e){ const r = dcv.getBoundingClientRect(); return e.clientX>=r.left && e.clientX<=r.right && e.clientY>=r.top && e.clientY<=r.bottom; }
 function attachDrag(el, id){
   el.addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); try { el.setPointerCapture(e.pointerId); } catch(err){} dragging = {id, cat:curCat, x0:e.clientX, y0:e.clientY, moved:false, ghost:null}; });
@@ -1860,8 +1956,8 @@ function drawDress(t, dt){
   ctx.fillStyle='#fff';rrect(mx-mw*.62,ph*.715,mw*1.24,ph*.045,9);ctx.fillStyle='#7b598a';ctx.fillRect(mx-mw*.55,ph*.76,10,ph*.12);ctx.fillRect(mx+mw*.55-10,ph*.76,10,ph*.12);
   const vanity=[['#ff6fa9',-.42],['#29dbe3',-.31],['#ffd060',.34],['#8d63d8',.43]];vanity.forEach(([c,p],k)=>{ctx.fillStyle=c;ctx.beginPath();ctx.arc(mx+mw*p,ph*.705,5+k%2*2,0,TAU);ctx.fill()});
   ctx.fillStyle='rgba(255,255,255,.82)';ctx.beginPath();ctx.ellipse(mx,ph*.925,mw*.52,ph*.055,0,0,TAU);ctx.fill();ctx.strokeStyle='#f0b2d2';ctx.lineWidth=5;ctx.stroke();ctx.fillStyle='#ffd45a';starPath(mx,ph*.925,ph*.035);ctx.fill();
-  const fg=ctx.createRadialGradient(mx,ph*.88,0,mx,ph*.88,mw*.58);fg.addColorStop(0,LOOKS[curChar].top.color+'55');fg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=fg;ctx.beginPath();ctx.ellipse(mx,ph*.89,mw*.55,ph*.12,0,0,TAU);ctx.fill();
-  drawGirl(CHARS[curChar],LOOKS[curChar],curChar,mx,ph*.94,Math.min(ph*.79,pw*.77),t,false);
+  const fg=ctx.createRadialGradient(mx,ph*.88,0,mx,ph*.88,mw*.58);fg.addColorStop(0,topHue(LOOKS[curChar])+'55');fg.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=fg;ctx.beginPath();ctx.ellipse(mx,ph*.89,mw*.55,ph*.12,0,0,TAU);ctx.fill();
+  drawGirl(CHARS[curChar],LOOKS[curChar],curChar,mx,ph*.94,Math.min(ph*.80,pw*1.62),t,false);
   for (let i=DSPARK.length-1;i>=0;i--){ const s = DSPARK[i]; s.life -= dt; if (s.life<=0){ DSPARK.splice(i,1); continue; } s.x += s.vx*dt; s.y += s.vy*dt; s.vy += 200*dt;
     ctx.fillStyle = hsl(s.h,100,70,Math.min(1,s.life*2)); ctx.beginPath(); ctx.arc(s.x, s.y, 3+2*s.life, 0, TAU); ctx.fill(); }
   ctx = saved;
@@ -1872,8 +1968,8 @@ async function start(){
   if (started) return; started = true;
   initAudio();
   const play=$('#play'), originalLabel=play.textContent;
-  if(!PD.ready){play.textContent='✨ LOADING LOOKS…';play.disabled=true;await PD_READY;}
-  if(!PD.ready){started=false;play.disabled=false;play.textContent=originalLabel;$('#splash small').textContent='The character art could not load. Please refresh and try again.';return;}
+  if(!GG.ready){play.textContent='✨ LOADING LOOKS…';play.disabled=true;await GG_READY;}
+  if(!GG.ready){started=false;play.disabled=false;play.textContent=originalLabel;$('#splash small').textContent='The character art could not load. Please refresh and try again.';return;}
   $('#splash').classList.add('gone'); openDress();
   const el = document.documentElement;
   try { if (el.requestFullscreen && !matchMedia('(display-mode: standalone)').matches) await el.requestFullscreen({navigationUI:'hide'}); } catch(e){}
@@ -1885,12 +1981,12 @@ $('#play').addEventListener('pointerdown', e => { e.preventDefault(); start(); }
 $('#play').addEventListener('click', start);
 document.addEventListener('visibilitychange', () => { if (AC && document.visibilityState==='visible' && AC.state==='suspended') AC.resume(); });
 
-const PD_READY=loadPaperDollAssets();
+const GG_READY=loadGlowGirls().catch(e=>{GG.error=e;console.warn('Glow Girls layers could not load',e)});
 setMusic(musicOn); renderStars(); renderMix(); resize();
 requestAnimationFrame(frame);
 if (location.search.includes('auto=1')){ window.__kb = {P, ROCKETS, BOOBOPS, BUBBLES, DROPS, launch, spawnBooBop, spawnDemon, spawnDrop, collectDrop, hitDemon, explode, addPotion, mix, ammo, PLAY, LEVELS, BOSSES, PROG,
     startLevel, freePlay, openMap, levelWon, levelLost, get playfield(){return [playL, playR];}, get mode(){return MODE}, get glow(){return glow}, get stars(){return starsTotal}, byId, get ac(){return AC},
-    LOOKS, CHARS, WARDROBE, SKIN_TONES, TINT, applyItem, setColor, resetColor, setCat, switchChar, surprise, signature, openDress, toStage, get curChar(){return curChar}, get curCat(){return curCat}, get dressOpen(){return dressOpen}};
+    LOOKS, CHARS, WARDROBE, LOOK_PRESETS, GG, TINT_MIX, isSkin, ggComposite, applyItem, setColor, resetColor, setCat, switchChar, surprise, signature, openDress, toStage, get curChar(){return curChar}, get curCat(){return curCat}, get dressOpen(){return dressOpen}};
   start().then(() => {   // start() is async (asset load) and ends by opening the dressing room — sequence after it
     if (!location.search.includes('dress=1')){
       const lm = location.search.match(/level=(\d)/);
