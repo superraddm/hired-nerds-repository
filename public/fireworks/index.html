@@ -269,6 +269,26 @@ button:focus{outline:none}
   background:linear-gradient(160deg,#ff3fa4,#a855ff);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 5px 0 #5b0d9a}
 #signature{background:linear-gradient(160deg,#33e6ff,#6757dc);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 5px 0 #30479b}
 #surprise:active,#signature:active{transform:translateY(4px);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 1px 0 #5b0d9a}
+/* ---------- unlock reward ---------- */
+#unlock{position:fixed;inset:0;z-index:28;display:grid;place-items:center;padding:calc(var(--sat) + 8px) 10px calc(var(--sab) + 8px);
+  background:radial-gradient(ellipse at 50% 40%,rgba(90,20,150,.92),rgba(8,0,22,.94));backdrop-filter:blur(5px)}
+#unlock[hidden]{display:none}
+.ucard{width:min(440px,100%);max-height:100%;overflow:auto;text-align:center;border-radius:26px;padding:16px 14px;
+  background:radial-gradient(ellipse at 50% 0%,#5c1490,#1d0745 72%);box-shadow:0 0 0 3px rgba(255,255,255,.22) inset,0 18px 50px rgba(0,0,0,.6);
+  animation:upop .5s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes upop{0%{transform:scale(.7) translateY(24px);opacity:0}100%{transform:scale(1) translateY(0);opacity:1}}
+.ucard h3{margin:0;font-size:clamp(20px,4.6vmin,34px);
+  background:linear-gradient(90deg,#ffd23f,#ff3fa4,#33e6ff);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 12px rgba(255,63,164,.7))}
+.ucard p{margin:4px 0 8px;font-weight:800;font-size:clamp(13px,2.7vmin,19px);color:#f0e2ff}
+#unlockCv{width:min(74%,240px);height:auto;aspect-ratio:2/3;display:block;margin:0 auto;
+  animation:ushine 2.4s ease-in-out infinite}
+@keyframes ushine{0%,100%{filter:drop-shadow(0 0 10px rgba(255,210,63,.55))}50%{filter:drop-shadow(0 0 26px rgba(255,210,63,.95))}}
+#unlockList{display:grid;gap:4px;margin:8px 0 10px;font-weight:900;font-size:clamp(11px,2.2vmin,16px)}
+#unlockList span{color:#ffd23f}
+#unlockOk{font-weight:900;font-size:clamp(14px,2.9vmin,22px);padding:.55em 1.2em;border-radius:999px;width:100%;
+  background:linear-gradient(160deg,#7dff4a,#12b886);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 6px 0 #0a6b4a;animation:pulse 1.4s ease-in-out infinite}
+#unlockOk:active{transform:translateY(5px);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 1px 0 #0a6b4a}
 /* ---------- naming ---------- */
 #names{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:calc(var(--sat) + 8px) 10px calc(var(--sab) + 8px);
   background:rgba(10,0,28,.86);backdrop-filter:blur(6px)}
@@ -360,6 +380,15 @@ button:focus{outline:none}
       <div class="swatches" id="dswatches"></div>
       <div class="dactions"><button id="signature">⭐ STAR LOOK</button><button id="surprise">🎲 SURPRISE!</button></div>
     </div>
+  </div>
+</div>
+<div id="unlock" hidden>
+  <div class="ucard">
+    <h3>🎉 WELL DONE!</h3>
+    <p>You've unlocked more outfits!</p>
+    <canvas id="unlockCv" width="320" height="480"></canvas>
+    <div id="unlockList"></div>
+    <button id="unlockOk">✨ LET'S SEE! ✨</button>
   </div>
 </div>
 <div id="names" hidden>
@@ -535,12 +564,12 @@ const CHARS = [
 // One shared wardrobe: every item is a layer registered to that same puppet, so any
 // piece fits any girl. Names are what the tiles announce to a screen reader.
 const WARDROBE = {
-  looks: [['A','Approved look A'],['B','Approved look B'],['C','Approved look C'],['D','Aurora Pulse preview']],
+  looks: [['A','Approved look A'],['B','Approved look B'],['C','Approved look C'],['D','Aurora Pulse preview'],['E','Prism Relay'],['F','Cherry Voltage'],['G','Blue Orbit'],['H','Pixel Bloom'],['I','Solar Flare'],['J','Midnight Ribbon'],['K','Mint Comet']],
   hair:  [['moonpony','Moonlit ponytail'],['starbraid','Star ribbon braid'],['cometbraid','Comet braid'],['silverwaves','Pearl silver waves'],['neonbuns','Neon twin buns']],
   face:  [['moondrops','Moon drop earrings'],['cheekcrystal','Cheek crystals'],['starbow','Couture star bow'],['tiara','Moon crystal tiara'],['headset','Crystal stage headset'],['visor','Performance visor']],
-  top:   [['moonmoto','Moonlit moto jacket'],['petaljacket','Petal couture jacket'],['neonmoto','Neon asymmetric jacket'],['tailcoat','Star ribbon tailcoat'],['auroratop','Aurora Pulse halter']],
-  bottom:[['moonshorts','Moon tailored shorts'],['petalskort','Petal layered skort'],['silvershorts','Crystal silver shorts'],['cargoshorts','Iridescent cargo shorts'],['auroraskort','Aurora Pulse skort']],
-  shoes: [['moonboots','Moon lace boots'],['petalboots','Petal couture boots'],['neonboots','Neon combat boots'],['aurorakicks','Aurora Pulse platforms']],
+  top:   [['moonmoto','Moonlit moto jacket'],['petaljacket','Petal couture jacket'],['neonmoto','Neon asymmetric jacket'],['tailcoat','Star ribbon tailcoat'],['auroratop','Aurora Pulse halter'],['prismbolero','Prism Relay bolero'],['cherrycircuit','Cherry Voltage circuit corset'],['orbitcape','Blue Orbit asymmetric cape top'],['bloomruffle','Pixel Bloom ruffle halter'],['solarvest','Solar Flare cropped vest'],['midnightbow','Midnight Ribbon bow top'],['mintmesh','Mint Comet mesh crop top']],
+  bottom:[['moonshorts','Moon tailored shorts'],['petalskort','Petal layered skort'],['silvershorts','Crystal silver shorts'],['cargoshorts','Iridescent cargo shorts'],['auroraskort','Aurora Pulse skort'],['relaypleats','Prism Relay pleated skort'],['voltagewrap','Cherry Voltage wrap skort'],['orbitflares','Blue Orbit crescent flare trousers'],['pixelpetals','Pixel Bloom architectural petal skirt'],['flareskort','Solar Flare flame skort'],['ribbonfringe','Midnight Ribbon fringe skirt'],['cometbubble','Mint Comet bubble shorts']],
+  shoes: [['moonboots','Moon lace boots'],['petalboots','Petal couture boots'],['neonboots','Neon combat boots'],['aurorakicks','Aurora Pulse platforms'],['prismhightops','Prism Relay high-tops'],['cherryboots','Cherry Voltage combat boots'],['orbitpoints','Blue Orbit pointed stage boots'],['bloomjanes','Pixel Bloom platform Mary Janes'],['sunburstboots','Solar Flare stage boots']],
 };
 /* Names are the child's to change; everything that draws one reads through here.
    Suggestions exist so she can rename the band without being able to type yet. */
@@ -559,7 +588,7 @@ const bandName=()=>NAMES.band||DEFAULT_BAND;
 const CATS = [['looks','✨','LOOKS'],['hair','💇','HAIR'],['face','💎','EXTRAS'],['top','🧥','TOP'],['bottom','🩳','BOTTOMS'],['shoes','🥾','SHOES']];
 const PALETTE = ['#101820','#573022','#f4cf77','#ffffff','#d83f8d','#ff91c2','#7740a8','#29dbe3','#168e99','#ffd060','#f36b5f','#ad263e'];
 const EXCL = [['starbow','tiara'],['headset','visor']];
-// The three approved concept outfits plus the Aurora Pulse review set.
+// The approved concept outfits, Aurora Pulse, and the seven-piece expansion range.
 // null colour = the garment's own artwork colour, which is what the studio signed off.
 const LOOK_PRESETS={
   sol:{
@@ -578,18 +607,135 @@ const LOOK_PRESETS={
     C:{preset:'C',hair:{style:'silverwaves',color:'#29dbe3'},top:{style:'tailcoat',color:'#168e99'},bottom:{style:'cargoshorts',color:'#101820'},shoes:{style:'neonboots',color:null},face:['headset'],faceColor:null},
     D:{preset:'D',hair:{style:'neonbuns',color:null},top:{style:'auroratop',color:null},bottom:{style:'auroraskort',color:null},shoes:{style:'aurorakicks',color:null},face:['moondrops'],faceColor:null}}
 };
-for(const c of CHARS) c.def = LOOK_PRESETS[c.id].A;
-function wardrobeFor(cat){ return WARDROBE[cat]; }
+const RANGE_PRESETS={
+  E:['prismbolero','relaypleats','prismhightops'],
+  F:['cherrycircuit','voltagewrap','cherryboots'],
+  G:['orbitcape','orbitflares','orbitpoints'],
+  H:['bloomruffle','pixelpetals','bloomjanes'],
+  I:['solarvest','flareskort','sunburstboots'],
+  J:['midnightbow','ribbonfringe','cherryboots'],
+  K:['mintmesh','cometbubble','prismhightops']
+};
+const RANGE_HAIR={
+  sol:['moonpony','starbraid','cometbraid','neonbuns','silverwaves','starbraid','moonpony'],
+  hana:['silverwaves','moonpony','starbraid','cometbraid','neonbuns','silverwaves','starbraid'],
+  jia:['neonbuns','cometbraid','silverwaves','moonpony','starbraid','neonbuns','cometbraid']
+};
+const RANGE_FACE={
+  sol:['moondrops','cheekcrystal','visor','starbow','headset','tiara','moondrops'],
+  hana:['cheekcrystal','tiara','headset','moondrops','starbow','visor','cheekcrystal'],
+  jia:['visor','moondrops','headset','cheekcrystal','tiara','starbow','visor']
+};
+for(const c of CHARS) Object.entries(RANGE_PRESETS).forEach(([preset,[top,bottom,shoes]],i)=>{
+  LOOK_PRESETS[c.id][preset]={preset,hair:{style:RANGE_HAIR[c.id][i],color:null},top:{style:top,color:null},bottom:{style:bottom,color:null},shoes:{style:shoes,color:null},face:[RANGE_FACE[c.id][i]],faceColor:null};
+});
+
+/* ================= OUTFIT PROGRESSION =================
+   Each girl is dealt eight of the eleven presets, once, and keeps that schedule for
+   good. Two are hers from the start and the other six arrive one per level, so
+   clearing a show dresses the whole group in something new. */
+let PROG = {unlocked:1, stars:[0,0,0,0,0,0]};
+try { const s = JSON.parse(localStorage.getItem('kb_prog')||'null'); if (s && Array.isArray(s.stars)) PROG = s; } catch(e){}
+function saveProg(){ try { localStorage.setItem('kb_prog', JSON.stringify(PROG)); } catch(e){} }
+
+const PRESET_IDS = WARDROBE.looks.map(w => w[0]);
+const SCHEDULE_LEN = 8, START_LOOKS = 2, GIRL_IDS = CHARS.map(c => c.id);
+const lookName = id => (WARDROBE.looks.find(w => w[0]===id) || [,id])[1];
+function shuffled(a){ const r=a.slice(); for(let i=r.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; [r[i],r[j]]=[r[j],r[i]]; } return r; }
+
+// The six opening looks should ideally all differ, so a girl's start does not echo
+// her bandmate's. Swap a duplicate for a later, unused pick from the same girl.
+function spreadStarts(rows){
+  const seen=new Set();
+  for(const g of GIRL_IDS) for(let k=0;k<START_LOOKS;k++){
+    if(!seen.has(rows[g][k])){ seen.add(rows[g][k]); continue; }
+    const j=rows[g].findIndex((id,idx)=>idx>=START_LOOKS && !seen.has(id));
+    if(j<0) return false;
+    [rows[g][k],rows[g][j]]=[rows[g][j],rows[g][k]];
+    seen.add(rows[g][k]);
+  }
+  return true;
+}
+// 24 assignments drawn from 11 presets, so every preset lands twice and two land a
+// third time: present everywhere, and never more than one apart.
+function buildSchedule(){
+  for(let attempt=0; attempt<300; attempt++){
+    const count={}; for(const id of PRESET_IDS) count[id]=2;
+    for(const id of shuffled(PRESET_IDS).slice(0, GIRL_IDS.length*SCHEDULE_LEN - PRESET_IDS.length*2)) count[id]++;
+    const cap={}, rows={};
+    for(const g of GIRL_IDS){ cap[g]=SCHEDULE_LEN; rows[g]=[]; }
+    let ok=true;
+    for(const id of shuffled(PRESET_IDS)){
+      // a preset's copies must go to different girls, so take the emptiest schedules
+      const picks=shuffled(GIRL_IDS).filter(g=>!rows[g].includes(id)).sort((a,b)=>cap[b]-cap[a]).slice(0,count[id]);
+      if(picks.length<count[id]){ ok=false; break; }
+      for(const g of picks){ rows[g].push(id); cap[g]--; }
+    }
+    if(!ok || GIRL_IDS.some(g=>rows[g].length!==SCHEDULE_LEN)) continue;
+    for(const g of GIRL_IDS) rows[g]=shuffled(rows[g]);
+    if(spreadStarts(rows)) return rows;
+  }
+  // Deterministic fallback: deal round-robin so a bad run of luck still yields a
+  // valid, balanced schedule rather than no schedule at all.
+  const rows={}; GIRL_IDS.forEach((g,gi)=>{ rows[g]=[]; for(let k=0;k<SCHEDULE_LEN;k++) rows[g].push(PRESET_IDS[(gi*3+k*1+gi)%PRESET_IDS.length]); });
+  for(const g of GIRL_IDS){ const seen=new Set(), out=[];
+    for(const id of PRESET_IDS.concat(PRESET_IDS)){ if(out.length>=SCHEDULE_LEN) break; if(!seen.has(id)){ seen.add(id); out.push(id); } }
+    rows[g]=out; }
+  return rows;
+}
+function validSchedule(sc){
+  if(!sc || sc.version!==1 || !sc.girls) return false;
+  return GIRL_IDS.every(g => Array.isArray(sc.girls[g]) && sc.girls[g].length===SCHEDULE_LEN
+    && new Set(sc.girls[g]).size===SCHEDULE_LEN && sc.girls[g].every(id=>PRESET_IDS.includes(id)));
+}
+let SCHEDULE;
+try { const saved=JSON.parse(localStorage.getItem('kb_outfit_schedule_v1')||'null');
+  if(validSchedule(saved)) SCHEDULE=saved.girls; } catch(e){}
+if(!SCHEDULE){ SCHEDULE=buildSchedule();
+  try { localStorage.setItem('kb_outfit_schedule_v1', JSON.stringify({version:1, girls:SCHEDULE})); } catch(e){} }
+
+/* PROG.stars is the only record of what has been cleared — no second counter that
+   could drift. A level counts once however often it is replayed. */
+function clearedLevels(){ return PROG.stars.reduce((n,st)=>n+(st>0?1:0),0); }
+function unlockedLookCount(){ return Math.min(SCHEDULE_LEN, START_LOOKS + clearedLevels()); }
+function scheduleFor(gi){ return SCHEDULE[CHARS[gi].id]; }
+function unlockedPresets(gi){ return scheduleFor(gi).slice(0, unlockedLookCount()); }
+function isPresetUnlocked(gi,id){ return unlockedPresets(gi).includes(id); }
+// Which level number a still-locked look is waiting on (1-based, for the tile label).
+function presetNeedsLevel(gi,id){ const at=scheduleFor(gi).indexOf(id); return at<START_LOOKS ? 0 : at-START_LOOKS+1; }
+// Garments follow their looks; hair and extras stay open to everyone.
+const GATED_CATS = ['top','bottom','shoes'];
+function unlockedPieces(gi,cat){
+  const out=new Set();
+  for(const id of unlockedPresets(gi)){ const pr=LOOK_PRESETS[CHARS[gi].id][id]; if(pr&&pr[cat]) out.add(pr[cat].style); }
+  return out;
+}
+function itemAllowed(gi,cat,id){
+  if(cat==='looks') return isPresetUnlocked(gi,id);
+  if(GATED_CATS.includes(cat)) return unlockedPieces(gi,cat).has(id);
+  return WARDROBE[cat] ? WARDROBE[cat].some(w=>w[0]===id) : false;
+}
+for(const c of CHARS) c.def = LOOK_PRESETS[c.id][SCHEDULE[c.id][0]];
+// The LOOKS tab lists only what this girl was dealt; the gated tabs list only the
+// pieces her unlocked looks are made of.
+function wardrobeFor(cat){
+  if(cat==='looks') return scheduleFor(curChar).map(id => [id, lookName(id)]);
+  if(GATED_CATS.includes(cat)){ const ok=unlockedPieces(curChar,cat); return WARDROBE[cat].filter(w=>ok.has(w[0])); }
+  return WARDROBE[cat];
+}
 const STYLE_OK={hair:0,top:0,bottom:0,shoes:0};
 for(const cat in STYLE_OK) STYLE_OK[cat]=WARDROBE[cat].map(w=>w[0]);
 // A saved look from an older wardrobe can name garments that no longer exist; fall
 // back to that girl's approved look A rather than rendering a hole.
 function sanitiseLook(look,i){
-  const def=LOOK_PRESETS[CHARS[i].id].A, out=JSON.parse(JSON.stringify(def));
+  const def=LOOK_PRESETS[CHARS[i].id][SCHEDULE[CHARS[i].id][0]], out=JSON.parse(JSON.stringify(def));
   if(!look||typeof look!=='object') return out;
   for(const cat of ['hair','top','bottom','shoes']){
     const p=look[cat];
-    if(p&&STYLE_OK[cat].includes(p.style)) out[cat]={style:p.style,color:p.color||null};
+    // A saved outfit can name a garment that no longer exists, or one this girl has
+    // not unlocked yet (a shared device, or a wardrobe that grew). Either way the
+    // piece falls back to her first assigned look rather than rendering a hole.
+    if(p&&STYLE_OK[cat].includes(p.style)&&itemAllowed(i,cat,p.style)) out[cat]={style:p.style,color:p.color||null};
   }
   const ids=WARDROBE.face.map(w=>w[0]);
   if(Array.isArray(look.face)) out.face=look.face.filter(f=>ids.includes(f));
@@ -598,15 +744,19 @@ function sanitiseLook(look,i){
   return out;
 }
 let LOOKS = CHARS.map((c,i) => sanitiseLook(null,i));
-try { const s = JSON.parse(localStorage.getItem('kb_looks_v4')||'null'); if (Array.isArray(s) && s.length===3) LOOKS = s.map(sanitiseLook); } catch(e){}
-function saveLooks(){ try { localStorage.setItem('kb_looks_v4', JSON.stringify(LOOKS)); } catch(e){} }
+// v5 adds lock-awareness; a v4 save is read once and carried across so a child does
+// not lose the outfit she left the game in.
+try { const raw = localStorage.getItem('kb_looks_v5') || localStorage.getItem('kb_looks_v4');
+  const s = JSON.parse(raw||'null'); if (Array.isArray(s) && s.length===3) LOOKS = s.map(sanitiseLook); } catch(e){}
+function saveLooks(){ try { localStorage.setItem('kb_looks_v5', JSON.stringify(LOOKS)); } catch(e){} }
+saveLooks();
 
 /* ================= REGISTERED PUPPET COMPOSITOR ================= */
 // Every wardrobe layer is authored over one locked 1024x1536 master and composited
 // at (0,0,1) - selecting an item is a layer substitution, never a scaling guess.
 // Same compositor for the dressing room, the thumbnails and the stage.
 const GG_W=1024, GG_H=1536, GG_TOP=63, GG_FOOT=1408, GG_SPAN=GG_FOOT-GG_TOP;
-const GG_SRC='assets/glowgirls/sol/', GG_V='?v=20260902b';
+const GG_SRC='assets/glowgirls/sol/', GG_V='?v=20260903a';
 const REDUCED_MOTION=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const GG={ready:false,img:{},error:null};
 function ggLoad(src){return new Promise(ok=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>ok(null);i.src=src})}
@@ -628,7 +778,7 @@ async function loadGlowGirls(){
    Garments blend towards the target at TINT_MIX rather than being replaced - a full
    replace flattens a patterned piece into one block of colour. Hair and the
    white-trimmed metal boots read well at full strength, so they stay at 1. */
-const GG_METAL=new Set(['bottom-silvershorts','shoes-moonboots','shoes-petalboots']);
+const GG_METAL=new Set(['bottom-silvershorts','shoes-moonboots','shoes-petalboots','top-orbitcape','bottom-orbitflares','shoes-orbitpoints','top-solarvest','shoes-sunburstboots']);
 const TINT_MIX=0.6;   // signed off in the studio, 2026-09-02
 const ggItemOf=k=>k.replace(/-(rear|front)$/,'');
 function isSkin(r,g,b){
@@ -977,9 +1127,6 @@ function powerUp(){
 // the girls' energy is the lives, the cannon empties after every shot, magic potions are limited ammo.
 let MODE = 'free';
 const AMMO_MAX = 9, ammo = {heart:2, star:2, bass:2, glitter:2};
-let PROG = {unlocked:1, stars:[0,0,0,0,0,0]};
-try { const s = JSON.parse(localStorage.getItem('kb_prog')||'null'); if (s && Array.isArray(s.stars)) PROG = s; } catch(e){}
-function saveProg(){ try { localStorage.setItem('kb_prog', JSON.stringify(PROG)); } catch(e){} }
 
 const DKIND = {   // the demon family — all smiley, all pop into bubbles
   boo:    {r:27, hue:300, speed:26},                             // classic bouncy Boo-Bop
@@ -1044,12 +1191,33 @@ function freePlay(){ MODE = 'free'; PLAY.on = false; BOOBOPS.length = 0; DROPS.l
 function levelWon(){
   if (PLAY.phase==='won') return; PLAY.on = false; PLAY.phase = 'won';
   const st = Math.max(1, PLAY.energy.filter(e=>e>0).length);
+  // Read this before the stars change: only the first clear of a show pays out, so
+  // replaying a favourite level cannot farm outfits.
+  const firstClear = !(PROG.stars[PLAY.idx] > 0);
   PROG.stars[PLAY.idx] = Math.max(PROG.stars[PLAY.idx]||0, st);
   PROG.unlocked = Math.max(PROG.unlocked, Math.min(6, PLAY.idx+2)); saveProg();
   rainbowSky = 2; cheer = 1; if (AC) sfxTenStars();
   setTimeout(()=>launch(W*0.3,H*0.22,['pink','heart','glitter']),200); setTimeout(()=>launch(W*0.5,H*0.15,['gold','bass','star']),600); setTimeout(()=>launch(W*0.7,H*0.22,['blue','star','glitter']),1000);
-  setTimeout(()=>openMap(`<div class="mwin">🏆 ${LEVELS[PLAY.idx].icon} ${LEVELS[PLAY.idx].name} CLEAR! ${'⭐'.repeat(st)}</div>`), 3000);
+  const banner = `<div class="mwin">\u{1f3c6} ${LEVELS[PLAY.idx].icon} ${LEVELS[PLAY.idx].name} CLEAR! ${'\u2b50'.repeat(st)}</div>`;
+  if (firstClear && unlockedLookCount() > START_LOOKS) setTimeout(()=>showUnlock(banner), 2400);
+  else setTimeout(()=>openMap(banner), 3000);
 }
+/* The reward moment: one new outfit modelled, and a line naming what each girl got. */
+let unlockBanner = '';
+function showUnlock(banner){
+  unlockBanner = banner;
+  const at = unlockedLookCount() - 1, star = (Math.random()*3)|0;
+  $('#unlockList').innerHTML = CHARS.map((c,i) =>
+    `<div>${girlName(i)} — <span>${lookName(scheduleFor(i)[at])}</span></div>`).join('');
+  const cv = $('#unlockCv'), x = cv.getContext('2d');
+  x.setTransform(1,0,0,1,0,0); x.clearRect(0,0,cv.width,cv.height);
+  const saved = ctx; ctx = x;
+  drawPuppet(star, LOOK_PRESETS[CHARS[star].id][scheduleFor(star)[at]], cv.width/2, cv.height-6, cv.height-40, undefined, true);
+  ctx = saved;
+  $('#unlock').hidden = false; lastTouch = performance.now();
+  if (AC) sfxChord();
+}
+function closeUnlock(){ $('#unlock').hidden = true; openMap(unlockBanner); }
 function levelLost(){
   if (PLAY.phase==='lost') return; PLAY.on = false; PLAY.phase = 'lost'; sfxSnore();
   setTimeout(()=>openMap(`<div class="mlose">😴 The girls fell asleep! One more nap, one more show — try again!</div>`), 2200);
@@ -1910,13 +2078,25 @@ function setCat(cat){ curCat = cat; renderDress(); if (AC){ const t0=now(); tone
 function renderTiles(){
   const look = LOOKS[curChar], box = $('#ditems'); box.innerHTML = '';
   const paints = COLOURABLE.includes(curCat), cur = paints ? (curCat==='face' ? look.faceColor : look[curCat].color) : null;
-  for (const [id,name] of wardrobeFor(curCat)){ const worn = isOn(look,curCat,id), paint = worn && paints;
-    const c = document.createElement('canvas'); c.className = 'tile' + (worn?' on':'') + (paint?' paint':''); c.width = c.height = 128;
-    c.dataset.id = id; c.title = name; c.setAttribute('aria-label', paint ? name + ' — colouring this' : name);
+  for (const [id,name] of wardrobeFor(curCat)){
+    // Looks she has been dealt but not yet earned show as locked tiles, so she can
+    // see what is coming; every other tab only lists what she can already wear.
+    const locked = !itemAllowed(curChar, curCat, id);
+    const worn = !locked && isOn(look,curCat,id), paint = worn && paints;
+    const c = document.createElement('canvas');
+    c.className = 'tile' + (worn?' on':'') + (paint?' paint':'') + (locked?' locked':''); c.width = c.height = 128;
+    c.dataset.id = id; c.title = name;
+    const lvl = locked ? presetNeedsLevel(curChar, id) : 0;
+    c.setAttribute('aria-label', locked ? name + ' — locked until show ' + lvl : (paint ? name + ' — colouring this' : name));
     if (paint) c.style.setProperty('--pc', cur || '#ffd23f');
-    drawTile(c, look, curCat, id, paint); box.appendChild(c); attachDrag(c, id); }
+    drawTile(c, look, curCat, id, paint, lvl); box.appendChild(c);
+    if (!locked) attachDrag(c, id); else c.addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); lockedNudge(id, lvl); }); }
 }
-function drawTile(c, look, cat, id, paint){
+function lockedNudge(id, lvl){
+  toast(`🔒 Win show ${lvl} to unlock ${lookName(id)}!`);
+  if (AC){ const t0=now(); tone(320,t0,0.13,{type:'triangle',vol:0.13,glide:190}); }
+}
+function drawTile(c, look, cat, id, paint, lockedLevel){
   const saved = ctx; ctx = c.getContext('2d'); ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,128,128);
   ctx.save();ctx.beginPath();ctx.arc(64,64,62,0,TAU);ctx.clip();
   let drew=false;
@@ -1934,6 +2114,14 @@ function drawTile(c, look, cat, id, paint){
     if (col) ctx.fillStyle = col;
     else { const g = ctx.createLinearGradient(86,86,114,114); g.addColorStop(0,'#ff3fa4'); g.addColorStop(.5,'#ffd23f'); g.addColorStop(1,'#33e6ff'); ctx.fillStyle = g; }
     ctx.fill(); ctx.lineWidth=3.5; ctx.strokeStyle='#fff'; ctx.stroke(); }
+  if (lockedLevel){
+    ctx.save(); ctx.beginPath(); ctx.arc(64,64,62,0,TAU); ctx.clip();
+    ctx.fillStyle='rgba(12,2,30,.72)'; ctx.fillRect(0,0,128,128);
+    ctx.textAlign='center'; ctx.fillStyle='#fff';
+    ctx.font='700 34px system-ui'; ctx.fillText('🔒',64,66);
+    ctx.font='900 15px system-ui'; ctx.fillStyle='#ffd23f'; ctx.fillText('SHOW '+lockedLevel,64,96);
+    ctx.restore();
+  }
   ctx=saved;
 }
 function renderSwatches(){
@@ -1947,10 +2135,13 @@ function renderSwatches(){
 }
 function applyItem(cat, id){
   const look = LOOKS[curChar];
+  // The last gate: drags, restored saves and console calls all land here.
+  if(!itemAllowed(curChar, cat, id)){ lockedNudge(id, cat==='looks' ? presetNeedsLevel(curChar,id) : 0); return false; }
   if(cat==='looks')LOOKS[curChar]=JSON.parse(JSON.stringify(LOOK_PRESETS[CHARS[curChar].id][id]));
   else if (cat==='face'){ look.preset=null; if (look.face.includes(id)) look.face = look.face.filter(f=>f!==id); else { for (const grp of EXCL) if (grp.includes(id)) look.face = look.face.filter(f=>!grp.includes(f)); look.face.push(id); } }
   else {look.preset=null;look[cat] = {style:id, color:look[cat].color};}
   saveLooks(); renderTiles(); renderSwatches(); $('#dname').style.background = topHue(LOOKS[curChar]); dressSparkle(); if (AC) sfxPour(WARDROBE[cat].findIndex(w=>w[0]===id));
+  return true;
 }
 function setColor(col){
   const look = LOOKS[curChar]; if(curCat==='looks')return;
@@ -1970,11 +2161,13 @@ function selectChar(n){ curChar = (n + 3) % 3; renderDress(); dressSparkle(); if
 function switchChar(d){ selectChar(curChar + d); }
 function surprise(){
   const look = LOOKS[curChar], rc = () => pick(PALETTE);
-  look.preset=null;look.hair = {style:pick(wardrobeFor('hair'))[0], color:rc()}; look.top = {style:pick(WARDROBE.top)[0], color:rc()}; look.bottom = {style:pick(WARDROBE.bottom)[0], color:rc()}; look.shoes = {style:pick(WARDROBE.shoes)[0], color:rc()};
+  // Surprise only ever rolls pieces she has already earned.
+  const roll = cat => pick(wardrobeFor(cat))[0];
+  look.preset=null;look.hair = {style:roll('hair'), color:rc()}; look.top = {style:roll('top'), color:rc()}; look.bottom = {style:roll('bottom'), color:rc()}; look.shoes = {style:roll('shoes'), color:rc()};
   look.face = []; look.faceColor = rc(); const n = 1 + ((Math.random()*2)|0); for (let k=0;k<n;k++){ const id = pick(WARDROBE.face)[0]; for (const grp of EXCL) if (grp.includes(id)) look.face = look.face.filter(f=>!grp.includes(f)); if (!look.face.includes(id)) look.face.push(id); }
   saveLooks(); renderDress(); dressSparkle(); if (AC) sfxGiggle(); toast(pick(['✨ TA-DA! ✨','SO CUTE!','SLAY! 💅','OOH LA LA!']));
 }
-function signature(){ LOOKS[curChar] = JSON.parse(JSON.stringify(CHARS[curChar].def)); saveLooks(); renderDress(); dressSparkle(); if (AC) sfxChord(); toast('⭐ STAR LOOK! ⭐'); }
+function signature(){ LOOKS[curChar] = JSON.parse(JSON.stringify(LOOK_PRESETS[CHARS[curChar].id][scheduleFor(curChar)[0]])); saveLooks(); renderDress(); dressSparkle(); if (AC) sfxChord(); toast('⭐ STAR LOOK! ⭐'); }
 function overPreview(e){ const r = dcv.getBoundingClientRect(); return e.clientX>=r.left && e.clientX<=r.right && e.clientY>=r.top && e.clientY<=r.bottom; }
 function attachDrag(el, id){
   el.addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); try { el.setPointerCapture(e.pointerId); } catch(err){} dragging = {id, cat:curCat, x0:e.clientX, y0:e.clientY, moved:false, ghost:null}; });
@@ -2014,6 +2207,7 @@ function closeNames(save){
   $('#names').hidden=true; lastTouch=performance.now();
 }
 $('#dname').addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); initAudio(); openNames(); });
+$('#unlockOk').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); closeUnlock(); });
 $('#nameOk').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); closeNames(true); });
 $('#nameCancel').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); closeNames(false); });
 function dressSparkle(){ const r = dcv.getBoundingClientRect(); for (let k=0;k<40;k++){ const a = rnd(TAU), sp = rnd(40,220); DSPARK.push({x:r.width/2, y:r.height*0.55, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp-60, life:rnd(0.5,1.1), h:(Math.random()*360)|0}); } }
@@ -2068,7 +2262,9 @@ setMusic(musicOn); renderStars(); renderMix(); resize();
 requestAnimationFrame(frame);
 if (location.search.includes('auto=1')){ window.__kb = {P, ROCKETS, BOOBOPS, BUBBLES, DROPS, launch, spawnBooBop, spawnDemon, spawnDrop, collectDrop, hitDemon, explode, addPotion, mix, ammo, PLAY, LEVELS, BOSSES, PROG,
     startLevel, freePlay, openMap, levelWon, levelLost, get playfield(){return [playL, playR];}, get mode(){return MODE}, get glow(){return glow}, get stars(){return starsTotal}, byId, get ac(){return AC},
-    LOOKS, CHARS, WARDROBE, LOOK_PRESETS, GG, TINT_MIX, isSkin, ggComposite, NAMES, openNames, closeNames, cleanName, applyItem, setColor, resetColor, setCat, switchChar, surprise, signature, openDress, toStage, get curChar(){return curChar}, get curCat(){return curCat}, get dressOpen(){return dressOpen}};
+    LOOKS, CHARS, WARDROBE, LOOK_PRESETS, GG, TINT_MIX, isSkin, ggComposite, NAMES, openNames, closeNames, cleanName, applyItem,
+    SCHEDULE, PRESET_IDS, SCHEDULE_LEN, START_LOOKS, buildSchedule, clearedLevels, unlockedLookCount, scheduleFor, unlockedPresets,
+    isPresetUnlocked, presetNeedsLevel, unlockedPieces, itemAllowed, wardrobeFor, showUnlock, closeUnlock, saveProg, renderDress, setColor, resetColor, setCat, switchChar, surprise, signature, openDress, toStage, get curChar(){return curChar}, get curCat(){return curCat}, get dressOpen(){return dressOpen}};
   start().then(() => {   // start() is async (asset load) and ends by opening the dressing room — sequence after it
     if (!location.search.includes('dress=1')){
       const lm = location.search.match(/level=(\d)/);
