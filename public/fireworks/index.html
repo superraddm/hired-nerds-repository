@@ -31,10 +31,10 @@ html,body{margin:0;height:100%;overflow:hidden;background:var(--ink);color:#fff;
 button{font-family:inherit;border:0;color:#fff;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none}
 button:focus{outline:none}
 
-#sky{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#sky{position:fixed;left:var(--app-x,0px);top:var(--app-y,0px);width:var(--app-w,100%);height:var(--app-h,100%);display:block;touch-action:none}
 
 /* ---------- UI overlay ---------- */
-#ui{position:fixed;inset:0;pointer-events:none;display:grid;overflow:hidden;
+#ui{position:fixed;left:var(--app-x,0px);top:var(--app-y,0px);width:var(--app-w,100%);height:var(--app-h,100%);pointer-events:none;display:grid;overflow:hidden;
   grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:auto minmax(0,1fr) auto;
   grid-template-areas:"top top top" "left mid right" "left ctl right";
   padding:calc(var(--sat) + 6px) calc(var(--sar) + 6px) calc(var(--sab) + 6px) calc(var(--sal) + 6px);gap:6px}
@@ -185,7 +185,7 @@ button:focus{outline:none}
 @keyframes hue{to{filter:hue-rotate(360deg) drop-shadow(0 0 18px rgba(255,63,164,.7))}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 /* ---------- show map & level HUD ---------- */
-#map{position:fixed;inset:0;z-index:14;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;gap:10px;place-items:center;text-align:center;color:#fff;
+#map{position:fixed;left:var(--app-x,0px);top:var(--app-y,0px);width:var(--app-w,100%);height:var(--app-h,100%);z-index:14;display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;gap:10px;place-items:center;text-align:center;color:#fff;
   padding:calc(var(--sat) + 14px) 16px calc(var(--sab) + 14px);background:radial-gradient(ellipse at 50% 20%,#4a0d7a 0%,#1a0640 55%,#0a0020 100%)}
 #map[hidden]{display:none}
 #map h2{margin:0;font-size:clamp(22px,5vmin,42px);letter-spacing:1px;text-shadow:0 0 18px #ff3fa4}
@@ -229,7 +229,7 @@ button:focus{outline:none}
 .bottle.out{filter:grayscale(.85) opacity(.55)}
 
 /* ---------- dressing room ---------- */
-#dress{position:fixed;inset:0;z-index:15;display:grid;grid-template-rows:auto minmax(0,1fr);gap:6px;color:#fff;
+#dress{position:fixed;left:var(--app-x,0px);top:var(--app-y,0px);width:var(--app-w,100%);height:var(--app-h,100%);z-index:15;display:grid;grid-template-rows:auto minmax(0,1fr);gap:6px;color:#fff;
   padding:calc(var(--sat) + 6px) calc(var(--sar) + 8px) calc(var(--sab) + 8px) calc(var(--sal) + 8px);
   background:radial-gradient(ellipse at 50% 20%,#4a0d7a 0%,#1a0640 55%,#0a0020 100%)}
 #dress[hidden]{display:none}
@@ -342,6 +342,12 @@ button:focus{outline:none}
 
 @keyframes hint{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px) scale(1.08)}}
 @keyframes nope{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+/* ---------- legacy quality tier (old iPads): no blur compositing, no looping decoration ---------- */
+html.q-legacy #stars,html.q-legacy .shelf,html.q-legacy .charstrip,html.q-legacy #paused,html.q-legacy #unlock,html.q-legacy #names{backdrop-filter:none;-webkit-backdrop-filter:none}
+html.q-legacy .bottle{filter:none}
+html.q-legacy #go,html.q-legacy #play,html.q-legacy #finale,html.q-legacy #toStage,html.q-legacy #unlockOk,html.q-legacy #splash h1,html.q-legacy .tile.paint,html.q-legacy #unlockCv,html.q-legacy .bottle .eyes i{animation:none}
+/* ---------- ?perf=1 diagnostics ---------- */
+#perf{position:fixed;left:6px;bottom:6px;z-index:99;font:11px/1.35 ui-monospace,Menlo,Consolas,monospace;color:#7dff4a;background:rgba(0,0,0,.65);padding:4px 7px;border-radius:6px;pointer-events:none;white-space:pre}
 /* OS "reduce motion": let looping animations play once and stop (never speed them up) */
 @media (prefers-reduced-motion:reduce){*{animation-iteration-count:1!important}}
 </style>
@@ -492,6 +498,92 @@ const byId = Object.fromEntries(ALL.map(p=>[p.id,p]));
 
 /* ================= STATE ================= */
 let W=0,H=0,DPR=1,U=1;
+
+/* ================= QUALITY TIER & DIAGNOSTICS =================
+   The A9 iPad (5th gen) cannot fill a 2048x1536 backing store with additive glows at
+   60 Hz, and Safari there has a hard cap on total canvas memory. `Q` is the single
+   source of every budget the renderer consults; `TIERS` are the starting points and
+   only physical-device measurements should retune them.
+     ?quality=full|medium|legacy  forces a tier for this load
+     localStorage kb_quality      pins one (user/debug preference only)
+     otherwise a capability guess picks one and the adaptive step-down corrects a
+     wrong guess within seconds (p95 frame interval over 40 ms for 3 s = one tier
+     down; never back up mid-play; remembered for the session only).
+   iPadOS Safari calls itself a Mac in its user agent, so the guess never parses the
+   UA: it looks at touch points and reported cores (an A9 reports two). */
+const QS = new URLSearchParams(location.search);
+const TIERS = {
+  full:   {dpr:2, hz:60, maxP:2600, perBurst:460, finale:[220,420], stars:140, crowd:80, weather:60, shadows:true,  trailEvery:1, crackle:18, glitter:2.2},
+  medium: {dpr:1, hz:60, maxP:1400, perBurst:240, finale:[350,550], stars:90,  crowd:50, weather:40, shadows:true,  trailEvery:1, crackle:12, glitter:1.5},
+  legacy: {dpr:1, hz:30, maxP:700,  perBurst:120, finale:[650,800], stars:50,  crowd:28, weather:24, shadows:false, trailEvery:2, crackle:6,  glitter:1.0},
+};
+const TIER_ORDER = ['full','medium','legacy'];
+const Q = Object.assign({tier:'full', auto:false}, TIERS.full);
+function guessTier(){
+  const forced = QS.get('quality'); if (TIERS[forced]) return forced;
+  try { const s = localStorage.getItem('kb_quality'); if (TIERS[s]) return s; } catch(e){}
+  try { const s = sessionStorage.getItem('kb_quality_auto'); if (TIERS[s]) return s; } catch(e){}
+  const appleTouch = navigator.maxTouchPoints > 1 && /Mac|iP(ad|hone|od)/.test(navigator.platform || '');
+  const cores = navigator.hardwareConcurrency || 0;
+  if (appleTouch && cores <= 2) return 'legacy';     // A9/A10-era iPads and iPhones
+  return 'full';
+}
+function setTier(name, why){
+  if (!TIERS[name] || (name === Q.tier && why !== 'boot')) return;
+  Object.assign(Q, TIERS[name], {tier:name});
+  const cl = document.documentElement.classList; for (const t of TIER_ORDER) cl.remove('q-'+t); cl.add('q-'+name);
+  if (why === 'auto'){ Q.auto = true; try { sessionStorage.setItem('kb_quality_auto', name); } catch(e){} }
+  PERF.tierAt = performance.now();
+  if (why !== 'boot'){ requestLayout(); invalidateScenery(); }
+}
+// Canvas shadows are the single most expensive thing this renderer does (every blurred
+// glow is a full offscreen pass). Legacy drops them all in one place rather than at
+// forty call sites: the setter simply writes 0 while Q.shadows is off.
+{ const d = Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype, 'shadowBlur');
+  if (d && d.set) Object.defineProperty(CanvasRenderingContext2D.prototype, 'shadowBlur', {configurable:true, get(){ return d.get.call(this); }, set(v){ d.set.call(this, Q.shadows ? v : 0); }}); }
+
+/* ---- diagnostics: ?perf=1 shows the overlay; window.__kbPerf is always there for harnesses ---- */
+const PERF = {frames:0, skipped:0, idle:0, long:0, ring:new Float32Array(180), work:new Float32Array(180), ri:0, rn:0, peakP:0,
+  inputAt:0, inputLat:0, fps:0, fpsN:0, fpsT:0, tierAt:0, lastEval:0, overlay:null, ovT:0};
+const PERF_SHOW = QS.has('perf');
+function perfPct(arr, q){ const a = Array.from(arr.subarray(0, PERF.rn)).sort((x,y)=>x-y); return a.length ? a[Math.min(a.length-1, Math.floor(q*(a.length-1)))] : 0; }
+function perfRecord(nowMs, intervalMs, workMs){
+  PERF.frames++; PERF.ring[PERF.ri] = intervalMs; PERF.work[PERF.ri] = workMs; PERF.ri = (PERF.ri+1) % PERF.ring.length; if (PERF.rn < PERF.ring.length) PERF.rn++;
+  if (intervalMs > 50) PERF.long++;
+  if (P.length > PERF.peakP) PERF.peakP = P.length;
+  PERF.fpsN++; if (nowMs - PERF.fpsT >= 1000){ PERF.fps = PERF.fpsN*1000/(nowMs-PERF.fpsT); PERF.fpsN = 0; PERF.fpsT = nowMs; }
+  if (PERF.inputAt){ PERF.inputLat = nowMs - PERF.inputAt; PERF.inputAt = 0; }
+  if (nowMs - PERF.lastEval > 3000){ PERF.lastEval = nowMs;
+    if (PERF.rn >= 60 && nowMs - PERF.tierAt > 5000 && !QS.has('quality') && perfPct(PERF.ring, 0.95) > 40){
+      const i = TIER_ORDER.indexOf(Q.tier); if (i < TIER_ORDER.length-1) setTier(TIER_ORDER[i+1], 'auto'); } }
+}
+function perfText(){
+  const r = LAY;
+  return `tier ${Q.tier}${Q.auto?' (auto)':''}  dpr ${DPR.toFixed(2)}  ${W}x${H} @ ${LAY.x},${LAY.y}
+fps ${PERF.fps.toFixed(1)}  interval p50 ${perfPct(PERF.ring,.5).toFixed(1)} p95 ${perfPct(PERF.ring,.95).toFixed(1)}  work p95 ${perfPct(PERF.work,.95).toFixed(1)}  long ${PERF.long}
+frames ${PERF.frames}  skipped ${PERF.skipped}  idle ${PERF.idle}  input->frame ${PERF.inputLat.toFixed(0)} ms
+particles ${P.length} (peak ${PERF.peakP})  rockets ${ROCKETS.length}  demons ${BOOBOPS.length}
+sources ${GG.loaded}/${GG.total}  canvases ${CANVAS_N}  ${(CANVAS_BYTES/1048576).toFixed(1)} MiB  tint ${((ggTintCache.bytes||0)/1048576).toFixed(1)}  comp ${((ggComp.bytes||0)/1048576).toFixed(1)}
+ctlTop ${Math.round(ctlTop)}  play ${Math.round(playL)}-${Math.round(playR)}  ctl ${r.ctl?Math.round(r.ctl.y):'-'}  cauldron ${r.cauldron?Math.round(r.cauldron.x)+','+Math.round(r.cauldron.y):'-'}`;
+}
+function perfOverlay(nowMs){
+  if (!PERF_SHOW) return;
+  if (!PERF.overlay){ const d = document.createElement('div'); d.id = 'perf'; document.body.appendChild(d); PERF.overlay = d; }
+  if (nowMs - PERF.ovT < 500) return; PERF.ovT = nowMs; PERF.overlay.textContent = perfText();
+}
+document.addEventListener('pointerdown', () => { if (!PERF.inputAt) PERF.inputAt = performance.now(); }, true);
+window.__kbPerf = {
+  get tier(){ return Q.tier; }, get auto(){ return Q.auto; }, get dpr(){ return DPR; }, get fps(){ return PERF.fps; },
+  get p50(){ return perfPct(PERF.ring, .5); }, get p95(){ return perfPct(PERF.ring, .95); }, get workP95(){ return perfPct(PERF.work, .95); },
+  get longFrames(){ return PERF.long; }, get frames(){ return PERF.frames; }, get skipped(){ return PERF.skipped; }, get idle(){ return PERF.idle; },
+  get particles(){ return P.length; }, get particlesPeak(){ return PERF.peakP; },
+  get sources(){ return {loaded:GG.loaded, total:GG.total, manifest:GG.manifest}; },
+  get canvases(){ return {count:CANVAS_N, bytes:CANVAS_BYTES, tint:ggTintCache.bytes||0, skin:ggSkinCache.bytes||0, base:ggBaseCache.bytes||0, comp:ggComp.bytes||0}; },
+  get rects(){ return {viewport:{x:LAY.x, y:LAY.y, w:W, h:H}, stage:{x:playL, y:0, w:playR-playL, h:ctlTop}, ctl:LAY.ctl, left:LAY.left, right:LAY.right, cauldron:LAY.cauldron, dress:LAY.dress}; },
+  get inputLatencyMs(){ return PERF.inputLat; },
+  reset(){ PERF.frames = PERF.skipped = PERF.idle = PERF.long = PERF.rn = PERF.ri = PERF.peakP = 0; PERF.inputLat = 0; },
+  setTier, get Q(){ return Q; },
+};
 const mix = [];                 // potion ids, max 3
 let starsTotal = 0, launches = 0;
 try { starsTotal = +localStorage.getItem('kb_stars') || 0; } catch(e){}
@@ -510,7 +602,7 @@ function initAudio(){
   musicGain = AC.createGain(); musicGain.gain.value = musicOn ? 0.16 : 0; musicGain.connect(master);
   const len = AC.sampleRate*2; noiseBuf = AC.createBuffer(1,len,AC.sampleRate);
   const d = noiseBuf.getChannelData(0); for (let i=0;i<len;i++) d[i]=Math.random()*2-1;
-  startMusic();
+  if (musicOn) startMusic();
 }
 const now = () => AC ? AC.currentTime : 0;
 function tone(freq, t0, dur, {type='sine', vol=0.3, attack=0.005, glide=null, out=sfxGain, lp=null}={}){
@@ -550,7 +642,7 @@ function sfxBoom(big, x){
   noise(t, big?1.4:0.8, {vol:big?0.7:0.45, lp:big?600:1500, lpEnd:80, out});
 }
 function sfxCrackle(x){
-  const t = now(); const n = 10+((Math.random()*8)|0);
+  const t = now(); const n = Math.min(Q.crackle, 10+((Math.random()*8)|0));
   for (let k=0;k<n;k++) noise(t+0.15+Math.random()*1.4, 0.03, {vol:0.18, lp:6000, hp:1500});
 }
 function sfxChord(){
@@ -598,6 +690,8 @@ function setMusic(on){
   // One control for all sound, not just the backing track — a child who wants quiet
   // means quiet, and the same button sits in the dressing room.
   if (master) master.gain.value = on ? 0.9 : 0;
+  // The scheduler is idle work while muted: stop it rather than run it into a silent gain.
+  if (!on && musicTimer){ clearInterval(musicTimer); musicTimer = null; } else if (on && AC && !musicTimer) startMusic();
   for (const sel of ['#music','#dmute']){ const el = $(sel); if (!el) continue;
     el.classList.toggle('off', !on); el.textContent = on ? '🔊' : '🔇'; }
   if (musicGain) musicGain.gain.setTargetAtTime(on?0.16:0, now(), 0.05);
@@ -822,25 +916,125 @@ saveLooks();
 // Every wardrobe layer is authored over one locked 1024x1536 master and composited
 // at (0,0,1) - selecting an item is a layer substitution, never a scaling guess.
 // Same compositor for the dressing room, the thumbnails and the stage.
+//
+// Memory discipline (a 2 GB iPad, and Safari's hard cap on total canvas memory):
+//  - a layer is never held as a full 1024x1536 canvas. `layers.json` (built offline
+//    by tools/build-glowgirl-layers.cjs) carries each PNG's alpha bounds, so tints,
+//    skins, bases and composites are allocated at the crop size and drawn back at
+//    their registered offset - pixel-identical to compositing the full canvas.
+//    Without the manifest the bounds are scanned once from the decoded image;
+//  - every cache has a byte budget, not just an entry count, and a dropped canvas is
+//    shrunk to 1x1 before it is released so Safari gives the memory back promptly;
+//  - sources load on demand: the three current looks first (so PLAY unblocks early)
+//    and the rest of the wardrobe trickles in behind. Empty layers are never fetched.
 const GG_W=1024, GG_H=1536, GG_TOP=63, GG_FOOT=1408, GG_SPAN=GG_FOOT-GG_TOP;
-const GG_SRC='assets/glowgirls/sol/', GG_V='?v=20260903c';
+const GG_SRC='assets/glowgirls/sol/', GG_V='?v=20260905a';
 const REDUCED_MOTION=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const GG={ready:false,img:{},error:null};
+const GG={ready:false,img:{},small:{},box:{},empty:new Set(),manifest:false,error:null,loaded:0,total:0,queue:[],pending:new Set(),inflight:0,waiters:[],dirty:false};
+const GG_FULL={x:0,y:0,w:GG_W,h:GG_H};
+// runtime key -> file basename (wardrobe keys are already `${cat}-${id}-${side}`)
+const GG_FILE={master:'master',blink:'anim-blink-front','head-mask':'head-base-mask','head-hana':'head-hana-front','head-jia':'head-jia-front'};
+const ggFile=k=>GG_FILE[k]||k;
+const ggSrcOf=k=>GG_SRC+(k==='master'?'':'final/')+ggFile(k)+'.png'+GG_V;
+const ggEmpty=k=>GG.empty.has(ggFile(k));
+function ggAllKeys(){
+  const keys=['master','blink','head-mask','head-hana','head-jia'];
+  for(const cat of ['hair','top','bottom','shoes','face'])for(const [id] of WARDROBE[cat])for(const side of ['rear','front'])keys.push(cat+'-'+id+'-'+side);
+  return keys.filter(k=>!ggEmpty(k));
+}
+function ggLookKeys(look){
+  const k=[];
+  for(const side of ['rear','front']){
+    k.push('hair-'+look.hair.style+'-'+side,'top-'+look.top.style+'-'+side,'bottom-'+look.bottom.style+'-'+side,'shoes-'+look.shoes.style+'-'+side);
+    for(const f of look.face)k.push('face-'+f+'-'+side);
+  }
+  return k.filter(x=>!ggEmpty(x));
+}
+
+/* ---- canvas accounting: every offscreen canvas goes through here so the diagnostics can report resident pixels ---- */
+let CANVAS_N=0, CANVAS_BYTES=0;
+function ggCanvas(w,h){const c=document.createElement('canvas');c.width=Math.max(1,Math.round(w));c.height=Math.max(1,Math.round(h));c._bytes=c.width*c.height*4;CANVAS_N++;CANVAS_BYTES+=c._bytes;return c}
+function ggResize(c,w,h){CANVAS_BYTES-=c._bytes||0;c.width=Math.max(1,Math.round(w));c.height=Math.max(1,Math.round(h));c._bytes=c.width*c.height*4;CANVAS_BYTES+=c._bytes}
+function ggFree(c){if(!c||!c._bytes)return;CANVAS_BYTES-=c._bytes;c.width=c.height=1;c._bytes=4;CANVAS_BYTES+=4}
+// A layer record: draw `src`'s (sx,sy,w,h) at registered (dx,dy). Records for raw
+// sources point into the Image; records for tints/composites own a cropped canvas.
+const ggRec=(src,box,owned)=>owned?{src,sx:0,sy:0,dx:box.x,dy:box.y,w:box.w,h:box.h,bytes:src._bytes}:{src,sx:box.x,sy:box.y,dx:box.x,dy:box.y,w:box.w,h:box.h};
+function ggDraw(x,r){x.drawImage(r.src,r.sx,r.sy,r.sw||r.w,r.sh||r.h,r.dx,r.dy,r.w,r.h)}
+function ggUnion(recs){let x0=GG_W,y0=GG_H,x1=0,y1=0;for(const r of recs){if(r.dx<x0)x0=r.dx;if(r.dy<y0)y0=r.dy;if(r.dx+r.w>x1)x1=r.dx+r.w;if(r.dy+r.h>y1)y1=r.dy+r.h}return x1>x0?{x:x0,y:y0,w:x1-x0,h:y1-y0}:{x:0,y:0,w:1,h:1}}
+// LRU caches with a byte budget and an entry cap (every canvas is a GPU surface on
+// iOS, so hundreds of tiny ones cost more than their pixels). A hit re-inserts.
+const MiB=1048576, BUDGET={tint:24*MiB,skin:10*MiB,base:10*MiB,comp:24*MiB}, CACHE_MAX=96;
+function ggPut(cache,key,rec,budget){
+  cache.set(key,rec); cache.bytes=(cache.bytes||0)+(rec.bytes||0);
+  while((cache.bytes>budget||cache.size>CACHE_MAX)&&cache.size>1){const k=cache.keys().next().value;if(k===key)break;ggDrop(cache,k)}
+  return rec;
+}
+function ggDrop(cache,k){const r=cache.get(k);cache.delete(k);if(r&&r.bytes){cache.bytes-=r.bytes;ggFree(r.src);CANVAS_N--}}
+function ggHit(cache,key){const r=cache.get(key);cache.delete(key);cache.set(key,r);return r}
+function ggClear(cache,keep){for(const k of [...cache.keys()])if(!keep||!keep(cache.get(k)))ggDrop(cache,k)}
+
+/* ---- sources ---- */
+async function ggManifest(){
+  try{const r=await fetch(GG_SRC+'layers.json'+GG_V);if(!r.ok)throw new Error('HTTP '+r.status);const m=await r.json();
+    for(const k in m.layers){const b=m.layers[k];if(b)GG.box[k]=b;else GG.empty.add(k)}GG.manifest=true}
+  catch(e){GG.manifest=false;console.warn('layers.json unavailable, scanning bounds at runtime',e)}
+}
+// Bounds of a layer in registered space. Without the manifest they are scanned once from the decoded image.
+function ggBoxOf(key){
+  const f=ggFile(key); if(GG.box[f])return GG.box[f];
+  const img=GG.img[key]; if(!img)return GG_FULL;
+  const c=ggCanvas(GG_W,GG_H),x=c.getContext('2d',{willReadFrequently:true});x.drawImage(img,0,0);
+  const d=x.getImageData(0,0,GG_W,GG_H).data;let x0=GG_W,y0=GG_H,x1=-1,y1=-1;
+  for(let y=0;y<GG_H;y+=2)for(let xx=0;xx<GG_W;xx+=2)if(d[(y*GG_W+xx)*4+3]>0){if(xx<x0)x0=xx;if(xx>x1)x1=xx;if(y<y0)y0=y;if(y>y1)y1=y}
+  ggFree(c);CANVAS_N--;
+  if(x1<0){GG.empty.add(f);return GG_FULL}
+  const bx=Math.max(0,x0-3),by=Math.max(0,y0-3);
+  return GG.box[f]={x:bx,y:by,w:Math.min(GG_W,x1+4)-bx,h:Math.min(GG_H,y1+4)-by};
+}
 function ggLoad(src){return new Promise(ok=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>ok(null);i.src=src})}
+function ggRequest(key,urgent){
+  if(GG.img[key]!==undefined||ggEmpty(key)||GG.pending.has(key))return;
+  GG.pending.add(key); if(urgent)GG.queue.unshift(key); else GG.queue.push(key); ggPump();
+}
+function ggPump(){
+  while(GG.inflight<4&&GG.queue.length){const k=GG.queue.shift();GG.inflight++;
+    ggLoad(ggSrcOf(k)).then(im=>{GG.img[k]=im;GG.loaded++;GG.inflight--;GG.pending.delete(k);GG.dirty=true;
+      const done=[];GG.waiters=GG.waiters.filter(w=>{if(w.keys.every(x=>GG.img[x]!==undefined)){done.push(w);return false}return true});
+      done.forEach(w=>w.ok());ggPump();
+      if(im)(im.decode?im.decode().catch(()=>{}):Promise.resolve()).then(()=>ggSmall(k))})}
+}
+// Decoding a 1024x1536 PNG on first draw costs tens of milliseconds on the main
+// thread (far more on an A9), and Safari drops decoded bitmaps under pressure and
+// decodes them again. So once a layer has been decoded off-thread, a quarter-size
+// crop of it is kept for good (about 3 MiB for the whole wardrobe): thumbnails and
+// stage puppets are drawn from these and never touch the full bitmap again. Only the
+// full-size dressing preview reads the source image.
+const GG_SMALL=0.25;
+function ggSmall(k){
+  const im=GG.img[k]; if(!im||GG.small[k])return null;
+  const box=ggBoxOf(k), c=ggCanvas(Math.ceil(box.w*GG_SMALL),Math.ceil(box.h*GG_SMALL));
+  // CPU-backed: these crops feed the pixel loops, so a readback per tint would cost more than the tint
+  c.getContext('2d',{willReadFrequently:true}).drawImage(im,box.x,box.y,box.w,box.h,0,0,c.width,c.height);
+  GG.dirty=true; return GG.small[k]=c;
+}
+// Resolves once every key has been fetched (a failure is recorded as null so nothing waits forever).
+function ggWhen(keys){keys=keys.filter(k=>!ggEmpty(k));return new Promise(ok=>{keys.forEach(k=>ggRequest(k,true));if(keys.every(k=>GG.img[k]!==undefined))ok();else GG.waiters.push({keys,ok})})}
+// A loaded source, or null. A miss queues the fetch (urgent: it is being drawn) and flags the composite as incomplete.
+let ggMissing=false;
+function ggGet(key){
+  if(ggEmpty(key))return null;
+  const im=GG.img[key]; if(im)return im;
+  if(im===undefined){ggRequest(key,true);ggMissing=true}
+  return null;
+}
 async function loadGlowGirls(){
-  const jobs=[
-    ['master',GG_SRC+'master.png'+GG_V],
-    ['blink',GG_SRC+'final/anim-blink-front.png'+GG_V],
-    ['head-mask',GG_SRC+'final/head-base-mask.png'+GG_V],
-    ['head-hana',GG_SRC+'final/head-hana-front.png'+GG_V],
-    ['head-jia',GG_SRC+'final/head-jia-front.png'+GG_V],
-  ];
-  for(const cat of ['hair','top','bottom','shoes','face'])for(const [id] of WARDROBE[cat])
-    for(const side of ['rear','front']) jobs.push([cat+'-'+id+'-'+side, GG_SRC+'final/'+cat+'-'+id+'-'+side+'.png'+GG_V]);
-  const got=await Promise.all(jobs.map(async([k,src])=>[k,await ggLoad(src)]));
-  for(const [k,im] of got) GG.img[k]=im;
+  await ggManifest();
+  const all=ggAllKeys(); GG.total=all.length;
+  const first=[...new Set(['master','blink','head-mask','head-hana','head-jia',...LOOKS.flatMap(ggLookKeys)])];
+  await ggWhen(first);
   if(!GG.img.master) throw new Error('master layer missing');
   GG.ready=true; if(dressOpen) renderDress();
+  for(const k of all) ggRequest(k,false);   // the rest of the wardrobe trickles in behind the first paint
 }
 
 /* Recolour. Two things are never repainted: white trim, silver and highlights; and
@@ -850,7 +1044,8 @@ async function loadGlowGirls(){
    narrow warm band, which is what isSkin() keys on.
    Garments blend towards the target at TINT_MIX rather than being replaced - a full
    replace flattens a patterned piece into one block of colour. Hair and the
-   white-trimmed metal boots read well at full strength, so they stay at 1. */
+   white-trimmed metal boots read well at full strength, so they stay at 1.
+   The tint runs over the layer's alpha bounds only; the maths per pixel is unchanged. */
 const GG_METAL=new Set(['bottom-silvershorts','shoes-moonboots','shoes-petalboots','top-orbitcape','bottom-orbitflares','shoes-orbitpoints','top-solarvest','shoes-sunburstboots']);
 const TINT_MIX=0.6;   // signed off in the studio, 2026-09-02
 const ggItemOf=k=>k.replace(/-(rear|front)$/,'');
@@ -862,17 +1057,23 @@ function isSkin(r,g,b){
   const hue=60*(g-b)/d;                // 0..60 in this branch
   return hue>=5&&hue<=40;
 }
+// A crop of the source at `res` (1, 0.5 or 0.25): recolouring happens at the resolution
+// the result will be shown at - a 150 px stage puppet or a 128 px thumbnail never needs
+// a 400x1100 tint - which is what keeps a swatch tap under the interaction budget.
+function ggCropOf(img,box,res,key){const cw=Math.max(1,Math.ceil(box.w*res)),ch=Math.max(1,Math.ceil(box.h*res));const c=ggCanvas(cw,ch),x=c.getContext('2d',{willReadFrequently:true});const sm=res<=GG_SMALL&&GG.small[key];if(sm)x.drawImage(sm,0,0,sm.width,sm.height,0,0,cw,ch);else x.drawImage(img,box.x,box.y,box.w,box.h,0,0,cw,ch);return [c,x]}
+// an untinted layer at low resolution is served from its small crop when there is one
+const ggRawRec=(key,img,box,res)=>{const sm=res<=GG_SMALL&&GG.small[key];return sm?{src:sm,sx:0,sy:0,sw:sm.width,sh:sm.height,dx:box.x,dy:box.y,w:box.w,h:box.h}:ggRec(img,box,false)};
+const ggResRec=(c,box)=>({src:c,sx:0,sy:0,sw:c.width,sh:c.height,dx:box.x,dy:box.y,w:box.w,h:box.h,bytes:c._bytes});
+const ggResOf=scale=>scale>=0.75?1:scale>=0.5?0.5:0.25;
 const ggTintCache=new Map();
-function ggPut(cache,key,val,cap){cache.set(key,val);if(cache.size>cap)cache.delete(cache.keys().next().value);return val}
-function ggCanvas(w,h){const c=document.createElement('canvas');c.width=w;c.height=h;return c}
-function tinted(key,color){
-  const img=GG.img[key]; if(!img) return null;
-  if(!color) return img;
+function tinted(key,color,res=1){
+  const img=ggGet(key); if(!img) return null;
+  const box=ggBoxOf(key);
+  if(!color) return ggRawRec(key,img,box,res);
   const item=ggItemOf(key), metal=GG_METAL.has(item), mix=key.startsWith('hair-')||metal?1:TINT_MIX;
-  const ck=key+'|'+color;
-  if(ggTintCache.has(ck)) return ggTintCache.get(ck);
-  const c=ggCanvas(img.width,img.height), x=c.getContext('2d',{willReadFrequently:true});
-  x.drawImage(img,0,0);
+  const ck=key+'|'+color+'|'+res;
+  if(ggTintCache.has(ck)) return ggHit(ggTintCache,ck);
+  const [c,x]=ggCropOf(img,box,res,key);
   const d=x.getImageData(0,0,c.width,c.height), p=d.data;
   const tr=parseInt(color.slice(1,3),16),tg=parseInt(color.slice(3,5),16),tb=parseInt(color.slice(5,7),16);
   for(let i=0;i<p.length;i+=4){
@@ -889,19 +1090,20 @@ function tinted(key,color){
     }
   }
   x.putImageData(d,0,0);
-  return ggPut(ggTintCache,ck,c,48);
+  return ggPut(ggTintCache,ck,ggResRec(c,box),BUDGET.tint);
 }
 
 /* Skin tone is the girl's identity, not a wardrobe slot: it repaints only the warm
    mid-tones of the master (and of the blink overlay, or a blink would flash the
    original tone around the eyes). */
 const ggSkinCache=new Map();
-function ggSkinned(key,tone){
-  const img=GG.img[key]; if(!img||!tone) return img;
-  const ck=key+'|'+tone;
-  if(ggSkinCache.has(ck)) return ggSkinCache.get(ck);
-  const c=ggCanvas(img.width,img.height), x=c.getContext('2d',{willReadFrequently:true});
-  x.drawImage(img,0,0);
+function ggSkinned(key,tone,res=1){
+  const img=ggGet(key); if(!img) return null;
+  const box=ggBoxOf(key);
+  if(!tone) return ggRawRec(key,img,box,res);
+  const ck=key+'|'+tone+'|'+res;
+  if(ggSkinCache.has(ck)) return ggHit(ggSkinCache,ck);
+  const [c,x]=ggCropOf(img,box,res,key);
   const d=x.getImageData(0,0,c.width,c.height), p=d.data;
   const tr=parseInt(tone.slice(1,3),16),tg=parseInt(tone.slice(3,5),16),tb=parseInt(tone.slice(5,7),16);
   for(let i=0;i<p.length;i+=4){
@@ -914,47 +1116,37 @@ function ggSkinned(key,tone){
     p[i+2]=b+(Math.min(255,tb*k)-b)*mix;
   }
   x.putImageData(d,0,0);
-  return ggPut(ggSkinCache,ck,c,8);
+  return ggPut(ggSkinCache,ck,ggResRec(c,box),BUDGET.skin);
 }
 
 // Hana and Jia use real registered head paintings while retaining the immutable
 // Sol body underneath.  The erase happens inside this isolated base canvas so it
 // can never punch a hole through rear hair or accessories already on the stack.
 const ggBaseCache=new Map();
-function ggCharacterBase(i){
-  const ch=CHARS[i], head=ch.head, key=(head||'sol')+'|'+(ch.skin||'0');
-  if(ggBaseCache.has(key))return ggBaseCache.get(key);
-  if(!head)return ggPut(ggBaseCache,key,ggSkinned('master',ch.skin),3);
-  const c=ggCanvas(GG_W,GG_H), x=c.getContext('2d');
-  x.drawImage(ggSkinned('master',ch.skin),0,0);
-  if(GG.img['head-mask']){
-    x.save();x.globalCompositeOperation='destination-out';x.drawImage(GG.img['head-mask'],0,0);x.restore();
-  }
-  const painted=ggSkinned('head-'+head,ch.skin);if(painted)x.drawImage(painted,0,0);
-  return ggPut(ggBaseCache,key,c,3);
+function ggCharacterBase(i,res){
+  const ch=CHARS[i], head=ch.head, key=(head||'sol')+'|'+(ch.skin||'0')+'|'+res;
+  if(ggBaseCache.has(key))return ggHit(ggBaseCache,key);
+  const body=ggSkinned('master',ch.skin,res); if(!body)return null;
+  if(!head)return body;
+  const maskImg=ggGet('head-mask'), face=ggSkinned('head-'+head,ch.skin,res);
+  if(!maskImg||!face)return body;      // still loading: the body alone this frame, not cached
+  const mask=ggRawRec('head-mask',maskImg,ggBoxOf('head-mask'),res), box=ggUnion([body,mask,face]);
+  const c=ggCanvas(box.w*res,box.h*res), x=c.getContext('2d'); x.setTransform(res,0,0,res,-box.x*res,-box.y*res);
+  ggDraw(x,body);
+  x.save();x.globalCompositeOperation='destination-out';ggDraw(x,mask);x.restore();
+  ggDraw(x,face);
+  return ggPut(ggBaseCache,key,ggResRec(c,box),BUDGET.base);
 }
 
-/* The master's bare feet are erased wherever the FRONT boot layer covers them (the
-   rear layer is the shaft interior the leg must stay visible against), dilated 1px
-   so no seam opens, and everything below the ankle line always sits inside a boot. */
-const ggEraseCache=new Map();
-function ggShoeErase(style){
-  if(ggEraseCache.has(style))return ggEraseCache.get(style);
-  const c=ggCanvas(GG_W,GG_H), x=c.getContext('2d'), img=GG.img['shoes-'+style+'-front'];
-  if(img)for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++) x.drawImage(img,dx,dy);
-  x.fillStyle='#000'; x.fillRect(0,1240,GG_W,GG_H-1240);
-  return ggPut(ggEraseCache,style,c,4);
-}
-
-function ggStack(look){
+function ggStack(look,res){
   const L=[];
-  const put=(key,color)=>{const t=tinted(key,color);if(t)L.push(t)};
+  const put=(key,color)=>{const t=tinted(key,color,res);if(t)L.push(t)};
   put('hair-'+look.hair.style+'-rear',look.hair.color);
   for(const f of look.face)put('face-'+f+'-rear',look.faceColor);
   put('top-'+look.top.style+'-rear',look.top.color);
   put('bottom-'+look.bottom.style+'-rear',look.bottom.color);
   L.push('MASTER'); L.push('BLINK');
-  if(GG.img['shoes-'+look.shoes.style+'-front']||GG.img['shoes-'+look.shoes.style+'-rear']) L.push({erase:look.shoes.style});
+  if(!ggEmpty('shoes-'+look.shoes.style+'-front')) L.push({erase:look.shoes.style});
   put('bottom-'+look.bottom.style+'-front',look.bottom.color);
   put('top-'+look.top.style+'-front',look.top.color);
   put('shoes-'+look.shoes.style+'-rear',look.shoes.color);
@@ -965,22 +1157,39 @@ function ggStack(look){
 }
 // Compositing every layer each frame would be far too slow, so a finished puppet is
 // cached per girl / look / blink state / resolution and simply blitted after that.
+// The canvas covers only the union of the layers' bounds, at `scale`.
 const ggComp=new Map();
 function ggComposite(i,look,blink,scale){
   const ch=CHARS[i], tone=ch.skin;
   const key=(ch.head||'sol')+'|'+(tone||'0')+'|'+JSON.stringify(look)+'|'+(blink?1:0)+'|'+scale;
-  if(ggComp.has(key))return ggComp.get(key);
-  const c=ggCanvas(Math.round(GG_W*scale),Math.round(GG_H*scale)), x=c.getContext('2d');
-  x.scale(scale,scale);
-  for(const lay of ggStack(look)){
-    if(lay==='MASTER'){x.drawImage(ggCharacterBase(i),0,0);continue}
-    // The existing blink painting is Sol-specific. Keep Hana and Jia still until
-    // their own head animation layers are authored rather than flashing Sol's eyes.
-    if(lay==='BLINK'){if(blink&&!ch.head&&GG.img.blink)x.drawImage(ggSkinned('blink',tone),0,0);continue}
-    if(lay&&lay.erase){x.save();x.globalCompositeOperation='destination-out';x.drawImage(ggShoeErase(lay.erase),0,0);x.restore();continue}
-    x.drawImage(lay,0,0);
+  if(ggComp.has(key))return ggHit(ggComp,key);
+  const outerMissing=ggMissing; ggMissing=false; const res=ggResOf(scale);
+  const base=ggCharacterBase(i,res), stack=ggStack(look,res);
+  // The existing blink painting is Sol-specific. Keep Hana and Jia still until
+  // their own head animation layers are authored rather than flashing Sol's eyes.
+  const blinkRec=blink&&!ch.head?ggSkinned('blink',tone,res):null;
+  const erase=stack.find(l=>l&&l.erase), eraseRec=erase?tinted('shoes-'+erase.erase+'-front',null):null;
+  if(!base){ggMissing=outerMissing||ggMissing;return null}
+  const box=ggUnion([base,blinkRec,...stack.filter(l=>l&&l.src)].filter(Boolean));
+  const c=ggCanvas(box.w*scale,box.h*scale), x=c.getContext('2d');
+  x.setTransform(scale,0,0,scale,-box.x*scale,-box.y*scale);
+  for(const lay of stack){
+    if(lay==='MASTER'){ggDraw(x,base);continue}
+    if(lay==='BLINK'){if(blinkRec)ggDraw(x,blinkRec);continue}
+    if(lay.erase){
+      /* The master's bare feet are erased wherever the FRONT boot layer covers them (the
+         rear layer is the shaft interior the leg must stay visible against), dilated 1px
+         so no seam opens, and everything below the ankle line always sits inside a boot. */
+      if(eraseRec){x.save();x.globalCompositeOperation='destination-out';
+        for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++)x.drawImage(eraseRec.src,eraseRec.sx,eraseRec.sy,eraseRec.w,eraseRec.h,eraseRec.dx+dx,eraseRec.dy+dy,eraseRec.w,eraseRec.h);
+        x.fillStyle='#000';x.fillRect(0,1240,GG_W,GG_H-1240);x.restore()}
+      continue}
+    ggDraw(x,lay);
   }
-  return ggPut(ggComp,key,c,14);
+  const rec={src:c,sx:0,sy:0,dx:box.x,dy:box.y,w:box.w,h:box.h,scale,bytes:c._bytes};
+  const partial=ggMissing; ggMissing=outerMissing||ggMissing;
+  if(partial){rec.partial=true;return rec}   // a layer is still loading: not cached, recomposited once it lands
+  return ggPut(ggComp,key,rec,BUDGET.comp);
 }
 // Blinks are the one animation that cannot separate clothing from the character.
 const ggBlinkAt=[0,0,0];
@@ -990,62 +1199,96 @@ function ggBlinking(i,t){
   if(ms>ggBlinkAt[i]+3400+i*700) ggBlinkAt[i]=ms;
   return ms-ggBlinkAt[i]<130;
 }
+// Composite resolution follows what will actually be shown (height on screen x DPR),
+// quantised to quarter steps so a breathing puppet does not spawn a new canvas per frame.
+function ggScaleFor(gh){const need=gh*DPR/GG_SPAN;return Math.min(1,Math.max(0.25,Math.ceil(need*4)/4))}
+const ggLast=[null,null,null];
 function drawPuppet(i,look,x,y,gh,t,still){
-  const scale=gh>320?1:0.5;                       // dressing-room preview vs stage
-  const c=ggComposite(i,look,ggBlinking(i,still?undefined:t),scale);
-  const s=gh/GG_SPAN, dw=GG_W*s, dh=GG_H*s;
+  const scale=ggScaleFor(gh);
+  let rec=ggComposite(i,look,ggBlinking(i,still?undefined:t),scale);
+  if(!rec)return;
+  // While a freshly picked garment is still downloading, keep showing her last
+  // complete look rather than a puppet with a hole in it.
+  if(rec.partial){const prev=ggLast[i];if(prev&&prev.scale===scale&&prev.src.width>1){ggFree(rec.src);CANVAS_N--;rec=prev}}
+  else ggLast[i]=rec;
+  const s=gh/GG_SPAN;
   const breath=still?1:1+0.004*Math.sin((t||0)*0.9+i*1.8);
   ctx.save();
   ctx.translate(x,y); ctx.scale(1,breath); ctx.translate(-x,-y);   // whole puppet, feet planted
-  ctx.drawImage(c,x-dw/2,y-GG_FOOT*s,dw,dh);
+  ctx.drawImage(rec.src,0,0,rec.src.width,rec.src.height,x-GG_W*s/2+rec.dx*s,y-GG_FOOT*s+rec.dy*s,rec.w*s,rec.h*s);
   ctx.restore();
+  if(rec.partial){ggFree(rec.src);CANVAS_N--}
 }
 // Item thumbnails crop to the layer's own bounds; the source stays registered.
-const ggBox=new Map();
-function ggBounds(cat,id){
-  const k=cat+'-'+id;
-  if(ggBox.has(k))return ggBox.get(k);
-  const c=ggCanvas(GG_W,GG_H), x=c.getContext('2d',{willReadFrequently:true});
-  for(const side of ['rear','front']){const im=GG.img[k+'-'+side];if(im)x.drawImage(im,0,0)}
-  const d=x.getImageData(0,0,GG_W,GG_H).data;
-  let x0=GG_W,y0=GG_H,x1=0,y1=0;
-  for(let y=0;y<GG_H;y+=3)for(let xx=0;xx<GG_W;xx+=3)
-    if(d[(y*GG_W+xx)*4+3]>24){if(xx<x0)x0=xx;if(xx>x1)x1=xx;if(y<y0)y0=y;if(y>y1)y1=y}
-  const box=x1>x0?{x:x0-8,y:y0-8,w:x1-x0+16,h:y1-y0+16}:null;
-  return ggPut(ggBox,k,box,40);
-}
 function drawItemThumb(cat,id,look,size){
-  const box=ggBounds(cat,id); if(!box)return false;
   const color=cat==='face'?look.faceColor:look[cat]?look[cat].color:null;
-  const t=ggCanvas(GG_W,GG_H), x=t.getContext('2d');
-  for(const side of ['rear','front']){const im=tinted(cat+'-'+id+'-'+side,color);if(im)x.drawImage(im,0,0)}
-  const sc=Math.min(size/box.w,size/box.h), dw=box.w*sc, dh=box.h*sc;
-  ctx.drawImage(t,box.x,box.y,box.w,box.h,(size-dw)/2,(size-dh)/2,dw,dh);
+  const keys=['rear','front'].map(s=>cat+'-'+id+'-'+s).filter(k=>!ggEmpty(k));
+  if(!keys.length)return false;
+  const recs=keys.map(k=>tinted(k,color,0.25));
+  if(recs.some(r=>!r))return false;    // still loading; the tile refreshes when it lands
+  const b=ggUnion(recs), pad=8, bx=b.x-pad, by=b.y-pad, bw=b.w+2*pad, bh=b.h+2*pad;
+  const sc=Math.min(size/bw,size/bh), ox=(size-bw*sc)/2, oy=(size-bh*sc)/2;
+  for(const r of recs)ctx.drawImage(r.src,r.sx,r.sy,r.sw||r.w,r.sh||r.h,ox+(r.dx-bx)*sc,oy+(r.dy-by)*sc,r.w*sc,r.h*sc);
   return true;
 }
 
+/* ================= LAYOUT =================
+   One owner for every viewport and DOM measurement. Safari's visible viewport moves
+   without a window resize (browser bars, the keyboard, rotation settling late), and
+   the rails and controls reflow on their own (ammo bottles appear, the name changes),
+   so anything that needs geometry reads `LAY` - a snapshot taken at most once per
+   frame - and nothing calls getBoundingClientRect() inside the draw loop.
+   Canvas coordinates are visual-viewport coordinates: the canvas and the fixed
+   overlays are pinned to the visual viewport through the --app-* variables, so a
+   pointer's clientX/Y converts with the same offset the drawing uses. */
+const LAY={x:0,y:0,W:0,H:0,ctlTop:0,playL:0,playR:0,ctl:null,left:null,right:null,cauldron:null,dress:null};
 let ctlTop = 0; // y where the DOM controls begin (stage sits above)
-
-function resize(){
-  W = innerWidth; H = innerHeight;
-  DPR = Math.min(devicePixelRatio||1, 2);
-  if (W*H*DPR*DPR > 3.4e6) DPR = Math.sqrt(3.4e6/(W*H));
-  cv.width = Math.round(W*DPR); cv.height = Math.round(H*DPR);
+let layoutDirty=true, layoutRafs=0;
+const LAYOUT_DEBUG=QS.has('layoutDebug');
+function requestLayout(){layoutDirty=true}
+const resize=requestLayout;
+function viewportRect(){const vv=window.visualViewport;if(vv&&vv.width>0&&vv.height>0)return {x:vv.offsetLeft,y:vv.offsetTop,w:vv.width,h:vv.height};return {x:0,y:0,w:innerWidth,h:innerHeight}}
+function rectOf(el){const r=el.getBoundingClientRect();return (r.width||r.height)?{x:r.left-LAY.x,y:r.top-LAY.y,w:r.width,h:r.height}:null}
+function syncLayout(){
+  layoutDirty=false;
+  const v=viewportRect(); LAY.x=v.x; LAY.y=v.y;
+  W=Math.round(v.w); H=Math.round(v.h); LAY.W=W; LAY.H=H;
+  const rs=document.documentElement.style;
+  rs.setProperty('--app-x',v.x+'px'); rs.setProperty('--app-y',v.y+'px'); rs.setProperty('--app-w',W+'px'); rs.setProperty('--app-h',H+'px');
+  let dpr=Math.min(devicePixelRatio||1,Q.dpr); if(W*H*dpr*dpr>3.4e6)dpr=Math.sqrt(3.4e6/(W*H)); DPR=dpr;
+  const bw=Math.round(W*DPR), bh=Math.round(H*DPR);
+  if(cv.width!==bw||cv.height!==bh){cv.width=bw;cv.height=bh}
   ctx.setTransform(DPR,0,0,DPR,0,0);
-  U = Math.min(W,H)/720;
-  const r = $('#ctl').getBoundingClientRect(); ctlTop = r.height ? r.top : H*0.8;
+  U=Math.min(W,H)/720;
+  LAY.ctl=rectOf($('#ctl')); LAY.left=rectOf($('#left')); LAY.right=rectOf($('#right')); LAY.cauldron=rectOf($('#cauldron'));
+  ctlTop=LAY.ctl?LAY.ctl.y:H*0.8; LAY.ctlTop=ctlTop;
   // demons, drops and shots live in the open sky between the two potion rails
-  const lr = $('#left').getBoundingClientRect(), rr = $('#right').getBoundingClientRect();
-  playL = lr.width ? lr.right + 6 : 0; playR = rr.width ? rr.left - 6 : W;
-  if (playR - playL < W*0.4){ playL = 0; playR = W; }
+  playL=LAY.left?LAY.left.x+LAY.left.w+6:0; playR=LAY.right?LAY.right.x-6:W;
+  if(playR-playL<W*0.4){playL=0;playR=W}
+  LAY.playL=playL; LAY.playR=playR;
+  // the dressing-room preview canvas is sized here, never inside drawDress
+  LAY.dress=dressOpen?rectOf($('#cvwrap')):null;
+  if(LAY.dress){const pw=Math.round(LAY.dress.w*DPR),ph=Math.round(LAY.dress.h*DPR);if(dcv.width!==pw||dcv.height!==ph){dcv.width=pw;dcv.height=ph}}
+  invalidateScenery();
 }
-addEventListener('resize', resize); addEventListener('orientationchange', () => setTimeout(resize, 200));
+addEventListener('resize', requestLayout);
+addEventListener('orientationchange', () => { requestLayout(); layoutRafs=3; setTimeout(requestLayout,200); setTimeout(requestLayout,600); });
+if (window.visualViewport){ visualViewport.addEventListener('resize', requestLayout); visualViewport.addEventListener('scroll', requestLayout); }
+if (window.ResizeObserver){ const ro=new ResizeObserver(requestLayout); for (const s of ['#top','#ctl','#left','#right','#cauldron','#cvwrap']) ro.observe($(s)); }
+function drawLayoutDebug(){
+  const boxes=dressOpen?[['dress canvas',LAY.dress&&{x:0,y:0,w:LAY.dress.w,h:LAY.dress.h},'#a855ff']]
+    :[['viewport',{x:0,y:0,w:W,h:H},'#7dff4a'],['stage',{x:playL,y:0,w:playR-playL,h:ctlTop},'#33e6ff'],['ctl',LAY.ctl,'#ffd23f'],['left',LAY.left,'#ff3fa4'],['right',LAY.right,'#ff3fa4'],['cauldron',LAY.cauldron,'#ff7a2f']];
+  ctx.save(); ctx.setTransform(DPR,0,0,DPR,0,0); ctx.globalCompositeOperation='source-over'; ctx.globalAlpha=1; ctx.shadowBlur=0; ctx.lineWidth=2; ctx.font='12px monospace'; ctx.textAlign='left'; ctx.textBaseline='top';
+  let y=4; const line=s=>{ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(6,y-1,ctx.measureText(s).width+4,14);ctx.fillStyle='#fff';ctx.fillText(s,8,y);y+=14};
+  for(const [n,r,c] of boxes){ if(!r)continue; ctx.strokeStyle=c; ctx.strokeRect(r.x+1,r.y+1,r.w-2,r.h-2); line(`${n} ${Math.round(r.x)},${Math.round(r.y)} ${Math.round(r.w)}x${Math.round(r.h)}`); }
+  line(`visualViewport ${LAY.x},${LAY.y}  dpr ${DPR.toFixed(2)}  tier ${Q.tier}  ctlTop ${Math.round(ctlTop)}`);
+  ctx.restore();
+}
 
 /* ================= PARTICLES ================= */
 const P = [], ROCKETS = [], FLASHES = [], BOOBOPS = [], BUBBLES = [], NOTES = ['♪','♫','♬'];
-const MAXP = 2600;
 let glow = 1, glowTarget = 1, lsx = 0, lsy = 0;   // Giant Lightstick glow level and head position
-function spawn(o){ if (P.length < MAXP) P.push(o); }
+function spawn(o){ if (P.length < Q.maxP) P.push(o); }
 
 function hsl(h,s,l,a){ return `hsla(${h},${s}%,${l}%,${a})`; }
 function colourFor(colours, i){
@@ -1082,7 +1325,7 @@ function explode(x, y, m, small){
   const big = scale > 1.45;
   const sizeM = clamp(M.size * (same?1.3:1), 0.5, 2.2);
   let n = Math.round((shape==='notes'?70:shape==='peony'?110:120) * M.count * potions * (same?1.3:1) * (willow?0.8:1) * (small?0.45:1));
-  n = Math.min(n, 460);
+  n = Math.min(n, Q.perBurst);
   const S = (willow?250:shape==='peony'?230:260) * U * scale;
   const drag = willow?2.6:glitter?1.9:1.5, grav = (willow?230:170)*U*M.grav;
   const lifeBase = willow?rnd(4,6.5):glitter?rnd(2.6,4):rnd(1.6,2.6), life = clamp(lifeBase*M.life, 0.6, 8);
@@ -1124,9 +1367,9 @@ function explode(x, y, m, small){
 // The cannon sits in the cauldron and swings to follow the mouse / last finger; it only fires when there is a potion mix.
 const aim = {x:0, y:0, a:-Math.PI/2, show:0}; let cannonKick = 0, mixCss = [];
 function cannonGeom(){
-  const cr = $('#cauldron').getBoundingClientRect();
-  const px = cr.width ? cr.left + cr.width/2 : W/2, py = cr.height ? cr.top + cr.height*0.12 : H*0.85;
-  const L = Math.max(64*U, (cr.width||100)*0.62), w = Math.max(22*U, (cr.width||100)*0.3);
+  const cr = LAY.cauldron || {x:0, y:0, w:0, h:0};   // the layout snapshot, never a live DOM read inside the frame
+  const px = cr.w ? cr.x + cr.w/2 : W/2, py = cr.h ? cr.y + cr.h*0.12 : H*0.85;
+  const L = Math.max(64*U, (cr.w||100)*0.62), w = Math.max(22*U, (cr.w||100)*0.3);
   return {px, py, L, w};
 }
 function aimAngle(px, py, x, y){ return clamp(Math.atan2(y-py, x-px), -Math.PI+0.3, -0.3); }
@@ -1286,7 +1529,7 @@ function openMap(banner){
 function closeMapUI(){ dressOpen = false; $('#dress').hidden = true; $('#map').hidden = true; $('#ui').classList.remove('hidden');
   $('#finale').hidden = MODE==='level'; $('#mapBtn').hidden = MODE!=='level'; $('#pause').hidden = MODE!=='level';
   $('#stars').style.display = MODE==='level' ? 'none' : ''; renderLives(); renderAmmo();
-  lastTouch = performance.now(); setTimeout(resize, 50); }
+  lastTouch = performance.now(); requestLayout(); setTimeout(requestLayout, 50); }
 function startLevel(i){
   MODE = 'level'; const cfg = LEVELS[i];
   Object.assign(PLAY, {on:true, idx:i, phase:'waves', left:cfg.waves, nextSpawn:performance.now()+2600,
@@ -1478,6 +1721,7 @@ function renderAmmo(){
     b.style.display = (rare && !(MODE==='level' && ammo[id] > 0)) ? 'none' : '';
     if (MODE==='level' && ammo[id]!==undefined){ a.style.display = 'grid'; a.textContent = ammo[id]; b.classList.toggle('out', ammo[id] <= 0); }
     else { a.style.display = 'none'; b.classList.remove('out'); } });
+  requestLayout();   // bottles came or went: the rails may have reflowed
 }
 
 /* ---- theme scenery ---- */
@@ -1508,7 +1752,7 @@ function drawThemeProps(th, t, hz){
     ctx.globalCompositeOperation = 'source-over';
   } else if (th===3){ // rain + umbrellas handled in crowd; here: streaks
     ctx.strokeStyle = 'rgba(150,220,240,0.35)'; ctx.lineWidth = 1.5*U; ctx.beginPath();
-    for (let k=0;k<60;k++){ const rx = ((k*97) % 100)/100*W, ry = ((k*61)/100*H + t*(260+((k*13)%80))*U) % H; ctx.moveTo(rx, ry); ctx.lineTo(rx-4*U, ry+16*U); }
+    for (let k=0;k<Q.weather;k++){ const rx = ((k*97) % 100)/100*W, ry = ((k*61)/100*H + t*(260+((k*13)%80))*U) % H; ctx.moveTo(rx, ry); ctx.lineTo(rx-4*U, ry+16*U); }
     ctx.stroke();
   } else if (th===4){ // ferris wheel + balloons
     const fx = W*0.14, fy = hz - 90*U, fr = 80*U;
@@ -1584,18 +1828,35 @@ let toastT = null;
 function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),1100); }
 
 /* ================= DRAW ================= */
-let last = performance.now(), beat = 0;
+let last = performance.now(), beat = 0, lastDrawAt = 0, tilesPending = false;
+const EL = {photo:$('#photo'), map:$('#map'), names:$('#names'), unlock:$('#unlock')};
+// Nothing renders while nothing can be seen moving: the splash is opaque, the map and
+// photo cover the stage, a modal freezes what is under it, a hidden tab is hidden.
+function renderActive(){
+  if (!started || document.hidden || paused) return false;
+  return EL.photo.hidden && EL.map.hidden && EL.unlock.hidden && EL.names.hidden;
+}
 function frame(nowMs){
   requestAnimationFrame(frame);
+  if (layoutDirty || layoutRafs > 0){ if (layoutRafs > 0) layoutRafs--; syncLayout(); }
+  if (GG.dirty){ GG.dirty = false; if (dressOpen && tilesPending && !dragging) renderTiles(); }
+  if (!renderActive()){ last = nowMs; PERF.idle++; return; }
+  if (Q.hz < 60 && nowMs - lastDrawAt < 1000/Q.hz - 2){ PERF.skipped++; return; }   // fixed-rate tiers skip RAF ticks
+  const t0 = performance.now();
   let dt = (nowMs-last)/1000; last = nowMs; if (dt>0.05) dt=0.05;
   const t = nowMs/1000; beat = (t*BPM/60)%1;
   if (!paused) update(dt, nowMs);
   if (dressOpen) drawDress(t, dt); else draw(t, dt);
+  if (LAYOUT_DEBUG){ const saved = ctx; if (dressOpen) ctx = dctx; drawLayoutDebug(); ctx = saved; }
+  perfRecord(nowMs, lastDrawAt ? nowMs - lastDrawAt : 0, performance.now() - t0); lastDrawAt = nowMs;
+  perfOverlay(nowMs);
 }
+
 function update(dt, nowMs){
   // rockets
   for (let i=ROCKETS.length-1;i>=0;i--){ const r=ROCKETS[i]; r.t+=dt; r.vy += r.g*dt; r.x += r.vx*dt; r.y += r.vy*dt;
-    for (let k=0;k<2;k++) spawn({x:r.x,y:r.y,vx:rnd(-30,30)*U-r.vx*0.1,vy:rnd(20,80)*U,life:rnd(0.25,0.5),max:0.4,h:r.h,s:90,l:75,sz:1.6*U,drag:2,grav:100*U,spin:0,tx:r.x,ty:r.y,tx2:r.x,ty2:r.y});
+    const trailN = Q.trailEvery === 1 ? 2 : (PERF.frames % Q.trailEvery === 0 ? 1 : 0);   // legacy: one spark every second rendered frame
+    for (let k=0;k<trailN;k++) spawn({x:r.x,y:r.y,vx:rnd(-30,30)*U-r.vx*0.1,vy:rnd(20,80)*U,life:rnd(0.25,0.5),max:0.4,h:r.h,s:90,l:75,sz:1.6*U,drag:2,grav:100*U,spin:0,tx:r.x,ty:r.y,tx2:r.x,ty2:r.y});
     let hit = false; for (const b of BOOBOPS){ if (!b.dead && Math.hypot(b.x-r.x, b.y-r.y) < b.r*1.1){ hit = true; break; } }
     if (!hit) for (const d of DROPS){ if (Math.hypot(d.x-r.x, d.y-r.y) < d.r*1.2){ hit = true; break; } }
     if (r.t >= r.T || hit){ ROCKETS.splice(i,1); explode(r.x, r.y, r.m); }
@@ -1607,7 +1868,7 @@ function update(dt, nowMs){
     const d = Math.exp(-p.drag*dt); p.vx*=d; p.vy*=d; p.vy += p.grav*dt;
     if (p.spin){ const a=p.spin*dt, c=Math.cos(a), s=Math.sin(a); const vx=p.vx*c-p.vy*s; p.vy=p.vx*s+p.vy*c; p.vx=vx; }
     p.x += p.vx*dt; p.y += p.vy*dt;
-    if (p.glit && Math.random()<dt*2.2 && P.length<MAXP-50) P.push({x:p.x,y:p.y,vx:rnd(-40,40)*U,vy:rnd(-40,40)*U,life:rnd(0.2,0.5),max:0.4,h:p.h,s:60,l:92,sz:1.8*U,drag:1,grav:60*U,spin:0,tw:true,tx:p.x,ty:p.y,tx2:p.x,ty2:p.y});
+    if (p.glit && Math.random()<dt*Q.glitter && P.length<Q.maxP-50) P.push({x:p.x,y:p.y,vx:rnd(-40,40)*U,vy:rnd(-40,40)*U,life:rnd(0.2,0.5),max:0.4,h:p.h,s:60,l:92,sz:1.8*U,drag:1,grav:60*U,spin:0,tw:true,tx:p.x,ty:p.y,tx2:p.x,ty2:p.y});
   }
   for (let i=FLASHES.length-1;i>=0;i--){ FLASHES[i].a -= dt*4; if (FLASHES[i].a<=0) FLASHES.splice(i,1); }
   flashA = Math.max(0, flashA - dt*1.2); shake = Math.max(0, shake - dt*30); cheer = Math.max(0, cheer - dt*0.25); rainbowSky = Math.max(0, rainbowSky-dt);
@@ -1635,7 +1896,7 @@ function update(dt, nowMs){
       if (AC && Math.random()<0.5){ const t0=now(); tone(1100+rnd(900), t0, 0.06, {type:'sine', vol:0.08, glide:2200}); }
       for (let k=0;k<4;k++){ const a=rnd(TAU); spawn({x:b.x,y:b.y,vx:Math.cos(a)*50*U,vy:Math.sin(a)*50*U,life:0.3,max:0.3,h:b.hue,s:80,l:90,sz:1.5*U,drag:2,grav:0,spin:0,tx:b.x,ty:b.y,tx2:b.x,ty2:b.y}); } } }
   // finale
-  if (!dressOpen && nowMs < finaleUntil && nowMs >= nextFinaleShot){ nextFinaleShot = nowMs + rnd(220,420);
+  if (!dressOpen && nowMs < finaleUntil && nowMs >= nextFinaleShot){ nextFinaleShot = nowMs + rnd(Q.finale[0], Q.finale[1]);
     const ids = [pick(COLOURS).id]; if (Math.random()<0.6) ids.push(pick(COLOURS).id); if (Math.random()<0.85) ids.push(pick(MAGICS).id); if (Math.random()<0.4) ids.push(pick(MAGICS).id);
     launch(rnd(W*0.1,W*0.9), rnd(H*0.08,H*0.5), ids); }
   else if (finaleUntil && nowMs >= finaleUntil){ finaleUntil = 0; $('#finale').classList.remove('busy');
@@ -1644,12 +1905,12 @@ function update(dt, nowMs){
   if (MODE==='free' && started && !dressOpen && $('#map').hidden && nowMs - lastTouch > 20000 && !ROCKETS.length){ lastTouch = nowMs - 8000; launch(rnd(W*0.2,W*0.8), rnd(H*0.15,H*0.4), [pick(COLOURS).id, pick(MAGICS).id]); }
 }
 
-function draw(t, dt){
-  ctx.globalCompositeOperation = 'source-over';
-  ctx.save();
-  if (shake>0.3) ctx.translate(rnd(-shake,shake), rnd(-shake,shake));
-  // sky (themed per level)
-  const th = themeIdx(), TS = THEME_SKY[th];
+/* ---- cached scenery: anything that does not move is painted once per layout/theme
+   into an offscreen canvas and blitted, so the per-frame cost is a copy, not a
+   gradient build plus a blurred moon plus 26 buildings of windows. ---- */
+let skyCv = null, skyKey = '', skylineCv = null, skylineKey = '', skylineTop = 0;
+function invalidateScenery(){ skyKey = ''; skylineKey = ''; stageKey = ''; }
+function paintSky(th, TS, t){
   const g = ctx.createLinearGradient(0,0,0,H);
   if (rainbowSky>0){ const hh=(t*200)%360; g.addColorStop(0,`hsl(${hh},70%,${12+rainbowSky*10}%)`); g.addColorStop(1,`hsl(${(hh+120)%360},80%,${28+rainbowSky*10}%)`); }
   else { g.addColorStop(0,TS[0]); g.addColorStop(0.55,TS[1]); g.addColorStop(1,TS[2]); }
@@ -1658,18 +1919,43 @@ function draw(t, dt){
   const hg = ctx.createRadialGradient(W/2, ctlTop, 0, W/2, ctlTop, Math.max(W,H)*0.7);
   hg.addColorStop(0,`rgba(${TS[3]},0.35)`); hg.addColorStop(0.5,'rgba(168,85,255,0.12)'); hg.addColorStop(1,'rgba(0,0,0,0)');
   ctx.fillStyle = hg; ctx.fillRect(0,0,W,H);
-  if (flashA>0){ ctx.fillStyle = hsl(flashH,100,70,flashA); ctx.fillRect(0,0,W,H); }
   // moon (not at sunset / sunrise)
   if (th!==0 && th!==4){
     ctx.fillStyle = '#fff6d5'; ctx.shadowColor = '#ffe9a8'; ctx.shadowBlur = 30; ctx.beginPath(); ctx.arc(W*0.84, H*0.13, (th===2?34:22)*U, 0, TAU); ctx.fill();
     ctx.shadowBlur = 0; if (th!==2){ ctx.fillStyle = '#12052a'; ctx.beginPath(); ctx.arc(W*0.84+12*U, H*0.13-6*U, 19*U, 0, TAU); ctx.fill(); } }
-  // stars
-  for (const s of stars){ const a = 0.4+0.6*Math.abs(Math.sin(t*s.s+s.p)); ctx.fillStyle = `rgba(255,255,255,${a})`; ctx.fillRect(s.x*W, s.y*H, s.r*U*1.5, s.r*U*1.5); }
-  // skyline
-  const hz = ctlTop - 6*U;
+}
+function drawSky(th, TS, t){
+  if (rainbowSky>0){ paintSky(th, TS, t); return; }     // the rainbow sky animates; paint it live while it lasts
+  const key = [th, W, H, DPR, ctlTop].join('|');
+  if (skyKey !== key){ skyKey = key; if (!skyCv) skyCv = ggCanvas(1,1); ggResize(skyCv, W*DPR, H*DPR);
+    const x = skyCv.getContext('2d', {alpha:false}); x.setTransform(DPR,0,0,DPR,0,0); const saved = ctx; ctx = x; paintSky(th, TS, t); ctx = saved; }
+  ctx.drawImage(skyCv, 0, 0, W, H);
+}
+function paintSkyline(hz){
   ctx.fillStyle = '#0d0322';
   for (const b of skyline){ const bw=b.w*W, bh=b.h*H*0.9; ctx.fillRect(b.x*W, hz-bh, bw+1, bh+10);
     if (b.win){ ctx.fillStyle = 'rgba(255,220,120,0.55)'; for (let y=hz-bh+6*U; y<hz-6*U; y+=9*U) for (let x=b.x*W+4*U; x<b.x*W+bw-4*U; x+=8*U) if (((x*7+y*13)|0)%5<2) ctx.fillRect(x,y,3*U,4*U); ctx.fillStyle='#0d0322'; } }
+}
+function drawSkyline(hz){
+  const key = [W, H, DPR, hz].join('|'), top = Math.floor(hz - H*0.11 - 2), hgt = Math.ceil(hz + 12 - top);
+  if (skylineKey !== key){ skylineKey = key; skylineTop = top; if (!skylineCv) skylineCv = ggCanvas(1,1); ggResize(skylineCv, W*DPR, hgt*DPR);
+    const x = skylineCv.getContext('2d'); x.setTransform(DPR,0,0,DPR,0,-top*DPR); const saved = ctx; ctx = x; paintSkyline(hz); ctx = saved; }
+  ctx.drawImage(skylineCv, 0, skylineTop, W, skylineCv.height/DPR);
+}
+function draw(t, dt){
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.save();
+  if (shake>0.3) ctx.translate(rnd(-shake,shake), rnd(-shake,shake));
+  // sky (themed per level)
+  const th = themeIdx(), TS = THEME_SKY[th];
+  drawSky(th, TS, t);
+  if (flashA>0){ ctx.fillStyle = hsl(flashH,100,70,flashA); ctx.fillRect(0,0,W,H); }
+  // stars
+  { const step = Math.max(1, Math.round(stars.length/Q.stars));
+    for (let i=0;i<stars.length;i+=step){ const s = stars[i], a = 0.4+0.6*Math.abs(Math.sin(t*s.s+s.p)); ctx.fillStyle = `rgba(255,255,255,${a})`; ctx.fillRect(s.x*W, s.y*H, s.r*U*1.5, s.r*U*1.5); } }
+  // skyline
+  const hz = ctlTop - 6*U;
+  drawSkyline(hz);
   drawThemeProps(th, t, hz);
   // spotlights
   ctx.globalCompositeOperation = 'lighter';
@@ -1683,15 +1969,22 @@ function draw(t, dt){
   // rockets
   for (const r of ROCKETS){ ctx.strokeStyle = hsl(r.h,100,80,0.9); ctx.lineWidth = 3*U; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(r.x-r.vx*0.04, r.y-r.vy*0.04); ctx.lineTo(r.x,r.y); ctx.stroke();
     ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(r.x,r.y,2.5*U,0,TAU); ctx.fill(); }
-  // particles
+  // particles, batched: one path and one stroke per colour/alpha/width bucket instead
+  // of one per particle (alpha in 16 steps, width in half pixels - invisible on a spark)
   ctx.lineCap = 'round';
+  const buckets = PBUCKETS; buckets.clear(); PNOTES.length = 0;
   for (const p of P){
     const f = p.life/p.max; let a = f<0.35 ? f/0.35 : 1;
     if (p.tw) a *= 0.35+0.65*Math.abs(Math.sin(p.life*23+p.x));
-    if (p.note){ ctx.fillStyle = hsl(p.h,p.s,p.l,a); ctx.font = `bold ${22*U}px ${'"Segoe UI Symbol",system-ui,sans-serif'}`; ctx.fillText(p.note, p.x, p.y); continue; }
-    ctx.strokeStyle = hsl(p.h,p.s,p.l,a); ctx.lineWidth = p.sz*(0.5+0.5*f);
-    ctx.beginPath(); ctx.moveTo(p.tx2,p.ty2); ctx.lineTo(p.x,p.y); ctx.stroke();
+    if (p.note){ PNOTES.push(p, a); continue; }
+    const aq = Math.round(a*15), lw = Math.round(p.sz*(0.5+0.5*f)*2);
+    const key = p.h+','+p.s+','+p.l+','+aq+','+lw;
+    let b = buckets.get(key); if (!b){ b = {style:hsl(p.h,p.s,p.l,aq/15), lw:lw/2, q:[]}; buckets.set(key, b); }
+    b.q.push(p.tx2, p.ty2, p.x, p.y);
   }
+  for (const b of buckets.values()){ ctx.strokeStyle = b.style; ctx.lineWidth = b.lw; ctx.beginPath(); const q = b.q; for (let i=0;i<q.length;i+=4){ ctx.moveTo(q[i],q[i+1]); ctx.lineTo(q[i+2],q[i+3]); } ctx.stroke(); }
+  if (PNOTES.length){ ctx.font = `bold ${22*U}px ${'"Segoe UI Symbol",system-ui,sans-serif'}`;
+    for (let i=0;i<PNOTES.length;i+=2){ const p = PNOTES[i]; ctx.fillStyle = hsl(p.h,p.s,p.l,PNOTES[i+1]); ctx.fillText(p.note, p.x, p.y); } }
   // stage + girls + crowd, then the demons on top of it: they dive right down to
   // the girls to tickle them, and behind the LED wall that moment was invisible.
   ctx.globalCompositeOperation = 'source-over';
@@ -1702,6 +1995,7 @@ function draw(t, dt){
   if (MODE==='level') drawShowBits(t);
   ctx.restore();
 }
+const PBUCKETS = new Map(), PNOTES = [];
 // A tall, slim K-pop idol drawn from a `look` (hair / face accessories / top / bottoms / shoes); shared by the dressing room and the stage.
 // Units: gh = full height; feet at (x,y); head centre at y-0.905gh with radius ~0.08gh (≈ 1/6 body — idol proportions, not chibi).
 const HC = -0.905, HR = 0.08;
@@ -2027,6 +2321,35 @@ function drawBubbles(t){
     ctx.strokeStyle = `rgba(255,255,255,${0.9*a})`; ctx.lineWidth = 2*U; ctx.beginPath(); ctx.arc(0,0,b.r*0.7,-2.4,-1.4); ctx.stroke();
     ctx.restore(); }
 }
+// Truss, neon sign, platform and speaker cabinets never move, so they are painted once
+// per layout into two strips (the par cans animate between them in the original draw
+// order) instead of re-blurring the sign text every frame.
+let stageA = null, stageB = null, stageKey = '', stageATop = 0, stageBTop = 0;
+function paintTruss(sy, tx0, tx1){
+  ctx.fillStyle = '#1a0a2c'; ctx.fillRect(tx0, sy - 30*U, tx1-tx0, 6*U);
+  ctx.strokeStyle = '#2a1440'; ctx.lineWidth = 2*U; ctx.beginPath(); for (let x=tx0; x<tx1; x+=14*U){ ctx.moveTo(x, sy-30*U); ctx.lineTo(x+7*U, sy-24*U); ctx.lineTo(x+14*U, sy-30*U); } ctx.stroke();
+}
+function paintSignPlatformSpeakers(sy, tx0, tx1, top){
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  // A long band name has to shrink to stay inside the sign rather than overflow it.
+  const bandTxt = bandName(), signW = (tx1-tx0)*0.86;
+  let fs = Math.min(30*U, (tx1-tx0)*0.11);
+  ctx.font = `900 ${fs}px "Arial Black","Arial Rounded MT Bold","Segoe UI",system-ui,sans-serif`;
+  const bandW = ctx.measureText(bandTxt).width;
+  if (bandW > signW){ fs *= signW/bandW; ctx.font = `900 ${fs}px "Arial Black","Arial Rounded MT Bold","Segoe UI",system-ui,sans-serif`; }
+  ctx.lineWidth = 6*U; ctx.strokeStyle = '#ff3fa4'; ctx.shadowColor = '#ff3fa4'; ctx.shadowBlur = 22; ctx.lineJoin = 'round'; ctx.strokeText(bandTxt, W/2, sy);
+  ctx.fillStyle = '#fff'; ctx.shadowBlur = 0; ctx.fillText(bandTxt, W/2, sy);
+  ctx.font = `800 ${11*U}px "Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif`; ctx.fillStyle = '#33e6ff'; ctx.shadowColor = '#33e6ff'; ctx.shadowBlur = 10;
+  // the Korean line transliterates the default name, so it only belongs to that one
+  ctx.fillText(bandTxt===DEFAULT_BAND ? BAND_SUB+'  ✦  WORLD TOUR' : '✦  WORLD TOUR  ✦', W/2, sy + 13*U); ctx.shadowBlur = 0;
+  // platform
+  ctx.fillStyle = '#1a0836'; ctx.beginPath(); ctx.moveTo(W*0.12, top); ctx.lineTo(W*0.88, top); ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.fill();
+  ctx.strokeStyle = '#ff3fa4'; ctx.lineWidth = 3*U; ctx.shadowColor='#ff3fa4'; ctx.shadowBlur = 14; ctx.beginPath(); ctx.moveTo(W*0.12, top); ctx.lineTo(W*0.88, top); ctx.stroke();
+  ctx.strokeStyle = '#33e6ff'; ctx.shadowColor='#33e6ff'; ctx.beginPath(); ctx.moveTo(W*0.12, top+6*U); ctx.lineTo(W*0.88, top+6*U); ctx.stroke(); ctx.shadowBlur = 0;
+  // speaker cabinets (the cones pulse, so they stay live)
+  for (const sx of [W*0.2, W*0.8]){ for (let k=0;k<2;k++){ const bx = sx-20*U, by = top-34*U*(k+1);
+    ctx.fillStyle = '#0b0318'; ctx.fillRect(bx, by, 40*U, 33*U); ctx.strokeStyle = '#33e6ff88'; ctx.lineWidth = 1.5*U; ctx.strokeRect(bx, by, 40*U, 33*U); } }
+}
 function drawStage(t){
   const top = ctlTop - 4*U, beatF = Math.pow(1-beat, 3), hh = (t*40)%360;
   const gh = Math.min(top*0.34, Math.max(142*U, 86)), spread = Math.min(W*0.19, gh*0.93);
@@ -2045,34 +2368,26 @@ function drawStage(t){
   ctx.strokeStyle = '#33e6ff'; ctx.lineWidth = 2*U; ctx.shadowColor = '#33e6ff'; ctx.shadowBlur = 10; ctx.strokeRect(lx, top-lh, lw, lh); ctx.shadowBlur = 0;
   // lighting truss + neon sign above the lightstick
   const sy = lsy - 44*U, tx0 = Math.max(lx, W*0.08), tx1 = Math.min(lx+lw, W*0.92);
-  ctx.fillStyle = '#1a0a2c'; ctx.fillRect(tx0, sy - 30*U, tx1-tx0, 6*U);
-  ctx.strokeStyle = '#2a1440'; ctx.lineWidth = 2*U; ctx.beginPath(); for (let x=tx0; x<tx1; x+=14*U){ ctx.moveTo(x, sy-30*U); ctx.lineTo(x+7*U, sy-24*U); ctx.lineTo(x+14*U, sy-30*U); } ctx.stroke();
+  const key = [W, H, DPR, ctlTop, bandName()].join('|');
+  if (stageKey !== key){ stageKey = key;
+    if (!stageA){ stageA = ggCanvas(1,1); stageB = ggCanvas(1,1); }
+    stageATop = Math.floor(sy - 33*U); stageBTop = Math.floor(sy - 60*U - 24);
+    ggResize(stageA, W*DPR, (Math.ceil(12*U)+2)*DPR); ggResize(stageB, W*DPR, Math.ceil(H - stageBTop)*DPR);
+    const saved = ctx;
+    ctx = stageA.getContext('2d'); ctx.setTransform(DPR,0,0,DPR,0,-stageATop*DPR); paintTruss(sy, tx0, tx1);
+    ctx = stageB.getContext('2d'); ctx.setTransform(DPR,0,0,DPR,0,-stageBTop*DPR); paintSignPlatformSpeakers(sy, tx0, tx1, top);
+    ctx = saved; }
+  ctx.drawImage(stageA, 0, stageATop, W, stageA.height/DPR);
   const parCols = ['#ff3fa4','#33e6ff','#ffd23f','#a855ff'];
   for (let i=0;i<7;i++){ const x = tx0 + (tx1-tx0)*(i+0.5)/7, on = 0.35 + 0.65*Math.pow(1-((beat + i*0.25)%1), 2), col = parCols[i%4];
     ctx.fillStyle = '#0b0318'; ctx.beginPath(); ctx.arc(x, sy-19*U, 6*U, 0, TAU); ctx.fill();
     ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 18*on; ctx.globalAlpha = on; ctx.beginPath(); ctx.arc(x, sy-19*U, 4*U, 0, TAU); ctx.fill(); ctx.globalAlpha = 1; ctx.shadowBlur = 0; }
   ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-  ctx.font = `900 ${Math.min(30*U, (tx1-tx0)*0.11)}px "Arial Black","Arial Rounded MT Bold","Segoe UI",system-ui,sans-serif`;
-  // A long band name has to shrink to stay inside the sign rather than overflow it.
-  const bandTxt = bandName(), signW = (tx1-tx0)*0.86;
-  let fs = Math.min(30*U, (tx1-tx0)*0.11);
-  ctx.font = `900 ${fs}px "Arial Black","Arial Rounded MT Bold","Segoe UI",system-ui,sans-serif`;
-  const bandW = ctx.measureText(bandTxt).width;
-  if (bandW > signW){ fs *= signW/bandW; ctx.font = `900 ${fs}px "Arial Black","Arial Rounded MT Bold","Segoe UI",system-ui,sans-serif`; }
-  ctx.lineWidth = 6*U; ctx.strokeStyle = '#ff3fa4'; ctx.shadowColor = '#ff3fa4'; ctx.shadowBlur = 22; ctx.lineJoin = 'round'; ctx.strokeText(bandTxt, W/2, sy);
-  ctx.fillStyle = '#fff'; ctx.shadowBlur = 0; ctx.fillText(bandTxt, W/2, sy);
-  ctx.font = `800 ${11*U}px "Segoe UI","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif`; ctx.fillStyle = '#33e6ff'; ctx.shadowColor = '#33e6ff'; ctx.shadowBlur = 10;
-  // the Korean line transliterates the default name, so it only belongs to that one
-  ctx.fillText(bandTxt===DEFAULT_BAND ? BAND_SUB+'  ✦  WORLD TOUR' : '✦  WORLD TOUR  ✦', W/2, sy + 13*U); ctx.shadowBlur = 0;
-  // platform
-  ctx.fillStyle = '#1a0836'; ctx.beginPath(); ctx.moveTo(W*0.12, top); ctx.lineTo(W*0.88, top); ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.fill();
-  ctx.strokeStyle = '#ff3fa4'; ctx.lineWidth = 3*U; ctx.shadowColor='#ff3fa4'; ctx.shadowBlur = 14; ctx.beginPath(); ctx.moveTo(W*0.12, top); ctx.lineTo(W*0.88, top); ctx.stroke();
-  ctx.strokeStyle = '#33e6ff'; ctx.shadowColor='#33e6ff'; ctx.beginPath(); ctx.moveTo(W*0.12, top+6*U); ctx.lineTo(W*0.88, top+6*U); ctx.stroke(); ctx.shadowBlur = 0;
+  ctx.drawImage(stageB, 0, stageBTop, W, stageB.height/DPR);
   for (let i=0;i<12;i++){ const x = W*0.14 + (W*0.72)*i/11, col = parCols[i%4], on = 0.4+0.6*Math.pow(1-((beat + i*0.125)%1),2);   // footlights
     ctx.fillStyle = col; ctx.globalAlpha = on; ctx.beginPath(); ctx.arc(x, top+3*U, 3*U, 0, TAU); ctx.fill(); ctx.globalAlpha = 1; }
-  // speaker stacks
-  for (const sx of [W*0.2, W*0.8]){ for (let k=0;k<2;k++){ const bx = sx-20*U, by = top-34*U*(k+1);
-    ctx.fillStyle = '#0b0318'; ctx.fillRect(bx, by, 40*U, 33*U); ctx.strokeStyle = '#33e6ff88'; ctx.lineWidth = 1.5*U; ctx.strokeRect(bx, by, 40*U, 33*U);
+  // speaker cones
+  for (const sx of [W*0.2, W*0.8]){ for (let k=0;k<2;k++){ const by = top-34*U*(k+1);
     ctx.fillStyle = '#2a1440'; ctx.beginPath(); ctx.arc(sx, by+16*U, 11*U*(1+0.12*beatF), 0, TAU); ctx.fill();
     ctx.fillStyle = '#5c3f80'; ctx.beginPath(); ctx.arc(sx, by+16*U, 4*U, 0, TAU); ctx.fill(); } }
   // Giant Lightstick (the thing the Glow Girls protect)
@@ -2109,9 +2424,9 @@ function drawStage(t){
       ctx.fillText('💤', x + 22*U, top - gh*1.02 + Math.sin(t*2+i)*5*U); }
     else { if (en < 0.35){ ctx.save(); ctx.globalAlpha = 0.85; drawGirl(ch, LOOKS[i], i, x, top, gh*0.98, t*0.4, false); ctx.restore(); }
       else drawGirl(ch, LOOKS[i], i, x, top, gh, t, false); } });
-  // crowd (in front, bottom band)
-  const crowdBand = H - top; const baseY = H + 6*U;
-  for (const c of crowd){ const cx = c.x*W, ch = (crowdBand*0.55 + 30*U) * c.h * (c.row?0.85:1), bob = Math.pow(1-((beat+c.p/TAU)%1),2)*(4+cheer*10)*U;
+  // crowd (in front, bottom band); lower tiers thin it out evenly across the width
+  const crowdBand = H - top; const baseY = H + 6*U, cstep = Math.max(1, Math.round(crowd.length/Q.crowd));
+  for (let ci=0; ci<crowd.length; ci+=cstep){ const c = crowd[ci]; const cx = c.x*W, ch = (crowdBand*0.55 + 30*U) * c.h * (c.row?0.85:1), bob = Math.pow(1-((beat+c.p/TAU)%1),2)*(4+cheer*10)*U;
     const y = baseY - (c.row?crowdBand*0.22:0) - bob; const bw = 18*U*c.w;
     ctx.fillStyle = c.row ? '#150627' : '#0b0318';
     ctx.beginPath(); ctx.arc(cx, y-ch, bw*0.55, 0, TAU); ctx.fill();
@@ -2162,8 +2477,8 @@ document.querySelectorAll('#ui .bottle').forEach(b => b.addEventListener('pointe
 $('#clear').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); mix.length=0; renderMix(); if (AC){ const t=now(); tone(500,t,0.15,{type:'sine',vol:0.2,glide:150}); } lastTouch=performance.now(); });
 $('#cauldron').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); const c=$('#cauldron'); c.classList.remove('slosh'); void c.offsetWidth; c.classList.add('slosh'); if (AC){ const t=now(); for(let k=0;k<3;k++) tone(rnd(300,600),t+k*0.06,0.1,{type:'sine',vol:0.15,glide:200}); } lastTouch=performance.now(); });
 $('#go').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); launch(); });
-cv.addEventListener('pointerdown', e => { e.preventDefault(); if (!started) return; initAudio(); aim.x = e.clientX; aim.y = e.clientY; launch(e.clientX, e.clientY); });
-cv.addEventListener('pointermove', e => { if (!started) return; aim.x = e.clientX; aim.y = e.clientY; aim.show = e.pointerType==='mouse' ? 0.5 : 0.8; });
+cv.addEventListener('pointerdown', e => { e.preventDefault(); if (!started) return; initAudio(); const px = e.clientX - LAY.x, py = e.clientY - LAY.y; aim.x = px; aim.y = py; launch(px, py); });
+cv.addEventListener('pointermove', e => { if (!started) return; aim.x = e.clientX - LAY.x; aim.y = e.clientY - LAY.y; aim.show = e.pointerType==='mouse' ? 0.5 : 0.8; });
 $('#finale').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); if (performance.now() < finaleUntil) return; finaleUntil = performance.now()+10000; nextFinaleShot = 0; $('#finale').classList.add('busy'); toast('🎆 FINALE! 🎆'); cheer = 1; lastTouch = performance.now(); });
 $('#music').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); setMusic(!musicOn); });
 $('#dmute').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); setMusic(!musicOn); });
@@ -2216,9 +2531,12 @@ $('#back').addEventListener('click', () => { $('#photo').hidden = true; $('#ui')
 // Style the three Glow Girls before the show. Tap an item (or drag it onto the girl) to wear it; swatches recolour the current category.
 let dressOpen = false, curChar = 0, curCat = 'looks', dragging = null, stageOpened = false, swipeX = null;
 const dcv = $('#dressCv'), dctx = dcv.getContext('2d'), DSPARK = [];
-function openDress(){ dressOpen = true; $('#dress').hidden = false; $('#ui').classList.add('hidden'); renderDress(); lastTouch = performance.now(); }
+function openDress(){ dressOpen = true; $('#dress').hidden = false; $('#ui').classList.add('hidden'); requestLayout(); renderDress(); lastTouch = performance.now(); }
 function toStage(){
   dressOpen = false; $('#dress').hidden = true; saveLooks(); lastTouch = performance.now();
+  // The stage draws the girls at a quarter of the registered size: drop the big preview
+  // composites and the preview canvas's backing store.
+  ggClear(ggComp, r => r.scale <= 0.5); dcv.width = dcv.height = 1; LAY.dress = null;
   cheer = 1; if (AC) sfxCheer();
   openMap();   // pick a show (or free play) after dressing up
 }
@@ -2242,7 +2560,7 @@ function renderDress(){
 }
 function setCat(cat){ curCat = cat; renderDress(); if (AC){ const t0=now(); tone(700,t0,0.08,{type:'square',vol:0.06}); } }
 function renderTiles(){
-  const look = LOOKS[curChar], box = $('#ditems'); box.innerHTML = '';
+  const look = LOOKS[curChar], box = $('#ditems'); box.innerHTML = ''; tilesPending = false;
   const paints = COLOURABLE.includes(curCat), cur = paints ? (curCat==='face' ? look.faceColor : look[curCat].color) : null;
   for (const [id,name] of wardrobeFor(curCat)){
     // Looks she has been dealt but not yet earned show as locked tiles, so she can
@@ -2271,7 +2589,7 @@ function drawTile(c, look, cat, id, paint, lockedLevel){
     if(cat==='looks'){drawPuppet(curChar,LOOK_PRESETS[CHARS[curChar].id][id],64,120,110,undefined,true);drew=true}
     else drew=drawItemThumb(cat,id,look,128);
   }
-  if(!drew){ctx.fillStyle='rgba(255,255,255,.12)';ctx.fill();ctx.fillStyle='#fff';ctx.font='700 13px system-ui';ctx.textAlign='center';ctx.fillText(GG.ready?'—':'LOADING…',64,69)}
+  if(!drew){tilesPending = tilesPending || GG.ready;ctx.fillStyle='rgba(255,255,255,.12)';ctx.fill();ctx.fillStyle='#fff';ctx.font='700 13px system-ui';ctx.textAlign='center';ctx.fillText(GG.ready?'—':'LOADING…',64,69)}
   ctx.restore();
   // A paint chip on the thumbnail says "the swatches below change this one".
   if (paint){ const col = cat==='face' ? look.faceColor : look[cat].color;
@@ -2334,7 +2652,7 @@ function surprise(){
   saveLooks(); renderDress(); dressSparkle(); if (AC) sfxGiggle(); toast(pick(['✨ TA-DA! ✨','SO CUTE!','SLAY! 💅','OOH LA LA!']));
 }
 function signature(){ LOOKS[curChar] = JSON.parse(JSON.stringify(LOOK_PRESETS[CHARS[curChar].id][scheduleFor(curChar)[0]])); saveLooks(); renderDress(); dressSparkle(); if (AC) sfxChord(); toast('⭐ STAR LOOK! ⭐'); }
-function overPreview(e){ const r = dcv.getBoundingClientRect(); return e.clientX>=r.left && e.clientX<=r.right && e.clientY>=r.top && e.clientY<=r.bottom; }
+function overPreview(e){ const r = LAY.dress; if (!r) return false; const x = e.clientX - LAY.x, y = e.clientY - LAY.y; return x>=r.x && x<=r.x+r.w && y>=r.y && y<=r.y+r.h; }
 function attachDrag(el, id){
   el.addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); try { el.setPointerCapture(e.pointerId); } catch(err){} dragging = {id, cat:curCat, x0:e.clientX, y0:e.clientY, moved:false, ghost:null}; });
   el.addEventListener('pointermove', e => { if (!dragging) return;
@@ -2376,10 +2694,21 @@ $('#dname').addEventListener('pointerdown', e => { e.preventDefault(); e.stopPro
 $('#unlockOk').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); closeUnlock(); });
 $('#nameOk').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); closeNames(true); });
 $('#nameCancel').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); closeNames(false); });
-function dressSparkle(){ const r = dcv.getBoundingClientRect(); for (let k=0;k<40;k++){ const a = rnd(TAU), sp = rnd(40,220); DSPARK.push({x:r.width/2, y:r.height*0.55, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp-60, life:rnd(0.5,1.1), h:(Math.random()*360)|0}); } }
+function dressSparkle(){ const r = LAY.dress; if (!r) return; for (let k=0;k<40;k++){ const a = rnd(TAU), sp = rnd(40,220); DSPARK.push({x:r.w/2, y:r.h*0.55, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp-60, life:rnd(0.5,1.1), h:(Math.random()*360)|0}); } }
+// The thirty-odd vanity bulbs were the one expensive thing in the studio: each was a
+// blurred glow pass per frame. One bulb is rendered with its glow once per DPR into a
+// small sprite and blitted with the pulse as alpha - the studio itself is a handful of
+// fills and strokes and is cheaper to repaint than to cache.
+let bulbCv = null, bulbDpr = 0;
+function bulbSprite(){
+  if (bulbCv && bulbDpr === DPR) return bulbCv;
+  if (!bulbCv) bulbCv = ggCanvas(1,1); bulbDpr = DPR; ggResize(bulbCv, 40*DPR, 40*DPR);
+  const x = bulbCv.getContext('2d'); x.setTransform(DPR,0,0,DPR,0,0);
+  x.fillStyle = 'rgba(255,244,190,1)'; x.shadowColor = '#ffe9a8'; x.shadowBlur = 12; x.beginPath(); x.arc(20,20,5.5,0,TAU); x.fill(); x.fill();
+  return bulbCv;
+}
 function drawDress(t, dt){
-  const r = dcv.getBoundingClientRect(); if (!r.width) return; const pw = Math.round(r.width), ph = Math.round(r.height);
-  if (dcv.width !== Math.round(pw*DPR) || dcv.height !== Math.round(ph*DPR)){ dcv.width = Math.round(pw*DPR); dcv.height = Math.round(ph*DPR); }
+  const r = LAY.dress; if (!r){ requestLayout(); return; } const pw = Math.round(r.w), ph = Math.round(r.h); if (!pw || !ph) return;
   const saved = ctx; ctx = dctx; ctx.setTransform(DPR,0,0,DPR,0,0);
   // Crystal Star Studio: warm wall panels, polished floor, a working vanity, garment rail and shoe display.
   const wall = ctx.createLinearGradient(0,0,0,ph); wall.addColorStop(0,'#f9e8f3'); wall.addColorStop(0.72,'#e8d2e8'); wall.addColorStop(0.721,'#cbb3d3'); wall.addColorStop(1,'#8d739f'); ctx.fillStyle=wall; ctx.fillRect(0,0,pw,ph);
@@ -2389,8 +2718,8 @@ function drawDress(t, dt){
   ctx.fillStyle='#765087';rrect(mx-mw/2-10,mt-10,mw+20,mh+20,22);ctx.fillStyle='#2c2039';rrect(mx-mw/2,mt,mw,mh,17);
   const glass=ctx.createLinearGradient(mx-mw/2,mt,mx+mw/2,mt+mh);glass.addColorStop(0,'rgba(218,251,255,.34)');glass.addColorStop(.48,'rgba(96,70,120,.12)');glass.addColorStop(1,'rgba(255,196,226,.23)');ctx.fillStyle=glass;rrect(mx-mw/2+8,mt+8,mw-16,mh-16,13);
   ctx.strokeStyle='rgba(255,255,255,.18)';ctx.lineWidth=10;ctx.beginPath();ctx.moveTo(mx-mw*.38,mt+mh*.14);ctx.lineTo(mx-mw*.02,mt+mh*.03);ctx.stroke();
-  const bulb=(bx,by,k)=>{const on=.72+.28*Math.sin(t*3.2+k*.8);ctx.fillStyle=`rgba(255,244,190,${on})`;ctx.shadowColor='#ffe9a8';ctx.shadowBlur=12*on;ctx.beginPath();ctx.arc(bx,by,5.5,0,TAU);ctx.fill()};let bi=0;
-  for(let bx=mx-mw/2+16;bx<=mx+mw/2-16;bx+=Math.max(28,mw/8)){bulb(bx,mt-5,bi++);bulb(bx,mt+mh+5,bi++)}for(let by=mt+24;by<mt+mh-18;by+=Math.max(30,mh/7)){bulb(mx-mw/2-5,by,bi++);bulb(mx+mw/2+5,by,bi++)}ctx.shadowBlur=0;
+  const sprite=bulbSprite(), bulb=(bx,by,k)=>{const on=.72+.28*Math.sin(t*3.2+k*.8);ctx.globalAlpha=on;ctx.drawImage(sprite,bx-20,by-20,40,40)};let bi=0;
+  for(let bx=mx-mw/2+16;bx<=mx+mw/2-16;bx+=Math.max(28,mw/8)){bulb(bx,mt-5,bi++);bulb(bx,mt+mh+5,bi++)}for(let by=mt+24;by<mt+mh-18;by+=Math.max(30,mh/7)){bulb(mx-mw/2-5,by,bi++);bulb(mx+mw/2+5,by,bi++)}ctx.globalAlpha=1;
   // Side furnishings appear when there is enough room, and stay behind the character.
   if(pw>390){const lx=pw*.055,rx=pw*.82,railW=Math.max(62,pw*.13);ctx.strokeStyle='#765087';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(lx,ph*.19);ctx.lineTo(lx,ph*.69);ctx.moveTo(lx+railW,ph*.19);ctx.lineTo(lx+railW,ph*.69);ctx.moveTo(lx,ph*.2);ctx.lineTo(lx+railW,ph*.2);ctx.stroke();
     const dresses=[['#ef69a4',.33],['#8d63d8',.39],['#21c8d3',.35]];dresses.forEach(([c,h],k)=>{const xx=lx+railW*(.18+k*.31);ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(xx,ph*.2);ctx.lineTo(xx,ph*.235);ctx.stroke();ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(xx,ph*.23);ctx.lineTo(xx-railW*.18,ph*h);ctx.lineTo(xx-railW*.25,ph*(h+.18));ctx.lineTo(xx+railW*.25,ph*(h+.18));ctx.lineTo(xx+railW*.18,ph*h);ctx.closePath();ctx.fill();ctx.fillStyle='rgba(255,255,255,.35)';ctx.fillRect(xx-railW*.14,ph*(h+.02),railW*.28,4)});
@@ -2424,14 +2753,15 @@ $('#play').addEventListener('click', start);
 document.addEventListener('visibilitychange', () => { if (AC && document.visibilityState==='visible' && AC.state==='suspended') AC.resume(); });
 
 const GG_READY=loadGlowGirls().catch(e=>{GG.error=e;console.warn('Glow Girls layers could not load',e)});
-setMusic(musicOn); renderStars(); renderMix(); resize();
+setMusic(musicOn); renderStars(); renderMix(); setTier(guessTier(), 'boot'); syncLayout();
 requestAnimationFrame(frame);
 if (location.search.includes('auto=1')){ window.__kb = {P, ROCKETS, BOOBOPS, BUBBLES, DROPS, launch, spawnBooBop, spawnDemon, spawnDrop, collectDrop, hitDemon, explode, addPotion, mix, ammo, PLAY, LEVELS, BOSSES, PROG,
     startLevel, freePlay, openMap, levelWon, levelLost, DKIND, RARE_MAGICS, RARE_IDS, RARE_DROPS_MAX, spawnDrop, setMusic, setPaused, renderAmmo,
     get paused(){return paused}, masterGain:()=>master?master.gain.value:null, stageTop:()=>ctlTop-4*U, drawSource:()=>String(draw), get playfield(){return [playL, playR];}, get mode(){return MODE}, get glow(){return glow}, get stars(){return starsTotal}, byId, get ac(){return AC},
     LOOKS, CHARS, WARDROBE, HAIR_BY_CHAR, LOOK_PRESETS, GG, TINT_MIX, isSkin, ggComposite, NAMES, openNames, closeNames, cleanName, applyItem,
     SCHEDULE, PRESET_IDS, SCHEDULE_LEN, START_LOOKS, buildSchedule, clearedLevels, unlockedLookCount, scheduleFor, unlockedPresets,
-    isPresetUnlocked, presetNeedsLevel, unlockedPieces, itemAllowed, wardrobeFor, showUnlock, closeUnlock, saveProg, renderDress, setColor, resetColor, setCat, switchChar, surprise, signature, openDress, toStage, get curChar(){return curChar}, get curCat(){return curCat}, get dressOpen(){return dressOpen}};
+    isPresetUnlocked, presetNeedsLevel, unlockedPieces, itemAllowed, wardrobeFor, showUnlock, closeUnlock, saveProg, renderDress, setColor, resetColor, setCat, switchChar, surprise, signature, openDress, toStage, get curChar(){return curChar}, get curCat(){return curCat}, get dressOpen(){return dressOpen},
+    Q, TIERS, setTier, LAY, syncLayout, requestLayout, PERF, BUDGET, ggComp, ggTintCache, ggSkinCache, ggBaseCache, ggClear, ggBoxOf, tinted, renderTiles, renderSwatches, get canvasBytes(){return CANVAS_BYTES}, get canvasCount(){return CANVAS_N}};
   start().then(() => {   // start() is async (asset load) and ends by opening the dressing room — sequence after it
     if (!location.search.includes('dress=1')){
       const lm = location.search.match(/level=(\d)/);
