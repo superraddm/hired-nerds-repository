@@ -20,7 +20,7 @@
   --ink:#12002b; --panel:rgba(18,0,43,.55);
   --bs: clamp(44px, min(8dvh, 15vw), 96px);           /* bottle size: 8 per rail + label must fit the height, 2 rails must fit the width */
   --cauldron-w: min(17dvh, 24vw, 150px); --go: min(14dvh, 20vw, 124px); --clear: min(7dvh, 10vw, 64px);
-  --round: clamp(44px, min(8dvh, 11vw), 72px);
+  --round: clamp(40px, min(8dvh, 11vw), 72px);
   --font: "Baloo 2","Fredoka","Nunito","Varela Round",-apple-system,"Segoe UI",system-ui,sans-serif;
   --sat: env(safe-area-inset-top,0px); --sab: env(safe-area-inset-bottom,0px);
   --sal: env(safe-area-inset-left,0px); --sar: env(safe-area-inset-right,0px);
@@ -49,11 +49,14 @@ button:focus{outline:none}
   display:grid;place-items:center;filter:grayscale(1) opacity(.35);transition:transform .25s, filter .25s}
 #stars .slot.on{filter:none;transform:scale(1.15)}
 #stars .count{font-weight:900;font-size:clamp(16px,3dvh,26px);margin-left:6px;color:var(--gold);text-shadow:0 0 10px var(--gold)}
-#topbtns{display:flex;gap:clamp(4px,1.2vw,8px)}
-.round{width:var(--round);height:var(--round);border-radius:50%;font-size:calc(var(--round)*.5);flex:0 0 auto;
+#topbtns{display:flex;gap:clamp(3px,1vw,8px);flex:0 1 auto;min-width:0}
+.round{width:var(--round);height:var(--round);border-radius:50%;font-size:calc(var(--round)*.5);flex:0 1 auto;min-width:34px;
   display:grid;place-items:center;background:linear-gradient(160deg,#4a1a86,#1f0644);
   box-shadow:0 0 0 3px rgba(255,255,255,.18) inset,0 6px 18px rgba(0,0,0,.45),0 0 18px rgba(168,85,255,.5);
   transition:transform .12s}
+/* .round sets display:grid, which outranks the UA rule for [hidden] — without this
+   a hidden button still takes its slot and pushes the row off a narrow screen. */
+.round[hidden]{display:none}
 .round:active{transform:scale(.9)}
 .round.off{filter:grayscale(1) opacity(.6)}
 #finale{background:linear-gradient(160deg,#ff3fa4,#ff7a2f);box-shadow:0 0 0 3px rgba(255,255,255,.25) inset,0 6px 18px rgba(0,0,0,.45),0 0 22px #ff3fa4;
@@ -204,11 +207,21 @@ button:focus{outline:none}
 #freePlayBtn{background:linear-gradient(160deg,#7dff4a,#12b886)}
 #mapDress{background:linear-gradient(160deg,#ff3fa4,#a855ff)}
 #freePlayBtn:active,#mapDress:active{transform:translateY(4px)}
-#lives{display:flex;align-items:center;gap:6px;background:var(--panel);border-radius:999px;padding:6px 10px;min-height:44px}
+/* On a narrow phone the energy bars yield space to the controls rather than
+   pushing them off the edge — the same way the star counter already does. */
+#lives{display:flex;align-items:center;gap:6px;background:var(--panel);border-radius:999px;padding:6px 8px;min-height:44px;
+  flex:0 1 auto;min-width:0;overflow:hidden}
+/* Below ~420px the energy bars are at their minimum content width and would push
+   the controls past the edge, so the emoji and bars step down instead. */
+@media (max-width:420px){
+  #lives{gap:3px;padding:6px 6px}
+  #lives .life i{font-size:clamp(13px,3.6vw,20px)}
+  #lives .life b{width:clamp(14px,4.6vw,26px);height:clamp(7px,1.4dvh,10px)}
+}
 #lives[hidden]{display:none}
-.life{display:grid;grid-template-columns:auto auto;align-items:center;gap:3px}
+.life{display:grid;grid-template-columns:auto minmax(0,auto);align-items:center;gap:3px;min-width:0}
 .life i{font-style:normal;font-size:clamp(16px,3.4dvh,26px);line-height:1}
-.life b{width:clamp(26px,7vw,56px);height:clamp(8px,1.6dvh,12px);border-radius:999px;background:rgba(255,255,255,.18);overflow:hidden;display:block}
+.life b{width:clamp(16px,7vw,56px);min-width:0;height:clamp(8px,1.6dvh,12px);border-radius:999px;background:rgba(255,255,255,.18);overflow:hidden;display:block}
 .life b u{display:block;height:100%;border-radius:999px;transition:width .3s}
 .life.zzz i{animation:bob 1.6s ease-in-out infinite}
 .bottle .ammo{position:absolute;bottom:-2px;left:-3px;z-index:3;display:none;place-items:center;min-width:1.5em;height:1.5em;padding:0 .2em;border-radius:999px;
@@ -269,6 +282,21 @@ button:focus{outline:none}
   background:linear-gradient(160deg,#ff3fa4,#a855ff);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 5px 0 #5b0d9a}
 #signature{background:linear-gradient(160deg,#33e6ff,#6757dc);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 5px 0 #30479b}
 #surprise:active,#signature:active{transform:translateY(4px);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 1px 0 #5b0d9a}
+/* ---------- pause ---------- */
+#paused{position:fixed;inset:0;z-index:27;display:grid;place-items:center;padding:calc(var(--sat) + 8px) 12px calc(var(--sab) + 8px);
+  background:rgba(10,0,28,.86);backdrop-filter:blur(6px)}
+#paused[hidden]{display:none}
+.pcard{width:min(420px,100%);text-align:center;border-radius:26px;padding:20px 16px;
+  background:radial-gradient(ellipse at 50% 0%,#4a0d7a,#170538 72%);box-shadow:0 0 0 3px rgba(255,255,255,.2) inset,0 18px 50px rgba(0,0,0,.6);
+  animation:upop .4s cubic-bezier(.2,1.5,.4,1) both}
+.pcard h3{margin:0;font-size:clamp(22px,5vmin,38px);text-shadow:0 0 16px #33e6ff}
+.pcard p{margin:6px 0 16px;font-weight:800;font-size:clamp(13px,2.7vmin,19px);color:#e9d7ff}
+.pactions{display:grid;gap:9px}
+.pactions button{font-weight:900;font-size:clamp(14px,3vmin,22px);padding:.6em 1em;border-radius:999px}
+#resumeBtn{background:linear-gradient(160deg,#7dff4a,#12b886);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 6px 0 #0a6b4a}
+#quitBtn{background:linear-gradient(160deg,#ff3fa4,#a855ff);box-shadow:0 0 0 3px rgba(255,255,255,.3) inset,0 6px 0 #5b0d9a}
+#resumeBtn:active,#quitBtn:active{transform:translateY(5px)}
+#dmute{flex:0 0 auto;width:clamp(38px,7vmin,54px);height:clamp(38px,7vmin,54px);font-size:clamp(17px,3.4vmin,26px)}
 /* ---------- unlock reward ---------- */
 #unlock{position:fixed;inset:0;z-index:28;display:grid;place-items:center;padding:calc(var(--sat) + 8px) 10px calc(var(--sab) + 8px);
   background:radial-gradient(ellipse at 50% 40%,rgba(90,20,150,.92),rgba(8,0,22,.94));backdrop-filter:blur(5px)}
@@ -328,9 +356,10 @@ button:focus{outline:none}
     <div id="topbtns">
       <button id="wardrobe" class="round" aria-label="Dressing room">👗</button>
       <button id="mapBtn" class="round" aria-label="Show map" hidden>🎪</button>
+      <button id="pause" class="round" aria-label="Pause the show" hidden>⏸️</button>
       <button id="finale" class="round" aria-label="Finale show">🎆</button>
       <button id="snap" class="round" aria-label="Take a photo">📸</button>
-      <button id="music" class="round" aria-label="Music on or off">🔊</button>
+      <button id="music" class="round" aria-label="Sound on or off">🔊</button>
     </div>
   </div>
   <div id="left" class="shelf" aria-label="Colour potions"></div>
@@ -367,7 +396,7 @@ button:focus{outline:none}
   </div>
 </div>
 <div id="dress" hidden>
-  <div class="dhead"><h2>👗 DRESSING ROOM</h2><button id="toStage">TO THE STAGE! 🎤</button></div>
+  <div class="dhead"><h2>👗 DRESSING ROOM</h2><button id="dmute" class="round" aria-label="Sound on or off">🔊</button><button id="toStage">TO THE STAGE! 🎤</button></div>
   <div class="dbody">
     <div class="dstage">
       <button class="arrow" id="prevChar" aria-label="Previous girl">◀</button>
@@ -379,6 +408,16 @@ button:focus{outline:none}
       <div class="items" id="ditems"></div>
       <div class="swatches" id="dswatches"></div>
       <div class="dactions"><button id="signature">⭐ STAR LOOK</button><button id="surprise">🎲 SURPRISE!</button></div>
+    </div>
+  </div>
+</div>
+<div id="paused" hidden>
+  <div class="pcard">
+    <h3>⏸️ PAUSED</h3>
+    <p>The show is waiting for you!</p>
+    <div class="pactions">
+      <button id="resumeBtn">▶️ KEEP GOING</button>
+      <button id="quitBtn">🎪 PICK A SHOW</button>
     </div>
   </div>
 </div>
@@ -426,6 +465,10 @@ const COLOURS = [
   {id:'blue',   icon:'💙', name:'Lightstick Blue — fast & tall', css:'#33e6ff', h:190,s:100,l:60, mod:{speed:1.35,life:0.85}, fast:true},
   {id:'gold',   icon:'💛', name:'Gold Debut — crackly twinkle',  css:'#ffd23f', h:48, s:100,l:60, mod:{count:1.1,life:1.15}, twinkle:true},
   {id:'lime',   icon:'💚', name:'Lime Fan Chant — lots of tiny', css:'#7dff4a', h:108,s:100,l:60, mod:{count:1.6,size:0.65}},
+  {id:'violet', icon:'💜', name:'Violet Encore — slow & floaty',  css:'#a855ff', h:272,s:100,l:66, mod:{life:1.35,speed:0.85,grav:0.7}},
+  {id:'orange', icon:'🧡', name:'Orange Spotlight — big sparks',  css:'#ff8a3c', h:24, s:100,l:60, mod:{size:1.35,count:0.85}},
+  {id:'red',    icon:'❤️', name:'Red Heartbeat — punchy',        css:'#ff4d6d', h:348,s:100,l:64, mod:{speed:1.25,size:1.15,life:0.9}},
+  {id:'white',  icon:'🤍', name:'Silver Spotlight — icy shimmer', css:'#eaf4ff', h:205,s:30, l:92, mod:{count:1.3,life:1.1}, twinkle:true},
 ];
 const MAGICS = [
   {id:'heart',  icon:'💖', name:'Heart Beat — heart shape',      css:'#ff5ab8', shape:'heart', mod:{}},
@@ -433,7 +476,18 @@ const MAGICS = [
   {id:'bass',   icon:'💥', name:'Bass Drop — HUGE',              css:'#ff4d4d', big:true, mod:{size:1.5,speed:1.35,count:1.3,grav:0.7}},
   {id:'glitter',icon:'✨', name:'Glitter Comeback — crackles',   css:'#fff2b3', glitter:true, mod:{life:1.4}},
 ];
-const ALL = [...COLOURS, ...MAGICS];
+/* Rare magic is never stocked on the shelf. It only falls when a demon's combo
+   actually calls for it, at most RARE_DROPS_MAX times in a show, so catching one
+   is an event rather than another bottle to scroll past. */
+const RARE_MAGICS = [
+  {id:'comet',  icon:'☄️', name:'Comet Rush — long and fast',    css:'#9ad8ff', big:true, glitter:true, mod:{speed:1.5,life:1.2}},
+  {id:'moon',   icon:'🌙', name:'Moon Bloom — slow silver stars', css:'#ffe9a8', shape:'star', twinkle:true, mod:{size:1.25,count:0.9,speed:0.9}},
+  {id:'swirl',  icon:'💫', name:'Swirl Fancam — spinning hearts', css:'#ffb1dc', shape:'heart', glitter:true, mod:{count:1.4,speed:0.85}},
+  {id:'rainbow',icon:'🌈', name:'Rainbow Comeback — every colour',css:'linear-gradient(90deg,#ff3fa4,#ffd23f,#7dff4a,#33e6ff,#a855ff)', rainbow:true, mod:{count:1.5,life:1.15}},
+];
+const RARE_IDS = RARE_MAGICS.map(m=>m.id);
+const MAGIC_ALL = [...MAGICS, ...RARE_MAGICS];
+const ALL = [...COLOURS, ...MAGICS, ...RARE_MAGICS];
 const byId = Object.fromEntries(ALL.map(p=>[p.id,p]));
 
 /* ================= STATE ================= */
@@ -451,7 +505,7 @@ let AC = null, master = null, musicGain = null, sfxGain = null, musicTimer = nul
 function initAudio(){
   if (AC) { if (AC.state==='suspended') AC.resume(); return; }
   try { AC = new (window.AudioContext||window.webkitAudioContext)(); } catch(e){ return; }
-  master = AC.createGain(); master.gain.value = 0.9; master.connect(AC.destination);
+  master = AC.createGain(); master.gain.value = musicOn ? 0.9 : 0; master.connect(AC.destination);
   sfxGain = AC.createGain(); sfxGain.gain.value = 0.8; sfxGain.connect(master);
   musicGain = AC.createGain(); musicGain.gain.value = musicOn ? 0.16 : 0; musicGain.connect(master);
   const len = AC.sampleRate*2; noiseBuf = AC.createBuffer(1,len,AC.sampleRate);
@@ -541,7 +595,11 @@ function startMusic(){
 }
 function setMusic(on){
   musicOn = on; try { localStorage.setItem('kb_music', on?'on':'off'); } catch(e){}
-  $('#music').classList.toggle('off', !on); $('#music').textContent = on ? '🔊' : '🔇';
+  // One control for all sound, not just the backing track — a child who wants quiet
+  // means quiet, and the same button sits in the dressing room.
+  if (master) master.gain.value = on ? 0.9 : 0;
+  for (const sel of ['#music','#dmute']){ const el = $(sel); if (!el) continue;
+    el.classList.toggle('off', !on); el.textContent = on ? '🔊' : '🔇'; }
   if (musicGain) musicGain.gain.setTargetAtTime(on?0.16:0, now(), 0.05);
 }
 
@@ -557,19 +615,26 @@ const skyline = Array.from({length:26}, (_,i) => ({x:i/26, w:rnd(0.025,0.045), h
 // see FABLE-HANDOFF.md. Until Hana's and Jia's heads exist they differ by skin tone
 // and by the look each one starts in. `skin` null = the master's own tone.
 const CHARS = [
-  {id:'sol',  name:'SOL',  skin:null,      eyes:'#3b2847', face:{rx:0.076,ry:0.091,cheek:1.02,jaw:0.58,chinW:0.012,eyeW:1.06,eyeH:0.76,wing:1.15,brow:-0.05}},
-  {id:'hana', name:'HANA', skin:'#efc3a4', eyes:'#63382f', face:{rx:0.082,ry:0.087,cheek:1.15,jaw:0.76,chinW:0.027,eyeW:1.04,eyeH:0.94,wing:0.68,brow:0.08}},
-  {id:'jia',  name:'JIA',  skin:'#d8a179', eyes:'#2b2528', face:{rx:0.071,ry:0.095,cheek:0.96,jaw:0.9,chinW:0.034,eyeW:1.16,eyeH:0.68,wing:1.0,brow:0.02}},
+  {id:'sol',  name:'SOL',  head:null,   skin:null,      eyes:'#3b2847', face:{rx:0.076,ry:0.091,cheek:1.02,jaw:0.58,chinW:0.012,eyeW:1.06,eyeH:0.76,wing:1.15,brow:-0.05}},
+  {id:'hana', name:'HANA', head:'hana', skin:'#efc3a4', eyes:'#63382f', face:{rx:0.082,ry:0.087,cheek:1.15,jaw:0.76,chinW:0.027,eyeW:1.04,eyeH:0.94,wing:0.68,brow:0.08}},
+  {id:'jia',  name:'JIA',  head:'jia',  skin:'#d8a179', eyes:'#2b2528', face:{rx:0.071,ry:0.095,cheek:0.96,jaw:0.9,chinW:0.034,eyeW:1.16,eyeH:0.68,wing:1.0,brow:0.02}},
 ];
-// One shared wardrobe: every item is a layer registered to that same puppet, so any
-// piece fits any girl. Names are what the tiles announce to a screen reader.
+// Every item is registered to the shared puppet geometry. Garments and extras fit
+// all three girls; hair is filtered to the five styles authored for each head.
 const WARDROBE = {
   looks: [['A','Approved look A'],['B','Approved look B'],['C','Approved look C'],['D','Aurora Pulse preview'],['E','Prism Relay'],['F','Cherry Voltage'],['G','Blue Orbit'],['H','Pixel Bloom'],['I','Solar Flare'],['J','Midnight Ribbon'],['K','Mint Comet']],
-  hair:  [['moonpony','Moonlit ponytail'],['starbraid','Star ribbon braid'],['cometbraid','Comet braid'],['silverwaves','Pearl silver waves'],['neonbuns','Neon twin buns']],
+  hair:  [['moonpony','Moonlit ponytail'],['starbraid','Star ribbon braid'],['cometbraid','Comet braid'],['silverwaves','Pearl silver waves'],['neonbuns','Neon twin buns'],
+          ['hana-rosewaves','Rose waves'],['hana-petalbob','Petal bob'],['hana-starlittwins','Starlit twin tails'],['hana-floralhalo','Floral halo braids'],['hana-petalpixie','Petal pixie'],
+          ['jia-neontails','Neon twin tails'],['jia-braidmatrix','Braid matrix'],['jia-embershag','Ember shag'],['jia-electricbob','Electric bob'],['jia-circuitfauxhawk','Circuit fauxhawk']],
   face:  [['moondrops','Moon drop earrings'],['cheekcrystal','Cheek crystals'],['starbow','Couture star bow'],['tiara','Moon crystal tiara'],['headset','Crystal stage headset'],['visor','Performance visor']],
   top:   [['moonmoto','Moonlit moto jacket'],['petaljacket','Petal couture jacket'],['neonmoto','Neon asymmetric jacket'],['tailcoat','Star ribbon tailcoat'],['auroratop','Aurora Pulse halter'],['prismbolero','Prism Relay bolero'],['cherrycircuit','Cherry Voltage circuit corset'],['orbitcape','Blue Orbit asymmetric cape top'],['bloomruffle','Pixel Bloom ruffle halter'],['solarvest','Solar Flare cropped vest'],['midnightbow','Midnight Ribbon bow top'],['mintmesh','Mint Comet mesh crop top']],
   bottom:[['moonshorts','Moon tailored shorts'],['petalskort','Petal layered skort'],['silvershorts','Crystal silver shorts'],['cargoshorts','Iridescent cargo shorts'],['auroraskort','Aurora Pulse skort'],['relaypleats','Prism Relay pleated skort'],['voltagewrap','Cherry Voltage wrap skort'],['orbitflares','Blue Orbit crescent flare trousers'],['pixelpetals','Pixel Bloom architectural petal skirt'],['flareskort','Solar Flare flame skort'],['ribbonfringe','Midnight Ribbon fringe skirt'],['cometbubble','Mint Comet bubble shorts']],
   shoes: [['moonboots','Moon lace boots'],['petalboots','Petal couture boots'],['neonboots','Neon combat boots'],['aurorakicks','Aurora Pulse platforms'],['prismhightops','Prism Relay high-tops'],['cherryboots','Cherry Voltage combat boots'],['orbitpoints','Blue Orbit pointed stage boots'],['bloomjanes','Pixel Bloom platform Mary Janes'],['sunburstboots','Solar Flare stage boots']],
+};
+const HAIR_BY_CHAR={
+  sol:['moonpony','starbraid','cometbraid','silverwaves','neonbuns'],
+  hana:['hana-rosewaves','hana-petalbob','hana-starlittwins','hana-floralhalo','hana-petalpixie'],
+  jia:['jia-neontails','jia-braidmatrix','jia-embershag','jia-electricbob','jia-circuitfauxhawk']
 };
 /* Names are the child's to change; everything that draws one reads through here.
    Suggestions exist so she can rename the band without being able to type yet. */
@@ -597,15 +662,15 @@ const LOOK_PRESETS={
     C:{preset:'C',hair:{style:'cometbraid',color:null},top:{style:'neonmoto',color:'#e43e92'},bottom:{style:'silvershorts',color:null},shoes:{style:'neonboots',color:null},face:['moondrops'],faceColor:null},
     D:{preset:'D',hair:{style:'moonpony',color:null},top:{style:'auroratop',color:null},bottom:{style:'auroraskort',color:null},shoes:{style:'aurorakicks',color:null},face:['moondrops'],faceColor:null}},
   hana:{
-    A:{preset:'A',hair:{style:'silverwaves',color:'#ff91c2'},top:{style:'petaljacket',color:null},bottom:{style:'petalskort',color:null},shoes:{style:'petalboots',color:null},face:['cheekcrystal'],faceColor:null},
-    B:{preset:'B',hair:{style:'moonpony',color:'#d83f8d'},top:{style:'neonmoto',color:'#29dbe3'},bottom:{style:'silvershorts',color:null},shoes:{style:'petalboots',color:null},face:['tiara'],faceColor:null},
-    C:{preset:'C',hair:{style:'cometbraid',color:'#ff91c2'},top:{style:'petaljacket',color:'#7740a8'},bottom:{style:'petalskort',color:'#7740a8'},shoes:{style:'petalboots',color:null},face:['starbow'],faceColor:null},
-    D:{preset:'D',hair:{style:'silverwaves',color:'#ff91c2'},top:{style:'auroratop',color:null},bottom:{style:'auroraskort',color:null},shoes:{style:'aurorakicks',color:null},face:['cheekcrystal'],faceColor:null}},
+    A:{preset:'A',hair:{style:'hana-rosewaves',color:null},top:{style:'petaljacket',color:null},bottom:{style:'petalskort',color:null},shoes:{style:'petalboots',color:null},face:['cheekcrystal'],faceColor:null},
+    B:{preset:'B',hair:{style:'hana-petalbob',color:null},top:{style:'neonmoto',color:'#29dbe3'},bottom:{style:'silvershorts',color:null},shoes:{style:'petalboots',color:null},face:['tiara'],faceColor:null},
+    C:{preset:'C',hair:{style:'hana-starlittwins',color:null},top:{style:'petaljacket',color:'#7740a8'},bottom:{style:'petalskort',color:'#7740a8'},shoes:{style:'petalboots',color:null},face:['starbow'],faceColor:null},
+    D:{preset:'D',hair:{style:'hana-floralhalo',color:null},top:{style:'auroratop',color:null},bottom:{style:'auroraskort',color:null},shoes:{style:'aurorakicks',color:null},face:['cheekcrystal'],faceColor:null}},
   jia:{
-    A:{preset:'A',hair:{style:'neonbuns',color:null},top:{style:'neonmoto',color:'#168e99'},bottom:{style:'silvershorts',color:null},shoes:{style:'neonboots',color:null},face:['moondrops'],faceColor:null},
-    B:{preset:'B',hair:{style:'starbraid',color:'#168e99'},top:{style:'moonmoto',color:'#29dbe3'},bottom:{style:'cargoshorts',color:null},shoes:{style:'neonboots',color:null},face:['visor'],faceColor:null},
-    C:{preset:'C',hair:{style:'silverwaves',color:'#29dbe3'},top:{style:'tailcoat',color:'#168e99'},bottom:{style:'cargoshorts',color:'#101820'},shoes:{style:'neonboots',color:null},face:['headset'],faceColor:null},
-    D:{preset:'D',hair:{style:'neonbuns',color:null},top:{style:'auroratop',color:null},bottom:{style:'auroraskort',color:null},shoes:{style:'aurorakicks',color:null},face:['moondrops'],faceColor:null}}
+    A:{preset:'A',hair:{style:'jia-neontails',color:null},top:{style:'neonmoto',color:'#168e99'},bottom:{style:'silvershorts',color:null},shoes:{style:'neonboots',color:null},face:['moondrops'],faceColor:null},
+    B:{preset:'B',hair:{style:'jia-braidmatrix',color:null},top:{style:'moonmoto',color:'#29dbe3'},bottom:{style:'cargoshorts',color:null},shoes:{style:'neonboots',color:null},face:['visor'],faceColor:null},
+    C:{preset:'C',hair:{style:'jia-embershag',color:null},top:{style:'tailcoat',color:'#168e99'},bottom:{style:'cargoshorts',color:'#101820'},shoes:{style:'neonboots',color:null},face:['headset'],faceColor:null},
+    D:{preset:'D',hair:{style:'jia-electricbob',color:null},top:{style:'auroratop',color:null},bottom:{style:'auroraskort',color:null},shoes:{style:'aurorakicks',color:null},face:['moondrops'],faceColor:null}}
 };
 const RANGE_PRESETS={
   E:['prismbolero','relaypleats','prismhightops'],
@@ -618,8 +683,8 @@ const RANGE_PRESETS={
 };
 const RANGE_HAIR={
   sol:['moonpony','starbraid','cometbraid','neonbuns','silverwaves','starbraid','moonpony'],
-  hana:['silverwaves','moonpony','starbraid','cometbraid','neonbuns','silverwaves','starbraid'],
-  jia:['neonbuns','cometbraid','silverwaves','moonpony','starbraid','neonbuns','cometbraid']
+  hana:['hana-floralhalo','hana-rosewaves','hana-starlittwins','hana-petalbob','hana-petalpixie','hana-floralhalo','hana-rosewaves'],
+  jia:['jia-electricbob','jia-braidmatrix','jia-embershag','jia-neontails','jia-circuitfauxhawk','jia-electricbob','jia-braidmatrix']
 };
 const RANGE_FACE={
   sol:['moondrops','cheekcrystal','visor','starbow','headset','tiara','moondrops'],
@@ -703,7 +768,7 @@ function unlockedPresets(gi){ return scheduleFor(gi).slice(0, unlockedLookCount(
 function isPresetUnlocked(gi,id){ return unlockedPresets(gi).includes(id); }
 // Which level number a still-locked look is waiting on (1-based, for the tile label).
 function presetNeedsLevel(gi,id){ const at=scheduleFor(gi).indexOf(id); return at<START_LOOKS ? 0 : at-START_LOOKS+1; }
-// Garments follow their looks; hair and extras stay open to everyone.
+// Garments follow their looks; each girl's five hairstyles and all extras stay open.
 const GATED_CATS = ['top','bottom','shoes'];
 function unlockedPieces(gi,cat){
   const out=new Set();
@@ -712,6 +777,7 @@ function unlockedPieces(gi,cat){
 }
 function itemAllowed(gi,cat,id){
   if(cat==='looks') return isPresetUnlocked(gi,id);
+  if(cat==='hair') return HAIR_BY_CHAR[CHARS[gi].id].includes(id);
   if(GATED_CATS.includes(cat)) return unlockedPieces(gi,cat).has(id);
   return WARDROBE[cat] ? WARDROBE[cat].some(w=>w[0]===id) : false;
 }
@@ -720,6 +786,7 @@ for(const c of CHARS) c.def = LOOK_PRESETS[c.id][SCHEDULE[c.id][0]];
 // pieces her unlocked looks are made of.
 function wardrobeFor(cat){
   if(cat==='looks') return scheduleFor(curChar).map(id => [id, lookName(id)]);
+  if(cat==='hair'){ const ok=HAIR_BY_CHAR[CHARS[curChar].id]; return WARDROBE.hair.filter(w=>ok.includes(w[0])); }
   if(GATED_CATS.includes(cat)){ const ok=unlockedPieces(curChar,cat); return WARDROBE[cat].filter(w=>ok.has(w[0])); }
   return WARDROBE[cat];
 }
@@ -756,12 +823,18 @@ saveLooks();
 // at (0,0,1) - selecting an item is a layer substitution, never a scaling guess.
 // Same compositor for the dressing room, the thumbnails and the stage.
 const GG_W=1024, GG_H=1536, GG_TOP=63, GG_FOOT=1408, GG_SPAN=GG_FOOT-GG_TOP;
-const GG_SRC='assets/glowgirls/sol/', GG_V='?v=20260903a';
+const GG_SRC='assets/glowgirls/sol/', GG_V='?v=20260903c';
 const REDUCED_MOTION=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const GG={ready:false,img:{},error:null};
 function ggLoad(src){return new Promise(ok=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>ok(null);i.src=src})}
 async function loadGlowGirls(){
-  const jobs=[['master',GG_SRC+'master.png'+GG_V],['blink',GG_SRC+'final/anim-blink-front.png'+GG_V]];
+  const jobs=[
+    ['master',GG_SRC+'master.png'+GG_V],
+    ['blink',GG_SRC+'final/anim-blink-front.png'+GG_V],
+    ['head-mask',GG_SRC+'final/head-base-mask.png'+GG_V],
+    ['head-hana',GG_SRC+'final/head-hana-front.png'+GG_V],
+    ['head-jia',GG_SRC+'final/head-jia-front.png'+GG_V],
+  ];
   for(const cat of ['hair','top','bottom','shoes','face'])for(const [id] of WARDROBE[cat])
     for(const side of ['rear','front']) jobs.push([cat+'-'+id+'-'+side, GG_SRC+'final/'+cat+'-'+id+'-'+side+'.png'+GG_V]);
   const got=await Promise.all(jobs.map(async([k,src])=>[k,await ggLoad(src)]));
@@ -844,6 +917,23 @@ function ggSkinned(key,tone){
   return ggPut(ggSkinCache,ck,c,8);
 }
 
+// Hana and Jia use real registered head paintings while retaining the immutable
+// Sol body underneath.  The erase happens inside this isolated base canvas so it
+// can never punch a hole through rear hair or accessories already on the stack.
+const ggBaseCache=new Map();
+function ggCharacterBase(i){
+  const ch=CHARS[i], head=ch.head, key=(head||'sol')+'|'+(ch.skin||'0');
+  if(ggBaseCache.has(key))return ggBaseCache.get(key);
+  if(!head)return ggPut(ggBaseCache,key,ggSkinned('master',ch.skin),3);
+  const c=ggCanvas(GG_W,GG_H), x=c.getContext('2d');
+  x.drawImage(ggSkinned('master',ch.skin),0,0);
+  if(GG.img['head-mask']){
+    x.save();x.globalCompositeOperation='destination-out';x.drawImage(GG.img['head-mask'],0,0);x.restore();
+  }
+  const painted=ggSkinned('head-'+head,ch.skin);if(painted)x.drawImage(painted,0,0);
+  return ggPut(ggBaseCache,key,c,3);
+}
+
 /* The master's bare feet are erased wherever the FRONT boot layer covers them (the
    rear layer is the shaft interior the leg must stay visible against), dilated 1px
    so no seam opens, and everything below the ankle line always sits inside a boot. */
@@ -877,14 +967,16 @@ function ggStack(look){
 // cached per girl / look / blink state / resolution and simply blitted after that.
 const ggComp=new Map();
 function ggComposite(i,look,blink,scale){
-  const tone=CHARS[i].skin;
-  const key=(tone||'0')+'|'+JSON.stringify(look)+'|'+(blink?1:0)+'|'+scale;
+  const ch=CHARS[i], tone=ch.skin;
+  const key=(ch.head||'sol')+'|'+(tone||'0')+'|'+JSON.stringify(look)+'|'+(blink?1:0)+'|'+scale;
   if(ggComp.has(key))return ggComp.get(key);
   const c=ggCanvas(Math.round(GG_W*scale),Math.round(GG_H*scale)), x=c.getContext('2d');
   x.scale(scale,scale);
   for(const lay of ggStack(look)){
-    if(lay==='MASTER'){x.drawImage(ggSkinned('master',tone),0,0);continue}
-    if(lay==='BLINK'){if(blink&&GG.img.blink)x.drawImage(ggSkinned('blink',tone),0,0);continue}
+    if(lay==='MASTER'){x.drawImage(ggCharacterBase(i),0,0);continue}
+    // The existing blink painting is Sol-specific. Keep Hana and Jia still until
+    // their own head animation layers are authored rather than flashing Sol's eyes.
+    if(lay==='BLINK'){if(blink&&!ch.head&&GG.img.blink)x.drawImage(ggSkinned('blink',tone),0,0);continue}
     if(lay&&lay.erase){x.save();x.globalCompositeOperation='destination-out';x.drawImage(ggShoeErase(lay.erase),0,0);x.restore();continue}
     x.drawImage(lay,0,0);
   }
@@ -1126,7 +1218,7 @@ function powerUp(){
 // MODE 'free' = the original sandbox. MODE 'level' = wave defense: demons descend on the stage,
 // the girls' energy is the lives, the cannon empties after every shot, magic potions are limited ammo.
 let MODE = 'free';
-const AMMO_MAX = 9, ammo = {heart:2, star:2, bass:2, glitter:2};
+const AMMO_MAX = 9, RARE_DROPS_MAX = 4, ammo = {heart:2, star:2, bass:2, glitter:2, comet:0, moon:0, swirl:0, rainbow:0};
 
 const DKIND = {   // the demon family — all smiley, all pop into bubbles
   boo:    {r:27, hue:300, speed:26},                             // classic bouncy Boo-Bop
@@ -1135,28 +1227,43 @@ const DKIND = {   // the demon family — all smiley, all pop into bubbles
   grump:  {r:28, hue:215, speed:21, combo:2, shades:true},       // too-cool: only the shown 2-potion combo pops it
   twirlie:{r:24, hue:150, speed:26, combo:2, spinny:true},       // spins side to side, needs its combo
   mega:   {r:44, hue:330, speed:13, combo:3, horns:true},        // huge, slow, needs a 3-potion combo
+  diva:   {r:34, hue:45,  speed:19, combo:3, shades:true, wings:true}, // late-show showoff: 3-potion combo on the wing
 };
-const C2 = () => [pick(COLOURS).id, pick(MAGICS).id];
-const C3 = () => { const m1 = pick(MAGICS).id; let m2 = pick(MAGICS).id; while (m2===m1) m2 = pick(MAGICS).id; return [pick(COLOURS).id, m1, m2]; };
+// Combos may call for rare magic only once the shows are hard enough to have
+// dropped some; the early levels stay on the four shelf potions.
+const magicPool = () => (MODE==='level' && PLAY.idx>=3) ? MAGIC_ALL : MAGICS;
+const C2 = () => [pick(COLOURS).id, pick(magicPool()).id];
+const C3 = () => { const pool = magicPool(); const m1 = pick(pool).id; let m2 = pick(pool).id; let guard = 0;
+  while (m2===m1 && ++guard < 20) m2 = pick(pool).id;
+  return [pick(COLOURS).id, m1, m2]; };
 const LEVELS = [
   {name:'Sunset Soundcheck', icon:'🌅', theme:0, waves:8,  kinds:['boo'],                                            sp:0.75, gap:[5000,6800], maxUp:2, food:8000,  ammoT:10000},
   {name:'Neon Night',        icon:'🌃', theme:1, waves:10, kinds:['boo','boo','zoomie'],                             sp:0.85, gap:[4300,6000], maxUp:2, food:9500,  ammoT:12000},
   {name:'Moonlight Ball',    icon:'🪩', theme:2, waves:12, kinds:['boo','boo','zoomie','grump'],                     sp:0.95, gap:[3900,5600], maxUp:3, food:10500, ammoT:10000},
-  {name:'Rainy Encore',      icon:'☔', theme:3, waves:13, kinds:['boo','zoomie','bloomp','grump','grump'],          sp:1.05, gap:[3500,5200], maxUp:3, food:11500, ammoT:9500},
-  {name:'Sunrise Festival',  icon:'🎡', theme:4, waves:15, kinds:['boo','zoomie','bloomp','grump','twirlie','twirlie'], sp:1.15, gap:[3100,4800], maxUp:4, food:13000, ammoT:9000},
-  {name:'Galaxy Finale',     icon:'🪐', theme:5, waves:16, kinds:['boo','zoomie','bloomp','grump','twirlie','mega'], sp:1.3,  gap:[2800,4400], maxUp:4, food:14500, ammoT:8500},
+  {name:'Rainy Encore',      icon:'☔', theme:3, waves:13, kinds:['boo','zoomie','bloomp','grump','grump','twirlie'], sp:1.05, gap:[3500,5200], maxUp:3, food:11500, ammoT:9500},
+  {name:'Sunrise Festival',  icon:'🎡', theme:4, waves:15, kinds:['boo','zoomie','bloomp','grump','twirlie','twirlie','mega'], sp:1.15, gap:[3100,4800], maxUp:4, food:13000, ammoT:9000},
+  {name:'Galaxy Finale',     icon:'🪐', theme:5, waves:16, kinds:['boo','zoomie','grump','twirlie','mega','mega','diva'], sp:1.3,  gap:[2800,4400], maxUp:4, food:14500, ammoT:8500},
 ];
 // Boss fights are LEARNABLE: always 8 hits, and each boss uses the same fixed recipe list every time.
 // 0 = any basic potion shot; arrays = the exact combo shown above the boss's head.
+/* Every boss step is a three-potion combo now, and every boss is built differently
+   — its own colour, size, crown and features — so beating one teaches a shape
+   rather than a repeat of the last fight. */
 const BOSSES = [
-  {name:'THE YAWN KING',   seq:[0,0,['pink','heart'],0,['pink','heart'],0,['blue','star'],['pink','heart']]},
-  {name:'DJ GRUMBLES',     seq:[0,['blue','star'],0,['blue','star'],['gold','glitter'],0,['blue','star'],['gold','glitter']]},
-  {name:'DISCO DOZER',     seq:[0,['gold','star'],0,['pink','glitter'],0,['gold','star'],['pink','glitter'],['gold','star']]},
-  {name:'PUDDLE PRINCE',   seq:[0,['blue','heart'],['blue','heart'],0,['lime','glitter'],0,['blue','heart'],['lime','glitter']]},
-  {name:'BALLOONZILLA',    seq:[0,['lime','star'],0,['pink','bass'],['lime','star'],0,['pink','bass'],['lime','star']]},
-  {name:'THE SNOOZE MOON', seq:[['pink','heart'],0,['blue','star'],['gold','glitter'],0,['pink','heart'],['blue','star'],['gold','glitter']]},
+  {name:'THE YAWN KING',   look:{hue:275, r:58, crown:1, horns:true},
+   seq:[0,0,['pink','heart','star'],0,['pink','heart','star'],0,['blue','star','glitter'],['pink','heart','star']]},
+  {name:'DJ GRUMBLES',     look:{hue:200, r:56, crown:2, shades:true},
+   seq:[0,['blue','star','bass'],0,['blue','star','bass'],['gold','glitter','star'],0,['blue','star','bass'],['gold','glitter','star']]},
+  {name:'DISCO DOZER',     look:{hue:48,  r:60, crown:3, spinny:true, horns:true},
+   seq:[0,['gold','star','glitter'],0,['pink','glitter','bass'],0,['gold','star','glitter'],['pink','glitter','bass'],['gold','star','glitter']]},
+  {name:'PUDDLE PRINCE',   look:{hue:180, r:57, crown:4, wings:true},
+   seq:[0,['blue','heart','glitter'],['blue','heart','glitter'],0,['lime','glitter','star'],0,['blue','heart','glitter'],['lime','glitter','star']]},
+  {name:'BALLOONZILLA',    look:{hue:330, r:66, crown:5, horns:true, wings:true},
+   seq:[0,['lime','star','bass'],0,['violet','bass','heart'],['lime','star','bass'],0,['violet','bass','heart'],['lime','star','bass']]},
+  {name:'THE SNOOZE MOON', look:{hue:255, r:62, crown:6, shades:true, horns:true, spinny:true},
+   seq:[['red','heart','moon'],0,['white','star','comet'],['gold','glitter','swirl'],0,['red','heart','moon'],['white','star','comet'],['orange','bass','rainbow']]},
 ];
-const PLAY = {on:false, idx:0, phase:'', left:0, nextSpawn:0, foodT:0, ammoT:0, slowUntil:0, energy:[1,1,1]};
+const PLAY = {on:false, idx:0, phase:'', left:0, nextSpawn:0, foodT:0, ammoT:0, slowUntil:0, rareDrops:0, energy:[1,1,1]};
 const DROPS = [], FOOD_ICON = {slushie:'🥤', hotdog:'🌭', popcorn:'🍿', donut:'🍩'};
 let playL = 0, playR = 0, girlXs = [0,0,0], lastBounceT = 0, livesKey = '';
 
@@ -1166,7 +1273,8 @@ function sfxBounce(){ if (!AC) return; const t = now(); tone(220,t,0.16,{type:'s
 
 /* ---- map / level select ---- */
 function openMap(banner){
-  PLAY.on = false; BOOBOPS.length = 0; DROPS.length = 0;
+  PLAY.on = false; paused = false; $('#paused').hidden = true; $('#pause').hidden = true;
+  BOOBOPS.length = 0; DROPS.length = 0;
   dressOpen = false; $('#dress').hidden = true;
   $('#ui').classList.add('hidden'); const m = $('#map'); m.hidden = false;
   $('#mapBanner').innerHTML = banner || '';
@@ -1176,14 +1284,15 @@ function openMap(banner){
   lastTouch = performance.now();
 }
 function closeMapUI(){ dressOpen = false; $('#dress').hidden = true; $('#map').hidden = true; $('#ui').classList.remove('hidden');
-  $('#finale').hidden = MODE==='level'; $('#mapBtn').hidden = MODE!=='level';
+  $('#finale').hidden = MODE==='level'; $('#mapBtn').hidden = MODE!=='level'; $('#pause').hidden = MODE!=='level';
   $('#stars').style.display = MODE==='level' ? 'none' : ''; renderLives(); renderAmmo();
   lastTouch = performance.now(); setTimeout(resize, 50); }
 function startLevel(i){
   MODE = 'level'; const cfg = LEVELS[i];
   Object.assign(PLAY, {on:true, idx:i, phase:'waves', left:cfg.waves, nextSpawn:performance.now()+2600,
-    foodT:performance.now()+cfg.food*0.6, ammoT:performance.now()+cfg.ammoT*0.5, slowUntil:0, energy:[1,1,1]});
+    foodT:performance.now()+cfg.food*0.6, ammoT:performance.now()+cfg.ammoT*0.5, slowUntil:0, rareDrops:0, energy:[1,1,1]});
   ammo.heart = ammo.star = ammo.bass = ammo.glitter = 2;
+  for (const id of RARE_IDS) ammo[id] = 0;   // rare magic has to be caught, every show
   BOOBOPS.length = 0; DROPS.length = 0; ROCKETS.length = 0; mix.length = 0; renderMix();
   closeMapUI(); toast(`${cfg.icon} ${cfg.name}!`); cheer = 1; if (AC) sfxCheer();
 }
@@ -1230,7 +1339,10 @@ function spawnDemon(kind, boss){
     speed:(k.speed||24)*U*cfg.sp, state:'descend', t:0, dead:false, orb:0, wave:rnd(TAU), hp:k.hp||1,
     zig:k.zig, spinny:k.spinny, shades:k.shades, wings:k.wings, horns:k.horns, flash:0, bump:0};
   if (k.combo) b.combo = k.combo===3 ? C3() : C2();
-  if (boss){ Object.assign(b, {boss:true, r:58*U, hue:275, speed:9*U*cfg.sp, hits:0, seq:BOSSES[PLAY.idx].seq, name:BOSSES[PLAY.idx].name, minT:performance.now()+7000, horns:true}); b.combo = null; }
+  if (boss){ const B = BOSSES[PLAY.idx], L = B.look || {};
+    Object.assign(b, {boss:true, r:(L.r||58)*U, hue:L.hue!==undefined?L.hue:275, speed:9*U*cfg.sp, hits:0, seq:B.seq, name:B.name,
+      minT:performance.now()+7000, crown:L.crown||1, horns:!!L.horns, shades:!!L.shades, wings:!!L.wings, spinny:!!L.spinny});
+    b.combo = null; }
   BOOBOPS.push(b); return b;
 }
 function updateLevelDemon(b, dt, i){
@@ -1301,7 +1413,15 @@ function spawnDrop(kind, forceId){
   if (!id){
     if (kind==='food') id = pick(['slushie','hotdog','popcorn','donut']);
     else { const need = neededMagics().sort((a,b)=>ammo[a]-ammo[b]);   // refill what the fight actually needs, emptiest first
-      id = need.length ? need[0] : MAGICS.map(m=>m.id).sort((a,b)=>ammo[a]-ammo[b])[0]; }
+      // rare magic only falls when a combo on screen asks for it, and only so often
+      const rareWanted = need.filter(i=>RARE_IDS.includes(i));
+      if (rareWanted.length && PLAY.rareDrops < RARE_DROPS_MAX) id = rareWanted[0];
+      else { const common = need.filter(i=>!RARE_IDS.includes(i));
+        id = common.length ? common[0] : MAGICS.map(m=>m.id).sort((a,b)=>ammo[a]-ammo[b])[0]; } }
+  }
+  if (kind==='ammo' && RARE_IDS.includes(id)){
+    if (PLAY.rareDrops >= RARE_DROPS_MAX) return;
+    PLAY.rareDrops++;
   }
   DROPS.push({x:rnd(playL+50*U, playR-50*U), y:-30*U, vy:rnd(26,38)*U, r:26*U, kind, id, p:rnd(TAU)});
 }
@@ -1309,7 +1429,8 @@ function collectDrop(d){
   sfxYum(); cheer = Math.min(1, cheer+0.3);
   for (let k=0;k<24;k++){ const a = rnd(TAU), sp = rnd(40,180)*U;
     spawn({x:d.x, y:d.y, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp, life:rnd(0.6,1.1), max:1, h:48, s:100, l:70, sz:2.5*U, drag:2, grav:80*U, spin:0, tw:true, tx:d.x, ty:d.y, tx2:d.x, ty2:d.y}); }
-  if (d.kind==='ammo'){ ammo[d.id] = Math.min(AMMO_MAX, ammo[d.id]+2); renderAmmo(); toast(`+2 ${byId[d.id].icon} POTION!`); return; }
+  if (d.kind==='ammo'){ ammo[d.id] = Math.min(AMMO_MAX, ammo[d.id]+2); renderAmmo();
+    toast(RARE_IDS.includes(d.id) ? `${byId[d.id].icon} NEW MAGIC POTION!` : `+2 ${byId[d.id].icon} POTION!`); return; }
   const lowest = () => { let lo = 0; for (let k=1;k<3;k++) if (PLAY.energy[k] < PLAY.energy[lo]) lo = k; return lo; };
   if (d.id==='slushie'){ const g = lowest(); PLAY.energy[g] = Math.min(1, PLAY.energy[g]+0.45); toast('🥤 SLURP! WAKE UP!'); }
   else if (d.id==='hotdog'){ const g = lowest(); PLAY.energy[g] = 1; toast('🌭 YUM! FULL POWER!'); }
@@ -1318,7 +1439,7 @@ function collectDrop(d){
   renderLives();
 }
 function updateShowMode(dt, nowMs){
-  if (!PLAY.on) return;
+  if (!PLAY.on || paused) return;
   renderLives();   // cheap: internally skips unless energy actually changed
   const cfg = LEVELS[PLAY.idx];
   const living = BOOBOPS.filter(b=>b.mode==='level' && !b.dead && !b.boss && b.state!=='flee').length;
@@ -1352,6 +1473,9 @@ function renderLives(){
 function renderAmmo(){
   document.querySelectorAll('#right .bottle').forEach(b => { const id = b.dataset.id, a = b.querySelector('.ammo');
     if (!a) return;
+    // A rare bottle only joins the shelf once it has been caught in this show.
+    const rare = RARE_IDS.includes(id);
+    b.style.display = (rare && !(MODE==='level' && ammo[id] > 0)) ? 'none' : '';
     if (MODE==='level' && ammo[id]!==undefined){ a.style.display = 'grid'; a.textContent = ammo[id]; b.classList.toggle('out', ammo[id] <= 0); }
     else { a.style.display = 'none'; b.classList.remove('out'); } });
 }
@@ -1465,7 +1589,7 @@ function frame(nowMs){
   requestAnimationFrame(frame);
   let dt = (nowMs-last)/1000; last = nowMs; if (dt>0.05) dt=0.05;
   const t = nowMs/1000; beat = (t*BPM/60)%1;
-  update(dt, nowMs);
+  if (!paused) update(dt, nowMs);
   if (dressOpen) drawDress(t, dt); else draw(t, dt);
 }
 function update(dt, nowMs){
@@ -1568,12 +1692,12 @@ function draw(t, dt){
     ctx.strokeStyle = hsl(p.h,p.s,p.l,a); ctx.lineWidth = p.sz*(0.5+0.5*f);
     ctx.beginPath(); ctx.moveTo(p.tx2,p.ty2); ctx.lineTo(p.x,p.y); ctx.stroke();
   }
-  // boo-bops & bubbles
+  // stage + girls + crowd, then the demons on top of it: they dive right down to
+  // the girls to tickle them, and behind the LED wall that moment was invisible.
   ctx.globalCompositeOperation = 'source-over';
+  drawStage(t);
   for (const b of BOOBOPS){ drawBooBop(b, t); }
   drawBubbles(t);
-  // stage + girls + crowd + cannon
-  drawStage(t);
   drawCannon(t, dt);
   if (MODE==='level') drawShowBits(t);
   ctx.restore();
@@ -1833,6 +1957,31 @@ function drawFaceAcc(id,gh,acc){
   else if(id==='earrings'){ctx.strokeStyle='#edf8ff';ctx.lineWidth=X(.065);ctx.beginPath();ctx.moveTo(X(-1.02),Y(.24));ctx.lineTo(X(-1.08),Y(.9));ctx.moveTo(X(1.02),Y(.24));ctx.lineTo(X(1.08),Y(.9));ctx.stroke();ctx.fillStyle=acc;starPath(X(-1.08),Y(1.03),X(.17));ctx.fill();starPath(X(1.08),Y(1.03),X(.17));ctx.fill()}
   ctx.restore();
 }
+// Each boss wears a different crown, so the six read as six characters.
+function drawCrown(b, r){
+  const c = b.crown || 1;
+  ctx.save(); ctx.fillStyle = '#ffd23f'; ctx.shadowColor = '#ffd23f'; ctx.shadowBlur = r*0.28;
+  if (c===1){ ctx.beginPath(); ctx.moveTo(-r*0.3,-r*0.95); ctx.lineTo(-r*0.3,-r*1.25); ctx.lineTo(-r*0.15,-r*1.05); ctx.lineTo(0,-r*1.3); ctx.lineTo(r*0.15,-r*1.05); ctx.lineTo(r*0.3,-r*1.25); ctx.lineTo(r*0.3,-r*0.95); ctx.closePath(); ctx.fill(); }
+  else if (c===2){ // headphones
+    ctx.strokeStyle='#ffd23f'; ctx.lineWidth=r*0.12; ctx.beginPath(); ctx.arc(0,-r*0.85,r*0.72,Math.PI*1.12,Math.PI*1.88); ctx.stroke();
+    for(const sx of [-1,1]){ ctx.beginPath(); ctx.ellipse(sx*r*0.68,-r*0.72,r*0.17,r*0.26,0,0,TAU); ctx.fill(); } }
+  else if (c===3){ // disco ball topper
+    ctx.beginPath(); ctx.arc(0,-r*1.28,r*0.26,0,TAU); ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=r*0.035;
+    for(let k=-1;k<=1;k++){ ctx.beginPath(); ctx.moveTo(-r*0.26,-r*1.28+k*r*0.12); ctx.lineTo(r*0.26,-r*1.28+k*r*0.12); ctx.stroke(); }
+    ctx.strokeStyle='#ffd23f'; ctx.lineWidth=r*0.07; ctx.beginPath(); ctx.moveTo(0,-r*1.02); ctx.lineTo(0,-r*0.9); ctx.stroke(); }
+  else if (c===4){ // raindrop tiara
+    for(const sx of [-0.55,0,0.55]){ ctx.beginPath(); ctx.moveTo(sx*r,-r*1.34); ctx.quadraticCurveTo(sx*r+r*0.16,-r*1.02,sx*r,-r*0.94);
+      ctx.quadraticCurveTo(sx*r-r*0.16,-r*1.02,sx*r,-r*1.34); ctx.fill(); } }
+  else if (c===5){ // balloon knot bow
+    for(const sx of [-1,1]){ ctx.beginPath(); ctx.ellipse(sx*r*0.34,-r*1.16,r*0.3,r*0.2,sx*0.5,0,TAU); ctx.fill(); }
+    ctx.beginPath(); ctx.arc(0,-r*1.12,r*0.12,0,TAU); ctx.fill(); }
+  else { // crescent moon
+    ctx.beginPath(); ctx.arc(0,-r*1.2,r*0.3,0,TAU); ctx.fill();
+    ctx.globalCompositeOperation='destination-out'; ctx.beginPath(); ctx.arc(r*0.14,-r*1.27,r*0.26,0,TAU); ctx.fill();
+    ctx.globalCompositeOperation='source-over'; }
+  ctx.restore(); ctx.shadowBlur = 0;
+}
 function drawBooBop(b, t){
   const r = b.r, wob = Math.sin(b.p*5)*0.07, body = `hsl(${b.hue},85%,62%)`, dark = `hsl(${b.hue},70%,30%)`, light = `hsl(${b.hue},90%,80%)`;
   ctx.save(); ctx.translate(b.x, b.y); ctx.scale(1+wob, 1-wob);
@@ -1850,7 +1999,7 @@ function drawBooBop(b, t){
   const hs = b.horns ? 1.5 : 1;
   ctx.fillStyle = light; ctx.beginPath(); ctx.moveTo(-r*0.6,-r*0.7); ctx.lineTo(-r*0.45,-r*(0.85+0.25*hs)); ctx.lineTo(-r*0.25,-r*0.85); ctx.fill();
   ctx.beginPath(); ctx.moveTo(r*0.6,-r*0.7); ctx.lineTo(r*0.45,-r*(0.85+0.25*hs)); ctx.lineTo(r*0.25,-r*0.85); ctx.fill();
-  if (b.boss){ ctx.fillStyle = '#ffd23f'; ctx.beginPath(); ctx.moveTo(-r*0.3,-r*0.95); ctx.lineTo(-r*0.3,-r*1.25); ctx.lineTo(-r*0.15,-r*1.05); ctx.lineTo(0,-r*1.3); ctx.lineTo(r*0.15,-r*1.05); ctx.lineTo(r*0.3,-r*1.25); ctx.lineTo(r*0.3,-r*0.95); ctx.closePath(); ctx.fill(); }
+  if (b.boss) drawCrown(b, r);
   // waving arms
   ctx.strokeStyle = body; ctx.lineWidth = r*0.18; ctx.lineCap='round';
   ctx.beginPath(); ctx.moveTo(-r*0.85,r*0.1); ctx.lineTo(-r*1.25, -r*0.3 + Math.sin(t*10+b.wave)*r*0.25); ctx.moveTo(r*0.85,r*0.1); ctx.lineTo(r*1.25, -r*0.3 + Math.cos(t*10+b.wave)*r*0.25); ctx.stroke();
@@ -1983,7 +2132,7 @@ function bottleHTML(p){
     <span class="glass" ${p.rainbow?`style="background:${p.css}"`:''}><span class="eyes"><i></i><i></i></span><span class="icon">${p.icon}</span></span><span class="n"></span><span class="ammo"></span></button>`;
 }
 $('#left').innerHTML = '<span class="lbl"><i>🎨</i><b>COLOURS</b></span>' + COLOURS.map(bottleHTML).join('');
-$('#right').innerHTML = '<span class="lbl"><i>✨</i><b>MAGIC</b></span>' + MAGICS.map(bottleHTML).join('');
+$('#right').innerHTML = '<span class="lbl"><i>✨</i><b>MAGIC</b></span>' + MAGIC_ALL.map(bottleHTML).join('');
 $('#splashBottles').innerHTML = [COLOURS[0],COLOURS[2],MAGICS[0],COLOURS[3],MAGICS[1]].map(bottleHTML).join('');
 
 function renderMix(){
@@ -2017,6 +2166,23 @@ cv.addEventListener('pointerdown', e => { e.preventDefault(); if (!started) retu
 cv.addEventListener('pointermove', e => { if (!started) return; aim.x = e.clientX; aim.y = e.clientY; aim.show = e.pointerType==='mouse' ? 0.5 : 0.8; });
 $('#finale').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); if (performance.now() < finaleUntil) return; finaleUntil = performance.now()+10000; nextFinaleShot = 0; $('#finale').classList.add('busy'); toast('🎆 FINALE! 🎆'); cheer = 1; lastTouch = performance.now(); });
 $('#music').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); setMusic(!musicOn); });
+$('#dmute').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); setMusic(!musicOn); });
+/* Pause freezes the show without losing it. Timers are stored as absolute stamps,
+   so everything pending is nudged forward by however long the break lasted. */
+let paused = false, pausedAt = 0;
+function setPaused(on){
+  if (on === paused || MODE!=='level' || !PLAY.on) { if(!on) { paused=false; $('#paused').hidden = true; } return; }
+  paused = on; $('#paused').hidden = !on;
+  if (on){ pausedAt = performance.now(); }
+  else { const gap = performance.now() - pausedAt;
+    PLAY.nextSpawn += gap; PLAY.foodT += gap; PLAY.ammoT += gap;
+    if (PLAY.slowUntil) PLAY.slowUntil += gap;
+    for (const b of BOOBOPS) if (b.minT) b.minT += gap; }
+  lastTouch = performance.now();
+}
+$('#pause').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); setPaused(!paused); });
+$('#resumeBtn').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); setPaused(false); });
+$('#quitBtn').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); setPaused(false); openMap(''); });
 $('#mapBtn').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); openMap(); });
 $('#freePlayBtn').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); freePlay(); });
 $('#mapDress').addEventListener('pointerdown', e => { e.preventDefault(); initAudio(); $('#map').hidden = true; openDress(); });
@@ -2261,14 +2427,16 @@ const GG_READY=loadGlowGirls().catch(e=>{GG.error=e;console.warn('Glow Girls lay
 setMusic(musicOn); renderStars(); renderMix(); resize();
 requestAnimationFrame(frame);
 if (location.search.includes('auto=1')){ window.__kb = {P, ROCKETS, BOOBOPS, BUBBLES, DROPS, launch, spawnBooBop, spawnDemon, spawnDrop, collectDrop, hitDemon, explode, addPotion, mix, ammo, PLAY, LEVELS, BOSSES, PROG,
-    startLevel, freePlay, openMap, levelWon, levelLost, get playfield(){return [playL, playR];}, get mode(){return MODE}, get glow(){return glow}, get stars(){return starsTotal}, byId, get ac(){return AC},
-    LOOKS, CHARS, WARDROBE, LOOK_PRESETS, GG, TINT_MIX, isSkin, ggComposite, NAMES, openNames, closeNames, cleanName, applyItem,
+    startLevel, freePlay, openMap, levelWon, levelLost, DKIND, RARE_MAGICS, RARE_IDS, RARE_DROPS_MAX, spawnDrop, setMusic, setPaused, renderAmmo,
+    get paused(){return paused}, masterGain:()=>master?master.gain.value:null, stageTop:()=>ctlTop-4*U, drawSource:()=>String(draw), get playfield(){return [playL, playR];}, get mode(){return MODE}, get glow(){return glow}, get stars(){return starsTotal}, byId, get ac(){return AC},
+    LOOKS, CHARS, WARDROBE, HAIR_BY_CHAR, LOOK_PRESETS, GG, TINT_MIX, isSkin, ggComposite, NAMES, openNames, closeNames, cleanName, applyItem,
     SCHEDULE, PRESET_IDS, SCHEDULE_LEN, START_LOOKS, buildSchedule, clearedLevels, unlockedLookCount, scheduleFor, unlockedPresets,
     isPresetUnlocked, presetNeedsLevel, unlockedPieces, itemAllowed, wardrobeFor, showUnlock, closeUnlock, saveProg, renderDress, setColor, resetColor, setCat, switchChar, surprise, signature, openDress, toStage, get curChar(){return curChar}, get curCat(){return curCat}, get dressOpen(){return dressOpen}};
   start().then(() => {   // start() is async (asset load) and ends by opening the dressing room — sequence after it
     if (!location.search.includes('dress=1')){
       const lm = location.search.match(/level=(\d)/);
-      if (lm){ PROG.unlocked = 6; startLevel(+lm[1]); } else freePlay();
+      // ?level= is a raw index; clamp it so a stray value opens a show instead of crashing
+      if (lm){ PROG.unlocked = 6; startLevel(clamp(+lm[1]|0, 0, LEVELS.length-1)); } else freePlay();
     }
     if (location.search.includes('mix=')) location.search.match(/mix=([\w,]+)/)[1].split(',').forEach(id=>byId[id]&&addPotion(id));
     if (location.search.includes('finale=1')) setTimeout(()=>{ finaleUntil = performance.now()+10000; },300);
