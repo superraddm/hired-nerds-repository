@@ -22,6 +22,7 @@ trap 'rm -rf "$STAGE"' EXIT
 mkdir -p "$STAGE/assets/glowgirls/sol"
 cp "$SRC"/index.html "$SRC"/manifest.webmanifest "$SRC"/icon-*.png "$STAGE/"
 cp "$SRC/assets/glowgirls/sol/master.png" "$STAGE/assets/glowgirls/sol/"
+cp "$SRC/assets/glowgirls/sol/layers.json" "$STAGE/assets/glowgirls/sol/"   # alpha-bounds manifest the compositor crops by
 cp -r "$SRC/assets/glowgirls/sol/final" "$STAGE/assets/glowgirls/sol/"
 
 # Anything index.html asks for must exist in the staged copy, or the game 404s live.
@@ -29,6 +30,7 @@ missing=0
 while read -r ref; do
   [ -f "$STAGE/$ref" ] || { echo "MISSING from deploy: $ref"; missing=1; }
 done < <(grep -oE "assets/[A-Za-z0-9/._-]+\.(png|webp|jpg)" "$SRC/index.html" | sed "s/'.*//" | sort -u)
+[ -f "$STAGE/assets/glowgirls/sol/layers.json" ] || { echo "MISSING from deploy: assets/glowgirls/sol/layers.json (run node tools/build-glowgirl-layers.cjs)"; missing=1; }
 [ "$missing" -eq 0 ] || { echo "aborting: staged copy is incomplete"; exit 1; }
 
 echo "Publishing $(du -sh "$STAGE" | cut -f1) to kpopboom..."
