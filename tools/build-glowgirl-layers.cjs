@@ -133,11 +133,9 @@ async function main() {
       else if (!(k in sortedLayers)) diffs.push(`${k}: in file (${a}) but no PNG on disk`);
       else if (a !== b) diffs.push(`${k}: file ${a}, computed ${b}`);
     }
-    if (fs.readFileSync(OUT_PATH, 'utf8').replace(/
-/g, '
-') !== text.replace(/
-/g, '
-') && diffs.length === 0) {
+    // git may check the file out with CRLF on Windows; compare line endings normalised
+    const norm = s => s.replace(/\r\n/g, '\n');
+    if (norm(fs.readFileSync(OUT_PATH, 'utf8')) !== norm(text) && diffs.length === 0) {
       diffs.push('file text differs from canonical serialization (same data, different formatting)');
     }
     if (diffs.length) {
