@@ -28,7 +28,7 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;overflow:hidden;background:var(--ink);color:#fff;font-family:var(--font);
   touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;overscroll-behavior:none}
-button{font-family:inherit;border:0;color:#fff;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+button{font-family:inherit;border:0;color:#fff;cursor:pointer;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-appearance:none;appearance:none;margin:0}
 button:focus{outline:none}
 
 #sky{position:fixed;left:var(--app-x,0px);top:var(--app-y,0px);width:var(--app-w,100%);height:var(--app-h,100%);display:block;touch-action:none}
@@ -50,8 +50,8 @@ button:focus{outline:none}
 #stars .slot.on{filter:none;transform:scale(1.15)}
 #stars .count{font-weight:900;font-size:clamp(16px,3dvh,26px);margin-left:6px;color:var(--gold);text-shadow:0 0 10px var(--gold)}
 #topbtns{display:flex;gap:clamp(3px,1vw,8px);flex:0 1 auto;min-width:0}
-.round{width:var(--round);height:var(--round);border-radius:50%;font-size:calc(var(--round)*.5);flex:0 1 auto;min-width:34px;
-  display:grid;place-items:center;background:linear-gradient(160deg,#4a1a86,#1f0644);
+.round{width:var(--round);height:var(--round);border-radius:50%;font-size:calc(var(--round)*.5);flex:0 1 auto;min-width:34px;padding:0;line-height:1;
+  display:flex;align-items:center;justify-content:center;text-align:center;background:linear-gradient(160deg,#4a1a86,#1f0644);
   box-shadow:0 0 0 3px rgba(255,255,255,.18) inset,0 6px 18px rgba(0,0,0,.45),0 0 18px rgba(168,85,255,.5);
   transition:transform .12s}
 /* .round sets display:grid, which outranks the UA rule for [hidden] — without this
@@ -105,7 +105,7 @@ button:focus{outline:none}
 
 /* ---------- controls ---------- */
 #ctl{grid-area:ctl;display:flex;align-items:flex-end;justify-content:center;gap:clamp(6px,1.5vw,22px);padding-bottom:4px;min-width:0}
-#clear{width:max(44px,var(--clear));height:max(44px,var(--clear));font-size:clamp(18px,3.4dvh,30px);align-self:center;
+#clear{width:max(44px,var(--clear));height:max(44px,var(--clear));font-size:clamp(18px,3.4dvh,30px);align-self:center;padding:0;
   background:linear-gradient(160deg,#3a1866,#1a0636)}
 #cauldronWrap{position:relative;display:grid;place-items:center;pointer-events:auto}
 #chips{display:flex;gap:4px;min-height:clamp(26px,4.5dvh,40px);align-items:flex-end;margin-bottom:4px}
@@ -244,7 +244,7 @@ button:focus{outline:none}
 #cvwrap{position:relative;height:100%;min-height:0;border-radius:18px;overflow:hidden}
 #cvwrap.over::after{content:"";position:absolute;inset:0;border:5px solid #7dff4a;border-radius:18px;pointer-events:none;box-shadow:0 0 24px #7dff4a inset}
 #dressCv{position:absolute;inset:0;width:100%;height:100%;touch-action:none;display:block}
-.arrow{width:clamp(44px,9vmin,72px);height:clamp(44px,9vmin,72px);border-radius:50%;font-size:clamp(18px,4vmin,32px);display:grid;place-items:center;
+.arrow{width:clamp(44px,9vmin,72px);height:clamp(44px,9vmin,72px);border-radius:50%;font-size:clamp(18px,4vmin,32px);padding:0;line-height:1;display:flex;align-items:center;justify-content:center;
   background:linear-gradient(160deg,#4a1a86,#1f0644);box-shadow:0 0 0 3px rgba(255,255,255,.18) inset,0 5px 14px rgba(0,0,0,.45)}
 .arrow:active{transform:scale(.9)}
 #dname{cursor:pointer;pointer-events:auto;touch-action:manipulation;-webkit-user-select:none;user-select:none}
@@ -345,6 +345,8 @@ button:focus{outline:none}
 /* ---------- legacy quality tier (old iPads): no blur compositing, no looping decoration ---------- */
 html.q-legacy #stars,html.q-legacy .shelf,html.q-legacy .charstrip,html.q-legacy #paused,html.q-legacy #unlock,html.q-legacy #names{backdrop-filter:none;-webkit-backdrop-filter:none}
 html.q-legacy .bottle{filter:none}
+html.q-legacy #cauldron .liquid{animation:none}
+html.q-legacy #cauldron .bub{display:none}
 html.q-legacy #go,html.q-legacy #play,html.q-legacy #finale,html.q-legacy #toStage,html.q-legacy #unlockOk,html.q-legacy #splash h1,html.q-legacy .tile.paint,html.q-legacy #unlockCv,html.q-legacy .bottle .eyes i{animation:none}
 /* ---------- ?perf=1 diagnostics ---------- */
 #perf{position:fixed;left:6px;bottom:6px;z-index:99;font:11px/1.35 ui-monospace,Menlo,Consolas,monospace;color:#7dff4a;background:rgba(0,0,0,.65);padding:4px 7px;border-radius:6px;pointer-events:none;white-space:pre}
@@ -513,26 +515,29 @@ let W=0,H=0,DPR=1,U=1;
    UA: it looks at touch points and reported cores (an A9 reports two). */
 const QS = new URLSearchParams(location.search);
 const TIERS = {
-  full:   {dpr:2, hz:60, maxP:2600, perBurst:460, finale:[220,420], stars:140, crowd:80, weather:60, shadows:true,  trailEvery:1, crackle:18, glitter:2.2},
-  medium: {dpr:1, hz:60, maxP:1400, perBurst:240, finale:[350,550], stars:90,  crowd:50, weather:40, shadows:true,  trailEvery:1, crackle:12, glitter:1.5},
-  legacy: {dpr:1, hz:30, maxP:700,  perBurst:120, finale:[650,800], stars:50,  crowd:28, weather:24, shadows:false, trailEvery:2, crackle:6,  glitter:1.0},
+  full:   {dpr:2, hz:60, maxP:2600, perBurst:460, finale:[220,420], stars:140, crowd:80, weather:60, shadows:true,  cheapGlow:false, trailEvery:1, crackle:18, glitter:2.2},
+  medium: {dpr:1, hz:60, maxP:1400, perBurst:240, finale:[350,550], stars:90,  crowd:50, weather:40, shadows:true,  cheapGlow:false, trailEvery:1, crackle:12, glitter:1.5},
+  legacy: {dpr:1, hz:30, maxP:700,  perBurst:120, finale:[650,800], stars:50,  crowd:28, weather:24, shadows:false, cheapGlow:true,  trailEvery:2, crackle:6,  glitter:1.0},
 };
 const TIER_ORDER = ['full','medium','legacy'];
 const Q = Object.assign({tier:'full', auto:false}, TIERS.full);
 function guessTier(){
   const forced = QS.get('quality'); if (TIERS[forced]) return forced;
   try { const s = localStorage.getItem('kb_quality'); if (TIERS[s]) return s; } catch(e){}
-  try { const s = sessionStorage.getItem('kb_quality_auto'); if (TIERS[s]) return s; } catch(e){}
+  try { const s = localStorage.getItem('kb_quality_auto'); if (TIERS[s]) return s; } catch(e){}   // what the step-down settled on last time
   const appleTouch = navigator.maxTouchPoints > 1 && /Mac|iP(ad|hone|od)/.test(navigator.platform || '');
   const cores = navigator.hardwareConcurrency || 0;
-  if (appleTouch && cores <= 2) return 'legacy';     // A9/A10-era iPads and iPhones
+  // The 2048x1536 panel (1024x768 CSS px) is the iPad 5 / Air 2 / mini 4 / Pro 9.7 generation; every
+  // later iPad reports a different size. The iPad 5 in the studio reported more than two cores.
+  const oldPanel = Math.min(screen.width, screen.height) === 768 && Math.max(screen.width, screen.height) === 1024;
+  if (appleTouch && (cores <= 2 || oldPanel)) return 'legacy';
   return 'full';
 }
 function setTier(name, why){
   if (!TIERS[name] || (name === Q.tier && why !== 'boot')) return;
   Object.assign(Q, TIERS[name], {tier:name});
   const cl = document.documentElement.classList; for (const t of TIER_ORDER) cl.remove('q-'+t); cl.add('q-'+name);
-  if (why === 'auto'){ Q.auto = true; try { sessionStorage.setItem('kb_quality_auto', name); } catch(e){} }
+  if (why === 'auto'){ Q.auto = true; try { localStorage.setItem('kb_quality_auto', name); } catch(e){} }
   PERF.tierAt = performance.now();
   if (why !== 'boot'){ requestLayout(); invalidateScenery(); }
 }
@@ -555,7 +560,8 @@ function perfRecord(nowMs, intervalMs, workMs){
   if (PERF.inputAt){ PERF.inputLat = nowMs - PERF.inputAt; PERF.inputAt = 0; }
   if (nowMs - PERF.lastEval > 3000){ PERF.lastEval = nowMs;
     if (PERF.rn >= 60 && nowMs - PERF.tierAt > 5000 && !QS.has('quality') && perfPct(PERF.ring, 0.95) > 40){
-      const i = TIER_ORDER.indexOf(Q.tier); if (i < TIER_ORDER.length-1) setTier(TIER_ORDER[i+1], 'auto'); } }
+      const i = TIER_ORDER.indexOf(Q.tier), apple = navigator.maxTouchPoints > 1 && /Mac|iP(ad|hone|od)/.test(navigator.platform || '');
+      if (i < TIER_ORDER.length-1) setTier(apple ? 'legacy' : TIER_ORDER[i+1], 'auto'); } }
 }
 function perfText(){
   const r = LAY;
@@ -847,11 +853,12 @@ function validSchedule(sc){
   return GIRL_IDS.every(g => Array.isArray(sc.girls[g]) && sc.girls[g].length===SCHEDULE_LEN
     && new Set(sc.girls[g]).size===SCHEDULE_LEN && sc.girls[g].every(id=>PRESET_IDS.includes(id)));
 }
-let SCHEDULE;
-try { const saved=JSON.parse(localStorage.getItem('kb_outfit_schedule_v1')||'null');
-  if(validSchedule(saved)) SCHEDULE=saved.girls; } catch(e){}
-if(!SCHEDULE){ SCHEDULE=buildSchedule();
-  try { localStorage.setItem('kb_outfit_schedule_v1', JSON.stringify({version:1, girls:SCHEDULE})); } catch(e){} }
+/* The deal was made once with buildSchedule() on 2026-09-06 and is now fixed: every
+   device gives each girl the same eight looks in the same order, so the outfits ARE
+   the characters rather than a per-tablet lottery. buildSchedule() stays for re-dealing
+   deliberately; a schedule saved by an earlier build is ignored. */
+const SCHEDULE = {sol:['E','H','B','D','J','A','G','I'], hana:['B','C','D','H','G','F','E','K'], jia:['F','K','A','E','J','C','I','D']};
+try { localStorage.removeItem('kb_outfit_schedule_v1'); } catch(e){}
 
 /* PROG.stars is the only record of what has been cleared — no second counter that
    could drift. A level counts once however often it is replayed. */
@@ -1421,8 +1428,10 @@ function drawCannon(t, dt){
   // muzzle ring + glow
   ctx.fillStyle = '#2a1440'; ctx.beginPath(); ctx.ellipse(L, 0, w*0.16, w*0.55, 0, 0, TAU); ctx.fill();
   ctx.fillStyle = mix.length ? c1 : '#3a1866'; ctx.beginPath(); ctx.ellipse(L, 0, w*0.1, w*0.4, 0, 0, TAU); ctx.fill();
-  if (mix.length){ ctx.globalCompositeOperation = 'lighter'; const mg = ctx.createRadialGradient(L,0,0,L,0,w*(1+0.3*Math.sin(t*6)));
-    mg.addColorStop(0,'rgba(255,255,255,0.7)'); mg.addColorStop(0.4,c1+'99'); mg.addColorStop(1,'rgba(0,0,0,0)'); ctx.fillStyle = mg; ctx.beginPath(); ctx.arc(L,0,w*1.4,0,TAU); ctx.fill(); }
+  if (mix.length){ ctx.globalCompositeOperation = 'lighter'; const mr = w*(1+0.3*Math.sin(t*6));
+    if (Q.cheapGlow) ctx.drawImage(muzzleSprite(c1), L-mr, -mr, 2*mr, 2*mr);
+    else { const mg = ctx.createRadialGradient(L,0,0,L,0,mr);
+      mg.addColorStop(0,'rgba(255,255,255,0.7)'); mg.addColorStop(0.4,c1+'99'); mg.addColorStop(1,'rgba(0,0,0,0)'); ctx.fillStyle = mg; ctx.beginPath(); ctx.arc(L,0,w*1.4,0,TAU); ctx.fill(); } }
   ctx.restore();
   // aim guide dots
   if (aim.show > 0 && mix.length){ const mx = px+Math.cos(aim.a)*L, my = py+Math.sin(aim.a)*L; ctx.fillStyle = `rgba(255,255,255,${0.7*Math.min(1,aim.show)})`;
@@ -1748,7 +1757,7 @@ function drawThemeProps(th, t, hz){
     ctx.strokeStyle = 'rgba(30,50,90,0.5)'; ctx.lineWidth = 1.2*U;
     for (let k=-2;k<=2;k++){ ctx.beginPath(); ctx.ellipse(dx, dy, dr*Math.cos(k*0.5), dr, 0, 0, TAU); ctx.stroke(); ctx.beginPath(); ctx.ellipse(dx, dy, dr, dr*0.35*Math.abs(k)||dr*0.05, 0, 0, TAU); ctx.stroke(); }
     ctx.globalCompositeOperation = 'lighter';
-    for (let k=0;k<5;k++){ const a = t*0.8 + k*TAU/5; ctx.fillStyle = `hsla(${(k*70+t*40)%360},100%,75%,0.1)`; ctx.beginPath(); ctx.moveTo(dx,dy); ctx.lineTo(dx+Math.cos(a)*W, dy+Math.sin(a)*W); ctx.lineTo(dx+Math.cos(a+0.2)*W, dy+Math.sin(a+0.2)*W); ctx.fill(); }
+    if (!Q.cheapGlow) for (let k=0;k<5;k++){ const a = t*0.8 + k*TAU/5; ctx.fillStyle = `hsla(${(k*70+t*40)%360},100%,75%,0.1)`; ctx.beginPath(); ctx.moveTo(dx,dy); ctx.lineTo(dx+Math.cos(a)*W, dy+Math.sin(a)*W); ctx.lineTo(dx+Math.cos(a+0.2)*W, dy+Math.sin(a+0.2)*W); ctx.fill(); }
     ctx.globalCompositeOperation = 'source-over';
   } else if (th===3){ // rain + umbrellas handled in crowd; here: streaks
     ctx.strokeStyle = 'rgba(150,220,240,0.35)'; ctx.lineWidth = 1.5*U; ctx.beginPath();
@@ -1960,11 +1969,14 @@ function draw(t, dt){
   // spotlights
   ctx.globalCompositeOperation = 'lighter';
   for (let i=0;i<3;i++){ const sx = W*(0.2+0.3*i), ang = -Math.PI/2 + Math.sin(t*0.7+i*2.1)*0.55; const len = H*0.95;
+    if (Q.cheapGlow){ const sp = coneSprite(i, len); ctx.save(); ctx.globalAlpha = 0.22+cheer*0.2; ctx.translate(sx, hz); ctx.rotate(ang + Math.PI/2); ctx.drawImage(sp, -sp.width/2, 1-sp.height); ctx.restore(); continue; }
     const grd = ctx.createLinearGradient(sx, hz, sx+Math.cos(ang)*len, hz+Math.sin(ang)*len);
     const col = ['255,63,164','51,230,255','168,85,255'][i]; grd.addColorStop(0,`rgba(${col},${0.22+cheer*0.2})`); grd.addColorStop(1,`rgba(${col},0)`);
     ctx.fillStyle = grd; ctx.beginPath(); ctx.moveTo(sx-10*U,hz); ctx.lineTo(sx+Math.cos(ang-0.09)*len, hz+Math.sin(ang-0.09)*len); ctx.lineTo(sx+Math.cos(ang+0.09)*len, hz+Math.sin(ang+0.09)*len); ctx.lineTo(sx+10*U,hz); ctx.fill(); }
   // flashes
-  for (const f of FLASHES){ const rg = ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,f.r*(1.2-f.a*0.4)); rg.addColorStop(0,hsl(f.h,f.s,85,f.a*0.9)); rg.addColorStop(0.35,hsl(f.h,f.s,65,f.a*0.35)); rg.addColorStop(1,hsl(f.h,f.s,60,0));
+  for (const f of FLASHES){
+    if (Q.cheapGlow){ const R = f.r*(1.2-f.a*0.4); ctx.globalAlpha = f.a; ctx.drawImage(flashSprite(f.h, f.s), f.x-R, f.y-R, 2*R, 2*R); ctx.globalAlpha = 1; continue; }
+    const rg = ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,f.r*(1.2-f.a*0.4)); rg.addColorStop(0,hsl(f.h,f.s,85,f.a*0.9)); rg.addColorStop(0.35,hsl(f.h,f.s,65,f.a*0.35)); rg.addColorStop(1,hsl(f.h,f.s,60,0));
     ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(f.x,f.y,f.r*1.2,0,TAU); ctx.fill(); }
   // rockets
   for (const r of ROCKETS){ ctx.strokeStyle = hsl(r.h,100,80,0.9); ctx.lineWidth = 3*U; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(r.x-r.vx*0.04, r.y-r.vy*0.04); ctx.lineTo(r.x,r.y); ctx.stroke();
@@ -1996,6 +2008,30 @@ function draw(t, dt){
   ctx.restore();
 }
 const PBUCKETS = new Map(), PNOTES = [];
+/* ---- legacy glow sprites. On the iPad the frame's JS is a few milliseconds; what
+   misses the 30 Hz cadence is rasterising fresh full-size radial gradients with
+   additive blending every frame (flashes, the lightstick halo, the muzzle glow, the
+   spotlight cones). Each of those is rendered once into a small canvas and blitted
+   with globalAlpha instead. Full tier keeps the live gradients. ---- */
+const GLOW = new Map();
+function glowSprite(key, w, h, paint){
+  let c = GLOW.get(key); if (c) return c;
+  if (GLOW.size >= 48){ const k = GLOW.keys().next().value; ggFree(GLOW.get(k)); CANVAS_N--; GLOW.delete(k); }
+  c = ggCanvas(w, h); paint(c.getContext('2d'), c.width, c.height); GLOW.set(key, c); return c;
+}
+const flashSprite = (h, s) => glowSprite('flash|'+h+'|'+s, 128, 128, (x, w) => { const r = w/2, g = x.createRadialGradient(r,r,0,r,r,r);
+  g.addColorStop(0,hsl(h,s,85,0.9)); g.addColorStop(0.35,hsl(h,s,65,0.35)); g.addColorStop(1,hsl(h,s,60,0)); x.fillStyle = g; x.fillRect(0,0,w,w); });
+const haloSprite = () => glowSprite('halo', 128, 128, (x, w) => { const r = w/2, g = x.createRadialGradient(r,r,0,r,r,r);
+  g.addColorStop(0,'rgba(255,235,150,0.5)'); g.addColorStop(0.4,'rgba(255,63,164,0.18)'); g.addColorStop(1,'rgba(255,63,164,0)'); x.fillStyle = g; x.fillRect(0,0,w,w); });
+const muzzleSprite = c1 => glowSprite('muzzle|'+c1, 64, 64, (x, w) => { const r = w/2, g = x.createRadialGradient(r,r,0,r,r,r);
+  g.addColorStop(0,'rgba(255,255,255,0.7)'); g.addColorStop(0.4,c1+'99'); g.addColorStop(1,'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0,0,w,w); });
+// a spotlight cone pointing up: base half-width 10U at the bottom centre, half-angle 0.09 rad, gradient fading along its length
+function coneSprite(i, len){
+  const col = ['255,63,164','51,230,255','168,85,255'][i], hw = Math.ceil(len*Math.sin(0.09) + 10*U) + 2;
+  return glowSprite('cone|'+i+'|'+Math.round(len)+'|'+U.toFixed(3), hw*2, Math.ceil(len)+2, (x, w, h) => {
+    const cx = w/2, g = x.createLinearGradient(0, h-1, 0, h-1-len); g.addColorStop(0,`rgba(${col},1)`); g.addColorStop(1,`rgba(${col},0)`);
+    x.fillStyle = g; x.beginPath(); x.moveTo(cx-10*U, h-1); x.lineTo(cx-len*Math.sin(0.09), h-1-len*Math.cos(0.09)); x.lineTo(cx+len*Math.sin(0.09), h-1-len*Math.cos(0.09)); x.lineTo(cx+10*U, h-1); x.fill(); });
+}
 // A tall, slim K-pop idol drawn from a `look` (hair / face accessories / top / bottoms / shoes); shared by the dressing room and the stage.
 // Units: gh = full height; feet at (x,y); head centre at y-0.905gh with radius ~0.08gh (≈ 1/6 body — idol proportions, not chibi).
 const HC = -0.905, HR = 0.08;
@@ -2314,9 +2350,11 @@ function drawBooBop(b, t){
 function drawBubbles(t){
   for (const b of BUBBLES){ const a = Math.min(1, b.life*1.5);
     ctx.save(); ctx.translate(b.x,b.y); ctx.scale(1+Math.sin(b.p*6)*0.06, 1-Math.sin(b.p*6)*0.06);
-    const g = ctx.createRadialGradient(-b.r*0.3,-b.r*0.3,b.r*0.1,0,0,b.r);
-    g.addColorStop(0,`hsla(${b.hue},100%,90%,${0.05*a})`); g.addColorStop(0.75,`hsla(${(b.hue+60)%360},100%,80%,${0.12*a})`); g.addColorStop(1,`hsla(${(b.hue+140)%360},100%,85%,${0.45*a})`);
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0,0,b.r,0,TAU); ctx.fill();
+    if (Q.cheapGlow) ctx.fillStyle = `hsla(${(b.hue+140)%360},100%,85%,${0.18*a})`;
+    else { const g = ctx.createRadialGradient(-b.r*0.3,-b.r*0.3,b.r*0.1,0,0,b.r);
+      g.addColorStop(0,`hsla(${b.hue},100%,90%,${0.05*a})`); g.addColorStop(0.75,`hsla(${(b.hue+60)%360},100%,80%,${0.12*a})`); g.addColorStop(1,`hsla(${(b.hue+140)%360},100%,85%,${0.45*a})`);
+      ctx.fillStyle = g; }
+    ctx.beginPath(); ctx.arc(0,0,b.r,0,TAU); ctx.fill();
     ctx.strokeStyle = `rgba(255,255,255,${0.7*a})`; ctx.lineWidth = 1.5*U; ctx.stroke();
     ctx.strokeStyle = `rgba(255,255,255,${0.9*a})`; ctx.lineWidth = 2*U; ctx.beginPath(); ctx.arc(0,0,b.r*0.7,-2.4,-1.4); ctx.stroke();
     ctx.restore(); }
@@ -2396,9 +2434,11 @@ function drawStage(t){
     ctx.fillStyle = '#2a1440'; ctx.fillRect(lsx-5*U, lsy, 10*U, top-lsy);           // handle
     ctx.fillStyle = '#5c3f80'; ctx.fillRect(lsx-9*U, lsy+headR*0.8, 18*U, 14*U);   // grip ring
     ctx.globalCompositeOperation = 'lighter';
-    const halo = ctx.createRadialGradient(lsx,lsy,0,lsx,lsy,headR*(3+gl*3+Math.sin(t*3)*0.4));
-    halo.addColorStop(0,`rgba(255,235,150,${0.5*gl})`); halo.addColorStop(0.4,`rgba(255,63,164,${0.18*gl})`); halo.addColorStop(1,'rgba(255,63,164,0)');
-    ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(lsx,lsy,headR*7,0,TAU); ctx.fill();
+    const hr = headR*(3+gl*3+Math.sin(t*3)*0.4);
+    if (Q.cheapGlow){ ctx.globalAlpha = gl; ctx.drawImage(haloSprite(), lsx-hr, lsy-hr, 2*hr, 2*hr); ctx.globalAlpha = 1; }
+    else { const halo = ctx.createRadialGradient(lsx,lsy,0,lsx,lsy,hr);
+      halo.addColorStop(0,`rgba(255,235,150,${0.5*gl})`); halo.addColorStop(0.4,`rgba(255,63,164,${0.18*gl})`); halo.addColorStop(1,'rgba(255,63,164,0)');
+      ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(lsx,lsy,headR*7,0,TAU); ctx.fill(); }
     ctx.globalCompositeOperation = 'source-over';
     ctx.fillStyle = `rgba(255,255,255,${0.25+0.5*gl})`; ctx.shadowColor='#ffe066'; ctx.shadowBlur = 30*gl; ctx.beginPath(); ctx.arc(lsx,lsy,headR,0,TAU); ctx.fill();
     ctx.fillStyle = `hsl(48,100%,${40+45*gl}%)`; ctx.shadowBlur = 0; ctx.beginPath();          // star inside

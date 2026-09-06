@@ -60,6 +60,17 @@ All code is in `public/fireworks/index.html` unless stated. Each block is commen
 - The canvas, the game UI, the dressing room and the map are pinned to the visual viewport through `--app-x/y/w/h`, so pointer `clientX/Y` and drawing share one offset.
 - `LAY` holds the snapshot: viewport, control top, playfield, rail/control/cauldron/dressing rectangles. The cannon, the dressing room, drag hit-testing and the debug overlay all read it. Nothing calls `getBoundingClientRect()` inside the draw loop any more.
 
+### First device pass (2026-09-06, iPad 5, Safari, preview deployment)
+
+Jof ran the preview on the device with `?perf=1`. What the overlay showed, and what changed as a result:
+
+- **The tier guess was wrong.** The iPad reported more than two cores, so the game started on `full`, stepped to `medium` (60 fps idle in the dressing room, 24 fps when tapping), then to `legacy`. Fixes: the guess also treats the 1024 x 768 CSS-pixel panel (iPad 5 / Air 2 / mini 4 / Pro 9.7 generation) as legacy; an Apple touch device that misses the gate now steps straight to legacy rather than via medium; and the tier the step-down settles on is remembered in `localStorage` (`kb_quality_auto`) so the next launch starts there.
+- **Dressing room at legacy: 30 fps, p95 34 ms, 1 ms of JS work per frame, 27 MiB of canvases, 24 ms input-to-frame.** Meets the gates.
+- **Stage at legacy: 30 fps nominal but p95 71 ms, dropping to 14-24 fps in play, with only 6 ms of JS work per frame.** The time is GPU raster of the additive gradient fills, not game logic. Fix: on legacy, the flashes, the lightstick halo, the cannon muzzle glow and the three spotlight cones are prerendered sprites blitted with alpha (`Q.cheapGlow`), bubbles are a flat fill, the five screen-sized disco-ball rays are skipped, and the cauldron's CSS swirl and bubble animations are off. Still to be confirmed on the device.
+- **Round icon buttons drew their emoji off-centre to the right.** iOS native button styling; buttons now have `appearance:none`, no padding, and flex centring.
+- **Outfits differed between devices.** The eight-look schedule per girl was dealt at random per device and stored locally. Jof's intent was one deal, fixed forever. The schedule dealt on 2026-09-06 is now a constant in the code and a locally saved deal is ignored; `buildSchedule()` remains for a deliberate re-deal.
+- **"White background on Sol's clothes."** The layers render clean on a dark background (checked offline), so this is most likely a white swatch applied to the bottoms in that device's saved look. Confirm with the reset swatch; if the skort stays white with the reset, it is a device-only rendering fault and needs a screenshot rather than a photo.
+
 ## Measured results
 
 Headless Edge on a desktop CPU with software GL, 1024 x 768. Frame rates here are relative comparisons only; they say nothing about the iPad. Baseline is `main` at d5ed9d0.
