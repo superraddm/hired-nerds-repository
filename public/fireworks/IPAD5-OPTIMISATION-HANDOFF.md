@@ -1,6 +1,6 @@
 # Fireworks: iPad 5 / iPadOS 16.7.16 optimisation handoff
 
-**Status (2026-09-05).** Gates 0-3 are implemented on branch `ipad5-optimisation` and pass the headless regression harness at both quality tiers. Gate 4, validation on the physical iPad with Safari Web Inspector, is **outstanding**. The work must not be called complete, merged or deployed until that matrix passes on the device. Nothing here changes saves, names, unlock progression, the wardrobe, the tinter maths, or the registered 1024 x 1536 puppet contract.
+**Status (2026-09-06).** Gates 0-3 are implemented and pass the headless regression harness at both quality tiers. Gate 4 was run as a first pass by Jof on the iPad 5 in Safari with the overlay (no Web Inspector): dressing room 30 fps / p95 34 ms / 27 MiB; stage in a boss fight 30 fps / p95 34 ms / 6-7 ms JS / 8 ms input-to-frame / 20 MiB; tier legacy chosen from the first frame. **Accepted by Jof and shipped to production on 2026-09-06.** Not yet exercised on the device: Add to Home Screen, browser-bar collapse during a level, the keyboard, two rotations, and the 10-minute endurance loop; run those from the list below when convenient and report any overlay line that misses. Nothing here changes saves, names, the wardrobe art, the tinter maths, or the registered 1024 x 1536 puppet contract; the outfit deal is now fixed (see the device-pass notes). Source-art defects found along the way are in `HEADS-HAIR-WARDROBE-TASK.md`.
 
 ## Objective
 
@@ -135,7 +135,7 @@ Attach the overlay readings and Web Inspector captures to this file. Tune `TIERS
 
 ## Source-art defects noticed, not fixed here
 
-The bounds scan flagged four hair rear layers whose art touches the top canvas edge (likely clipped): `hair-hana-floralhalo-rear`, `hair-hana-petalpixie-rear`, `hair-jia-circuitfauxhawk-rear`, `hair-jia-electricbob-rear`. `face-moondrops-front` is empty while its rear is not, the only empty front layer; worth confirming it is not an export mistake.
+Recorded with reproduction and a trial fix in `HEADS-HAIR-WARDROBE-TASK.md`: four Hana/Jia hair rear layers clipped at the top canvas edge, the empty `face-moondrops-front`, and the opaque black outline baked into `bottom-pixelpetals-front` and `top-bloomruffle-front` (the "black on Sol's clothes" report; identical in the old build). Jof chose to leave the art untouched for now.
 
 ## Brief for whoever runs Gate 4
 
