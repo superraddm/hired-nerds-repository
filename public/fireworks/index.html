@@ -940,12 +940,12 @@ const REDUCED_MOTION=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const GG={ready:false,img:{},small:{},box:{},empty:new Set(),manifest:false,error:null,loaded:0,total:0,queue:[],pending:new Set(),inflight:0,waiters:[],dirty:false};
 const GG_FULL={x:0,y:0,w:GG_W,h:GG_H};
 // runtime key -> file basename (wardrobe keys are already `${cat}-${id}-${side}`)
-const GG_FILE={master:'master',blink:'anim-blink-front','head-mask':'head-base-mask','head-hana':'head-hana-front','head-jia':'head-jia-front'};
+const GG_FILE={master:'master',blink:'anim-blink-front','head-mask':'head-base-mask','head-hana':'head-hana-front','head-jia':'head-jia-front','blink-hana':'head-hana-blink','blink-jia':'head-jia-blink'};
 const ggFile=k=>GG_FILE[k]||k;
 const ggSrcOf=k=>GG_SRC+(k==='master'?'':'final/')+ggFile(k)+'.png'+GG_V;
 const ggEmpty=k=>GG.empty.has(ggFile(k));
 function ggAllKeys(){
-  const keys=['master','blink','head-mask','head-hana','head-jia'];
+  const keys=['master','blink','head-mask','head-hana','head-jia','blink-hana','blink-jia'];
   for(const cat of ['hair','top','bottom','shoes','face'])for(const [id] of WARDROBE[cat])for(const side of ['rear','front'])keys.push(cat+'-'+id+'-'+side);
   return keys.filter(k=>!ggEmpty(k));
 }
@@ -1037,7 +1037,7 @@ function ggGet(key){
 async function loadGlowGirls(){
   await ggManifest();
   const all=ggAllKeys(); GG.total=all.length;
-  const first=[...new Set(['master','blink','head-mask','head-hana','head-jia',...LOOKS.flatMap(ggLookKeys)])];
+  const first=[...new Set(['master','blink','head-mask','head-hana','head-jia','blink-hana','blink-jia',...LOOKS.flatMap(ggLookKeys)])];
   await ggWhen(first);
   if(!GG.img.master) throw new Error('master layer missing');
   GG.ready=true; if(dressOpen) renderDress();
@@ -1172,9 +1172,9 @@ function ggComposite(i,look,blink,scale){
   if(ggComp.has(key))return ggHit(ggComp,key);
   const outerMissing=ggMissing; ggMissing=false; const res=ggResOf(scale);
   const base=ggCharacterBase(i,res), stack=ggStack(look,res);
-  // The existing blink painting is Sol-specific. Keep Hana and Jia still until
-  // their own head animation layers are authored rather than flashing Sol's eyes.
-  const blinkRec=blink&&!ch.head?ggSkinned('blink',tone,res):null;
+  // Sol blinks with her own painting; Hana and Jia with a lid patch registered to their heads
+  // (head-<girl>-blink), recoloured to their tone like the head itself.
+  const blinkRec=blink?ggSkinned(ch.head?'blink-'+ch.head:'blink',tone,res):null;
   const erase=stack.find(l=>l&&l.erase), eraseRec=erase?tinted('shoes-'+erase.erase+'-front',null):null;
   if(!base){ggMissing=outerMissing||ggMissing;return null}
   const box=ggUnion([base,blinkRec,...stack.filter(l=>l&&l.src)].filter(Boolean));
