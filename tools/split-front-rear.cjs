@@ -19,7 +19,7 @@ const fs = require('fs');
 const path = require('path');
 const sharp = require(path.join(__dirname, '..', 'hirednerds-chat', 'app', 'node_modules', 'sharp'));
 const argv = process.argv.slice(2), bi = argv.indexOf('--behind'), behind = bi >= 0 ? argv[bi + 1] : null;
-const [merged, id] = argv.filter((a, i) => i !== bi && i !== bi + 1);
+const [merged, id] = bi >= 0 ? argv.filter((a, i) => i !== bi && i !== bi + 1) : argv;
 if (!merged || !id || !/^(hair|top|bottom|shoes|face)-[a-z0-9-]+$/.test(id)) { console.error('usage: split-front-rear.cjs <merged.png> <cat-id>'); process.exit(2); }
 const root = path.join(__dirname, '..', 'public', 'fireworks', 'assets', 'glowgirls', 'sol');
 const W = 1024, H = 1536, DILATE = 2;
