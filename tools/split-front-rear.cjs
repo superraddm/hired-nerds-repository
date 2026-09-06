@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 // Split one merged garment/hair layer into the -front and -rear files the game composites.
 //
-//   node tools/split-front-rear.cjs <merged.png> <category-id>   e.g. hair-hana-petalbob
+//   node tools/split-front-rear.cjs <merged.png> <category-id> [--behind <png>]   e.g. hair-hana-petalbob
+//   --behind: a second full-canvas PNG (say a ponytail snipped off in Photoshop) whose pixels go to the
+//   REAR file regardless of position, so it hangs behind the body and shows only past the outline.
 //
 // Rule (the registered-puppet contract): pixels that lie over the master's body
 // silhouette are drawn in FRONT of the body, everything outside it goes BEHIND.
@@ -16,7 +18,8 @@
 const fs = require('fs');
 const path = require('path');
 const sharp = require(path.join(__dirname, '..', 'hirednerds-chat', 'app', 'node_modules', 'sharp'));
-const [merged, id] = process.argv.slice(2);
+const argv = process.argv.slice(2), bi = argv.indexOf('--behind'), behind = bi >= 0 ? argv[bi + 1] : null;
+const [merged, id] = argv.filter((a, i) => i !== bi && i !== bi + 1);
 if (!merged || !id || !/^(hair|top|bottom|shoes|face)-[a-z0-9-]+$/.test(id)) { console.error('usage: split-front-rear.cjs <merged.png> <cat-id>'); process.exit(2); }
 const root = path.join(__dirname, '..', 'public', 'fireworks', 'assets', 'glowgirls', 'sol');
 const W = 1024, H = 1536, DILATE = 2;
@@ -33,6 +36,10 @@ const W = 1024, H = 1536, DILATE = 2;
   const front = Buffer.alloc(W * H * 4), rear = Buffer.alloc(W * H * 4); let nf = 0, nr = 0;
   for (let i = 0; i < W * H; i++) { const a = src.data[i * 4 + 3]; if (!a) continue;
     const dst = inside[i] ? front : rear; src.data.copy(dst, i * 4, i * 4, i * 4 + 4); if (inside[i]) nf++; else nr++; }
+  if (behind) { const b = await sharp(behind).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    if (b.info.width !== W || b.info.height !== H) throw new Error('--behind layer must be ' + W + 'x' + H);
+    let nb = 0; for (let i = 0; i < W * H; i++) { if (!b.data[i * 4 + 3]) continue; b.data.copy(rear, i * 4, i * 4, i * 4 + 4); nb++; nr++; }
+    console.log(`behind layer: ${nb} px forced to rear`); }
   for (const [side, buf, n] of [['front', front, nf], ['rear', rear, nr]]) {
     const out = path.join(root, 'final', `${id}-${side}.png`);
     if (fs.existsSync(out)) { const bk = path.join(root, 'psd-import', 'backup'); fs.mkdirSync(bk, { recursive: true }); fs.copyFileSync(out, path.join(bk, path.basename(out))); }
