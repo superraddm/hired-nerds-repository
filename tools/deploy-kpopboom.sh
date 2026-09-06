@@ -5,10 +5,12 @@
 # unlike jofdavies.com which deploys on push to main. So this has to be run by hand
 # after a game change, or the two hosts drift apart.
 #
-#   bash tools/deploy-kpopboom.sh
+#   bash tools/deploy-kpopboom.sh          # production
+#   bash tools/deploy-kpopboom.sh ipad5    # PREVIEW at https://ipad5.kpopboom.pages.dev; production untouched
 #
 # Needs wrangler auth: `npx wrangler login` if `npx wrangler whoami` fails.
 set -euo pipefail
+BRANCH="${1:-main}"
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SRC="$ROOT/public/fireworks"
@@ -33,9 +35,9 @@ done < <(grep -oE "assets/[A-Za-z0-9/._-]+\.(png|webp|jpg)" "$SRC/index.html" | 
 [ -f "$STAGE/assets/glowgirls/sol/layers.json" ] || { echo "MISSING from deploy: assets/glowgirls/sol/layers.json (run node tools/build-glowgirl-layers.cjs)"; missing=1; }
 [ "$missing" -eq 0 ] || { echo "aborting: staged copy is incomplete"; exit 1; }
 
-echo "Publishing $(du -sh "$STAGE" | cut -f1) to kpopboom..."
+echo "Publishing $(du -sh "$STAGE" | cut -f1) to kpopboom (branch $BRANCH)..."
 cd "$ROOT"
 npx --yes wrangler@latest pages deploy "$STAGE" \
   --project-name=kpopboom \
-  --branch=main \
+  --branch="$BRANCH" \
   --commit-dirty=true
