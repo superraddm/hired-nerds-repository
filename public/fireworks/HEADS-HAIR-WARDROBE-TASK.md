@@ -36,17 +36,34 @@ The gap between a short top and a low waistband used to show the unitard as a bl
 - Soles on the standing line: `bloomjanes` (+31), `cherryboots` (+46), `orbitpoints` (+26), `prismhightops` (+13), `sunburstboots` (+13) moved up so the sole is at y 1408. Done.
 - Rule for new boots: sole at 1408; the shaft interior above the front rim goes in the rear file; keep the front layer's alpha tight at the rim. The mannequin's foot is erased only under the shoe's own front outline (dilated 2 px), no longer everything below the ankle line, so open shoes show the foot in the girl's tone.
 
-## 5. Hair
+## 5. Hair (Photoshop, Jof)
 
-Checked through the game's own compositor (the offline sheet renderer can flatter a style at the head, which is how the first pass missed these). Three Hana/Jia styles were seated too high, leaving painted skull bare at the forehead and temple:
+Three automatic seats went in (electric bob, floral halo, fauxhawk) plus four small moves for Hana, and it is still not right: the fit needs an eye on each style, so this is hand work. Everything below is prepared in `assets/glowgirls/sol/psd-import/hair-work/`:
 
-| Style | Fix |
+| File | What it is |
 |---|---|
-| `hair-jia-electricbob` | moved +4 x, +20 y |
-| `hair-hana-floralhalo` | moved +20 y |
-| `hair-jia-circuitfauxhawk` | crest re-split into the front layer, then moved +10 y |
+| `hana-head-reference.png`, `jia-head-reference.png` | The mannequin with that girl's real in-game head (Sol's head cut out, hers painted in). Align hair to THIS, not to `master.png`. |
+| `hair-<style>-merged.png` (10 files) | Each Hana/Jia style as one layer, rear and front combined, at its current position. |
+| `sol-fit-standard-silverwaves.png`, `sol-fit-standard-cometbraid.png` | Sol wearing two of her own styles: what a correctly seated style looks like on this puppet. Sol's hair is signed off; do not touch her files. |
 
-Method: `tools/glowgirl-art/hair-coverage.cjs` flags a style whose skull/temple cover falls below Sol's five; `hair-seat.cjs` shifts the merged hair; candidates at several offsets are rendered with the game compositor and chosen by eye (20 px too far and the skull shows above the hair); split, rebuild the manifest. The other twelve styles were within Sol's band and were left alone; the braid-matrix buns are large by design.
+Photoshop, per style:
+
+1. Open the girl's head reference. It is the full 1024 x 1536 canvas; never crop, never resize the canvas, never move the reference.
+2. File > Place Embedded the style's `-merged.png`. It lands at its current registration. Keep it a Smart Object so scaling stays clean.
+3. Free Transform (Ctrl+T). Drag the reference point to the brow line (about x 516, y 112) so scale works around the face. Move, and scale only if the style is clearly the wrong size for the head; keep proportions. Targets, judged by eye against the Sol standards:
+   - hairline on the forehead (styles with a fringe reach the brow; centre-parted styles show a little forehead, as Sol's silver waves do);
+   - temples covered and the ears framed as the style intends;
+   - no painted skull showing above or beside the hair;
+   - crown 20-40 px above the top of the skull (skull top is y 61), never touching the canvas top;
+   - nothing over the eyes or mouth unless the style is a side sweep.
+4. Hide the reference layer. File > Export > Export As, PNG, transparency on, 100%, whole canvas. Do NOT use Quick Export or Export Layer, which write only the layer's bounds and lose registration. Save as `hair-<style>.png` in `hair-work/` (for example `hair-hana-petalbob.png`).
+5. From the repo root:
+   `node tools/split-front-rear.cjs public/fireworks/assets/glowgirls/sol/psd-import/hair-work/hair-hana-petalbob.png hair-hana-petalbob`
+   The tool splits front/rear by the body silhouette (anything over the head or body goes in front) and copies the files it replaces to `psd-import/backup/`.
+6. After the batch: `node tools/build-glowgirl-layers.cjs` (it also warns if any hair touches the canvas top), then `node tools/serve-fireworks.cjs` and check each style on the girl at http://localhost:8787/ with `?auto=1&dress=1`. A LAN address is printed for the iPad.
+7. Ship: `git add public/fireworks/assets/glowgirls/sol/final public/fireworks/assets/glowgirls/sol/layers.json`, commit, `git push origin main`, then `bash tools/deploy-kpopboom.sh`. Or tell me to.
+
+Notes: the head layers are bald skulls, so the hair alone decides the hairline. Where a fringe should cover the forehead, the hair must physically cover it. Ten styles, five per girl; Jia's neon tails is a copy of Sol's neon buns and may only need a nudge.
 
 ## 6. Outlines
 

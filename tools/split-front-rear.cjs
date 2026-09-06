@@ -7,8 +7,8 @@
 // silhouette are drawn in FRONT of the body, everything outside it goes BEHIND.
 // The silhouette is dilated a little so anti-aliased garment edges at the body
 // outline stay in front. Output goes to public/fireworks/assets/glowgirls/sol/final/
-// as <category-id>-front.png and <category-id>-rear.png; existing files are backed up
-// as .bak alongside. Rebuild layers.json afterwards.
+// as <category-id>-front.png and <category-id>-rear.png; the files they replace are copied
+// to psd-import/backup/ (never into final/, which is deployed whole). Rebuild layers.json afterwards.
 //
 // Boots are the exception the rule cannot know about: the shaft interior above the
 // front rim must be in the REAR file so the leg shows inside the boot. Split boots
@@ -35,7 +35,7 @@ const W = 1024, H = 1536, DILATE = 2;
     const dst = inside[i] ? front : rear; src.data.copy(dst, i * 4, i * 4, i * 4 + 4); if (inside[i]) nf++; else nr++; }
   for (const [side, buf, n] of [['front', front, nf], ['rear', rear, nr]]) {
     const out = path.join(root, 'final', `${id}-${side}.png`);
-    if (fs.existsSync(out)) fs.copyFileSync(out, out + '.bak');
+    if (fs.existsSync(out)) { const bk = path.join(root, 'psd-import', 'backup'); fs.mkdirSync(bk, { recursive: true }); fs.copyFileSync(out, path.join(bk, path.basename(out))); }
     await sharp(buf, { raw: { width: W, height: H, channels: 4 } }).png().toFile(out);
     console.log(`${path.basename(out)}: ${n} px${n ? '' : ' (empty: fine, the manifest will mark it)'}`);
   }
