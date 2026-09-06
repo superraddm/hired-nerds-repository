@@ -133,7 +133,11 @@ async function main() {
       else if (!(k in sortedLayers)) diffs.push(`${k}: in file (${a}) but no PNG on disk`);
       else if (a !== b) diffs.push(`${k}: file ${a}, computed ${b}`);
     }
-    if (fs.readFileSync(OUT_PATH, 'utf8') !== text && diffs.length === 0) {
+    if (fs.readFileSync(OUT_PATH, 'utf8').replace(/
+/g, '
+') !== text.replace(/
+/g, '
+') && diffs.length === 0) {
       diffs.push('file text differs from canonical serialization (same data, different formatting)');
     }
     if (diffs.length) {
