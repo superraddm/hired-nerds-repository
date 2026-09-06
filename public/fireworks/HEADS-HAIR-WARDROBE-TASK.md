@@ -5,7 +5,7 @@ Updated 2026-09-06. Most of what this document originally set out as Photoshop w
 ## 1. The document and its landmarks
 
 - Canvas 1024 x 1536, transparent. Every exported layer is this full size, never cropped, never moved. Registration is the whole contract.
-- References: `master.png` (the mannequin: Sol's body, bare torso from neck to hip, black unitard from the hips down, feet on the standing line), `final/head-base-mask.png` (the part of Sol's head erased for the other girls), `final/head-hana-front.png`, `final/head-jia-front.png`.
+- References: `master.png` (the mannequin: Sol's body wearing a black bralet and the unitard shorts, skin elsewhere from the neck to the hips, feet on the standing line; rebuilt by `tools/glowgirl-art/master-build.cjs`), `final/head-base-mask.png` (the part of Sol's head erased for the other girls), `final/head-hana-front.png`, `final/head-jia-front.png`.
 - Landmarks (registered pixels):
 
 | Landmark | Value |
@@ -34,12 +34,19 @@ The gap between a short top and a low waistband used to show the unitard as a bl
 
 - `shoes-orbitpoints`: the trouser flares of `bottom-orbitflares` were baked into the boot layer. Cut by geometry (boots in x 359-442 and 592-652 below y 1247, flare fabric and the panel corners removed) so the boots mix with any bottom. Done.
 - Soles on the standing line: `bloomjanes` (+31), `cherryboots` (+46), `orbitpoints` (+26), `prismhightops` (+13), `sunburstboots` (+13) moved up so the sole is at y 1408. Done.
-- Rule for new boots: sole at 1408; the shaft interior above the front rim goes in the rear file; keep the front layer's alpha tight at the rim (it is dilated one pixel at runtime to erase the mannequin's foot).
+- Rule for new boots: sole at 1408; the shaft interior above the front rim goes in the rear file; keep the front layer's alpha tight at the rim. The mannequin's foot is erased only under the shoe's own front outline (dilated 2 px), no longer everything below the ankle line, so open shoes show the foot in the girl's tone.
 
 ## 5. Hair
 
-- `hair-jia-circuitfauxhawk`: the crest had been split into the rear layer, so the painted head covered it and Jia looked bald under it. Re-split from the merged art with `tools/split-front-rear.cjs` (over the body silhouette = front). Done.
-- Every other Hana and Jia style sits correctly on the new heads (checked on contact sheets). Four rear layers touch the canvas top by a few pixels (`hana-floralhalo`, `hana-petalpixie`, `jia-circuitfauxhawk`, `jia-electricbob`), a flat crown that is invisible at game size; moving them would put the fringe on the forehead, so they stay.
+Checked through the game's own compositor (the offline sheet renderer can flatter a style at the head, which is how the first pass missed these). Three Hana/Jia styles were seated too high, leaving painted skull bare at the forehead and temple:
+
+| Style | Fix |
+|---|---|
+| `hair-jia-electricbob` | moved +4 x, +20 y |
+| `hair-hana-floralhalo` | moved +20 y |
+| `hair-jia-circuitfauxhawk` | crest re-split into the front layer, then moved +10 y |
+
+Method: `tools/glowgirl-art/hair-coverage.cjs` flags a style whose skull/temple cover falls below Sol's five; `hair-seat.cjs` shifts the merged hair; candidates at several offsets are rendered with the game compositor and chosen by eye (20 px too far and the skull shows above the hair); split, rebuild the manifest. The other twelve styles were within Sol's band and were left alone; the braid-matrix buns are large by design.
 
 ## 6. Outlines
 
@@ -49,7 +56,7 @@ The gap between a short top and a low waistband used to show the unitard as a bl
 
 - **Blink layers for Hana and Jia.** The blink painting is Sol's eyes, so the other two do not blink. One layer per head in the eye region (x 464-573, y 115-171), registered to that head.
 - `face-moondrops-front.png` is empty while its rear is not; probably an export slip. The earrings still show because they fall outside the head silhouette.
-- The mannequin's bare chest is a union of the tops' own skin renderings and only looks right under a top. If a future top exposes chest that no current top exposes, that patch of the mannequin will need painting.
+- The mannequin's bralet is the original unitard restored wherever every closed top covers the bust, so no closed top can reveal it; the three open-front designs (petal jacket, moon moto, solar vest) show it as an undergarment by design. The chest skin around it is a union of the tops' own skin renderings and only looks right under a top. A future top that exposes bust or chest no current top exposes will show the bralet edge or need that patch painted; check it with the game composite before shipping.
 
 ## 8. Export and check
 

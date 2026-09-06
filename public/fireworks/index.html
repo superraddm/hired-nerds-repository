@@ -1184,12 +1184,13 @@ function ggComposite(i,look,blink,scale){
     if(lay==='MASTER'){ggDraw(x,base);continue}
     if(lay==='BLINK'){if(blinkRec)ggDraw(x,blinkRec);continue}
     if(lay.erase){
-      /* The master's bare feet are erased wherever the FRONT boot layer covers them (the
-         rear layer is the shaft interior the leg must stay visible against), dilated 1px
-         so no seam opens, and everything below the ankle line always sits inside a boot. */
+      /* The mannequin's bare feet are erased only where the FRONT shoe layer covers them,
+         dilated 2px so no seam opens at the rim (the rear layer is a boot's shaft interior,
+         which the leg must stay visible against). Since garments carry no skin, an open
+         shoe shows the mannequin's own foot through its straps, repainted to the girl's tone. */
       if(eraseRec){x.save();x.globalCompositeOperation='destination-out';
-        for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++)x.drawImage(eraseRec.src,eraseRec.sx,eraseRec.sy,eraseRec.w,eraseRec.h,eraseRec.dx+dx,eraseRec.dy+dy,eraseRec.w,eraseRec.h);
-        x.fillStyle='#000';x.fillRect(0,1240,GG_W,GG_H-1240);x.restore()}
+        for(let dx=-2;dx<=2;dx++)for(let dy=-2;dy<=2;dy++)x.drawImage(eraseRec.src,eraseRec.sx,eraseRec.sy,eraseRec.w,eraseRec.h,eraseRec.dx+dx,eraseRec.dy+dy,eraseRec.w,eraseRec.h);
+        x.restore()}
       continue}
     ggDraw(x,lay);
   }

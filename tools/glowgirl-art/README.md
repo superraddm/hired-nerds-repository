@@ -9,3 +9,9 @@ Offline helpers for the registered-puppet layers in `public/fireworks/assets/glo
 - `../split-front-rear.cjs`, `../strip-dark-rim.cjs`, `../build-glowgirl-layers.cjs` — split a merged layer, peel a black outline, rebuild/check `layers.json`.
 
 The untouched originals of every file the batch changed are in the session scratch folder `scratchpad/artcheck/originals/`; the previous committed versions are also in git history (commit before "Glow Girls art: …").
+
+## Hair seating (added 2026-09-06, second pass)
+
+- `hair-coverage.cjs` — for every hairstyle, how much of the painted skull above the brow and of the temples the front layer hides, plus crown and fringe rows. Sol's five styles are the reference band; a style far below it is mis-seated.
+- `hair-seat.cjs <girl> <style> [dx dy scale]` — shifts/scales the merged hair about the brow line and writes `<style>.seated.png` next to the script; with no fixed values it searches, but the score over-rewards sinking the hair, so always render candidates and choose by eye. Seated values used: `jia-electricbob` +4,+20; `hana-floralhalo` 0,+20; `jia-circuitfauxhawk` 0,+10. Then split with `../split-front-rear.cjs` and rebuild the manifest.
+- `game-composite-shot.mjs <girlIndex> <style> <out.png>` — the game's own composite of a look (the truth; the offline sheet renderer can differ at the head), via the headless harness in the session scratch folder (`kb/cdp.mjs`, `kb/serve.mjs`); copy it next to those to run.
