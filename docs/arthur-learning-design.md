@@ -115,9 +115,17 @@ implemented:
   option rather than the default.
 - **Word Garden is a literacy corner, not a typing pad.** Arthur already writes
   freely on Grid, so free typing, saved words and copy-the-word were removed.
-  The tab now holds Finish the sentence (one missing word, picture as the clue;
-  nouns, doing words and describing words), Find the missing letter (picture
+  The tab now holds Finish the sentence (one missing word, picture as the clue,
+  candidate words shown as a bank, answer typed rather than tapped; nouns, doing
+  words and describing words), Find the missing letter (picture
   words plus parent-supplied familiar words), Put the words in order (tap the
   scrambled tiles first to last) and the unchanged Number words. Wrong taps
   get a neutral prompt and stay available; Give me a clue outlines the answer;
   Hear it speaks the word or sentence only on deliberate tap.
+- **Patterns must get harder.** The bead puzzles now climb seven levels as
+  Next is pressed: pairs with the last bead missing, a gap mid-string, AAB and
+  ABB, ABC, AABB over eight beads, mixed fours, then four different shapes.
+  The level is shown in the support tag and Choose a puzzle jumps to any
+  level. Progression is still manual, so the pace stays Arthur's.
+- **Stored settings from the first build** kept the old show-only addition
+  default; that value is retired so every saved player gets the answer step.
