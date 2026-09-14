@@ -103,3 +103,21 @@ the generation folder; a copy is included in the project. Prompt:
 > character: no human child, dog scout leader, cube-shaped or stacked-block
 > creature, letter-headed figure, or rainbow number coding. This is a reusable
 > transparent PNG illustration for a lightweight children's browser game.
+
+## Revision after review (14 September 2026, evening)
+
+Jof reviewed the playable build on a laptop and asked for two changes, both now
+implemented:
+
+- **Add needs an answer step.** Joining the groups now shows `2 + 1 = ?` and asks
+  for the total: choose from three numbers by default, or type it on a number
+  keypad (Grown-ups setting). The show-only demonstration remains a parent
+  option rather than the default.
+- **Word Garden is a literacy corner, not a typing pad.** Arthur already writes
+  freely on Grid, so free typing, saved words and copy-the-word were removed.
+  The tab now holds Finish the sentence (one missing word, picture as the clue;
+  nouns, doing words and describing words), Find the missing letter (picture
+  words plus parent-supplied familiar words), Put the words in order (tap the
+  scrambled tiles first to last) and the unchanged Number words. Wrong taps
+  get a neutral prompt and stay available; Give me a clue outlines the answer;
+  Hear it speaks the word or sentence only on deliberate tap.

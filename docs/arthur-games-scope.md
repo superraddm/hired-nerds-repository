@@ -89,15 +89,19 @@ support that can be expanded to three choices:
    arrangement, or put that many counters into a tray. Extend to ten when wanted.
    This is distinct from rehearsing a number sequence Arthur already knows.
 2. **Build an addition.** Show two counters and add one more by tapping. Present
-   `2 + 1 = 3` beside the three actual counters. Begin with demonstration and
-   quantities totalling five or less; an optional Find the answer setting then
-   asks Arthur to choose a number. No timed response or forced difficulty rise.
-3. **Word and pattern corner.** A free typing pad and optional parent-chosen word
-   copying challenges preserve the activity Arthur enjoys. An A–Z on-screen
-   keyboard plus native-keyboard option; optional Hear it on deliberate tap.
+   `2 + 1 = ?` beside the three actual counters, then ask for the answer: choose
+   from three numbers (default) or type it on a number keypad (parent setting).
+   A show-only demonstration remains available as a parent setting. Quantities
+   total five or less to begin. No timed response or forced difficulty rise.
+3. **Word garden and pattern corner.** Arthur already writes freely on Grid, so
+   the games do not duplicate free typing. Instead the word garden holds short
+   literacy puzzles in the same picnic theme: finish the sentence (one missing
+   word, the picture as the clue; nouns, doing words and describing words),
+   find the missing letter in a picture word (parent-supplied familiar words
+   join this set), and put the words of a sentence in order by tapping them
+   first to last. Number words ONE–TEN are paired with quantities, shown,
+   chosen or typed on an A–Z keyboard. Optional Hear it on deliberate tap.
    Provide a small repeating-pattern puzzle activity as a familiar alternative.
-   Number words ONE–FIVE can be paired with quantities, without making spelling
-   a prerequisite for numeracy or assuming a typed word proves understanding.
 
 Do not build Grid integration, YouTube integration, speech recognition,
 automatic ability assessment, a learning dashboard or rewards economy for this
