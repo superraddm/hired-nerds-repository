@@ -88,8 +88,9 @@ support that can be expanded to three choices:
 1. **Match a quantity.** Match a numeral to 1–5 visible counters in a stable
    arrangement, or put that many counters into a tray. Extend to ten when wanted.
    This is distinct from rehearsing a number sequence Arthur already knows.
-2. **Build an addition.** Show two counters and add one more by tapping. Present
-   `2 + 1 = ?` beside the three actual counters, then ask for the answer: choose
+2. **Build an addition.** Show two groups of counters, the joined group with the
+   new counters outlined, and `2 + 1 = ?` beside them, all at once; then ask
+   for the answer: choose
    from three numbers (default) or type it on a number keypad (parent setting).
    A show-only demonstration remains available as a parent setting. Quantities
    total five or less to begin. No timed response or forced difficulty rise.

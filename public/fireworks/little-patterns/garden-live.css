@@ -7,3 +7,5 @@
 .word-bank{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:6px 0 4px}.word-tile.bank{background:#fff4c9;border-color:#d4bd71;color:#594777;font-size:21px;min-height:48px}.word-tile.hint{outline:4px solid #477b59;outline-offset:4px}.word-tile.gap:not(:empty){letter-spacing:1px}.sentence .word-tile.gap{color:#594777}
 
 .shape.diamond{width:28px;height:28px;border-radius:5px;background:#e58a8a;border-color:#b85c5c;transform:rotate(45deg);box-shadow:none}.pattern-choices .shape.diamond{width:34px;height:34px}.pattern-strip{flex-wrap:wrap}.puzzle-picker.levels{flex-direction:column;align-items:stretch}.puzzle-picker.levels button{text-align:left}@media(max-width:780px){.shape.diamond{width:20px;height:20px}.pattern-choices .shape.diamond{width:26px;height:26px}}
+
+/* one colour for every answer */.choice:nth-child(2),.pattern-choices .choice:nth-child(2){background:#ccead9;border-color:#75ad91}
