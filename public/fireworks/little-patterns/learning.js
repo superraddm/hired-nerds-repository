@@ -1,0 +1,20 @@
+/* Deterministic learning rounds. UI and audio are separate. */
+(function(root){
+  'use strict';
+  const NUMBER_WORDS=['ZERO','ONE','TWO','THREE','FOUR','FIVE','SIX','SEVEN','EIGHT','NINE','TEN'];
+  const PICTURES=[{word:'APPLE',picture:'apple'},{word:'SUN',picture:'sun'},{word:'TREE',picture:'tree'},{word:'BALL',picture:'ball'},{word:'CAT',picture:'cat'},{word:'DOG',picture:'dog'},{word:'BUS',picture:'bus'},{word:'FISH',picture:'fish'},{word:'MOON',picture:'moon'},{word:'FLOWER',picture:'flower'}];
+  const defaults={range:5,choices:2,case:'upper',addition:'show',numberWords:'show',keyboard:'az',soft:false,pace:0,customWords:[]};
+  function cleanWord(text){return String(text||'').normalize('NFC').replace(/[^a-zA-Z '-]/g,'').trim().replace(/\s+/g,' ').slice(0,30).toUpperCase();}
+  function normalisePrefs(input){const p={...defaults};if(!input||typeof input!=='object')return p;for(const key of ['range','choices','case','addition','numberWords','keyboard','pace']){const allowed={range:[5,10],choices:[2,3],case:['upper','lower'],addition:['show','choose'],numberWords:['show','choose','type'],keyboard:['az','device'],pace:[0,1800,850]}[key];if(allowed.includes(input[key]))p[key]=input[key];}p.soft=input.soft===true;if(Array.isArray(input.customWords))p.customWords=[...new Set(input.customWords.map(cleanWord).filter(Boolean))].slice(0,24);return p;}
+  function options(answer,pool,count,index=0){const other=[...new Set(pool)].filter(v=>v!==answer);const result=[answer,...other.slice(index%Math.max(1,other.length)).concat(other).slice(0,count-1)];const offset=index%result.length;return result.slice(offset).concat(result.slice(0,offset));}
+  function numberAt(index,max){return index%max+1;}
+  function countRound(index,prefs){const target=numberAt(index,prefs.range);return {target,choices:options(target,Array.from({length:prefs.range},(_,i)=>i+1),prefs.choices,index),seen:[],hint:0,done:false};}
+  function sumRound(index,prefs){const sums=[];for(let total=2;total<=prefs.range;total++)for(let a=total-1;a>=1;a--)sums.push([a,total-a]);const [a,b]=sums[index%sums.length];return {a,b,total:a+b,stage:'parts',choices:options(a+b,Array.from({length:prefs.range},(_,i)=>i+1),prefs.choices,index),done:false};}
+  function patternRound(index,prefs){const shapes=['circle','square','triangle'];const a=shapes[index%3],b=shapes[(index+1)%3];const unit=prefs.choices===3&&index%2?[a,a,b]:[a,b];const sequence=Array.from({length:6},(_,i)=>unit[i%unit.length]);return {sequence,unit,answer:sequence[5],choices:options(sequence[5],shapes,prefs.choices,index),done:false};}
+  function wordRound(index,prefs){const entries=PICTURES.concat(prefs.customWords.map(word=>({word,picture:(PICTURES.find(p=>p.word===word)||{}).picture||null})));const entry=entries[index%entries.length];return {...entry,draft:'',model:true,done:false};}
+  function numberWordRound(index,prefs){const target=numberAt(index,prefs.range);const word=NUMBER_WORDS[target];return {target,word,draft:'',choices:options(word,NUMBER_WORDS.slice(1,prefs.range+1),prefs.choices,index),done:false};}
+  function matches(typed,expected){return String(typed).trim().replace(/\s+/g,' ').toLocaleUpperCase('en-GB')===String(expected).toLocaleUpperCase('en-GB');}
+  function editText(value,start,end,key){value=String(value);start=Math.max(0,Math.min(value.length,start));end=Math.max(start,Math.min(value.length,end));if(key==='Backspace'){if(start===end&&start>0)start-=Array.from(value.slice(0,start)).pop().length;return {value:value.slice(0,start)+value.slice(end),caret:start};}const insert=key==='Space'?' ':key;const next=value.slice(0,start)+insert+value.slice(end);if(next.length>500)return {value,caret:end};return {value:next,caret:start+insert.length};}
+  const api={NUMBER_WORDS,PICTURES,defaults,normalisePrefs,cleanWord,options,countRound,sumRound,patternRound,wordRound,numberWordRound,matches,editText};
+  if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.GardenLearning=api;
+})(typeof window!=='undefined'?window:globalThis);

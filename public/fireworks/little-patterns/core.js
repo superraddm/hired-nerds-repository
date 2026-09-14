@@ -12,11 +12,12 @@
     constructor(rng=Math.random){this.rng=rng;this.reset();}
     drawId(){if(!this.bag.length)this.bag=shuffle([0,1,2,3,4,5,6],this.rng);return this.bag.pop();}
     spawn(id){const matrix=copy(SHAPES[id]);return {id,matrix,x:Math.floor((10-matrix[0].length)/2),y:0};}
-    reset(){this.board=emptyBoard();this.bag=[];this.rows=0;this.full=false;this.previous=null;this.active=this.spawn(this.drawId());this.next=this.drawId();}
+    reset(){this.board=emptyBoard();this.bag=[];this.rows=0;this.full=false;this.previous=null;this.lastSum=null;this.active=this.spawn(this.drawId());this.next=this.drawId();}
     move(dx,dy){if(this.full)return false;const moved={...this.active,x:this.active.x+dx,y:this.active.y+dy};if(!fits(this.board,moved))return false;this.active=moved;return true;}
     turn(){if(this.full)return false;const matrix=rotate(this.active.matrix);for(const dx of [0,-1,1,-2,2]){const p={...this.active,matrix,x:this.active.x+dx};if(fits(this.board,p)){this.active=p;return true;}}return false;}
     landing(){const p=copy(this.active);while(fits(this.board,{...p,y:p.y+1}))p.y++;return p;}
-    place(){if(this.full)return 0;this.previous=copy({board:this.board,active:this.active,next:this.next,bag:this.bag,rows:this.rows});this.active=this.landing();this.active.matrix.forEach((row,y)=>row.forEach((v,x)=>{if(v)this.board[this.active.y+y][this.active.x+x]=this.active.id+1;}));const result=clearLines(this.board);this.board=result.board;this.rows+=result.cleared;this.active=this.spawn(this.next);this.next=this.drawId();this.full=!fits(this.board,this.active);return result.cleared;}
+    rowSums(){if(this.full)return [];const p=this.landing();return p.matrix.map((row,i)=>({row:p.y+i,before:this.board[p.y+i].filter(Boolean).length,added:row.filter(Boolean).length})).filter(s=>s.added).map(s=>({...s,total:s.before+s.added}));}
+    place(){if(this.full)return 0;this.previous=copy({board:this.board,active:this.active,next:this.next,bag:this.bag,rows:this.rows,lastSum:this.lastSum});const completed=this.rowSums().filter(s=>s.total===10);if(completed.length)this.lastSum=completed[completed.length-1];this.active=this.landing();this.active.matrix.forEach((row,y)=>row.forEach((v,x)=>{if(v)this.board[this.active.y+y][this.active.x+x]=this.active.id+1;}));const result=clearLines(this.board);this.board=result.board;this.rows+=result.cleared;this.active=this.spawn(this.next);this.next=this.drawId();this.full=!fits(this.board,this.active);return result.cleared;}
     undo(){if(!this.previous)return false;Object.assign(this,copy(this.previous));this.previous=null;this.full=false;return true;}
   }
   const WORDS=[{word:'CAT',picture:'🐈'},{word:'SUN',picture:'☀'},{word:'DOG',picture:'🐕'},{word:'BUS',picture:'🚌'},{word:'HAT',picture:'🎩'},{word:'CUP',picture:'☕'},{word:'BED',picture:'🛏'},{word:'PIG',picture:'🐖'},{word:'APPLE',picture:'🍎'},{word:'MOON',picture:'☾'}];

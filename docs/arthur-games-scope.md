@@ -75,6 +75,13 @@ Subtraction can be introduced explicitly later using that removal.
 
 ## Game 2: Number Workshop, using words and patterns as strengths
 
+Visual revision: the user rejected the minimalist learning-game previews and
+requested a more playful preschool presentation, informed by the teaching
+techniques of Yakka Dee, Hey Duggee, Numberblocks and Alphablocks, with entirely
+distinct characters. The revised working title is **Nook's Garden**. See
+[the programme review and learning design](arthur-learning-design.md). This
+revision does not change the approved Colour Blocks visual style.
+
 Three activities for the first release, with manual progression and two-choice
 support that can be expanded to three choices:
 
