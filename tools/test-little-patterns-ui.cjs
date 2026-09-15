@@ -602,3 +602,13 @@ test('sound buttons name the state, Nook wears a short name tag, and the block c
   const css = fs.readFileSync(path.join(root, 'blocks-live.css'), 'utf8');
   assert.match(css, /\.overlay \.primary\{flex:0 0 auto/, 'Keep playing no longer inherits flex:1 inside the vertical overlay');
 });
+
+test('on wide layouts the bubble is ordered below Nook, beside the response area, without moving the companion block', t => {
+  const css = fs.readFileSync(path.join(root, 'garden-live.css'), 'utf8');
+  const wide = css.slice(css.indexOf('@media(min-width:551px)'));
+  assert.match(wide, /\.companion \.speech\{order:3/);
+  assert.match(wide, /\.companion img\{order:1/);
+  assert.match(wide, /\.companion\{align-self:end/);
+  const html = fs.readFileSync(path.join(root, 'garden.html'), 'utf8');
+  assert.ok(html.indexOf('<aside class="companion">') < html.indexOf('<section class="activity"'), 'the companion block itself stays where it was');
+});
