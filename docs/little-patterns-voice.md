@@ -1,7 +1,7 @@
 # Shared voice library
 
-Implemented 15 September 2026; encouragement added later the same day. The built-in
-game speech now uses 70 bundled WAV clips, about 2.39 MiB in total. Every device receives the same audio, with no
+Implemented 15 September 2026; extended the same day for review round 2. The
+built-in game speech now uses 117 bundled WAV clips, about 4.31 MiB in total. Every device receives the same audio, with no
 runtime TTS model, LLM request, speech API or server language pack.
 
 ## Voice and rights record
@@ -22,8 +22,10 @@ player data is used for generation.
 
 - All suggested words and built-in picture words, including READ pronounced as
   the present-tense verb ("reed").
-- Number words ONE to TEN.
-- Every blank sentence and completed sentence. Sentence playback continues to
+- Number words ZERO to TWENTY and the tens to ONE HUNDRED; compounds such as
+  seventy-three are two clips in a row. Also "plus", "take away", "equals",
+  "apples" and the five bead shapes for the make-your-own readback.
+- Every blank sentence and completed sentence in both banks (picnic; bath and bed). Sentence playback continues to
   say "blank" while an answer is merely typed; it changes after a correct check.
 - Gentle incorrect-answer feedback: "Whoops! Try again." It plays only when sound
   is already enabled, alongside visible feedback.

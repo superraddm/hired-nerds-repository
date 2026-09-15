@@ -456,3 +456,29 @@ sentence bank, number words to one hundred):
 Session progress apples (A4). Level 10 as first written. Squares valued 1–3 in
 Colour Blocks. A header-level control (levels live in the activity). Any
 automatic level promotion.
+
+
+---
+
+## Build record (15 September 2026)
+
+Built by Claude Fable 5.1 from this brief, phases 0 to 6 in order, one commit per
+numbered item where possible, deployed after each phase to
+https://kpopboom.party/little-patterns/ with the live files verified against the
+working tree. Every commit ran the three test files and the stage check first.
+
+| Phase | Commits | Notes |
+| --- | --- | --- |
+| 0 | (none) | Symbol rule followed: the basket symbol was added for the take-away area with its NOTICE line. |
+| 1 | 3549533, 0bc1e76, 3e1d493 | Per-activity levels and operation; versioned puzzle ids with legacy fallback; one success path; Next level inside the activity. Number words got a level so the shared Quantities setting could retire. |
+| 2 | 2066fa1, 460cc92, fc594ee, 68f9992, f047332, bc1c15f, 0c5c0b9 | Encouragement bank with chained clips; announce once; hint-only status; two-step clues; one-line Words input; labels and Colour Blocks fixes; bubble beside the answers on wide layouts. |
+| 3 | f06e3bd, 3deb49f, 4238928 | Take away with a separate basket; Add and Take away levels 1 to 5 on the tray; Doubles and Make ten (item 15 folded in). |
+| 4 | b83c0d7, b69a2bc, 5e66cbb | Count to 100 with tens-first counting and an optional keypad; mixed order and arrangements; Number words to ONE HUNDRED. |
+| 5 | 89f6770 | Multi-gap model; repeat levels 8 to 11; Growing, Mirror and Number rules. |
+| 6 | b1f03fe, 0a0ff27, 5b158ca, 69c36ff | Missing part level; bath-time bank, longer and familiar sentences; make-your-own bead string. |
+
+Decisions taken where the brief left room (all following Pass 2): the ten-frame is
+established before it collapses to a stick; typing is a setting, never forced by
+level; each Add operation keeps its own place; a private word or sentence gets the
+opener clip only; number beads carry numerals. Tests: 88 passing. Device validation
+on the iPad remains a manual step.
