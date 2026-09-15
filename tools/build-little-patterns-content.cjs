@@ -42,15 +42,15 @@ const sections = [
   },
   {
     title: 'Every Garden addition',
-    note: 'All 45 ordered sums with two positive groups and a total up to 10. Level 1 (totals up to 5) is the default; level 2 adds totals up to 10. The picker allows every sum in the level; reversed groups are separate examples. Zero is not part of this release.',
-    headers: ['First group', 'Second group', 'Answer', 'Equation'],
-    rows: Array.from({ length: 45 }, (_, index) => { const r = L.sumRound(index, prefs, 2); return [r.a, r.b, r.total, `${r.a} + ${r.b} = ${r.total}`]; })
+    note: 'Add has five levels chosen in the activity: 1 within 5 (the default), 2 within 10, 3 within 20 without crossing ten (10 + 4), 4 within 20 crossing ten (8 + 5), 5 tens to 100 (30 + 20). Level 1 is the part of level 2 with totals up to 5, so it is not listed separately. Levels 3 and 4 draw quantities as full ten-frames plus ones; level 5 draws complete tens as sticks. The picker allows every sum in the level; reversed groups are separate examples.',
+    headers: ['Level', 'First group', 'Second group', 'Answer', 'Equation'],
+    rows: [2, 3, 4, 5].flatMap(level => L.sumSequence(level, 'add').map(([a, b]) => [level, a, b, a + b, `${a} + ${b} = ${a + b}`]))
   },
   {
     title: 'Every Garden take away',
-    note: 'Take away lives inside the Add activity behind an Add / Take away switch. Nook starts with a group and eats none, some or all of it; what is left stays a countable group and the eaten apples sit in a separate basket area. Level 1 starts from up to 5, level 2 from up to 10. Zero is included both as an amount taken and as an answer.',
-    headers: ['Start with', 'Taken away', 'Answer', 'Equation'],
-    rows: L.sumSequence(2, 'take').map(([a, b]) => [a, b, a - b, `${a} − ${b} = ${a - b}`])
+    note: 'Take away lives inside the Add activity behind an Add / Take away switch and shares its levels: 1 from up to 5, 2 from up to 10, 3 from 11 to 19 taking ones only (15 − 3), 4 within 20 crossing ten (12 − 5), 5 tens (60 − 20). Nook starts with a group and eats none, some or all of it; what is left stays a countable group and the eaten apples sit in a separate basket area. Zero is included both as an amount taken and as an answer. Level 1 is the part of level 2 starting from up to 5.',
+    headers: ['Level', 'Start with', 'Taken away', 'Answer', 'Equation'],
+    rows: [2, 3, 4, 5].flatMap(level => L.sumSequence(level, 'take').map(([a, b]) => [level, a, b, a - b, `${a} − ${b} = ${a - b}`]))
   },
   {
     title: 'Every pattern and missing-shape answer',
@@ -76,4 +76,4 @@ const md = '# Little Patterns: all game content and answers\n\n' + intro + '\n\n
 const html = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>All game answers · Little Patterns</title><style>body{font:17px/1.6 "Trebuchet MS",Arial,sans-serif;color:#293d60;background:#fffdf0;margin:0}main{max-width:1100px;margin:auto;padding:24px}h1,h2{line-height:1.2}h2{margin-top:40px}a{color:#315f50}nav{display:flex;flex-wrap:wrap;gap:10px 20px}nav a{padding:8px 0}.table{overflow-x:auto}table{border-collapse:collapse;width:100%;background:#fff}th,td{padding:10px;text-align:left;border:1px solid #b8c8b3;vertical-align:top}th{background:#d7eee2}p{max-width:85ch}a:focus-visible{outline:3px solid #815a24;outline-offset:4px}</style></head><body><main><a href="./">← Games</a><h1>All game content and answers</h1><p>'+escape(intro)+'</p><nav aria-label="Content sections">'+sections.map((s,i)=>'<a href="#section-'+i+'">'+escape(s.title)+'</a>').join('')+'</nav>'+sections.map((s,i)=>'<section id="section-'+i+'"><h2>'+escape(s.title)+'</h2><p>'+escape(s.note)+'</p><div class="table"><table><thead><tr>'+s.headers.map(h=>'<th scope="col">'+escape(h)+'</th>').join('')+'</tr></thead><tbody>'+s.rows.map(row=>'<tr>'+row.map(cell=>'<td>'+escape(cell)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div></section>').join('')+'</main></body></html>\n';
 fs.writeFileSync(path.join(__dirname, '../docs/little-patterns-content.md'), md);
 fs.writeFileSync(path.join(__dirname, '../public/fireworks/little-patterns/content.html'), html);
-console.log(`Built content reference: ${L.SENTENCES.length} sentences, 45 sums, ${L.sumSequence(2, 'take').length} take aways, ${patterns.size} patterns, 10 picture words.`);
+console.log(`Built content reference: ${L.SENTENCES.length} sentences, ${[2,3,4,5].reduce((n, l) => n + L.sumSequence(l, 'add').length, 0)} sums, ${[2,3,4,5].reduce((n, l) => n + L.sumSequence(l, 'take').length, 0)} take aways, ${patterns.size} patterns, 10 picture words.`);

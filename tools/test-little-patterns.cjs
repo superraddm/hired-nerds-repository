@@ -62,7 +62,7 @@ test('every picture word has a bundled Mulberry symbol that is a plain local SVG
 
 // Per-activity levels: chosen explicitly, clamped safely, and each level has its own sequence of examples.
 test('levels are per activity, clamped to the published maximum and drive their own example sequences',()=>{
-  assert.deepEqual(learning.LEVELS,{count:2,add:2,numbers:2,patterns:7});
+  assert.deepEqual(learning.LEVELS,{count:2,add:5,numbers:2,patterns:7});
   assert.deepEqual(learning.OPERATIONS,['add','take']);
   for(const kind of Object.keys(learning.LEVELS)){assert.equal(learning.clampLevel(kind,0),1);assert.equal(learning.clampLevel(kind,'2'),1);assert.equal(learning.clampLevel(kind,learning.LEVELS[kind]+1),1);assert.equal(learning.clampLevel(kind,learning.LEVELS[kind]),learning.LEVELS[kind]);}
   assert.deepEqual(learning.countSequence(1),[1,2,3,4,5]);assert.equal(learning.countSequence(2).length,10);
@@ -107,4 +107,21 @@ test('take away rounds start from a group, remove none, some or all, and keep th
   const line=learning.successLine('add',learning.sumRound(0,p,1,'take',[5,2]));
   assert.equal(line.text.includes('5 − 2 = 3.'),true);assert.deepEqual(line.speech.filter(x=>!learning.OPENERS.includes(x)),['FIVE','take away','TWO','equals','THREE']);
   assert.deepEqual(learning.numberSpeech(0),['ZERO']);assert.deepEqual(learning.numberSpeech(17),['SEVENTEEN']);assert.deepEqual(learning.numberSpeech(73),['SEVENTY','THREE']);assert.deepEqual(learning.numberSpeech(21),['TWENTY','ONE']);assert.deepEqual(learning.numberSpeech(100),['ONE HUNDRED']);assert.equal(learning.numberWord(45),'FORTY-FIVE');assert.deepEqual(learning.numberSpeech(101),[]);
+});
+
+// Add and Take away levels 3 to 5: no crossing ten, crossing ten, then tens. Answers stay inside the level and every sum is a distinct puzzle.
+test('arithmetic levels 3 to 5 keep their rules and draw quantities as tens and ones',()=>{
+  const p=learning.defaults;
+  assert.deepEqual(learning.RANGES.add,[5,10,20,20,100]);
+  assert.equal(learning.levelRange(3,'add'),20);assert.equal(learning.levelRange(5,'add'),100);assert.equal(learning.levelRange(9,'add'),100);assert.equal(learning.levelRange(2),10);
+  const l3a=learning.sumSequence(3,'add');assert.ok(l3a.length>20);assert.ok(l3a.every(([a,b])=>a>=10&&a<=19&&b>=1&&b<=9&&a%10+b<=10&&a+b<=20),'level 3 add never crosses ten');
+  const l3t=learning.sumSequence(3,'take');assert.ok(l3t.every(([a,b])=>a>=11&&a<=19&&b>=1&&b<=a%10),'level 3 take away removes ones only');
+  const l4a=learning.sumSequence(4,'add');assert.ok(l4a.every(([a,b])=>a<=9&&b<=9&&a+b>=11&&a+b<=20),'level 4 add crosses ten');
+  const l4t=learning.sumSequence(4,'take');assert.ok(l4t.every(([a,b])=>a>=11&&a<=20&&a-b<10&&a-b>=2),'level 4 take away crosses back below ten');
+  const l5a=learning.sumSequence(5,'add');assert.ok(l5a.every(([a,b])=>a%10===0&&b%10===0&&a+b<=100&&a>=10&&b>=10));assert.ok(l5a.some(([a,b])=>a+b===100));
+  const l5t=learning.sumSequence(5,'take');assert.ok(l5t.every(([a,b])=>a%10===0&&b%10===0&&b<=a&&a<=100));assert.ok(l5t.some(([a,b])=>a===b),'taking every ten is included');
+  for(const level of [3,4,5])for(const op of learning.OPERATIONS){const seq=learning.sumSequence(level,op);const ids=new Set();for(let i=0;i<seq.length;i++){const r=learning.sumRound(i,p,level,op);ids.add(r.id);assert.equal(r.level,level);assert.ok(r.answer>=0&&r.answer<=learning.levelRange(level,'add'));assert.ok(r.choices.includes(r.answer));assert.equal(new Set(r.choices).size,3);if(level===5)assert.ok(r.choices.every(n=>n%10===0));assert.ok(learning.successLine('add',r).speech.length>=6);}assert.equal(ids.size,seq.length,'every sum in '+op+' level '+level+' is its own puzzle');}
+  assert.equal(learning.usesTray('add',2),false);assert.equal(learning.usesTray('add',3),true);
+  assert.equal(learning.usesSticks('add',4),false,'a complete ten stays a visible ten-frame at levels 3 and 4');assert.equal(learning.usesSticks('add',5),true);
+  assert.deepEqual(learning.arithmeticPool(5,'take'),[0,10,20,30,40,50,60,70,80,90,100]);
 });

@@ -19,17 +19,27 @@
   function normalisePrefs(input){const p={...defaults};if(!input||typeof input!=='object')return p;for(const key of ['range','choices','case','addition','numberWords','keyboard','pace']){const allowed={range:[5,10],choices:[2,3],case:['upper','lower'],addition:['choose','type','demo'],numberWords:['show','choose','type'],keyboard:['az','device'],pace:[0,1800,850]}[key];if(allowed.includes(input[key]))p[key]=input[key];}p.soft=input.soft===true;if(Array.isArray(input.customWords))p.customWords=[...new Set(input.customWords.map(cleanWord).filter(Boolean))].slice(0,24);return p;}
   function options(answer,pool,count,index=0){const other=[...new Set(pool)].filter(v=>v!==answer);const start=index%Math.max(1,other.length);const result=[answer,...other.slice(start).concat(other.slice(0,start)).slice(0,count-1)];const offset=index%result.length;return result.slice(offset).concat(result.slice(0,offset));}
   // Levels are chosen per activity and never advance on their own. The round index only varies examples within a level.
-  const LEVELS={count:2,add:2,numbers:2,patterns:7};
+  const LEVELS={count:2,add:5,numbers:2,patterns:7};
   const OPERATIONS=['add','take'];
   function clampLevel(kind,level){const max=LEVELS[kind]||1;return Number.isInteger(level)&&level>=1&&level<=max?level:1;}
   // Every round carries a stable puzzle id: kind, save version, level, operation and the content itself. Restoration matches on it.
   const VERSION=2;
   function identify(kind,level,operation,key){return [kind,'v'+VERSION,'L'+level,operation,key].join(':');}
-  function levelRange(level){return level>=2?10:5;}
-  function countSequence(level){return Array.from({length:levelRange(clampLevel('count',level))},(_,i)=>i+1);}
+  // The largest quantity a level shows. Add levels: within 5, within 10, within 20 without crossing ten, within 20 crossing ten, tens to 100.
+  const RANGES={count:[5,10],add:[5,10,20,20,100],numbers:[5,10]};
+  function levelRange(level,kind='count'){const table=RANGES[kind]||RANGES.count;return table[Math.max(1,Math.min(table.length,Number(level)||1))-1];}
+  function countSequence(level){return Array.from({length:levelRange(clampLevel('count',level),'count')},(_,i)=>i+1);}
   // Take away includes taking nothing and taking everything, so zero appears as an answer and as an amount.
-  function sumSequence(level,operation='add'){const range=levelRange(clampLevel('add',level));const sums=[];if(operation==='take'){for(let a=1;a<=range;a++)for(let b=a;b>=0;b--)sums.push([a,b]);return sums;}for(let total=2;total<=range;total++)for(let a=total-1;a>=1;a--)sums.push([a,total-a]);return sums;}
-  function arithmeticPool(level,operation){const range=levelRange(clampLevel('add',level));return Array.from({length:range+1},(_,i)=>i).filter(n=>operation==='take'||n>=1);}
+  function sumSequence(level,operation='add'){level=clampLevel('add',level);const take=operation==='take';const sums=[];
+    if(level<=2){const range=levelRange(level,'add');if(take){for(let a=1;a<=range;a++)for(let b=a;b>=0;b--)sums.push([a,b]);}else{for(let total=2;total<=range;total++)for(let a=total-1;a>=1;a--)sums.push([a,total-a]);}}
+    else if(level===3){if(take){for(let a=11;a<=19;a++)for(let b=1;b<=a%10;b++)sums.push([a,b]);}else{for(let a=10;a<=19;a++)for(let b=1;b<=9;b++)if(a%10+b<=10)sums.push([a,b]);}}
+    else if(level===4){if(take){for(let a=11;a<=18;a++)for(let b=2;b<=9;b++)if(a-b>=2&&a-b<10)sums.push([a,b]);}else{for(let a=2;a<=9;a++)for(let b=2;b<=9;b++)if(a+b>=11)sums.push([a,b]);}}
+    else{if(take){for(let a=10;a<=100;a+=10)for(let b=10;b<=a;b+=10)sums.push([a,b]);}else{for(let a=10;a<=90;a+=10)for(let b=10;a+b<=100;b+=10)sums.push([a,b]);}}
+    return sums;}
+  function arithmeticPool(level,operation){level=clampLevel('add',level);const range=levelRange(level,'add');if(level>=5)return Array.from({length:11},(_,i)=>i*10).filter(n=>operation==='take'||n>=20);return Array.from({length:range+1},(_,i)=>i).filter(n=>operation==='take'||n>=1);}
+  // Levels 3 and up draw every quantity as tens and ones; a complete ten stays a visible ten-frame until level 5, where it becomes a stick.
+  function usesTray(kind,level){return level>=3;}
+  function usesSticks(kind,level){return kind==='add'?level>=5:level>=4;}
   function countRound(index,prefs,level=1){level=clampLevel('count',level);const sequence=countSequence(level);const target=sequence[index%sequence.length];return {id:identify('count',level,'count',target),level,target,choices:options(target,sequence,prefs.choices,index),seen:[],hint:0,done:false};}
   // pair optionally names a directly chosen sum; it must still fit the level.
   function sumRound(index,prefs,level=1,operation='add',pair=null){level=clampLevel('add',level);if(!OPERATIONS.includes(operation))operation='add';const sums=sumSequence(level,operation);const valid=Array.isArray(pair)&&pair.length===2&&sums.some(([a,b])=>a===pair[0]&&b===pair[1]);const [a,b]=valid?pair:sums[index%sums.length];const answer=operation==='take'?a-b:a+b;return {id:identify('add',level,operation,a+(operation==='take'?'-':'+')+b),level,operation,a,b,total:answer,answer,stage:'parts',draft:'',hint:0,choices:options(answer,arithmeticPool(level,operation),3,index),done:false};}
@@ -37,7 +47,7 @@
   const PATTERN_LEVELS=LEVELS.patterns;
   function patternRound(index,prefs,level=1){const shapes=['circle','square','triangle','diamond'];level=clampLevel('patterns',level);const step=level-1;const s=i=>shapes[(i+index)%4];const [A,B,C,D]=[s(0),s(1),s(2),s(3)];const unit=[[A,B],[A,B],index%2?[A,A,B]:[A,B,B],[A,B,C],[A,A,B,B],index%2?[A,B,A,C]:[A,B,C,B],[A,B,C,D]][step];const length=step>=4?8:6;const sequence=Array.from({length},(_,i)=>unit[i%unit.length]);const gap=step===0||step===2?length-1:unit.length+index%(length-unit.length-1);const pool=[...new Set(unit)];for(const x of shapes)if(pool.length<Math.max(2,prefs.choices)&&!pool.includes(x))pool.push(x);return {id:identify('patterns',level,'repeat',sequence.join(',')+'#'+gap),level,sequence,unit,gap,answer:sequence[gap],hint:0,choices:options(sequence[gap],pool,prefs.choices,index),done:false};}
   function wordRound(index,prefs){const entries=PICTURES.concat(prefs.customWords.map(word=>({word,picture:(PICTURES.find(p=>p.word===word)||{}).picture||null})));const entry=entries[index%entries.length];return {id:identify('word',1,'word',entry.word),...entry,draft:'',model:true,done:false};}
-  function numberWordRound(index,prefs,level=1){level=clampLevel('numbers',level);const range=levelRange(level);const target=index%range+1;const word=NUMBER_WORDS[target];return {id:identify('numbers',level,'word',target),level,target,word,draft:'',hint:0,choices:options(word,NUMBER_WORDS.slice(1,range+1),prefs.choices,index),done:false};}
+  function numberWordRound(index,prefs,level=1){level=clampLevel('numbers',level);const range=levelRange(level,'numbers');const target=index%range+1;const word=NUMBER_WORDS[target];return {id:identify('numbers',level,'word',target),level,target,word,draft:'',hint:0,choices:options(word,NUMBER_WORDS.slice(1,range+1),prefs.choices,index),done:false};}
   function sentenceWords(text){return text.replace(/[.!?]/g,'').split(' ').map(w=>w.toUpperCase());}
   function sentencePool(entry){return [...new Set([entry.gap,...(DISTRACTORS[entry.gap]||SENTENCES.filter(s=>s.kind===entry.kind).map(s=>s.gap))])];}
   function sentencePrompt(round){return round.words.map((word,i)=>i===round.gapAt&&!round.done?'blank':word.toLowerCase()).join(' ')+'.';}
@@ -62,6 +72,6 @@
   function spokenBank(){const texts=[...Object.keys(WORD_SYMBOLS),...NUMBER_WORDS,...Object.values(TENS_WORDS),...PICTURES.map(p=>p.word),...Object.values(FEEDBACK),...SPOKEN_EXTRAS,"Hello! I'm Nook. Let's play."];for(let i=0;i<SENTENCES.length;i++){const r=sentenceRound(i,defaults);texts.push(sentencePrompt(r));r.done=true;texts.push(sentencePrompt(r));}const key=s=>s.trim().toLowerCase().replace(/\s+/g,' ').replace(/[.!?]+$/,'');return [...new Set(texts.map(key))].sort();}
   function matches(typed,expected){return String(typed).trim().replace(/\s+/g,' ').toLocaleUpperCase('en-GB')===String(expected).toLocaleUpperCase('en-GB');}
   function editText(value,start,end,key){value=String(value);start=Math.max(0,Math.min(value.length,start));end=Math.max(start,Math.min(value.length,end));if(key==='Backspace'){if(start===end&&start>0)start-=Array.from(value.slice(0,start)).pop().length;return {value:value.slice(0,start)+value.slice(end),caret:start};}const insert=key==='Space'?' ':key;const next=value.slice(0,start)+insert+value.slice(end);if(next.length>500)return {value,caret:end};return {value:next,caret:start+insert.length};}
-  const api={NUMBER_WORDS,TENS_WORDS,numberSpeech,numberWord,arithmeticPool,FEEDBACK,PICTURES,SENTENCES,WORD_SYMBOLS,PATTERN_LEVELS,LEVELS,OPERATIONS,VERSION,identify,clampLevel,levelRange,countSequence,sumSequence,sentenceWords,sentencePool,sentencePrompt,sentenceRound,letterRound,orderRound,defaults,normalisePrefs,cleanWord,options,countRound,sumRound,patternRound,wordRound,numberWordRound,OPENERS,successLine,spokenBank,matches,editText};
+  const api={NUMBER_WORDS,TENS_WORDS,numberSpeech,numberWord,arithmeticPool,usesTray,usesSticks,RANGES,FEEDBACK,PICTURES,SENTENCES,WORD_SYMBOLS,PATTERN_LEVELS,LEVELS,OPERATIONS,VERSION,identify,clampLevel,levelRange,countSequence,sumSequence,sentenceWords,sentencePool,sentencePrompt,sentenceRound,letterRound,orderRound,defaults,normalisePrefs,cleanWord,options,countRound,sumRound,patternRound,wordRound,numberWordRound,OPENERS,successLine,spokenBank,matches,editText};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.GardenLearning=api;
 })(typeof window!=='undefined'?window:globalThis);
