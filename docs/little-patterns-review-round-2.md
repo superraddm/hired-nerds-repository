@@ -331,11 +331,38 @@ Reviewed the supplied screenshots and local code; live-page retrieval failed. No
 
 ## Build brief for Sonnet (derived from the approved passes)
 
-Baseline: commit `7c88f68` or later on main. Keep all scope constraints. Run the
-three test files and `node tools/stage-little-patterns.cjs --check` before every
-commit; add tests for every new generator and for save/restore of every new round
-shape. Small commits, one numbered item each where possible. Do not publish;
-`bash tools/deploy-kpopboom.sh` is Jof's step.
+Baseline: commit `f264816` or later on main (Mulberry Symbols already in). Keep all
+scope constraints. Run the three test files and `node tools/stage-little-patterns.cjs
+--check` before every commit; add tests for every new generator and for save/restore
+of every new round shape. Small commits, one numbered item each where possible.
+
+**Publishing:** Jof has asked for this build to be deployed by the builder. After
+each completed phase, and again at the very end, run the full checks and then
+`bash tools/deploy-kpopboom.sh` (production, kpopboom.party/little-patterns/).
+Verify the live pages return 200 and match the working tree before moving on.
+Never deploy with failing tests or a failing stage check.
+
+### 0. Picture symbols (done, and the rule for new words)
+
+Word pictures are Mulberry Symbols (CC BY-SA 4.0) in `assets/symbols`, mapped by
+`WORD_SYMBOLS` in learning.js; see `assets/symbols/NOTICE.txt` and
+`docs/little-patterns-content.md`. Widgit Symbols are the intended end state once
+Jof has a licence, so keep the symbol layer swappable: one map, one folder, one
+notice. Rules for every new word this build introduces (subtraction copy, second
+sentence bank, number words to one hundred):
+
+- Pick the symbol from the untracked full release (`assets/mulberry-symbols.zip`,
+  index in `assets/symbol-info.csv`), copy it to `assets/symbols/<word>.svg`, add
+  the mapping to `WORD_SYMBOLS`, add the line to NOTICE.txt, and regenerate the
+  voice clips with `python tools/build-little-patterns-voice.py`. The stage
+  allow-list and the symbol test pick the file up automatically.
+- Do not use emoji anywhere in the game UI. If Mulberry has no symbol for a word,
+  choose a different word rather than a near miss (this is why FLY became JUMP
+  and COLD became DRY).
+- Count trays, sticks of ten and the take-away area keep the CSS apple; a
+  Mulberry `basket` symbol may mark the take-away area if a picture is wanted.
+- Pattern beads stay CSS shapes.
+
 
 ### 1. Plumbing first (Pass 2 findings 3, 4, 5, 7)
 
