@@ -1,7 +1,9 @@
 # Little Patterns: review round 2 (no build)
 
 Two review passes, no code changes. Pass 1 is Claude (Fable 5.1); pass 2 is Codex
-(gpt-6-astra). Jof reviews both, then a build brief goes to Sonnet.
+(gpt-6-astra). **Approved by Jof as written, 15 September 2026.** The build brief at
+the end of this document is the instruction set for the Sonnet build; where the two
+passes disagree, the brief follows Pass 2, which was the response to Pass 1.
 
 Baseline reviewed: commit `7c88f68`, live at https://kpopboom.party/little-patterns/.
 Jof has confirmed the iPad works well. The game directions are approved and are not
@@ -324,3 +326,106 @@ Reviewed the supplied screenshots and local code; live-page retrieval failed. No
 4. **Count to 100:** shared tens-and-ones representation, count-by-ten support, three-digit input and direct level/item selection; reuse for arithmetic through twenty and tens.
 5. **Pattern depth:** separate level navigation, richer repeating examples, then multiple gaps; introduce other rule families explicitly.
 6. **Later enrichment:** missing addends, higher number words, longer sentences and creative patterns.
+
+---
+
+## Build brief for Sonnet (derived from the approved passes)
+
+Baseline: commit `7c88f68` or later on main. Keep all scope constraints. Run the
+three test files and `node tools/stage-little-patterns.cjs --check` before every
+commit; add tests for every new generator and for save/restore of every new round
+shape. Small commits, one numbered item each where possible. Do not publish;
+`bash tools/deploy-kpopboom.sh` is Jof's step.
+
+### 1. Plumbing first (Pass 2 findings 3, 4, 5, 7)
+
+1. Per-activity state: separate `level`, `operation` (add / take away), answer
+   mode and round position for Count, Add and Patterns. Stop deriving Pattern
+   level from `floor(index/3)`. A preference change rebuilds only the affected
+   activity's round, never other activities' drafts.
+2. Round identity: every saved round carries a stable puzzle id including the
+   operation and level, plus a version. Existing saves that still match restore;
+   others start fresh for that activity only.
+3. One success event path: `choose()`, `checkSum()`, `checkWord()` and
+   `placeTile()` raise a single "answered correctly" event; feedback renders from
+   round state; encouragement audio plays only on that event and only if sound is
+   already on (`speak()` must not unmute for automatic feedback).
+4. Next stays "another like this" within the current level. Add an explicit
+   "Next level" action inside the activity (not the header). Every level remains
+   directly choosable from the activity pill's picker.
+
+### 2. Feedback and obvious layout fixes (A1, A2, A3 amended, G2, G5, G6, G7, F1)
+
+5. Nook's bubble carries success: short factual lines that restate the answer
+   ("Yes! 2 + 1 = 3.", "Three apples. You found it."), chosen deterministically
+   per puzzle. Bubble tint may change to the success green for that round. No
+   motion, no timers, no inflation words. Bundle matching voice clips via
+   `tools/build-little-patterns-voice.py`; equations need their own clips.
+6. Announce success once: keep the completed model beside the task, keep one
+   live-region announcement, drop the duplicate visible status line.
+7. Wrong answer: one neutral line in the bubble, one useful hint in the status.
+   No repeated "try again".
+8. Clue button: first tap scaffolds (Add: number-tag the joined apples like
+   Count; Missing word: play the sentence with "blank", already present;
+   Patterns: outline the unit, already present), second tap outlines the answer.
+   Scaffolds must work with sound off.
+9. Words: single-line answer input at a stable width that fits the longest bank
+   word, Enter beside it, keyboard toggle on the same row.
+10. "Sound: off / Sound: on"; name tag "NOOK"; fix the stretched "Keep playing"
+    button in the Colour Blocks pause overlay (`.primary` inherits `flex:1`);
+    rename "Hold: faster" to "Down" with a small "hold" hint.
+11. Keep feedback near the response area on landscape iPad without moving the
+    whole companion above the task.
+
+### 3. Small-number arithmetic breadth (C1 amended, C2 amended, C4, C5)
+
+12. Take away: a group, then removed apples move to a clearly separated
+    "taken away" area (not faded in place). Equation `5 − 2 = ?` with the same
+    answer modes as Add. Include zero and taking everything away.
+13. Add and Take away levels: 1 within 5 (default), 2 within 10, 3 within 20
+    without crossing ten (10 + 4, 15 − 3), 4 within 20 crossing ten, 5 tens
+    (30 + 20, 60 − 20). Levels 3 and up use the tens-and-ones tray from item 16.
+14. Picker sets: "Doubles" (1+1 … 5+5) and "Make ten" (9+1 … 1+9).
+15. Typed answers stay inside the equation slot; the completed equation stays on
+    screen after success.
+
+### 4. Quantity practice and counting to 100 (B1 amended, B2, B3 amended, B4 later; Pass 2 findings 1, 2)
+
+16. Tens-and-ones tray: a complete ten-frame becomes a stick of ten, but only
+    after the level has shown one ten-frame filling up, so a stick is visibly ten
+    apples. Never auto-collapse mid-count. `frame()` must render any target,
+    not only five or ten pockets.
+17. Count levels: 1 (1–5, five-frame), 2 (1–10, ten-frame), 3 (11–20), 4 (tens
+    only to 50), 5 (21–50), 6 (51–100). Levels 1 and 2 unchanged. Numeral choices
+    remain available at every level; typing on the keypad is an option at any
+    level, not forced by level. Keypad accepts three digits.
+18. Count with me at levels 3+: tens first ("ten, twenty…"), then ones, each
+    group counted once, running total in the tag, optional speech.
+19. Mixed order: a deterministic non-sequential order for Count targets and for
+    sums, so answers cannot be anticipated from the sequence; keep direct
+    selection. Alternative arrangements of the same quantity at levels 1–2.
+20. Number words to ONE HUNDRED reuse the tray (later in this phase).
+
+### 5. Pattern depth (D amended; Pass 2 finding 6)
+
+21. Data model: multiple gaps, partial answers, per-gap selection, wrapping that
+    preserves reading order for ten-bead strings.
+22. Levels 8+: longer repeating units and two gaps first (AB / ABC with two gaps,
+    ABCDE over ten beads). Growing patterns, symmetry and number sequences come
+    after, each introduced as its own named rule with its own hint text, never
+    as a silent step in the same ladder. Any attribute pairing must differ by
+    shape as well as colour. From level 8 the unit hint text is replaced by the
+    clue button's outline.
+
+### 6. Later enrichment (C3, D1, E2, E3, B4)
+
+23. Missing addend (`2 + ? = 5`) as its own level with its own clue model.
+24. Second sentence bank (new scene, same 24 emoji words), longer sentences for
+    Word order, then grown-up custom sentences with gap choice and distractors.
+25. Make-your-own bead string with readback (needs edit, delete, length limit).
+
+### Not in this build
+
+Session progress apples (A4). Level 10 as first written. Squares valued 1–3 in
+Colour Blocks. A header-level control (levels live in the activity). Any
+automatic level promotion.
