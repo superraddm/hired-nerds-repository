@@ -679,7 +679,7 @@ test('Add levels 3 to 5 draw tens-and-ones trays: full ten-frames first, sticks 
   assert.equal(levels.length, 6);
   assert.match(levels[2].textContent, /no crossing ten/);
   levels[2].click(); a.click('[data-close]');
-  assert.match(a.query('#support').textContent, /Level 3 of 5/);
+  assert.match(a.query('#support').textContent, /Level 3 of 6/);
   assert.match(a.query('.equation').textContent, /10 \+ 1 = \?/);
   assert.equal(a.w.document.querySelectorAll('.sum-build .tray').length, 2);
   assert.equal(a.w.document.querySelectorAll('.sum-build .number-group:first-child .five-frame.ten .pocket.full').length, 10, 'ten is a visible full ten-frame');

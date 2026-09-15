@@ -113,7 +113,7 @@ test('take away rounds start from a group, remove none, some or all, and keep th
 test('arithmetic levels 3 to 5 keep their rules and draw quantities as tens and ones',()=>{
   const p=learning.defaults;
   assert.deepEqual(learning.RANGES.add,[5,10,20,20,100,10]);
-  assert.equal(learning.levelRange(3,'add'),20);assert.equal(learning.levelRange(5,'add'),100);assert.equal(learning.levelRange(9,'add'),100);assert.equal(learning.levelRange(2),10);
+  assert.equal(learning.levelRange(3,'add'),20);assert.equal(learning.levelRange(5,'add'),100);assert.equal(learning.levelRange(6,'add'),10);assert.equal(learning.levelRange(9,'add'),10,'beyond the top level the last range applies');assert.equal(learning.levelRange(2),10);
   const l3a=learning.sumSequence(3,'add');assert.ok(l3a.length>20);assert.ok(l3a.every(([a,b])=>a>=10&&a<=19&&b>=1&&b<=9&&a%10+b<=10&&a+b<=20),'level 3 add never crosses ten');
   const l3t=learning.sumSequence(3,'take');assert.ok(l3t.every(([a,b])=>a>=11&&a<=19&&b>=1&&b<=a%10),'level 3 take away removes ones only');
   const l4a=learning.sumSequence(4,'add');assert.ok(l4a.every(([a,b])=>a<=9&&b<=9&&a+b>=11&&a+b<=20),'level 4 add crosses ten');
