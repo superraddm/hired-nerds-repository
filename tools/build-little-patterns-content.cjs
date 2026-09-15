@@ -42,9 +42,9 @@ const sections = [
   },
   {
     title: 'Every Garden addition',
-    note: 'Add has five levels chosen in the activity: 1 within 5 (the default), 2 within 10, 3 within 20 without crossing ten (10 + 4), 4 within 20 crossing ten (8 + 5), 5 tens to 100 (30 + 20). Level 1 is the part of level 2 with totals up to 5, so it is not listed separately. Levels 3 and 4 draw quantities as full ten-frames plus ones; level 5 draws complete tens as sticks. The picker allows every sum in the level; reversed groups are separate examples. Play order within a level is deliberately mixed so the next answer cannot be predicted from the last; this table is sorted for reading.',
+    note: 'Add has five levels chosen in the activity: 1 within 5 (the default), 2 within 10, 3 within 20 without crossing ten (10 + 4), 4 within 20 crossing ten (8 + 5), 5 tens to 100 (30 + 20), 6 the missing part (2 + ? = 5, addition only, within ten, with the joined group shown and the hidden part outlined). Level 1 is the part of level 2 with totals up to 5, so it is not listed separately. Levels 3 and 4 draw quantities as full ten-frames plus ones; level 5 draws complete tens as sticks. The picker allows every sum in the level; reversed groups are separate examples. Play order within a level is deliberately mixed so the next answer cannot be predicted from the last; this table is sorted for reading.',
     headers: ['Level', 'First group', 'Second group', 'Answer', 'Equation'],
-    rows: [2, 3, 4, 5].flatMap(level => L.sumSequence(level, 'add').slice().sort((x, y) => x[0] - y[0] || x[1] - y[1]).map(([a, b]) => [level, a, b, a + b, `${a} + ${b} = ${a + b}`]))
+    rows: [2, 3, 4, 5, 6].flatMap(level => L.sumSequence(level, 'add').slice().sort((x, y) => x[0] - y[0] || x[1] - y[1]).map(([a, b]) => [level, a, level === 6 ? `? (${b})` : b, level === 6 ? b : a + b, level === 6 ? `${a} + ? = ${a + b}` : `${a} + ${b} = ${a + b}`]))
   },
   {
     title: 'Every Garden take away',

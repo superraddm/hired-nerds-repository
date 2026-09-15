@@ -149,3 +149,7 @@ button.bead-slot{cursor:pointer;font:inherit;min-width:48px;min-height:48px;padd
 .level-picker .level-beads b{font-size:15px}
 @media(max-width:780px){.shape.oval{width:30px;height:18px}.pattern-choices .shape.oval{width:40px;height:24px}.pattern-strip.long{grid-template-columns:repeat(5,48px);gap:22px 7px}.bead-slot.number,.bead-slot.number b{font-size:20px}.mirror-line{height:60px}.bead-group{gap:4px;padding:4px}}
 @media(max-width:550px){.pattern-strip.long{grid-template-columns:repeat(5,48px)}.bead-index{font-size:10px}}
+
+/* Missing part: the second group is unknown; the joined group shows it outlined. */
+.number-group.missing-part{border-style:dashed}.number-group.missing-part .apples .none{font-size:34px;color:#6a558a}
+.equation .unknown{color:#805da7}

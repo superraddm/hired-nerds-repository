@@ -19,14 +19,14 @@
   function normalisePrefs(input){const p={...defaults};if(!input||typeof input!=='object')return p;for(const key of ['range','choices','case','countAnswer','addition','numberWords','keyboard','pace']){const allowed={range:[5,10],choices:[2,3],case:['upper','lower'],countAnswer:['choose','type'],addition:['choose','type','demo'],numberWords:['show','choose','type'],keyboard:['az','device'],pace:[0,1800,850]}[key];if(allowed.includes(input[key]))p[key]=input[key];}p.soft=input.soft===true;if(Array.isArray(input.customWords))p.customWords=[...new Set(input.customWords.map(cleanWord).filter(Boolean))].slice(0,24);return p;}
   function options(answer,pool,count,index=0){const other=[...new Set(pool)].filter(v=>v!==answer);const start=index%Math.max(1,other.length);const result=[answer,...other.slice(start).concat(other.slice(0,start)).slice(0,count-1)];const offset=index%result.length;return result.slice(offset).concat(result.slice(0,offset));}
   // Levels are chosen per activity and never advance on their own. The round index only varies examples within a level.
-  const LEVELS={count:6,add:5,numbers:4,patterns:14};
+  const LEVELS={count:6,add:6,numbers:4,patterns:14};
   const OPERATIONS=['add','take'];
   function clampLevel(kind,level){const max=LEVELS[kind]||1;return Number.isInteger(level)&&level>=1&&level<=max?level:1;}
   // Every round carries a stable puzzle id: kind, save version, level, operation and the content itself. Restoration matches on it.
   const VERSION=2;
   function identify(kind,level,operation,key){return [kind,'v'+VERSION,'L'+level,operation,key].join(':');}
   // The largest quantity a level shows. Add levels: within 5, within 10, within 20 without crossing ten, within 20 crossing ten, tens to 100.
-  const RANGES={count:[5,10,20,50,50,100],add:[5,10,20,20,100],numbers:[5,10,20,100]};
+  const RANGES={count:[5,10,20,50,50,100],add:[5,10,20,20,100,10],numbers:[5,10,20,100]};
   function levelRange(level,kind='count'){const table=RANGES[kind]||RANGES.count;return table[Math.max(1,Math.min(table.length,Number(level)||1))-1];}
   // A fixed, non-sequential order: the first item stays first, then a stride walks the list so the next answer cannot be read off the last one.
   function mixed(list){const n=list.length;if(n<3)return list.slice();const gcd=(a,b)=>b?gcd(b,a%b):a;const stride=[7,3,5,2].find(s=>gcd(s,n)===1)||1;return Array.from({length:n},(_,i)=>list[(i*stride)%n]);}
@@ -39,9 +39,12 @@
     if(level<=2){const range=levelRange(level,'add');if(take){for(let a=1;a<=range;a++)for(let b=a;b>=0;b--)sums.push([a,b]);}else{for(let total=2;total<=range;total++)for(let a=total-1;a>=1;a--)sums.push([a,total-a]);}}
     else if(level===3){if(take){for(let a=11;a<=19;a++)for(let b=1;b<=a%10;b++)sums.push([a,b]);}else{for(let a=10;a<=19;a++)for(let b=1;b<=9;b++)if(a%10+b<=10)sums.push([a,b]);}}
     else if(level===4){if(take){for(let a=11;a<=18;a++)for(let b=2;b<=9;b++)if(a-b>=2&&a-b<10)sums.push([a,b]);}else{for(let a=2;a<=9;a++)for(let b=2;b<=9;b++)if(a+b>=11)sums.push([a,b]);}}
-    else{if(take){for(let a=10;a<=100;a+=10)for(let b=10;b<=a;b+=10)sums.push([a,b]);}else{for(let a=10;a<=90;a+=10)for(let b=10;a+b<=100;b+=10)sums.push([a,b]);}}
+    else if(level===5){if(take){for(let a=10;a<=100;a+=10)for(let b=10;b<=a;b+=10)sums.push([a,b]);}else{for(let a=10;a<=90;a+=10)for(let b=10;a+b<=100;b+=10)sums.push([a,b]);}}
+    // Level 6, addition only: the missing part. 2 + ? = 5, within ten, with the joined group shown and the unknown part outlined.
+    else{for(let total=3;total<=10;total++)for(let a=1;a<total-1;a++)sums.push([a,total-a]);if(take)return sumSequence(5,'take');}
     return mixed(sums);}
-  function arithmeticPool(level,operation){level=clampLevel('add',level);const range=levelRange(level,'add');if(level>=5)return Array.from({length:11},(_,i)=>i*10).filter(n=>operation==='take'||n>=20);return Array.from({length:range+1},(_,i)=>i).filter(n=>operation==='take'||n>=1);}
+  function arithmeticPool(level,operation){level=clampLevel('add',level);const range=levelRange(level,'add');if(level===5)return Array.from({length:11},(_,i)=>i*10).filter(n=>operation==='take'||n>=20);return Array.from({length:range+1},(_,i)=>i).filter(n=>operation==='take'||n>=1);}
+  function missingPart(level,operation){return level===6&&operation==='add';}
   // Named practice sets: the sums worth repeating. Both fit level 2 (within 10) and are addition only.
   const SUM_SETS={doubles:{label:'Doubles',level:2,sums:[[1,1],[2,2],[3,3],[4,4],[5,5]]},ten:{label:'Make ten',level:2,sums:[[9,1],[8,2],[7,3],[6,4],[5,5],[4,6],[3,7],[2,8],[1,9]]}};
   function setRound(name,index,prefs){const set=SUM_SETS[name];if(!set)return null;const pair=set.sums[((index%set.sums.length)+set.sums.length)%set.sums.length];const r=sumRound(0,prefs,set.level,'add',pair);r.set=name;return r;}
@@ -53,7 +56,7 @@
   function countTokens(target){const tens=Math.floor(target/10),ones=target%10;return [...Array.from({length:tens},(_,i)=>'t'+i),...Array.from({length:ones},(_,i)=>'o'+i)];}
   function runningTotals(seen){let total=0;const totals={};for(const token of seen){total+=String(token).startsWith('t')?10:1;totals[token]=total;}return totals;}
   // pair optionally names a directly chosen sum; it must still fit the level.
-  function sumRound(index,prefs,level=1,operation='add',pair=null){level=clampLevel('add',level);if(!OPERATIONS.includes(operation))operation='add';const sums=sumSequence(level,operation);const valid=Array.isArray(pair)&&pair.length===2&&sums.some(([a,b])=>a===pair[0]&&b===pair[1]);const [a,b]=valid?pair:sums[index%sums.length];const answer=operation==='take'?a-b:a+b;return {id:identify('add',level,operation,a+(operation==='take'?'-':'+')+b),level,operation,a,b,total:answer,answer,stage:'parts',draft:'',hint:0,choices:options(answer,arithmeticPool(level,operation),3,index),done:false};}
+  function sumRound(index,prefs,level=1,operation='add',pair=null){level=clampLevel('add',level);if(!OPERATIONS.includes(operation))operation='add';if(operation==='take'&&level===6)level=5;const sums=sumSequence(level,operation);const valid=Array.isArray(pair)&&pair.length===2&&sums.some(([a,b])=>a===pair[0]&&b===pair[1]);const [a,b]=valid?pair:sums[index%sums.length];const missing=missingPart(level,operation);const total=operation==='take'?a-b:a+b;const answer=missing?b:total;return {id:identify('add',level,missing?'missing':operation,a+(operation==='take'?'-':'+')+b),level,operation,missing,a,b,total,answer,stage:'parts',draft:'',hint:0,choices:options(answer,arithmeticPool(level,operation),3,index),done:false};}
   // Pattern rules. Levels 1 to 11 repeat a unit (longer units and two gaps from level 8). Growing, mirror and number patterns are separate named rules with their own hint text, never a silent step in the ladder.
   const PATTERN_RULES={repeat:{name:'Repeating pattern',prompt:'Let’s make a pattern!',title:'One bead is missing',titleTwo:'Two beads are missing',hint:''},grow:{name:'Growing pattern',prompt:'This pattern grows!',title:'The pattern grows',titleTwo:'The pattern grows',hint:'Each group has one more bead.'},mirror:{name:'Mirror pattern',prompt:'A mirror pattern!',title:'The pattern turns around',titleTwo:'The pattern turns around',hint:'The second half is the first half backwards.'},number:{name:'Number pattern',prompt:'Numbers in a row!',title:'What number comes next?',titleTwo:'What numbers are missing?',hint:'Count on in {step}.'}};
   const PATTERN_LEVELS=LEVELS.patterns;
@@ -90,7 +93,7 @@
   function hashText(text){let h=0;for(const c of String(text))h=(h*31+c.charCodeAt(0))>>>0;return h;}
   function successLine(kind,round){const plural=n=>n+(n===1?' apple':' apples');const pick=hashText(round.id||'')%(OPENERS.length+(kind==='count'?1:0));const opener=pick<OPENERS.length?OPENERS[pick]:'Lovely counting.';const first=hashText(round.id||'x')%3!==2;let fact,speech;
     if(kind==='count'){fact=plural(round.target)+'.';speech=[...numberSpeech(round.target),round.target===1?'apple':'apples'];}
-    else if(kind==='add'){const take=round.operation==='take';fact=round.a+(take?' − ':' + ')+round.b+' = '+round.answer+'.';speech=[...numberSpeech(round.a),take?'take away':'plus',...numberSpeech(round.b),'equals',...numberSpeech(round.answer)];}
+    else if(kind==='add'){const take=round.operation==='take';fact=round.a+(take?' − ':' + ')+round.b+' = '+round.total+'.';speech=[...numberSpeech(round.a),take?'take away':'plus',...numberSpeech(round.b),'equals',...numberSpeech(round.total)];}
     else if(kind==='patterns'){fact='The pattern fits.';speech=['The pattern fits.'];}
     else if(kind==='numbers'){fact=round.word+'.';speech=[round.word];}
     else if(kind==='letter'){fact=round.word+'.';speech=PICTURES.some(p=>p.word===round.word)?[round.word]:[];}
@@ -102,6 +105,6 @@
   function spokenBank(){const texts=[...Object.keys(WORD_SYMBOLS),...NUMBER_WORDS,...Object.values(TENS_WORDS),...PICTURES.map(p=>p.word),...Object.values(FEEDBACK),...SPOKEN_EXTRAS,"Hello! I'm Nook. Let's play."];for(let i=0;i<SENTENCES.length;i++){const r=sentenceRound(i,defaults);texts.push(sentencePrompt(r));r.done=true;texts.push(sentencePrompt(r));}const key=s=>s.trim().toLowerCase().replace(/\s+/g,' ').replace(/[.!?]+$/,'');return [...new Set(texts.map(key))].sort();}
   function matches(typed,expected){return String(typed).trim().replace(/\s+/g,' ').toLocaleUpperCase('en-GB')===String(expected).toLocaleUpperCase('en-GB');}
   function editText(value,start,end,key){value=String(value);start=Math.max(0,Math.min(value.length,start));end=Math.max(start,Math.min(value.length,end));if(key==='Backspace'){if(start===end&&start>0)start-=Array.from(value.slice(0,start)).pop().length;return {value:value.slice(0,start)+value.slice(end),caret:start};}const insert=key==='Space'?' ':key;const next=value.slice(0,start)+insert+value.slice(end);if(next.length>500)return {value,caret:end};return {value:next,caret:start+insert.length};}
-  const api={NUMBER_WORDS,TENS_WORDS,numberSpeech,numberWord,arithmeticPool,usesTray,usesSticks,RANGES,SUM_SETS,setRound,countTokens,runningTotals,mixed,arrangement,numberSequence,FEEDBACK,PICTURES,SENTENCES,WORD_SYMBOLS,PATTERN_LEVELS,PATTERN_RULES,SHAPES,patternHint,LEVELS,OPERATIONS,VERSION,identify,clampLevel,levelRange,countSequence,sumSequence,sentenceWords,sentencePool,sentencePrompt,sentenceRound,letterRound,orderRound,defaults,normalisePrefs,cleanWord,options,countRound,sumRound,patternRound,wordRound,numberWordRound,OPENERS,successLine,spokenBank,matches,editText};
+  const api={NUMBER_WORDS,TENS_WORDS,numberSpeech,numberWord,arithmeticPool,missingPart,usesTray,usesSticks,RANGES,SUM_SETS,setRound,countTokens,runningTotals,mixed,arrangement,numberSequence,FEEDBACK,PICTURES,SENTENCES,WORD_SYMBOLS,PATTERN_LEVELS,PATTERN_RULES,SHAPES,patternHint,LEVELS,OPERATIONS,VERSION,identify,clampLevel,levelRange,countSequence,sumSequence,sentenceWords,sentencePool,sentencePrompt,sentenceRound,letterRound,orderRound,defaults,normalisePrefs,cleanWord,options,countRound,sumRound,patternRound,wordRound,numberWordRound,OPENERS,successLine,spokenBank,matches,editText};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.GardenLearning=api;
 })(typeof window!=='undefined'?window:globalThis);

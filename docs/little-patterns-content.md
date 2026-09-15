@@ -111,7 +111,7 @@ Count has six levels chosen in the activity: 1 to 5, 1 to 10, 11 to 20, tens to 
 
 ## Every Garden addition
 
-Add has five levels chosen in the activity: 1 within 5 (the default), 2 within 10, 3 within 20 without crossing ten (10 + 4), 4 within 20 crossing ten (8 + 5), 5 tens to 100 (30 + 20). Level 1 is the part of level 2 with totals up to 5, so it is not listed separately. Levels 3 and 4 draw quantities as full ten-frames plus ones; level 5 draws complete tens as sticks. The picker allows every sum in the level; reversed groups are separate examples. Play order within a level is deliberately mixed so the next answer cannot be predicted from the last; this table is sorted for reading.
+Add has five levels chosen in the activity: 1 within 5 (the default), 2 within 10, 3 within 20 without crossing ten (10 + 4), 4 within 20 crossing ten (8 + 5), 5 tens to 100 (30 + 20), 6 the missing part (2 + ? = 5, addition only, within ten, with the joined group shown and the hidden part outlined). Level 1 is the part of level 2 with totals up to 5, so it is not listed separately. Levels 3 and 4 draw quantities as full ten-frames plus ones; level 5 draws complete tens as sticks. The picker allows every sum in the level; reversed groups are separate examples. Play order within a level is deliberately mixed so the next answer cannot be predicted from the last; this table is sorted for reading.
 
 | Level | First group | Second group | Answer | Equation |
 | --- | --- | --- | --- | --- |
@@ -295,6 +295,42 @@ Add has five levels chosen in the activity: 1 within 5 (the default), 2 within 1
 | 5 | 80 | 10 | 90 | 80 + 10 = 90 |
 | 5 | 80 | 20 | 100 | 80 + 20 = 100 |
 | 5 | 90 | 10 | 100 | 90 + 10 = 100 |
+| 6 | 1 | ? (2) | 2 | 1 + ? = 3 |
+| 6 | 1 | ? (3) | 3 | 1 + ? = 4 |
+| 6 | 1 | ? (4) | 4 | 1 + ? = 5 |
+| 6 | 1 | ? (5) | 5 | 1 + ? = 6 |
+| 6 | 1 | ? (6) | 6 | 1 + ? = 7 |
+| 6 | 1 | ? (7) | 7 | 1 + ? = 8 |
+| 6 | 1 | ? (8) | 8 | 1 + ? = 9 |
+| 6 | 1 | ? (9) | 9 | 1 + ? = 10 |
+| 6 | 2 | ? (2) | 2 | 2 + ? = 4 |
+| 6 | 2 | ? (3) | 3 | 2 + ? = 5 |
+| 6 | 2 | ? (4) | 4 | 2 + ? = 6 |
+| 6 | 2 | ? (5) | 5 | 2 + ? = 7 |
+| 6 | 2 | ? (6) | 6 | 2 + ? = 8 |
+| 6 | 2 | ? (7) | 7 | 2 + ? = 9 |
+| 6 | 2 | ? (8) | 8 | 2 + ? = 10 |
+| 6 | 3 | ? (2) | 2 | 3 + ? = 5 |
+| 6 | 3 | ? (3) | 3 | 3 + ? = 6 |
+| 6 | 3 | ? (4) | 4 | 3 + ? = 7 |
+| 6 | 3 | ? (5) | 5 | 3 + ? = 8 |
+| 6 | 3 | ? (6) | 6 | 3 + ? = 9 |
+| 6 | 3 | ? (7) | 7 | 3 + ? = 10 |
+| 6 | 4 | ? (2) | 2 | 4 + ? = 6 |
+| 6 | 4 | ? (3) | 3 | 4 + ? = 7 |
+| 6 | 4 | ? (4) | 4 | 4 + ? = 8 |
+| 6 | 4 | ? (5) | 5 | 4 + ? = 9 |
+| 6 | 4 | ? (6) | 6 | 4 + ? = 10 |
+| 6 | 5 | ? (2) | 2 | 5 + ? = 7 |
+| 6 | 5 | ? (3) | 3 | 5 + ? = 8 |
+| 6 | 5 | ? (4) | 4 | 5 + ? = 9 |
+| 6 | 5 | ? (5) | 5 | 5 + ? = 10 |
+| 6 | 6 | ? (2) | 2 | 6 + ? = 8 |
+| 6 | 6 | ? (3) | 3 | 6 + ? = 9 |
+| 6 | 6 | ? (4) | 4 | 6 + ? = 10 |
+| 6 | 7 | ? (2) | 2 | 7 + ? = 9 |
+| 6 | 7 | ? (3) | 3 | 7 + ? = 10 |
+| 6 | 8 | ? (2) | 2 | 8 + ? = 10 |
 
 ## Every Garden take away
 

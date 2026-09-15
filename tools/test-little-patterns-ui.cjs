@@ -340,7 +340,7 @@ test('levels are separate per activity, the Next level action is explicit, and a
   assert.match(a.query('#next-level').textContent, /Next level/);
   assert.equal(position.operation, 'add');
   a.click('[data-mode="add"]');
-  assert.match(a.query('#support').textContent, /Level 1 of 5/);
+  assert.match(a.query('#support').textContent, /Level 1 of 6/);
   a.click('[data-mode="words"]');
   assert.equal(a.query('#word-input').value, 'A', 'changing the Count level never touches a Words draft');
   a.w.LP.savePrefs({ ...a.w.LP.prefs, choices: 3 });
@@ -676,7 +676,7 @@ test('Add levels 3 to 5 draw tens-and-ones trays: full ten-frames first, sticks 
   const a = app(t);
   a.click('[data-mode="add"]'); a.click('#support');
   const levels = a.w.document.querySelectorAll('.level-picker button');
-  assert.equal(levels.length, 5);
+  assert.equal(levels.length, 6);
   assert.match(levels[2].textContent, /no crossing ten/);
   levels[2].click(); a.click('[data-close]');
   assert.match(a.query('#support').textContent, /Level 3 of 5/);
@@ -692,7 +692,7 @@ test('Add levels 3 to 5 draw tens-and-ones trays: full ten-frames first, sticks 
   a.click('[data-choice="11"]');
   assert.match(a.query('#speech').textContent, /10 \+ 1 = 11\./);
   a.click('#next-level'); a.click('#next-level');
-  assert.match(a.query('#support').textContent, /Level 5 of 5/);
+  assert.match(a.query('#support').textContent, /Level 5 of 6/);
   assert.match(a.query('.equation').textContent, /10 \+ 10 = \?/);
   assert.equal(a.w.document.querySelectorAll('.sum-build .stick').length, 2);
   assert.equal(a.w.document.querySelectorAll('.sum-result .stick').length, 2);
@@ -747,7 +747,7 @@ test('the Add picker offers Doubles and Make ten; Next cycles inside the set and
   a.click('#support');
   a.w.document.querySelectorAll('.level-picker button')[0].click(); a.click('[data-close]');
   assert.equal(a.store('garden-position').selection.addSet, undefined, 'choosing a level leaves the set');
-  assert.match(a.query('#support').textContent, /Level 1 of 5 · Add/);
+  assert.match(a.query('#support').textContent, /Level 1 of 6 · Add/);
   const b = app(t, 'garden.html', { 'lp-player-player-1-garden-position': { mode: 'add', operation: 'take', selection: { addSet: { set: 'ten', index: 3 } } } });
   assert.match(b.query('.equation').textContent, /6 \+ 4 = \?/, 'a saved set restores at its place');
 });
@@ -953,4 +953,33 @@ test('growing, mirror and number patterns are named rules with their own hints, 
   a.click(`[data-choice="${number.answer}"]`);
   assert.match(a.query('#speech').textContent, /The pattern fits\./);
   assert.equal(a.query('#next-level').hidden, true, 'level 14 is the top');
+});
+
+test('the missing part level shows the joined group with the hidden part outlined and asks how many joined', t => {
+  const a = app(t);
+  a.click('[data-mode="add"]'); a.click('#support');
+  const levels = a.w.document.querySelectorAll('.level-picker button');
+  assert.equal(levels.length, 6);
+  assert.match(levels[5].textContent, /missing part/);
+  levels[5].click(); a.click('[data-close]');
+  const r = a.store('garden-rounds').add;
+  assert.equal(r.missing, true);
+  assert.match(a.query('#support').textContent, /Level 6 of 6 · Add/);
+  assert.equal(a.query('#activity-title').textContent, `Two groups make ${r.total}. How many joined?`);
+  assert.equal(a.query('.number-group.missing-part strong').textContent, '?');
+  assert.match(a.query('.equation').textContent, new RegExp(`${r.a} \\+ \\? = ${r.total}`));
+  assert.equal(a.w.document.querySelectorAll('.sum-result .new-fruit .apple').length, r.b, 'the joined apples are outlined');
+  assert.equal(a.w.document.querySelectorAll('.sum-result .apple').length, r.total);
+  a.click('#help');
+  assert.equal(a.w.document.querySelectorAll('.sum-result .count-tag').length, r.b, 'the first clue numbers only the outlined apples');
+  a.click('#help');
+  assert.ok(a.query(`[data-choice="${r.b}"].hint`));
+  a.click(`[data-choice="${r.b}"]`);
+  assert.match(a.query('.equation').textContent, new RegExp(`${r.a} \\+ ${r.b} = ${r.total}`), 'the completed equation stays');
+  assert.match(a.query('#speech').textContent, new RegExp(`${r.a} \\+ ${r.b} = ${r.total}\\.`));
+  assert.equal(a.query('#next-level').hidden, true);
+  a.click('[data-operation="take"]');
+  assert.match(a.query('#support').textContent, /Level 5 of 5 · Take away/, 'take away has no missing-part level');
+  a.click('#support');
+  assert.equal(a.w.document.querySelectorAll('.level-picker button').length, 5);
 });
