@@ -74,7 +74,8 @@ test('missing-word input is typed, checked and retained separately for each play
   for (const key of ['P', 'P', 'L', 'E']) a.click(`[data-key="${key}"]`);
   a.click('#check-word');
   assert.equal(a.query('#next').hidden, false);
-  assert.match(a.query('#status').textContent, /complete/);
+  assert.match(a.query('#status').textContent, /NOOK EATS AN APPLE/);
+  assert.equal(a.query('#speech').textContent, 'NOOK EATS AN APPLE.');
 });
 
 test('word pictures toggle both ways while the sentence picture and writing stay visible', t => {
@@ -419,4 +420,61 @@ test('saved rounds restore by puzzle id: a matching id keeps its state, a mismat
   assert.equal(a.store('garden-rounds').add.id, 'add:v2:L2:add:1+1');
   a.click('[data-mode="words"]');
   assert.equal(a.query('#word-input').value, 'APP', 'other activities are untouched');
+});
+
+test('every correct answer goes through one path: bubble and announcement come from round state, audio only when sound is already on', async t => {
+  const a = app(t);
+  a.click('[data-choice="1"]');
+  assert.equal(a.query('#speech').textContent, '1 apple altogether.');
+  assert.equal(a.query('#status').textContent, '1 apple altogether.');
+  assert.ok(a.query('#speech').classList.contains('success'));
+  assert.equal(a.plays.length, 0); assert.equal(a.spoken.length, 0);
+  a.click('#next');
+  assert.equal(a.query('#speech').textContent, 'Apples for our picnic!', 'a fresh round shows the prompt again');
+  assert.ok(!a.query('#speech').classList.contains('success'));
+  a.click('[data-sound]');
+  a.click('[data-choice="2"]');
+  await new Promise(resolve => setTimeout(resolve, 0));
+  assert.equal(a.spoken.length, 0, 'automatic feedback never falls back to a device voice');
+  a.click('[data-mode="add"]');
+  const wrong = Array.from(a.w.document.querySelectorAll('[data-choice]')).find(b => b.dataset.choice !== '2');
+  wrong.click();
+  assert.equal(a.query('#speech').textContent, 'Whoops! Try again.');
+  assert.equal(a.store('garden-rounds').add.feedback, 'retry');
+  a.click('[data-choice="2"]');
+  assert.equal(a.query('#speech').textContent, '1 + 1 = 2.');
+  assert.equal(a.store('garden-rounds').add.feedback, '');
+  a.click('[data-mode="words"]'); a.click('[data-word-tab="order"]');
+  const words = a.store('garden-rounds').order.words;
+  for (const word of words) Array.from(a.w.document.querySelectorAll('[data-tile]')).find(b => b.textContent === word && !b.disabled).click();
+  assert.equal(a.query('#speech').textContent, words.join(' ') + '.');
+  assert.equal(a.query('#next').hidden, false);
+});
+
+test('a restored finished round shows its success line without replaying anything', t => {
+  const a = app(t, 'garden.html', {
+    'lp-player-player-1-garden-position': { mode: 'count', indices: { count: 2 }, levels: { count: 1 } },
+    'lp-player-player-1-garden-rounds': { count: { id: 'count:v2:L1:count:3', target: 3, seen: [], done: true, feedback: 'retry' } }
+  });
+  assert.equal(a.query('#speech').textContent, '3 apples altogether.');
+  assert.equal(a.query('#next').hidden, false);
+  assert.equal(a.plays.length, 0);
+});
+
+test('automatic speech plays only bundled clips while sound is on, and chained clips play in order from one player', async t => {
+  const a = app(t);
+  await a.w.LP.audio.speak('apple', { auto: true });
+  assert.equal(a.plays.length, 0, 'sound off stays silent');
+  assert.equal(a.w.LP.audio.muted, true, 'automatic speech never unmutes');
+  a.click('[data-sound]');
+  await a.w.LP.audio.speak('Purple dinosaur', { auto: true });
+  assert.equal(a.spoken.length, 0, 'no device voice for automatic lines');
+  await a.w.LP.audio.speak(['APPLE', 'sun.'], { auto: true });
+  assert.equal(a.plays.length, 1);
+  assert.equal(a.plays[0], a.w.LPVoiceLibrary.clips.apple.file);
+  a.players[0].onended();
+  assert.equal(a.plays[1], a.w.LPVoiceLibrary.clips.sun.file);
+  assert.equal(a.players.length, 1);
+  await a.w.LP.audio.speak(['apple', 'not in the library']);
+  assert.equal(a.spoken.at(-1), 'apple not in the library', 'a tapped request still falls back to the local voice as one phrase');
 });

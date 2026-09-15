@@ -38,8 +38,17 @@
   function sentenceRound(index,prefs){const e=SENTENCES[index%SENTENCES.length];const words=sentenceWords(e.text);return {id:identify('sentence',1,'gap',e.text),text:e.text,words,gap:e.gap,gapAt:words.indexOf(e.gap),picture:e.picture,choices:options(e.gap,sentencePool(e),3,index),draft:'',hint:false,done:false};}
   function letterRound(index,prefs){const entries=PICTURES.concat(prefs.customWords.map(word=>({word,picture:(PICTURES.find(p=>p.word===word)||{}).picture||null})));const e=entries[index%entries.length];const positions=Array.from(e.word).map((c,i)=>/[A-Z]/.test(c)?i:-1).filter(i=>i>=0);const position=positions[(index+Math.floor(index/entries.length))%positions.length];const letter=e.word[position];const pool=[...new Set(Array.from(e.word.replace(/[^A-Z]/g,'')).concat(Array.from('AEIOUBTSLMNRDP')))];return {id:identify('letter',1,'letter',e.word+'#'+position),word:e.word,picture:e.picture,position,letter,choices:options(letter,pool,prefs.choices,index),done:false};}
   function orderRound(index,prefs){const e=SENTENCES[index%SENTENCES.length];const words=sentenceWords(e.text);const shift=1+index%(words.length-1);let tiles=words.slice(shift).concat(words.slice(0,shift));if(index%2)tiles=tiles.reverse();if(tiles.join(' ')===words.join(' '))tiles=words.slice().reverse();return {id:identify('order',1,'order',e.text+'#'+tiles.join(',')),text:e.text,words,tiles,picture:e.picture,used:[],done:false};}
+  // Success feedback is derived from the finished round, never stored: the same puzzle always gets the same line.
+  function successLine(kind,round){const plural=n=>n+(n===1?' apple':' apples');let text;
+    if(kind==='count')text=plural(round.target)+' altogether.';
+    else if(kind==='add')text=round.a+' + '+round.b+' = '+round.answer+'.';
+    else if(kind==='patterns')text='The pattern fits.';
+    else if(kind==='numbers')text=round.word+'. '+plural(round.target)+'.';
+    else if(kind==='letter')text=round.word+'.';
+    else text=round.words.join(' ')+'.';
+    return {text,speech:[]};}
   function matches(typed,expected){return String(typed).trim().replace(/\s+/g,' ').toLocaleUpperCase('en-GB')===String(expected).toLocaleUpperCase('en-GB');}
   function editText(value,start,end,key){value=String(value);start=Math.max(0,Math.min(value.length,start));end=Math.max(start,Math.min(value.length,end));if(key==='Backspace'){if(start===end&&start>0)start-=Array.from(value.slice(0,start)).pop().length;return {value:value.slice(0,start)+value.slice(end),caret:start};}const insert=key==='Space'?' ':key;const next=value.slice(0,start)+insert+value.slice(end);if(next.length>500)return {value,caret:end};return {value:next,caret:start+insert.length};}
-  const api={NUMBER_WORDS,FEEDBACK,PICTURES,SENTENCES,WORD_SYMBOLS,PATTERN_LEVELS,LEVELS,OPERATIONS,VERSION,identify,clampLevel,levelRange,countSequence,sumSequence,sentenceWords,sentencePool,sentencePrompt,sentenceRound,letterRound,orderRound,defaults,normalisePrefs,cleanWord,options,countRound,sumRound,patternRound,wordRound,numberWordRound,matches,editText};
+  const api={NUMBER_WORDS,FEEDBACK,PICTURES,SENTENCES,WORD_SYMBOLS,PATTERN_LEVELS,LEVELS,OPERATIONS,VERSION,identify,clampLevel,levelRange,countSequence,sumSequence,sentenceWords,sentencePool,sentencePrompt,sentenceRound,letterRound,orderRound,defaults,normalisePrefs,cleanWord,options,countRound,sumRound,patternRound,wordRound,numberWordRound,successLine,matches,editText};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.GardenLearning=api;
 })(typeof window!=='undefined'?window:globalThis);

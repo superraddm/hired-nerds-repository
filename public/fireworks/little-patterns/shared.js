@@ -82,23 +82,34 @@
       timer=setTimeout(finish,1000);
     });
   }
-  async function speak(text){
+  const clipKey=text=>String(text).trim().toLowerCase().replace(/\s+/g,' ').replace(/[.!?]+$/,'');
+  // Bundled clips play one after another from a single reusable player, so a line such as "Yes! Two plus one equals three" needs no clip of its own.
+  function playClips(clips,request){
+    if(!clipPlayer){clipPlayer=new Audio();clipPlayer.preload='none';}
+    clipPlayer.volume=.65;
+    const failed=()=>{if(request===speechRequest&&!muted)status('That voice clip could not play. Tap the word to try again.');};
+    let next=0;
+    const play=()=>{if(request!==speechRequest||muted||document.hidden||next>=clips.length)return;clipPlayer.src=clips[next++].file;clipPlayer.onended=play;clipPlayer.onerror=failed;try{const playing=clipPlayer.play();if(playing?.catch)playing.catch(failed);}catch(_){failed();}};
+    play();
+  }
+  // options.auto marks feedback the game starts by itself: it plays only bundled clips, only while sound is already on, and never unmutes.
+  async function speak(text,options={}){
     stopSpeech();const request=speechRequest;
-    const key=String(text).trim().toLowerCase().replace(/\s+/g,' ').replace(/[.!?]+$/,'');
+    const auto=options.auto===true;
+    if(auto&&muted)return;
+    const parts=(Array.isArray(text)?text:[text]).map(clipKey).filter(Boolean);
     const library=window.LPVoiceLibrary?.clips;
-    const clip=library&&Object.prototype.hasOwnProperty.call(library,key)?library[key]:null;
-    if(clip){
+    const clips=parts.map(key=>library&&Object.prototype.hasOwnProperty.call(library,key)?library[key]:null);
+    if(clips.length&&clips.every(Boolean)){
       // Start from the tap itself for iPad audio permissions; no fetch/decoding queue.
       // One reusable player, no preload, no text or player data in requests.
       if(document.hidden)return;
       setMuted(false);
-      if(!clipPlayer){clipPlayer=new Audio();clipPlayer.preload='none';}
-      clipPlayer.volume=.65;clipPlayer.src=clip.file;
-      const failed=()=>{if(request===speechRequest&&!muted)status('That voice clip could not play. Tap the word to try again.');};
-      clipPlayer.onerror=failed;
-      try{const playing=clipPlayer.play();if(playing?.catch)playing.catch(failed);}catch(_){failed();}
+      playClips(clips,request);
       return;
     }
+    if(auto)return;
+    text=Array.isArray(text)?text.join(' '):text;
     // Private familiar words outside the fixed library stay on the device.
     if(!('speechSynthesis' in window)){status('Voice is unavailable on this device. You can keep playing.');return;}
     await setMuted(false);
