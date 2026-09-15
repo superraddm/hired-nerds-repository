@@ -708,3 +708,34 @@ test('Add levels 3 to 5 draw tens-and-ones trays: full ten-frames first, sticks 
   assert.match(a.query('#speech').textContent, /100 − 10 = 90\./);
   assert.match(a.query('.equation').textContent, /100 − 10 = 90/, 'the completed equation stays on screen');
 });
+
+test('the Add picker offers Doubles and Make ten; Next cycles inside the set and a level choice leaves it', t => {
+  const a = app(t);
+  a.click('[data-mode="add"]'); a.click('[data-operation="take"]'); a.click('#support');
+  const sets = a.w.document.querySelectorAll('.set-picker button');
+  assert.equal(sets.length, 2);
+  assert.match(sets[0].textContent, /Doubles/); assert.match(sets[1].textContent, /Make ten/);
+  sets[0].click();
+  assert.equal(a.query('.lp-modal'), null);
+  assert.equal(a.store('garden-position').operation, 'add', 'sets are addition');
+  assert.match(a.query('.equation').textContent, /1 \+ 1 = \?/);
+  assert.match(a.query('#support').textContent, /Doubles · 1 of 5/);
+  assert.equal(a.query('#next-level').hidden, true);
+  a.click('[data-choice="2"]'); a.click('#next');
+  assert.match(a.query('.equation').textContent, /2 \+ 2 = \?/);
+  assert.match(a.query('#support').textContent, /Doubles · 2 of 5/);
+  for (let i = 0; i < 3; i++) { a.click('#next'); }
+  assert.match(a.query('.equation').textContent, /5 \+ 5 = \?/, 'the set includes 5 + 5 even though the level is 1');
+  a.click('#next');
+  assert.match(a.query('.equation').textContent, /1 \+ 1 = \?/, 'the set wraps');
+  assert.deepEqual(a.store('garden-position').selection.addSet, { set: 'doubles', index: 0 });
+  a.click('#support');
+  a.w.document.querySelectorAll('.set-picker button')[1].click();
+  assert.match(a.query('.equation').textContent, /9 \+ 1 = \?/);
+  a.click('#support');
+  a.w.document.querySelectorAll('.level-picker button')[0].click(); a.click('[data-close]');
+  assert.equal(a.store('garden-position').selection.addSet, undefined, 'choosing a level leaves the set');
+  assert.match(a.query('#support').textContent, /Level 1 of 5 · Add/);
+  const b = app(t, 'garden.html', { 'lp-player-player-1-garden-position': { mode: 'add', operation: 'take', selection: { addSet: { set: 'ten', index: 3 } } } });
+  assert.match(b.query('.equation').textContent, /6 \+ 4 = \?/, 'a saved set restores at its place');
+});

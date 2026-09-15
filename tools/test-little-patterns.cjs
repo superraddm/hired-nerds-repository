@@ -125,3 +125,12 @@ test('arithmetic levels 3 to 5 keep their rules and draw quantities as tens and 
   assert.equal(learning.usesSticks('add',4),false,'a complete ten stays a visible ten-frame at levels 3 and 4');assert.equal(learning.usesSticks('add',5),true);
   assert.deepEqual(learning.arithmeticPool(5,'take'),[0,10,20,30,40,50,60,70,80,90,100]);
 });
+
+test('Doubles and Make ten are fixed addition sets that fit within ten and cycle in order',()=>{
+  const p=learning.defaults;
+  assert.deepEqual(learning.SUM_SETS.doubles.sums,[[1,1],[2,2],[3,3],[4,4],[5,5]]);
+  assert.deepEqual(learning.SUM_SETS.ten.sums.map(([a,b])=>a+b),Array(9).fill(10));
+  assert.deepEqual(learning.SUM_SETS.ten.sums[0],[9,1]);assert.deepEqual(learning.SUM_SETS.ten.sums[8],[1,9]);
+  for(const name of Object.keys(learning.SUM_SETS)){const set=learning.SUM_SETS[name];for(let i=0;i<set.sums.length+2;i++){const r=learning.setRound(name,i,p);assert.equal(r.set,name);assert.equal(r.operation,'add');assert.deepEqual([r.a,r.b],set.sums[i%set.sums.length]);assert.equal(r.answer,r.a+r.b);assert.ok(r.choices.includes(r.answer));assert.equal(new Set(r.choices).size,3);assert.equal(r.level,2);assert.match(r.id,/^add:v2:L2:add:/);}}
+  assert.equal(learning.setRound('nothing',0,p),null);
+});

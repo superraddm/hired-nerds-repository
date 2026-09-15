@@ -37,6 +37,9 @@
     else{if(take){for(let a=10;a<=100;a+=10)for(let b=10;b<=a;b+=10)sums.push([a,b]);}else{for(let a=10;a<=90;a+=10)for(let b=10;a+b<=100;b+=10)sums.push([a,b]);}}
     return sums;}
   function arithmeticPool(level,operation){level=clampLevel('add',level);const range=levelRange(level,'add');if(level>=5)return Array.from({length:11},(_,i)=>i*10).filter(n=>operation==='take'||n>=20);return Array.from({length:range+1},(_,i)=>i).filter(n=>operation==='take'||n>=1);}
+  // Named practice sets: the sums worth repeating. Both fit level 2 (within 10) and are addition only.
+  const SUM_SETS={doubles:{label:'Doubles',level:2,sums:[[1,1],[2,2],[3,3],[4,4],[5,5]]},ten:{label:'Make ten',level:2,sums:[[9,1],[8,2],[7,3],[6,4],[5,5],[4,6],[3,7],[2,8],[1,9]]}};
+  function setRound(name,index,prefs){const set=SUM_SETS[name];if(!set)return null;const pair=set.sums[((index%set.sums.length)+set.sums.length)%set.sums.length];const r=sumRound(0,prefs,set.level,'add',pair);r.set=name;return r;}
   // Levels 3 and up draw every quantity as tens and ones; a complete ten stays a visible ten-frame until level 5, where it becomes a stick.
   function usesTray(kind,level){return level>=3;}
   function usesSticks(kind,level){return kind==='add'?level>=5:level>=4;}
@@ -72,6 +75,6 @@
   function spokenBank(){const texts=[...Object.keys(WORD_SYMBOLS),...NUMBER_WORDS,...Object.values(TENS_WORDS),...PICTURES.map(p=>p.word),...Object.values(FEEDBACK),...SPOKEN_EXTRAS,"Hello! I'm Nook. Let's play."];for(let i=0;i<SENTENCES.length;i++){const r=sentenceRound(i,defaults);texts.push(sentencePrompt(r));r.done=true;texts.push(sentencePrompt(r));}const key=s=>s.trim().toLowerCase().replace(/\s+/g,' ').replace(/[.!?]+$/,'');return [...new Set(texts.map(key))].sort();}
   function matches(typed,expected){return String(typed).trim().replace(/\s+/g,' ').toLocaleUpperCase('en-GB')===String(expected).toLocaleUpperCase('en-GB');}
   function editText(value,start,end,key){value=String(value);start=Math.max(0,Math.min(value.length,start));end=Math.max(start,Math.min(value.length,end));if(key==='Backspace'){if(start===end&&start>0)start-=Array.from(value.slice(0,start)).pop().length;return {value:value.slice(0,start)+value.slice(end),caret:start};}const insert=key==='Space'?' ':key;const next=value.slice(0,start)+insert+value.slice(end);if(next.length>500)return {value,caret:end};return {value:next,caret:start+insert.length};}
-  const api={NUMBER_WORDS,TENS_WORDS,numberSpeech,numberWord,arithmeticPool,usesTray,usesSticks,RANGES,FEEDBACK,PICTURES,SENTENCES,WORD_SYMBOLS,PATTERN_LEVELS,LEVELS,OPERATIONS,VERSION,identify,clampLevel,levelRange,countSequence,sumSequence,sentenceWords,sentencePool,sentencePrompt,sentenceRound,letterRound,orderRound,defaults,normalisePrefs,cleanWord,options,countRound,sumRound,patternRound,wordRound,numberWordRound,OPENERS,successLine,spokenBank,matches,editText};
+  const api={NUMBER_WORDS,TENS_WORDS,numberSpeech,numberWord,arithmeticPool,usesTray,usesSticks,RANGES,SUM_SETS,setRound,FEEDBACK,PICTURES,SENTENCES,WORD_SYMBOLS,PATTERN_LEVELS,LEVELS,OPERATIONS,VERSION,identify,clampLevel,levelRange,countSequence,sumSequence,sentenceWords,sentencePool,sentencePrompt,sentenceRound,letterRound,orderRound,defaults,normalisePrefs,cleanWord,options,countRound,sumRound,patternRound,wordRound,numberWordRound,OPENERS,successLine,spokenBank,matches,editText};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.GardenLearning=api;
 })(typeof window!=='undefined'?window:globalThis);

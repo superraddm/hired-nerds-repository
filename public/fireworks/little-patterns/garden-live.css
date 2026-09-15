@@ -106,3 +106,6 @@ button.word-tile.bank{position:relative;width:100%;min-width:0;min-height:76px;p
 .number-group .tray{margin:0 auto 6px}
 @media(max-width:780px){.tray .five-frame{grid-template-columns:repeat(5,40px);gap:4px;padding:6px}.tray .pocket{height:44px;min-height:44px}.stick{width:32px;height:150px}}
 @media(max-width:550px){.tray{gap:8px}.tray .five-frame{grid-template-columns:repeat(5,minmax(0,1fr));width:100%;max-width:250px}.sum-build.trays{flex-direction:column;align-items:center}.sum-build.trays .number-group{width:100%;max-width:300px}}
+
+/* Named practice sets in the Add picker. */
+.set-picker{display:flex;flex-direction:column;gap:8px;margin:8px 0 12px}.set-picker button{min-height:48px;text-align:left;font-size:15px;padding:10px 14px}.set-picker button[aria-pressed=true]{background:#fff0ad;border-color:#d3b863;color:#66542a;outline:3px solid #66542a;outline-offset:2px}
