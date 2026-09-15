@@ -16,7 +16,7 @@ button.support{cursor:pointer;min-height:48px;padding:0 14px;font:inherit;font-s
 .word-submit{display:block;width:100%;min-height:56px;margin:12px 0 16px;padding:12px 20px;border:2px solid #285347;border-radius:16px;background:#376e5a;color:#fff;font:900 22px/1.3 "Trebuchet MS",Arial,sans-serif;box-shadow:0 4px 0 #285347}
 .word-submit:active{transform:translateY(2px);box-shadow:0 2px 0 #285347}
 .answer-feedback{min-height:1.5em;margin:8px 0;color:#66502d;font-size:17px;font-weight:900;line-height:1.5}
-.word-board[aria-invalid=true]{border-color:#b28e51}
+.word-board[aria-invalid=true],.word-line[aria-invalid=true]{border-color:#b28e51;background:#fff6e8}
 .word-bank{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 button.word-tile.bank{position:relative;width:100%;min-width:0;min-height:76px;padding:10px 6px;gap:6px;font-size:clamp(15px,3.5vw,23px);line-height:1.2}
 .word-emoji{font-size:34px;line-height:1.3}
@@ -54,3 +54,13 @@ button.word-tile.bank{position:relative;width:100%;min-width:0;min-height:76px;p
 
 /* Clue scaffold: numbered apples inside the joined group. */
 .apples .tagged{position:relative;display:inline-flex;flex-shrink:0}.apples .tagged .count-tag{bottom:-6px;right:-8px}
+
+/* Compact Words input: one row, stable width, Enter and the keyboard toggle beside it. */
+.typing-row{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;margin:0 0 4px}
+.word-line{width:13ch;max-width:100%;min-height:56px;padding:8px 14px;border:3px solid #b29acb;border-bottom-width:5px;border-radius:16px;background:#fffef7;color:#293d60;font:900 26px/1.2 "Trebuchet MS",Arial,sans-serif;text-align:left;letter-spacing:1px}
+.word-line[readonly]{caret-color:transparent}
+.typing-row .word-submit{display:inline-flex;align-items:center;justify-content:center;width:auto;min-width:120px;margin:0;font-size:20px}
+.typing-row .keyboard-toggle{margin:0}
+.word-label{margin-top:10px}
+.answer-feedback{margin:6px 0}
+@media(max-width:550px){.word-line{font-size:22px;min-height:52px;width:12ch}.typing-row .word-submit{min-width:100px;font-size:18px;min-height:52px}}

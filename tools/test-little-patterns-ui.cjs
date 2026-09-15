@@ -129,7 +129,8 @@ test('wrong writing gives gentle feedback beside Enter, preserves the answer and
   for (const key of ['C','A','T']) a.click(`[data-key="${key}"]`);
   a.click('#check-word');
   assert.equal(a.query('#answer-feedback').textContent, 'Whoops! Try again.');
-  assert.equal(a.query('#check-word').nextElementSibling, a.query('#answer-feedback'));
+  assert.equal(a.query('#check-word').parentElement, a.query('#word-input').parentElement, 'Enter sits beside the answer box');
+  assert.equal(a.query('.typing-row').nextElementSibling, a.query('#answer-feedback'), 'feedback follows the input row');
   assert.equal(a.query('#speech').textContent, 'Whoops! Try again.');
   assert.equal(a.query('#word-input').value, 'CAT');
   assert.equal(a.query('#word-input').getAttribute('aria-invalid'), 'true');
@@ -560,4 +561,27 @@ test('Give me a clue scaffolds first and outlines the answer second, silently, i
   a.click('#help');
   assert.ok(a.query('[data-choice="ONE"].hint'));
   assert.equal(a.plays.length, 0); assert.equal(a.spoken.length, 0);
+});
+
+test('the Words answer box is a single line at a stable width with Enter and the keyboard toggle on its row', t => {
+  const a = app(t);
+  a.click('[data-mode="words"]');
+  const input = a.query('#word-input');
+  assert.equal(input.tagName, 'INPUT');
+  assert.equal(input.getAttribute('type'), 'text');
+  assert.equal(input.getAttribute('maxlength'), '40');
+  assert.equal(input.hasAttribute('readonly'), true, 'A to Z keys feed the box without the device keyboard');
+  assert.deepEqual(Array.from(a.query('.typing-row').children).map(el => el.id), ['word-input', 'check-word', 'keyboard-toggle']);
+  assert.equal(a.query('.typing-actions'), null);
+  for (const key of ['A', 'P', 'P', 'L', 'E']) a.click(`[data-key="${key}"]`);
+  assert.equal(input.value, 'APPLE');
+  a.click('#keyboard-toggle');
+  assert.equal(a.query('#word-input').hasAttribute('readonly'), false);
+  assert.equal(a.query('.keyboard'), null);
+  assert.equal(a.query('#word-input').value, 'APPLE', 'switching keyboards keeps the draft');
+  a.click('#check-word');
+  assert.equal(a.query('#next').hidden, false);
+  a.w.LP.savePrefs({ ...a.w.LP.prefs, numberWords: 'type' });
+  a.click('[data-word-tab="numbers"]');
+  assert.equal(a.query('#word-input').tagName, 'INPUT');
 });
