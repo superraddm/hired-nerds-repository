@@ -51,3 +51,6 @@ button.word-tile.bank{position:relative;width:100%;min-width:0;min-height:76px;p
 
 /* The status line is the live region and the instruction carrier; feedback lives in Nook's bubble. */
 .garden-status{font-size:13px;font-weight:normal;color:#5b6a52}
+
+/* Clue scaffold: numbered apples inside the joined group. */
+.apples .tagged{position:relative;display:inline-flex;flex-shrink:0}.apples .tagged .count-tag{bottom:-6px;right:-8px}
