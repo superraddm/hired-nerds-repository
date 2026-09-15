@@ -30,13 +30,21 @@ DRY      dry.svg
 WET      wet.svg
 ASLEEP   sleep_on_side_,_to.svg
 SOFT     soft.svg
+BASKET   basket.svg  (marks the taken-away area in Take away; not a word puzzle)
 
 --- Original LICENSE.txt from the Mulberry release ---
-The Mulberry Symbol set
-=======================
-
-Copyright 2018-2026 Steve Lee
-
-This work is licensed under the Creative Commons Attribution-Share Alike License. 
-
+The Mulberry Symbol set
+
+=======================
+
+
+
+Copyright 2018-2026 Steve Lee
+
+
+
+This work is licensed under the Creative Commons Attribution-Share Alike License. 
+
+
+
 To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/4.0/

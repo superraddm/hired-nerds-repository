@@ -75,3 +75,14 @@ button.word-tile.bank{position:relative;width:100%;min-width:0;min-height:76px;p
   .garden .scene .companion .speech.success:after{border-color:#77ad91}
   .garden .scene.word-scene .companion{align-self:start;margin-top:12px}
 }
+
+/* Take away: what is left stays a countable group; what went sits in a clearly separate basket area. */
+.operation-tabs{margin:0 0 10px}.operation-tabs button[aria-pressed=true]{background:#e0d4f0;border-color:#b09acb;color:#594777}
+.take-result{display:flex;justify-content:center;align-items:stretch;gap:16px;flex-wrap:wrap;margin:8px 0}
+.take-result .number-group.left{background:#fff0b3;border-color:#d5bd69;min-width:150px}
+.take-result .number-group.taken{background:#f7e9dc;border:2px dashed #c99b6f;color:#6d5232;min-width:120px;opacity:.92}
+.take-result .number-group.taken .group-label{color:#7a5a3a}
+.take-result .number-group.taken img.symbol{display:block;width:40px;height:40px;margin:0 auto 2px}
+.apples .none{font-size:14px;font-weight:900;color:#7b8a6a;letter-spacing:1px}
+.operation-picker{display:flex;gap:8px;margin:12px 0 4px}.operation-picker button{flex:1;min-height:48px}.operation-picker button[aria-pressed=true]{background:#e1d3f1;border-color:#b09bd0;color:#594777;outline:3px solid #594777;outline-offset:2px}
+@media(max-width:550px){.take-result{gap:10px}.take-result .number-group.left{min-width:120px}}

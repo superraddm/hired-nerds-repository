@@ -29,6 +29,7 @@ Pictures are Mulberry Symbols by Steve Lee (CC BY-SA 4.0), the same symbol style
 
 | Word | Symbol file |
 | --- | --- |
+| BASKET | basket.svg |
 | APPLE | apple.svg |
 | SUN | sun.svg |
 | TREE | tree.svg |
@@ -87,6 +88,16 @@ Count and Number words have levels chosen in the activity: level 1 is 1–5 and 
 | 8 | EIGHT |
 | 9 | NINE |
 | 10 | TEN |
+| 11 | ELEVEN |
+| 12 | TWELVE |
+| 13 | THIRTEEN |
+| 14 | FOURTEEN |
+| 15 | FIFTEEN |
+| 16 | SIXTEEN |
+| 17 | SEVENTEEN |
+| 18 | EIGHTEEN |
+| 19 | NINETEEN |
+| 20 | TWENTY |
 
 ## Every Garden addition
 
@@ -139,6 +150,78 @@ All 45 ordered sums with two positive groups and a total up to 10. Level 1 (tota
 | 3 | 7 | 10 | 3 + 7 = 10 |
 | 2 | 8 | 10 | 2 + 8 = 10 |
 | 1 | 9 | 10 | 1 + 9 = 10 |
+
+## Every Garden take away
+
+Take away lives inside the Add activity behind an Add / Take away switch. Nook starts with a group and eats none, some or all of it; what is left stays a countable group and the eaten apples sit in a separate basket area. Level 1 starts from up to 5, level 2 from up to 10. Zero is included both as an amount taken and as an answer.
+
+| Start with | Taken away | Answer | Equation |
+| --- | --- | --- | --- |
+| 1 | 1 | 0 | 1 − 1 = 0 |
+| 1 | 0 | 1 | 1 − 0 = 1 |
+| 2 | 2 | 0 | 2 − 2 = 0 |
+| 2 | 1 | 1 | 2 − 1 = 1 |
+| 2 | 0 | 2 | 2 − 0 = 2 |
+| 3 | 3 | 0 | 3 − 3 = 0 |
+| 3 | 2 | 1 | 3 − 2 = 1 |
+| 3 | 1 | 2 | 3 − 1 = 2 |
+| 3 | 0 | 3 | 3 − 0 = 3 |
+| 4 | 4 | 0 | 4 − 4 = 0 |
+| 4 | 3 | 1 | 4 − 3 = 1 |
+| 4 | 2 | 2 | 4 − 2 = 2 |
+| 4 | 1 | 3 | 4 − 1 = 3 |
+| 4 | 0 | 4 | 4 − 0 = 4 |
+| 5 | 5 | 0 | 5 − 5 = 0 |
+| 5 | 4 | 1 | 5 − 4 = 1 |
+| 5 | 3 | 2 | 5 − 3 = 2 |
+| 5 | 2 | 3 | 5 − 2 = 3 |
+| 5 | 1 | 4 | 5 − 1 = 4 |
+| 5 | 0 | 5 | 5 − 0 = 5 |
+| 6 | 6 | 0 | 6 − 6 = 0 |
+| 6 | 5 | 1 | 6 − 5 = 1 |
+| 6 | 4 | 2 | 6 − 4 = 2 |
+| 6 | 3 | 3 | 6 − 3 = 3 |
+| 6 | 2 | 4 | 6 − 2 = 4 |
+| 6 | 1 | 5 | 6 − 1 = 5 |
+| 6 | 0 | 6 | 6 − 0 = 6 |
+| 7 | 7 | 0 | 7 − 7 = 0 |
+| 7 | 6 | 1 | 7 − 6 = 1 |
+| 7 | 5 | 2 | 7 − 5 = 2 |
+| 7 | 4 | 3 | 7 − 4 = 3 |
+| 7 | 3 | 4 | 7 − 3 = 4 |
+| 7 | 2 | 5 | 7 − 2 = 5 |
+| 7 | 1 | 6 | 7 − 1 = 6 |
+| 7 | 0 | 7 | 7 − 0 = 7 |
+| 8 | 8 | 0 | 8 − 8 = 0 |
+| 8 | 7 | 1 | 8 − 7 = 1 |
+| 8 | 6 | 2 | 8 − 6 = 2 |
+| 8 | 5 | 3 | 8 − 5 = 3 |
+| 8 | 4 | 4 | 8 − 4 = 4 |
+| 8 | 3 | 5 | 8 − 3 = 5 |
+| 8 | 2 | 6 | 8 − 2 = 6 |
+| 8 | 1 | 7 | 8 − 1 = 7 |
+| 8 | 0 | 8 | 8 − 0 = 8 |
+| 9 | 9 | 0 | 9 − 9 = 0 |
+| 9 | 8 | 1 | 9 − 8 = 1 |
+| 9 | 7 | 2 | 9 − 7 = 2 |
+| 9 | 6 | 3 | 9 − 6 = 3 |
+| 9 | 5 | 4 | 9 − 5 = 4 |
+| 9 | 4 | 5 | 9 − 4 = 5 |
+| 9 | 3 | 6 | 9 − 3 = 6 |
+| 9 | 2 | 7 | 9 − 2 = 7 |
+| 9 | 1 | 8 | 9 − 1 = 8 |
+| 9 | 0 | 9 | 9 − 0 = 9 |
+| 10 | 10 | 0 | 10 − 10 = 0 |
+| 10 | 9 | 1 | 10 − 9 = 1 |
+| 10 | 8 | 2 | 10 − 8 = 2 |
+| 10 | 7 | 3 | 10 − 7 = 3 |
+| 10 | 6 | 4 | 10 − 6 = 4 |
+| 10 | 5 | 5 | 10 − 5 = 5 |
+| 10 | 4 | 6 | 10 − 4 = 6 |
+| 10 | 3 | 7 | 10 − 3 = 7 |
+| 10 | 2 | 8 | 10 − 2 = 8 |
+| 10 | 1 | 9 | 10 − 1 = 9 |
+| 10 | 0 | 10 | 10 − 0 = 10 |
 
 ## Every pattern and missing-shape answer
 

@@ -612,3 +612,49 @@ test('on wide layouts the bubble is ordered below Nook, beside the response area
   const html = fs.readFileSync(path.join(root, 'garden.html'), 'utf8');
   assert.ok(html.indexOf('<aside class="companion">') < html.indexOf('<section class="activity"'), 'the companion block itself stays where it was');
 });
+
+test('take away lives inside Add: a separate basket area, the same answer modes, its own place, and restore by id', t => {
+  const a = app(t);
+  a.click('[data-mode="add"]');
+  assert.equal(a.query('[data-operation="add"]').getAttribute('aria-pressed'), 'true');
+  a.click('#next');
+  assert.match(a.query('.equation').textContent, /2 \+ 1 = \?/);
+  a.click('[data-operation="take"]');
+  assert.equal(a.store('garden-position').operation, 'take');
+  assert.match(a.query('.equation').textContent, /1 − 1 = \?/);
+  assert.equal(a.query('.take-result .number-group.taken .apple') !== null, true, 'the taken apple sits in the basket area');
+  assert.equal(a.query('.take-result .number-group.left .apple'), null, 'nothing is left');
+  assert.equal(a.query('.take-result .number-group.left .none').textContent, 'none');
+  assert.ok(a.query('.number-group.taken img.symbol').getAttribute('src').endsWith('basket.svg'));
+  assert.equal(a.query('#speech').textContent, 'Nook eats them all. How many are left?');
+  assert.ok(Array.from(a.w.document.querySelectorAll('[data-choice]')).some(b => b.dataset.choice === '0'), 'zero is a choice');
+  a.click('[data-choice="0"]');
+  assert.match(a.query('#speech').textContent, /1 − 1 = 0\./);
+  a.click('#next');
+  assert.match(a.query('.equation').textContent, /1 − 0 = \?/);
+  assert.equal(a.query('.take-result .number-group.left .apple') !== null, true);
+  a.click('#help');
+  assert.equal(a.w.document.querySelectorAll('.number-group.left .count-tag').length, 1, 'the clue numbers what is left, never the basket');
+  a.click('[data-operation="add"]');
+  assert.match(a.query('.equation').textContent, /2 \+ 1 = \?/, 'switching back returns to the same sum');
+  a.click('[data-operation="take"]');
+  assert.match(a.query('.equation').textContent, /1 − 0 = \?/, 'take away kept its own place');
+  a.w.LP.savePrefs({ ...a.w.LP.prefs, addition: 'type' });
+  a.click('[data-pad="1"]'); a.click('#check-sum');
+  assert.match(a.query('#speech').textContent, /1 − 0 = 1\./);
+  a.click('#support');
+  assert.equal(a.query('.operation-picker [data-close]'), null);
+  assert.equal(a.w.document.querySelector('.operation-picker button[aria-pressed="true"]').textContent, 'Take away');
+  const form = a.query('#pick-sum'); form.elements.a.value = '4'; form.elements.b.value = '5';
+  a.submit('#pick-sum');
+  assert.match(a.query('#sum-error').textContent, /cannot take more/);
+  form.elements.b.value = '2'; a.submit('#pick-sum');
+  assert.match(a.query('.equation').textContent, /4 − 2 = \?/);
+  assert.equal(a.store('garden-rounds').add.id, 'add:v2:L1:take:4-2');
+  const b = app(t, 'garden.html', {
+    'lp-player-player-1-garden-position': { mode: 'add', operation: 'take', levels: { add: 1 }, indices: { take: 3 } },
+    'lp-player-player-1-garden-rounds': { add: { id: 'add:v2:L1:take:2-1', a: 2, b: 1, draft: '', hint: 1, done: false } }
+  });
+  assert.match(b.query('.equation').textContent, /2 − 1 = \?/);
+  assert.equal(b.w.document.querySelectorAll('.number-group.left .count-tag').length, 1, 'the clue step came back with the round');
+});

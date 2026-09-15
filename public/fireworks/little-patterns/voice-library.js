@@ -36,6 +36,10 @@ window.LPVoiceLibrary={
       "file": "assets/voice/e9de08263f4ad491.wav",
       "seconds": 0.456
     },
+    "basket": {
+      "file": "assets/voice/fa76d99ad957d952.wav",
+      "seconds": 0.565
+    },
     "big": {
       "file": "assets/voice/2a21fe6d592a19b7.wav",
       "seconds": 0.396
@@ -60,6 +64,18 @@ window.LPVoiceLibrary={
       "file": "assets/voice/c195d2d875623436.wav",
       "seconds": 0.526
     },
+    "eighteen": {
+      "file": "assets/voice/34357b18abddea18.wav",
+      "seconds": 0.591
+    },
+    "eighty": {
+      "file": "assets/voice/0dbc3407a7080e3d.wav",
+      "seconds": 0.607
+    },
+    "eleven": {
+      "file": "assets/voice/e979074ebd5633a7.wav",
+      "seconds": 0.529
+    },
     "equals": {
       "file": "assets/voice/e93cb41d4a7d2395.wav",
       "seconds": 0.665
@@ -67,6 +83,14 @@ window.LPVoiceLibrary={
     "fast": {
       "file": "assets/voice/115dc3606fbf8691.wav",
       "seconds": 0.55
+    },
+    "fifteen": {
+      "file": "assets/voice/c463967e5708cab7.wav",
+      "seconds": 0.672
+    },
+    "fifty": {
+      "file": "assets/voice/f8d807ee15e983f8.wav",
+      "seconds": 0.538
     },
     "fish": {
       "file": "assets/voice/b474a99a2705e23c.wav",
@@ -80,9 +104,17 @@ window.LPVoiceLibrary={
       "file": "assets/voice/c06b0cfe0cc5e900.wav",
       "seconds": 0.465
     },
+    "forty": {
+      "file": "assets/voice/9cee2304bd633d42.wav",
+      "seconds": 0.538
+    },
     "four": {
       "file": "assets/voice/04efaf080f5a3e74.wav",
       "seconds": 0.395
+    },
+    "fourteen": {
+      "file": "assets/voice/fef8f41cdcd20386.wav",
+      "seconds": 0.687
     },
     "hello! i'm nook. let's play": {
       "file": "assets/voice/cd845c4b46d3d15f.wav",
@@ -112,6 +144,14 @@ window.LPVoiceLibrary={
       "file": "assets/voice/edcd8e701a2df0cd.wav",
       "seconds": 0.571
     },
+    "nineteen": {
+      "file": "assets/voice/cde4e100efd26f5b.wav",
+      "seconds": 0.726
+    },
+    "ninety": {
+      "file": "assets/voice/521c74a4d5824aba.wav",
+      "seconds": 0.617
+    },
     "nook eats an apple": {
       "file": "assets/voice/4cbe16d017ce61b6.wav",
       "seconds": 1.008
@@ -132,6 +172,10 @@ window.LPVoiceLibrary={
       "file": "assets/voice/7692c3ad3540bb80.wav",
       "seconds": 0.464
     },
+    "one hundred": {
+      "file": "assets/voice/a86a6a017586300c.wav",
+      "seconds": 0.804
+    },
     "plus": {
       "file": "assets/voice/383ef36928344f56.wav",
       "seconds": 0.531
@@ -148,6 +192,14 @@ window.LPVoiceLibrary={
       "file": "assets/voice/3ba8d02b16fd2a01.wav",
       "seconds": 0.533
     },
+    "seventeen": {
+      "file": "assets/voice/2c5abdef2a0eacb4.wav",
+      "seconds": 0.718
+    },
+    "seventy": {
+      "file": "assets/voice/ab0e4b1a7839571e.wav",
+      "seconds": 0.613
+    },
     "sing": {
       "file": "assets/voice/6342d0648a746457.wav",
       "seconds": 0.429
@@ -155,6 +207,14 @@ window.LPVoiceLibrary={
     "six": {
       "file": "assets/voice/44778d82365e4af6.wav",
       "seconds": 0.439
+    },
+    "sixteen": {
+      "file": "assets/voice/f2ce341fdaa67727.wav",
+      "seconds": 0.677
+    },
+    "sixty": {
+      "file": "assets/voice/df41164e151227b3.wav",
+      "seconds": 0.573
     },
     "soft": {
       "file": "assets/voice/f5f445528f4a0134.wav",
@@ -171,6 +231,10 @@ window.LPVoiceLibrary={
     "swim": {
       "file": "assets/voice/d493f8869139bac7.wav",
       "seconds": 0.386
+    },
+    "take away": {
+      "file": "assets/voice/1ea6dbf5abafb168.wav",
+      "seconds": 0.727
     },
     "tall": {
       "file": "assets/voice/241daf2e753a6a2f.wav",
@@ -256,6 +320,14 @@ window.LPVoiceLibrary={
       "file": "assets/voice/c44adc9f2857ee0b.wav",
       "seconds": 0.918
     },
+    "thirteen": {
+      "file": "assets/voice/9ecc81f0a4b6dfb0.wav",
+      "seconds": 0.67
+    },
+    "thirty": {
+      "file": "assets/voice/aca5fb59db69e5df.wav",
+      "seconds": 0.506
+    },
     "three": {
       "file": "assets/voice/8b5b9db0c13db242.wav",
       "seconds": 0.408
@@ -263,6 +335,14 @@ window.LPVoiceLibrary={
     "tree": {
       "file": "assets/voice/dc9c5edb8b2d479e.wav",
       "seconds": 0.447
+    },
+    "twelve": {
+      "file": "assets/voice/d1a749ad879b6c07.wav",
+      "seconds": 0.583
+    },
+    "twenty": {
+      "file": "assets/voice/7c2c4df740f720b0.wav",
+      "seconds": 0.57
     },
     "two": {
       "file": "assets/voice/3fc4ccfe745870e2.wav",
@@ -283,6 +363,10 @@ window.LPVoiceLibrary={
     "you found it": {
       "file": "assets/voice/d456801d10208a77.wav",
       "seconds": 0.743
+    },
+    "zero": {
+      "file": "assets/voice/f9194e73f9e9459e.wav",
+      "seconds": 0.578
     }
   }
 };

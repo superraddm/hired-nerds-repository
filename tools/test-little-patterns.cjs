@@ -63,14 +63,14 @@ test('every picture word has a bundled Mulberry symbol that is a plain local SVG
 // Per-activity levels: chosen explicitly, clamped safely, and each level has its own sequence of examples.
 test('levels are per activity, clamped to the published maximum and drive their own example sequences',()=>{
   assert.deepEqual(learning.LEVELS,{count:2,add:2,numbers:2,patterns:7});
-  assert.deepEqual(learning.OPERATIONS,['add']);
+  assert.deepEqual(learning.OPERATIONS,['add','take']);
   for(const kind of Object.keys(learning.LEVELS)){assert.equal(learning.clampLevel(kind,0),1);assert.equal(learning.clampLevel(kind,'2'),1);assert.equal(learning.clampLevel(kind,learning.LEVELS[kind]+1),1);assert.equal(learning.clampLevel(kind,learning.LEVELS[kind]),learning.LEVELS[kind]);}
   assert.deepEqual(learning.countSequence(1),[1,2,3,4,5]);assert.equal(learning.countSequence(2).length,10);
   assert.equal(learning.sumSequence(1).length,10);assert.equal(learning.sumSequence(2).length,45);
   assert.ok(learning.sumSequence(1).every(([a,b])=>a+b<=5));
   const p=learning.defaults;
   assert.equal(learning.countRound(7,p,2).target,8);assert.equal(learning.countRound(7,p,1).target,3);
-  assert.equal(learning.sumRound(0,p,1,'take').operation,'add','unknown operations fall back to addition');
+  assert.equal(learning.sumRound(0,p,1,'divide').operation,'add','unknown operations fall back to addition');
   assert.equal(learning.numberWordRound(0,p,2).choices.length,p.choices);
 });
 // Puzzle identity: stable for the same puzzle, distinct across levels and operations, and versioned for future migrations.
@@ -89,4 +89,22 @@ test('every round carries a stable, versioned puzzle id that includes its level 
   assert.match(learning.orderRound(0,p).id,/^order:v2:L1:order:/);
   assert.match(learning.numberWordRound(0,p,2).id,/^numbers:v2:L2:word:1$/);
   const ids=new Set();for(let i=0;i<45;i++)ids.add(learning.sumRound(i,p,2).id);assert.equal(ids.size,45);
+});
+
+// Take away shares the Add activity: same levels, same answer modes, its own operation in the id, zero included.
+test('take away rounds start from a group, remove none, some or all, and keep the answer among unique choices',()=>{
+  const p=learning.defaults;
+  assert.deepEqual(learning.OPERATIONS,['add','take']);
+  for(const level of [1,2]){const seq=learning.sumSequence(level,'take');const range=learning.levelRange(level);
+    assert.ok(seq.some(([a,b])=>b===0),'taking nothing is included');assert.ok(seq.some(([a,b])=>a===b),'taking everything is included');
+    assert.ok(seq.every(([a,b])=>a>=1&&a<=range&&b>=0&&b<=a));
+    for(let i=0;i<seq.length;i++){const r=learning.sumRound(i,p,level,'take');assert.equal(r.operation,'take');assert.equal(r.answer,r.a-r.b);assert.equal(r.total,r.answer);assert.ok(r.answer>=0);assert.ok(r.choices.includes(r.answer));assert.equal(new Set(r.choices).size,3);assert.ok(r.choices.every(n=>n>=0&&n<=range));assert.match(r.id,/^add:v2:L\d:take:\d+-\d+$/);}}
+  assert.equal(learning.sumSequence(1,'take').length,20);
+  assert.notEqual(learning.sumRound(0,p,1,'add',[3,2]).id,learning.sumRound(0,p,1,'take',[3,2]).id,'3 + 2 and 3 - 2 are different puzzles');
+  assert.equal(learning.sumRound(0,p,1,'take',[3,0]).answer,3);
+  assert.equal(learning.sumRound(0,p,1,'take',[2,5]).b<=learning.sumRound(0,p,1,'take',[2,5]).a,true,'an impossible take away falls back to the sequence');
+  assert.ok(learning.sumRound(0,p,1,'add').choices.every(n=>n>=1),'addition never offers zero');
+  const line=learning.successLine('add',learning.sumRound(0,p,1,'take',[5,2]));
+  assert.equal(line.text.includes('5 − 2 = 3.'),true);assert.deepEqual(line.speech.filter(x=>!learning.OPENERS.includes(x)),['FIVE','take away','TWO','equals','THREE']);
+  assert.deepEqual(learning.numberSpeech(0),['ZERO']);assert.deepEqual(learning.numberSpeech(17),['SEVENTEEN']);assert.deepEqual(learning.numberSpeech(73),['SEVENTY','THREE']);assert.deepEqual(learning.numberSpeech(21),['TWENTY','ONE']);assert.deepEqual(learning.numberSpeech(100),['ONE HUNDRED']);assert.equal(learning.numberWord(45),'FORTY-FIVE');assert.deepEqual(learning.numberSpeech(101),[]);
 });
