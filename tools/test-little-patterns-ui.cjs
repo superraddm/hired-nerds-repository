@@ -6,6 +6,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { JSDOM } = require('../.wrangler/test-runtime/node_modules/jsdom');
 const root = path.join(__dirname, '../public/fireworks/little-patterns');
+const L = require('../public/fireworks/little-patterns/learning.js');
 
 function app(t, page = 'garden.html', seed = {}, blocked = false) {
   const html = fs.readFileSync(path.join(root, page), 'utf8');
@@ -301,7 +302,8 @@ test('an explicitly chosen number continues from that number within its level', 
   Array.from(a.w.document.querySelectorAll('.puzzle-picker button')).find(b => b.textContent === '7').click();
   assert.equal(a.query('.lp-modal'), null);
   a.click('[data-choice="7"]'); a.click('#next');
-  assert.equal(a.store('garden-rounds').count.target, 8);
+  const seq = a.w.GardenLearning.countSequence(2);
+  assert.equal(a.store('garden-rounds').count.target, seq[(seq.indexOf(7) + 1) % seq.length], 'Next continues from the chosen number in the mixed order');
   assert.equal(a.store('garden-rounds').count.level, 2);
 });
 
@@ -313,7 +315,8 @@ test('a chosen sum continues to the next sum at the same level instead of jumpin
   a.submit('#pick-sum');
   assert.match(a.query('.equation').textContent, /2 \+ 2 = \?/);
   a.click('[data-choice="4"]'); a.click('#next');
-  assert.match(a.query('.equation').textContent, /1 \+ 3 = \?/);
+  const seq = a.w.GardenLearning.sumSequence(1, 'add'), after = seq[(seq.findIndex(([x, y]) => x === 2 && y === 2) + 1) % seq.length];
+  assert.match(a.query('.equation').textContent, new RegExp(after[0] + ' \\+ ' + after[1] + ' = \\?'));
 });
 
 test('levels are separate per activity, the Next level action is explicit, and a level change keeps other drafts', t => {
@@ -349,7 +352,7 @@ test('levels are separate per activity, the Next level action is explicit, and a
 test('an older save with the shared 1 to 10 range and a pattern index restores onto explicit levels', t => {
   const a = app(t, 'garden.html', {
     'lp-player-player-1-little-patterns-v1': { range: 10 },
-    'lp-player-player-1-garden-position': { mode: 'patterns', indices: { patterns: 12, count: 6 } },
+    'lp-player-player-1-garden-position': { mode: 'patterns', indices: { patterns: 12, count: L.countSequence(2).indexOf(7) } },
     'lp-player-player-1-garden-rounds': { count: { target: 7, seen: [0, 1], done: false } }
   });
   assert.match(a.query('#support').textContent, /Level 5 of 7/);
@@ -416,7 +419,7 @@ test('removing the active player clears their local drafts and starts another pl
 
 test('saved rounds restore by puzzle id: a matching id keeps its state, a mismatched one starts that activity fresh only', t => {
   const a = app(t, 'garden.html', {
-    'lp-player-player-1-garden-position': { mode: 'count', indices: { count: 2, sentence: 0 }, levels: { count: 1, add: 2 } },
+    'lp-player-player-1-garden-position': { mode: 'count', indices: { count: L.countSequence(1).indexOf(3), sentence: 0 }, levels: { count: 1, add: 2 } },
     'lp-player-player-1-garden-rounds': {
       count: { id: 'count:v2:L1:count:3', target: 3, seen: [0], done: false },
       add: { id: 'add:v2:L1:add:1+1', a: 1, b: 1, draft: '5', done: false },
@@ -443,7 +446,7 @@ test('every correct answer goes through one path: bubble and announcement come f
   assert.equal(a.query('#speech').textContent, 'Apples for our picnic!', 'a fresh round shows the prompt again');
   assert.ok(!a.query('#speech').classList.contains('success'));
   a.click('[data-sound]');
-  a.click('[data-choice="2"]');
+  a.click(`[data-choice="${a.store('garden-rounds').count.target}"]`);
   await new Promise(resolve => setTimeout(resolve, 0));
   assert.equal(a.spoken.length, 0, 'automatic feedback never falls back to a device voice');
   const speech = L.successLine('count', a.store('garden-rounds').count).speech;
@@ -469,7 +472,7 @@ test('every correct answer goes through one path: bubble and announcement come f
 
 test('a restored finished round shows its success line without replaying anything', t => {
   const a = app(t, 'garden.html', {
-    'lp-player-player-1-garden-position': { mode: 'count', indices: { count: 2 }, levels: { count: 1 } },
+    'lp-player-player-1-garden-position': { mode: 'count', indices: { count: L.countSequence(1).indexOf(3) }, levels: { count: 1 } },
     'lp-player-player-1-garden-rounds': { count: { id: 'count:v2:L1:count:3', target: 3, seen: [], done: true, feedback: 'retry' } }
   });
   assert.match(a.query('#speech').textContent, /3 apples\./);
@@ -625,7 +628,8 @@ test('take away lives inside Add: a separate basket area, the same answer modes,
   a.click('[data-mode="add"]');
   assert.equal(a.query('[data-operation="add"]').getAttribute('aria-pressed'), 'true');
   a.click('#next');
-  assert.match(a.query('.equation').textContent, /2 \+ 1 = \?/);
+  const L = a.w.GardenLearning, eq = (op, i) => { const [x, y] = L.sumSequence(1, op)[i]; return new RegExp(x + ' ' + (op === 'take' ? '−' : '\\+') + ' ' + y + ' = \\?'); };
+  assert.match(a.query('.equation').textContent, eq('add', 1));
   a.click('[data-operation="take"]');
   assert.equal(a.store('garden-position').operation, 'take');
   assert.match(a.query('.equation').textContent, /1 − 1 = \?/);
@@ -638,17 +642,19 @@ test('take away lives inside Add: a separate basket area, the same answer modes,
   a.click('[data-choice="0"]');
   assert.match(a.query('#speech').textContent, /1 − 1 = 0\./);
   a.click('#next');
-  assert.match(a.query('.equation').textContent, /1 − 0 = \?/);
-  assert.equal(a.query('.take-result .number-group.left .apple') !== null, true);
+  const second = L.sumSequence(1, 'take')[1];
+  assert.match(a.query('.equation').textContent, eq('take', 1));
+  assert.equal(a.w.document.querySelectorAll('.take-result .number-group.left .apple').length, second[0] - second[1]);
   a.click('#help');
-  assert.equal(a.w.document.querySelectorAll('.number-group.left .count-tag').length, 1, 'the clue numbers what is left, never the basket');
+  assert.equal(a.w.document.querySelectorAll('.number-group.left .count-tag').length, second[0] - second[1], 'the clue numbers what is left, never the basket');
   a.click('[data-operation="add"]');
-  assert.match(a.query('.equation').textContent, /2 \+ 1 = \?/, 'switching back returns to the same sum');
+  assert.match(a.query('.equation').textContent, eq('add', 1), 'switching back returns to the same sum');
   a.click('[data-operation="take"]');
-  assert.match(a.query('.equation').textContent, /1 − 0 = \?/, 'take away kept its own place');
+  assert.match(a.query('.equation').textContent, eq('take', 1), 'take away kept its own place');
   a.w.LP.savePrefs({ ...a.w.LP.prefs, addition: 'type' });
-  a.click('[data-pad="1"]'); a.click('#check-sum');
-  assert.match(a.query('#speech').textContent, /1 − 0 = 1\./);
+  for (const d of String(second[0] - second[1])) a.click(`[data-pad="${d}"]`);
+  a.click('#check-sum');
+  assert.match(a.query('#speech').textContent, new RegExp(second[0] + ' − ' + second[1] + ' = ' + (second[0] - second[1]) + '\\.'));
   a.click('#support');
   assert.equal(a.query('.operation-picker [data-close]'), null);
   assert.equal(a.w.document.querySelector('.operation-picker button[aria-pressed="true"]').textContent, 'Take away');
@@ -659,7 +665,7 @@ test('take away lives inside Add: a separate basket area, the same answer modes,
   assert.match(a.query('.equation').textContent, /4 − 2 = \?/);
   assert.equal(a.store('garden-rounds').add.id, 'add:v2:L1:take:4-2');
   const b = app(t, 'garden.html', {
-    'lp-player-player-1-garden-position': { mode: 'add', operation: 'take', levels: { add: 1 }, indices: { take: 3 } },
+    'lp-player-player-1-garden-position': { mode: 'add', operation: 'take', levels: { add: 1 }, indices: { take: L.sumSequence(1, 'take').findIndex(([x, y]) => x === 2 && y === 1) } },
     'lp-player-player-1-garden-rounds': { add: { id: 'add:v2:L1:take:2-1', a: 2, b: 1, draft: '', hint: 1, done: false } }
   });
   assert.match(b.query('.equation').textContent, /2 − 1 = \?/);
@@ -808,4 +814,24 @@ test('Count levels 3 to 6: a full ten-frame first, then sticks; Count with me co
   assert.match(b.query('#speech').textContent, /100 apples\./);
   b.click('[data-mode="count"]');
   assert.equal(b.query('#next').hidden, false);
+});
+
+test('later passes through a small level arrange the same quantity differently and still count correctly', t => {
+  const a = app(t);
+  for (let i = 0; i < 5; i++) a.click('#next');
+  const round = a.store('garden-rounds').count;
+  assert.equal(round.target, 1, 'the second pass starts again at one');
+  assert.deepEqual(round.slots, [0]);
+  for (let i = 0; i < 6; i++) a.click('#next');
+  const spread = a.store('garden-rounds').count;
+  assert.equal(spread.level, 1);
+  assert.deepEqual(spread.slots, L.arrangement(spread.target, 2), 'third pass fills from the right');
+  const pockets = Array.from(a.w.document.querySelectorAll('.five-frame .pocket'));
+  assert.equal(pockets.length, 5);
+  assert.equal(pockets.filter(p => p.classList.contains('full')).length, spread.target);
+  assert.ok(pockets[4].classList.contains('full'), 'the last pocket is used first');
+  a.click('#help');
+  assert.equal(a.query('.pocket.counted .count-tag').textContent, '1');
+  a.click('#help');
+  assert.equal(a.store('garden-rounds').count.seen.length, Math.min(2, spread.target));
 });

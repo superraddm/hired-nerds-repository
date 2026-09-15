@@ -28,15 +28,19 @@
   // The largest quantity a level shows. Add levels: within 5, within 10, within 20 without crossing ten, within 20 crossing ten, tens to 100.
   const RANGES={count:[5,10,20,50,50,100],add:[5,10,20,20,100],numbers:[5,10]};
   function levelRange(level,kind='count'){const table=RANGES[kind]||RANGES.count;return table[Math.max(1,Math.min(table.length,Number(level)||1))-1];}
+  // A fixed, non-sequential order: the first item stays first, then a stride walks the list so the next answer cannot be read off the last one.
+  function mixed(list){const n=list.length;if(n<3)return list.slice();const gcd=(a,b)=>b?gcd(b,a%b):a;const stride=[7,3,5,2].find(s=>gcd(s,n)===1)||1;return Array.from({length:n},(_,i)=>list[(i*stride)%n]);}
   // Count levels: 1 to 5, 1 to 10, 11 to 20, tens to 50, 21 to 50, 51 to 100.
-  function countSequence(level){level=clampLevel('count',level);if(level<=2)return Array.from({length:levelRange(level,'count')},(_,i)=>i+1);if(level===3)return Array.from({length:10},(_,i)=>11+i);if(level===4)return [10,20,30,40,50];if(level===5)return Array.from({length:30},(_,i)=>21+i);return Array.from({length:50},(_,i)=>51+i);}
+  function countSequence(level){level=clampLevel('count',level);if(level<=2)return mixed(Array.from({length:levelRange(level,'count')},(_,i)=>i+1));if(level===3)return mixed(Array.from({length:10},(_,i)=>11+i));if(level===4)return mixed([10,20,30,40,50]);if(level===5)return mixed(Array.from({length:30},(_,i)=>21+i));return mixed(Array.from({length:50},(_,i)=>51+i));}
+  // Alternative arrangements of the same quantity in the five- or ten-frame: pass one fills from the left, later passes spread the apples or fill from the right.
+  function arrangement(target,variant){const size=target>5?10:5;const all=Array.from({length:size},(_,i)=>i);variant=((variant%3)+3)%3;if(variant===1)return all.filter(i=>i%2===0).concat(all.filter(i=>i%2===1)).slice(0,target);if(variant===2)return all.slice().reverse().slice(0,target);return all.slice(0,target);}
   // Take away includes taking nothing and taking everything, so zero appears as an answer and as an amount.
   function sumSequence(level,operation='add'){level=clampLevel('add',level);const take=operation==='take';const sums=[];
     if(level<=2){const range=levelRange(level,'add');if(take){for(let a=1;a<=range;a++)for(let b=a;b>=0;b--)sums.push([a,b]);}else{for(let total=2;total<=range;total++)for(let a=total-1;a>=1;a--)sums.push([a,total-a]);}}
     else if(level===3){if(take){for(let a=11;a<=19;a++)for(let b=1;b<=a%10;b++)sums.push([a,b]);}else{for(let a=10;a<=19;a++)for(let b=1;b<=9;b++)if(a%10+b<=10)sums.push([a,b]);}}
     else if(level===4){if(take){for(let a=11;a<=18;a++)for(let b=2;b<=9;b++)if(a-b>=2&&a-b<10)sums.push([a,b]);}else{for(let a=2;a<=9;a++)for(let b=2;b<=9;b++)if(a+b>=11)sums.push([a,b]);}}
     else{if(take){for(let a=10;a<=100;a+=10)for(let b=10;b<=a;b+=10)sums.push([a,b]);}else{for(let a=10;a<=90;a+=10)for(let b=10;a+b<=100;b+=10)sums.push([a,b]);}}
-    return sums;}
+    return mixed(sums);}
   function arithmeticPool(level,operation){level=clampLevel('add',level);const range=levelRange(level,'add');if(level>=5)return Array.from({length:11},(_,i)=>i*10).filter(n=>operation==='take'||n>=20);return Array.from({length:range+1},(_,i)=>i).filter(n=>operation==='take'||n>=1);}
   // Named practice sets: the sums worth repeating. Both fit level 2 (within 10) and are addition only.
   const SUM_SETS={doubles:{label:'Doubles',level:2,sums:[[1,1],[2,2],[3,3],[4,4],[5,5]]},ten:{label:'Make ten',level:2,sums:[[9,1],[8,2],[7,3],[6,4],[5,5],[4,6],[3,7],[2,8],[1,9]]}};
@@ -44,7 +48,7 @@
   // Levels 3 and up draw every quantity as tens and ones; a complete ten stays a visible ten-frame until level 5, where it becomes a stick.
   function usesTray(kind,level){return level>=3;}
   function usesSticks(kind,level){return kind==='add'?level>=5:level>=4;}
-  function countRound(index,prefs,level=1){level=clampLevel('count',level);const sequence=countSequence(level);const target=sequence[index%sequence.length];return {id:identify('count',level,'count',target),level,target,choices:options(target,sequence,prefs.choices,index),seen:[],draft:'',hint:0,done:false};}
+  function countRound(index,prefs,level=1){level=clampLevel('count',level);const sequence=countSequence(level);const target=sequence[index%sequence.length];const variant=level<=2?Math.floor(index/sequence.length)%3:0;return {id:identify('count',level,'count',target+(variant?'~'+variant:'')),level,target,slots:arrangement(target,variant),choices:options(target,sequence,prefs.choices,index),seen:[],draft:'',hint:0,done:false};}
   // Counting tokens on the tray: 't0', 't1' for complete tens (tens first), 'o0', 'o1' for loose ones. Levels 1 and 2 keep plain apple ordinals.
   function countTokens(target){const tens=Math.floor(target/10),ones=target%10;return [...Array.from({length:tens},(_,i)=>'t'+i),...Array.from({length:ones},(_,i)=>'o'+i)];}
   function runningTotals(seen){let total=0;const totals={};for(const token of seen){total+=String(token).startsWith('t')?10:1;totals[token]=total;}return totals;}
@@ -79,6 +83,6 @@
   function spokenBank(){const texts=[...Object.keys(WORD_SYMBOLS),...NUMBER_WORDS,...Object.values(TENS_WORDS),...PICTURES.map(p=>p.word),...Object.values(FEEDBACK),...SPOKEN_EXTRAS,"Hello! I'm Nook. Let's play."];for(let i=0;i<SENTENCES.length;i++){const r=sentenceRound(i,defaults);texts.push(sentencePrompt(r));r.done=true;texts.push(sentencePrompt(r));}const key=s=>s.trim().toLowerCase().replace(/\s+/g,' ').replace(/[.!?]+$/,'');return [...new Set(texts.map(key))].sort();}
   function matches(typed,expected){return String(typed).trim().replace(/\s+/g,' ').toLocaleUpperCase('en-GB')===String(expected).toLocaleUpperCase('en-GB');}
   function editText(value,start,end,key){value=String(value);start=Math.max(0,Math.min(value.length,start));end=Math.max(start,Math.min(value.length,end));if(key==='Backspace'){if(start===end&&start>0)start-=Array.from(value.slice(0,start)).pop().length;return {value:value.slice(0,start)+value.slice(end),caret:start};}const insert=key==='Space'?' ':key;const next=value.slice(0,start)+insert+value.slice(end);if(next.length>500)return {value,caret:end};return {value:next,caret:start+insert.length};}
-  const api={NUMBER_WORDS,TENS_WORDS,numberSpeech,numberWord,arithmeticPool,usesTray,usesSticks,RANGES,SUM_SETS,setRound,countTokens,runningTotals,FEEDBACK,PICTURES,SENTENCES,WORD_SYMBOLS,PATTERN_LEVELS,LEVELS,OPERATIONS,VERSION,identify,clampLevel,levelRange,countSequence,sumSequence,sentenceWords,sentencePool,sentencePrompt,sentenceRound,letterRound,orderRound,defaults,normalisePrefs,cleanWord,options,countRound,sumRound,patternRound,wordRound,numberWordRound,OPENERS,successLine,spokenBank,matches,editText};
+  const api={NUMBER_WORDS,TENS_WORDS,numberSpeech,numberWord,arithmeticPool,usesTray,usesSticks,RANGES,SUM_SETS,setRound,countTokens,runningTotals,mixed,arrangement,FEEDBACK,PICTURES,SENTENCES,WORD_SYMBOLS,PATTERN_LEVELS,LEVELS,OPERATIONS,VERSION,identify,clampLevel,levelRange,countSequence,sumSequence,sentenceWords,sentencePool,sentencePrompt,sentenceRound,letterRound,orderRound,defaults,normalisePrefs,cleanWord,options,countRound,sumRound,patternRound,wordRound,numberWordRound,OPENERS,successLine,spokenBank,matches,editText};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.GardenLearning=api;
 })(typeof window!=='undefined'?window:globalThis);

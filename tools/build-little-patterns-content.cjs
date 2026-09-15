@@ -36,21 +36,21 @@ const sections = [
   },
   {
     title: 'Counting and number words',
-    note: 'Count and Number words have levels chosen in the activity: level 1 is 1–5 and level 2 is 1–10. Every quantity in the level can be chosen directly. Typed answers ignore case and surrounding spaces.',
+    note: 'Count has six levels chosen in the activity: 1 to 5, 1 to 10, 11 to 20, tens to 50, 21 to 50 and 51 to 100; from level 3 quantities are drawn as tens and ones (a full ten-frame at level 3, sticks of ten from level 4). Number words have levels 1 to 5 and 1 to 10. Every quantity in a level can be chosen directly; play order within a level is deliberately mixed, and at levels 1 and 2 later passes arrange the same quantity differently in the frame. Typed answers ignore case and surrounding spaces.',
     headers: ['Apples / numeral', 'Number word'],
     rows: L.NUMBER_WORDS.slice(1).map((word, index) => [index + 1, word])
   },
   {
     title: 'Every Garden addition',
-    note: 'Add has five levels chosen in the activity: 1 within 5 (the default), 2 within 10, 3 within 20 without crossing ten (10 + 4), 4 within 20 crossing ten (8 + 5), 5 tens to 100 (30 + 20). Level 1 is the part of level 2 with totals up to 5, so it is not listed separately. Levels 3 and 4 draw quantities as full ten-frames plus ones; level 5 draws complete tens as sticks. The picker allows every sum in the level; reversed groups are separate examples.',
+    note: 'Add has five levels chosen in the activity: 1 within 5 (the default), 2 within 10, 3 within 20 without crossing ten (10 + 4), 4 within 20 crossing ten (8 + 5), 5 tens to 100 (30 + 20). Level 1 is the part of level 2 with totals up to 5, so it is not listed separately. Levels 3 and 4 draw quantities as full ten-frames plus ones; level 5 draws complete tens as sticks. The picker allows every sum in the level; reversed groups are separate examples. Play order within a level is deliberately mixed so the next answer cannot be predicted from the last; this table is sorted for reading.',
     headers: ['Level', 'First group', 'Second group', 'Answer', 'Equation'],
-    rows: [2, 3, 4, 5].flatMap(level => L.sumSequence(level, 'add').map(([a, b]) => [level, a, b, a + b, `${a} + ${b} = ${a + b}`]))
+    rows: [2, 3, 4, 5].flatMap(level => L.sumSequence(level, 'add').slice().sort((x, y) => x[0] - y[0] || x[1] - y[1]).map(([a, b]) => [level, a, b, a + b, `${a} + ${b} = ${a + b}`]))
   },
   {
     title: 'Every Garden take away',
     note: 'Take away lives inside the Add activity behind an Add / Take away switch and shares its levels: 1 from up to 5, 2 from up to 10, 3 from 11 to 19 taking ones only (15 − 3), 4 within 20 crossing ten (12 − 5), 5 tens (60 − 20). Nook starts with a group and eats none, some or all of it; what is left stays a countable group and the eaten apples sit in a separate basket area. Zero is included both as an amount taken and as an answer. Level 1 is the part of level 2 starting from up to 5.',
     headers: ['Level', 'Start with', 'Taken away', 'Answer', 'Equation'],
-    rows: [2, 3, 4, 5].flatMap(level => L.sumSequence(level, 'take').map(([a, b]) => [level, a, b, a - b, `${a} − ${b} = ${a - b}`]))
+    rows: [2, 3, 4, 5].flatMap(level => L.sumSequence(level, 'take').slice().sort((x, y) => x[0] - y[0] || x[1] - y[1]).map(([a, b]) => [level, a, b, a - b, `${a} − ${b} = ${a - b}`]))
   },
   {
     title: 'Every pattern and missing-shape answer',

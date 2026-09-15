@@ -65,11 +65,11 @@ test('levels are per activity, clamped to the published maximum and drive their 
   assert.deepEqual(learning.LEVELS,{count:6,add:5,numbers:2,patterns:7});
   assert.deepEqual(learning.OPERATIONS,['add','take']);
   for(const kind of Object.keys(learning.LEVELS)){assert.equal(learning.clampLevel(kind,0),1);assert.equal(learning.clampLevel(kind,'2'),1);assert.equal(learning.clampLevel(kind,learning.LEVELS[kind]+1),1);assert.equal(learning.clampLevel(kind,learning.LEVELS[kind]),learning.LEVELS[kind]);}
-  assert.deepEqual(learning.countSequence(1),[1,2,3,4,5]);assert.equal(learning.countSequence(2).length,10);
+  assert.deepEqual([...learning.countSequence(1)].sort(),[1,2,3,4,5]);assert.equal(learning.countSequence(2).length,10);
   assert.equal(learning.sumSequence(1).length,10);assert.equal(learning.sumSequence(2).length,45);
   assert.ok(learning.sumSequence(1).every(([a,b])=>a+b<=5));
   const p=learning.defaults;
-  assert.equal(learning.countRound(7,p,2).target,8);assert.equal(learning.countRound(7,p,1).target,3);
+  assert.equal(learning.countRound(7,p,2).target,learning.countSequence(2)[7]);assert.equal(learning.countRound(7,p,1).target,learning.countSequence(1)[2]);
   assert.equal(learning.sumRound(0,p,1,'divide').operation,'add','unknown operations fall back to addition');
   assert.equal(learning.numberWordRound(0,p,2).choices.length,p.choices);
 });
@@ -77,9 +77,9 @@ test('levels are per activity, clamped to the published maximum and drive their 
 test('every round carries a stable, versioned puzzle id that includes its level and operation',()=>{
   const p=learning.defaults;
   assert.equal(learning.VERSION,2);
-  assert.equal(learning.countRound(2,p,1).id,learning.countRound(2,p,1).id);
-  assert.equal(learning.countRound(2,p,1).id,'count:v2:L1:count:3');
-  assert.notEqual(learning.countRound(2,p,1).id,learning.countRound(2,p,2).id,'the same target at another level is another puzzle');
+  assert.equal(learning.countRound(1,p,1).id,learning.countRound(1,p,1).id);
+  assert.equal(learning.countRound(1,p,1).id,'count:v2:L1:count:3');
+  assert.notEqual(learning.countRound(1,p,1).id,learning.countRound(1,p,2).id,'the same target at another level is another puzzle');
   assert.equal(learning.sumRound(0,p,1).id,'add:v2:L1:add:1+1');
   assert.equal(learning.sumRound(0,p,1,'add',[2,3]).id,'add:v2:L1:add:2+3','a directly chosen sum is identified by its own operands');
   assert.equal(learning.sumRound(0,p,1,'add',[9,9]).a,1,'a chosen sum outside the level falls back to the sequence');
@@ -139,7 +139,7 @@ test('Doubles and Make ten are fixed addition sets that fit within ten and cycle
 test('count levels 3 to 6 span 11 to 100 in tens and ones, with tokens that count each group once',()=>{
   const p=learning.defaults;
   assert.deepEqual(learning.RANGES.count,[5,10,20,50,50,100]);
-  assert.deepEqual(learning.countSequence(1),[1,2,3,4,5]);assert.equal(learning.countSequence(2).length,10);
+  assert.deepEqual([...learning.countSequence(1)].sort(),[1,2,3,4,5]);assert.equal(learning.countSequence(2).length,10);
   assert.deepEqual([...learning.countSequence(3)].sort((a,b)=>a-b),[11,12,13,14,15,16,17,18,19,20]);
   assert.deepEqual([...learning.countSequence(4)].sort((a,b)=>a-b),[10,20,30,40,50]);
   const l5=[...learning.countSequence(5)].sort((a,b)=>a-b);assert.equal(l5[0],21);assert.equal(l5[l5.length-1],50);assert.equal(l5.length,30);
@@ -150,4 +150,21 @@ test('count levels 3 to 6 span 11 to 100 in tens and ones, with tokens that coun
   assert.deepEqual(learning.runningTotals([0,1,2]),{0:1,1:2,2:3},'levels 1 and 2 keep plain ordinals');
   assert.equal(learning.usesTray('count',2),false);assert.equal(learning.usesTray('count',3),true);assert.equal(learning.usesSticks('count',3),false,'level 3 shows a full ten-frame so a ten is visibly ten apples');assert.equal(learning.usesSticks('count',4),true);
   assert.equal(learning.normalisePrefs({countAnswer:'type'}).countAnswer,'type');assert.equal(learning.normalisePrefs({countAnswer:'demo'}).countAnswer,'choose');
+});
+
+// Mixed order and arrangements: the first example is unchanged, the rest cannot be read off the previous answer, and every item still appears once per pass.
+test('count targets and sums follow a fixed mixed order, and levels 1 and 2 rearrange the same quantity on later passes',()=>{
+  const p=learning.defaults;
+  assert.deepEqual(learning.mixed([1,2,3,4,5]),[1,3,5,2,4]);
+  assert.deepEqual(learning.mixed([1,2]),[1,2]);
+  for(const n of [5,9,10,20,30,45,50,54]){const list=Array.from({length:n},(_,i)=>i+1);const m=learning.mixed(list);assert.equal(m[0],1,'the first example is unchanged');assert.deepEqual([...m].sort((a,b)=>a-b),list,'every item once');let steps=0;for(let i=1;i<m.length;i++)if(m[i]===m[i-1]+1)steps++;assert.ok(steps<=n/4,'no long runs of consecutive answers for n='+n);}
+  assert.equal(learning.countSequence(1)[0],1);assert.equal(learning.countSequence(2)[0],1);assert.notDeepEqual(learning.countSequence(2),[1,2,3,4,5,6,7,8,9,10]);
+  assert.deepEqual(learning.sumSequence(1,'add')[0],[1,1]);assert.deepEqual(learning.sumSequence(3,'add')[0],[10,1]);assert.deepEqual(learning.sumSequence(1,'take')[0],[1,1]);
+  assert.deepEqual(learning.SUM_SETS.doubles.sums.map(s=>s[0]),[1,2,3,4,5],'named sets stay in order');
+  assert.deepEqual(learning.arrangement(3,0),[0,1,2]);assert.deepEqual(learning.arrangement(3,1),[0,2,4]);assert.deepEqual(learning.arrangement(4,1),[0,2,4,1]);assert.deepEqual(learning.arrangement(3,2),[4,3,2]);assert.deepEqual(learning.arrangement(7,1),[0,2,4,6,8,1,3]);
+  const first=learning.countRound(0,p,1),second=learning.countRound(5,p,1),third=learning.countRound(10,p,1);
+  assert.equal(first.target,second.target);assert.deepEqual(first.slots,[0]);assert.notEqual(first.id,second.id,'a rearranged quantity is its own puzzle');assert.equal(learning.countRound(15,p,1).id,first.id,'the arrangement cycle repeats');
+  assert.equal(new Set(third.slots).size,third.target);
+  for(let i=0;i<40;i++){const r=learning.countRound(i,p,2);assert.equal(r.slots.length,r.target);assert.ok(r.slots.every(s=>s>=0&&s<(r.target>5?10:5)));assert.equal(new Set(r.slots).size,r.target);}
+  assert.deepEqual(learning.countRound(30,p,3).slots,learning.arrangement(learning.countRound(30,p,3).target,0),'trays keep the standard fill');
 });
