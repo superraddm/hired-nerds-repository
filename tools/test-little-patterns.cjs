@@ -62,7 +62,7 @@ test('every picture word has a bundled Mulberry symbol that is a plain local SVG
 
 // Per-activity levels: chosen explicitly, clamped safely, and each level has its own sequence of examples.
 test('levels are per activity, clamped to the published maximum and drive their own example sequences',()=>{
-  assert.deepEqual(learning.LEVELS,{count:6,add:5,numbers:2,patterns:7});
+  assert.deepEqual(learning.LEVELS,{count:6,add:5,numbers:4,patterns:7});
   assert.deepEqual(learning.OPERATIONS,['add','take']);
   for(const kind of Object.keys(learning.LEVELS)){assert.equal(learning.clampLevel(kind,0),1);assert.equal(learning.clampLevel(kind,'2'),1);assert.equal(learning.clampLevel(kind,learning.LEVELS[kind]+1),1);assert.equal(learning.clampLevel(kind,learning.LEVELS[kind]),learning.LEVELS[kind]);}
   assert.deepEqual([...learning.countSequence(1)].sort(),[1,2,3,4,5]);assert.equal(learning.countSequence(2).length,10);
@@ -167,4 +167,13 @@ test('count targets and sums follow a fixed mixed order, and levels 1 and 2 rear
   assert.equal(new Set(third.slots).size,third.target);
   for(let i=0;i<40;i++){const r=learning.countRound(i,p,2);assert.equal(r.slots.length,r.target);assert.ok(r.slots.every(s=>s>=0&&s<(r.target>5?10:5)));assert.equal(new Set(r.slots).size,r.target);}
   assert.deepEqual(learning.countRound(30,p,3).slots,learning.arrangement(learning.countRound(30,p,3).target,0),'trays keep the standard fill');
+});
+
+test('number words reach the teens and the tens to one hundred, with choices drawn from the same level',()=>{
+  const p=learning.normalisePrefs({choices:3});
+  assert.deepEqual([...learning.numberSequence(3)].sort((a,b)=>a-b),[11,12,13,14,15,16,17,18,19,20]);
+  assert.deepEqual([...learning.numberSequence(4)].sort((a,b)=>a-b),[10,20,30,40,50,60,70,80,90,100]);
+  assert.equal(learning.numberSequence(1)[0],1);
+  for(let level=1;level<=4;level++){const seq=learning.numberSequence(level);const words=new Set(seq.map(learning.numberWord));for(let i=0;i<seq.length;i++){const r=learning.numberWordRound(i,p,level);assert.equal(r.level,level);assert.equal(r.word,learning.numberWord(r.target));assert.ok(r.choices.includes(r.word));assert.equal(new Set(r.choices).size,3);assert.ok(r.choices.every(w=>words.has(w)));assert.ok(learning.matches(' '+r.word.toLowerCase()+' ',r.word));assert.ok(learning.successLine('numbers',r).speech.length>=2);}}
+  assert.equal(learning.numberWordRound(0,p,4).word,'TEN');assert.ok(learning.numberSequence(4).map(learning.numberWord).includes('ONE HUNDRED'));assert.ok(learning.numberSequence(3).map(learning.numberWord).includes('ELEVEN'));
 });

@@ -36,9 +36,9 @@ const sections = [
   },
   {
     title: 'Counting and number words',
-    note: 'Count has six levels chosen in the activity: 1 to 5, 1 to 10, 11 to 20, tens to 50, 21 to 50 and 51 to 100; from level 3 quantities are drawn as tens and ones (a full ten-frame at level 3, sticks of ten from level 4). Number words have levels 1 to 5 and 1 to 10. Every quantity in a level can be chosen directly; play order within a level is deliberately mixed, and at levels 1 and 2 later passes arrange the same quantity differently in the frame. Typed answers ignore case and surrounding spaces.',
-    headers: ['Apples / numeral', 'Number word'],
-    rows: L.NUMBER_WORDS.slice(1).map((word, index) => [index + 1, word])
+    note: 'Count has six levels chosen in the activity: 1 to 5, 1 to 10, 11 to 20, tens to 50, 21 to 50 and 51 to 100; from level 3 quantities are drawn as tens and ones (a full ten-frame at level 3, sticks of ten from level 4). Number words have four levels: 1 to 5, 1 to 10, the teens to twenty, and the tens to one hundred (level 1 is the part of level 2 up to five). Every quantity in a level can be chosen directly; play order within a level is deliberately mixed, and at levels 1 and 2 later passes arrange the same quantity differently in the frame. Typed answers ignore case and surrounding spaces.',
+    headers: ['Number words level', 'Apples / numeral', 'Number word'],
+    rows: [2, 3, 4].flatMap(level => L.numberSequence(level).slice().sort((a, b) => a - b).map(n => [level, n, L.numberWord(n)]))
   },
   {
     title: 'Every Garden addition',

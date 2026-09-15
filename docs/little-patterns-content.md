@@ -74,30 +74,40 @@ Any letter position in these words can be the answer over repeated rounds. Space
 
 ## Counting and number words
 
-Count has six levels chosen in the activity: 1 to 5, 1 to 10, 11 to 20, tens to 50, 21 to 50 and 51 to 100; from level 3 quantities are drawn as tens and ones (a full ten-frame at level 3, sticks of ten from level 4). Number words have levels 1 to 5 and 1 to 10. Every quantity in a level can be chosen directly; play order within a level is deliberately mixed, and at levels 1 and 2 later passes arrange the same quantity differently in the frame. Typed answers ignore case and surrounding spaces.
+Count has six levels chosen in the activity: 1 to 5, 1 to 10, 11 to 20, tens to 50, 21 to 50 and 51 to 100; from level 3 quantities are drawn as tens and ones (a full ten-frame at level 3, sticks of ten from level 4). Number words have four levels: 1 to 5, 1 to 10, the teens to twenty, and the tens to one hundred (level 1 is the part of level 2 up to five). Every quantity in a level can be chosen directly; play order within a level is deliberately mixed, and at levels 1 and 2 later passes arrange the same quantity differently in the frame. Typed answers ignore case and surrounding spaces.
 
-| Apples / numeral | Number word |
-| --- | --- |
-| 1 | ONE |
-| 2 | TWO |
-| 3 | THREE |
-| 4 | FOUR |
-| 5 | FIVE |
-| 6 | SIX |
-| 7 | SEVEN |
-| 8 | EIGHT |
-| 9 | NINE |
-| 10 | TEN |
-| 11 | ELEVEN |
-| 12 | TWELVE |
-| 13 | THIRTEEN |
-| 14 | FOURTEEN |
-| 15 | FIFTEEN |
-| 16 | SIXTEEN |
-| 17 | SEVENTEEN |
-| 18 | EIGHTEEN |
-| 19 | NINETEEN |
-| 20 | TWENTY |
+| Number words level | Apples / numeral | Number word |
+| --- | --- | --- |
+| 2 | 1 | ONE |
+| 2 | 2 | TWO |
+| 2 | 3 | THREE |
+| 2 | 4 | FOUR |
+| 2 | 5 | FIVE |
+| 2 | 6 | SIX |
+| 2 | 7 | SEVEN |
+| 2 | 8 | EIGHT |
+| 2 | 9 | NINE |
+| 2 | 10 | TEN |
+| 3 | 11 | ELEVEN |
+| 3 | 12 | TWELVE |
+| 3 | 13 | THIRTEEN |
+| 3 | 14 | FOURTEEN |
+| 3 | 15 | FIFTEEN |
+| 3 | 16 | SIXTEEN |
+| 3 | 17 | SEVENTEEN |
+| 3 | 18 | EIGHTEEN |
+| 3 | 19 | NINETEEN |
+| 3 | 20 | TWENTY |
+| 4 | 10 | TEN |
+| 4 | 20 | TWENTY |
+| 4 | 30 | THIRTY |
+| 4 | 40 | FORTY |
+| 4 | 50 | FIFTY |
+| 4 | 60 | SIXTY |
+| 4 | 70 | SEVENTY |
+| 4 | 80 | EIGHTY |
+| 4 | 90 | NINETY |
+| 4 | 100 | ONE HUNDRED |
 
 ## Every Garden addition
 

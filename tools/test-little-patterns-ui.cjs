@@ -835,3 +835,38 @@ test('later passes through a small level arrange the same quantity differently a
   a.click('#help');
   assert.equal(a.store('garden-rounds').count.seen.length, Math.min(2, spread.target));
 });
+
+test('Number words to one hundred reuse the tray and can be chosen or typed', t => {
+  const a = app(t);
+  a.w.LP.savePrefs({ ...a.w.LP.prefs, numberWords: 'choose', choices: 3 });
+  a.click('[data-mode="words"]'); a.click('[data-word-tab="numbers"]'); a.click('#support');
+  const levels = a.w.document.querySelectorAll('.level-picker button');
+  assert.equal(levels.length, 4);
+  levels[3].click();
+  Array.from(a.w.document.querySelectorAll('.puzzle-picker button')).find(b => b.textContent === '100').click();
+  assert.match(a.query('#support').textContent, /Level 4 of 4/);
+  assert.equal(a.w.document.querySelectorAll('.tray .stick').length, 10, 'one hundred is ten sticks');
+  assert.equal(a.query('.tray').getAttribute('role'), 'img');
+  assert.equal(a.query('.number-total').textContent, '100');
+  assert.ok(a.query('[data-choice="ONE HUNDRED"]'));
+  a.click('[data-choice="ONE HUNDRED"]');
+  assert.match(a.query('#speech').textContent, /ONE HUNDRED\./);
+  assert.match(a.query('.number-model').textContent, /ONE HUNDRED/);
+  a.w.LP.savePrefs({ ...a.w.LP.prefs, numberWords: 'type' });
+  a.click('#support');
+  a.w.document.querySelectorAll('.level-picker button')[2].click();
+  Array.from(a.w.document.querySelectorAll('.puzzle-picker button')).find(b => b.textContent === '13').click();
+  assert.equal(a.w.document.querySelectorAll('.tray .five-frame.ten').length, 2, 'a teen is a full ten-frame plus a second frame');
+  assert.equal(a.query('.stick'), null);
+  assert.match(a.query('#support').textContent, /Level 3 of 4/);
+  for (const key of ['T', 'H', 'I', 'R', 'T', 'E', 'E', 'N']) a.click(`[data-key="${key}"]`);
+  a.click('#check-word');
+  assert.match(a.query('#speech').textContent, /THIRTEEN\./);
+  a.click('#support');
+  a.w.document.querySelectorAll('.level-picker button')[3].click();
+  Array.from(a.w.document.querySelectorAll('.puzzle-picker button')).find(b => b.textContent === '100').click();
+  for (const key of ['O', 'N', 'E', 'Space', 'H', 'U', 'N', 'D', 'R', 'E', 'D']) a.click(`[data-key="${key}"]`);
+  assert.equal(a.query('#word-input').value, 'ONE HUNDRED');
+  a.click('#check-word');
+  assert.equal(a.query('#next').hidden, false);
+});
