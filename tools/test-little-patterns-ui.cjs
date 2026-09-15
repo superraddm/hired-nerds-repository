@@ -585,3 +585,20 @@ test('the Words answer box is a single line at a stable width with Enter and the
   a.click('[data-word-tab="numbers"]');
   assert.equal(a.query('#word-input').tagName, 'INPUT');
 });
+
+test('sound buttons name the state, Nook wears a short name tag, and the block controls read as names', t => {
+  const a = app(t);
+  assert.equal(a.query('[data-sound]').textContent, '♪ Sound: off');
+  a.click('[data-sound]');
+  assert.equal(a.query('[data-sound]').textContent, '♪ Sound: on');
+  assert.equal(a.query('[data-sound]').getAttribute('aria-pressed'), 'true');
+  assert.equal(a.query('.name-tag').textContent, 'NOOK');
+  const b = app(t, 'blocks.html');
+  assert.equal(b.query('[data-sound]').textContent, '♪ Sound: off');
+  const down = b.query('[data-action="down"]');
+  assert.equal(down.childNodes[1].textContent, 'Down');
+  assert.equal(down.querySelector('small').textContent, 'hold');
+  assert.match(down.getAttribute('aria-label'), /Hold to move faster/);
+  const css = fs.readFileSync(path.join(root, 'blocks-live.css'), 'utf8');
+  assert.match(css, /\.overlay \.primary\{flex:0 0 auto/, 'Keep playing no longer inherits flex:1 inside the vertical overlay');
+});
