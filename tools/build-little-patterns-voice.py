@@ -26,7 +26,7 @@ PITCH_RATE = 24000  # A small fixed pitch lift from 22050 Hz, identical on every
 def bank():
     program = """
 const L=require('./public/fireworks/little-patterns/learning.js');
-const texts=[...Object.keys(L.WORD_EMOJIS),...L.NUMBER_WORDS.slice(1),...L.PICTURES.map(p=>p.word),...Object.values(L.FEEDBACK)];
+const texts=[...Object.keys(L.WORD_SYMBOLS),...L.NUMBER_WORDS.slice(1),...L.PICTURES.map(p=>p.word),...Object.values(L.FEEDBACK)];
 for(let i=0;i<L.SENTENCES.length;i++){
  const r=L.sentenceRound(i,L.defaults);texts.push(L.sentencePrompt(r));r.done=true;texts.push(L.sentencePrompt(r));
 }

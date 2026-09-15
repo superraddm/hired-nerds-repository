@@ -82,7 +82,7 @@ test('word pictures toggle both ways while the sentence picture and writing stay
   assert.equal(a.query('#sentence-picture').hidden, false);
   const emojis = Array.from(a.w.document.querySelectorAll('.word-emoji'));
   assert.equal(emojis.length, 3);
-  assert.ok(emojis.every(el => el.hidden && el.textContent.trim()));
+  assert.ok(emojis.every(el => el.hidden && el.querySelector('img.symbol')));
   a.click('[data-key="A"]'); a.click('#word-hint');
   assert.ok(emojis.every(el => !el.hidden));
   assert.equal(a.query('#sentence-picture').hidden, false);

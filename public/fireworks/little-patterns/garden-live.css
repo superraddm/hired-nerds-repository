@@ -40,3 +40,5 @@ button.word-tile.bank{position:relative;width:100%;min-width:0;min-height:76px;p
   .sum-build .number-group{padding:10px 6px}
   .sum-result{padding:12px}
 }
+
+/* Mulberry picture symbols */.word-picture img.symbol{width:96px;height:96px;object-fit:contain}.word-emoji img.symbol{width:44px;height:44px;display:block;margin:0 auto}@media(max-width:550px){.word-picture img.symbol{width:72px;height:72px}.word-emoji img.symbol{width:36px;height:36px}}

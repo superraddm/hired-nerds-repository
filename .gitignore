@@ -1,3 +1,7 @@
 
 # wrangler local state
 .wrangler/
+
+# Full Mulberry Symbols release (52 MB zip + 42 MB categories page); only the picked SVGs in assets/symbols are tracked
+public/fireworks/little-patterns/assets/mulberry-symbols.zip
+public/fireworks/little-patterns/assets/categories-en.html

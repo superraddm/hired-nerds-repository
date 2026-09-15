@@ -24,7 +24,7 @@ The games share the existing Kpopboom host under /little-patterns/.
 | Block pace and audio | Manual movement by default; optional very slow or steady descent; hold Down for faster movement. Pause, mute, deliberate restart, and a full board that waits for undo or restart. Optional newly synthesised folk melody; no copied soundtrack. |
 | Count | Apples in a five- or ten-space tray. Tap the numeral; tap apples or Count with me to mark each object once. Choose any number from 1 to 10 directly. |
 | Add | Both groups and the joined group appear immediately with an unanswered equation. Choose among three equally styled number buttons by default. Optional number keypad or show-answer demonstration. Totals start within 5; choose quantities up to 10. |
-| Missing word | Read or play a sentence with blank in the gap, then type the missing word. Always three tappable words; taps pronounce the word. The sentence picture stays visible. Show pictures / Hide pictures toggles the candidate emojis, which start hidden. Includes nouns, doing words and describing words. |
+| Missing word | Read or play a sentence with blank in the gap, then type the missing word. Always three tappable words; taps pronounce the word. The sentence picture stays visible. Show pictures / Hide pictures toggles the candidate word pictures (Mulberry Symbols), which start hidden. Includes nouns, doing words and describing words. |
 | Missing letter | Choose a missing letter in a picture word or a grown-up's familiar word. Repeated letters can be hidden at different positions. |
 | Word order | Tap scrambled sentence tiles first to last. Placed tiles remain in their original positions, disabled, while the sentence fills. |
 | Number words | Connect quantities, numerals and ONE through TEN; show, choose or type the word. |
@@ -127,7 +127,7 @@ Old preview files remain design records, not the current playable specification.
 
 ## Content reference and speech direction (15 September)
 
-All built-in sentences, candidate words and emojis, 45 Garden sums, 30 distinct
+All built-in sentences, candidate words and picture symbols, 45 Garden sums, 30 distinct
 patterns, number words and block-row equations are listed in
 [little-patterns-content.md](little-patterns-content.md). The same reference is
 available in the browser at /little-patterns/content.html and from the hub privacy
@@ -151,3 +151,14 @@ Incorrect answers now show "Whoops! Try again" in Nook's bubble. Typed-word
 feedback also appears immediately beneath Enter and marks the input gently;
 the draft stays editable. The matching shared voice clip plays only with sound
 enabled. No penalty, reset, flash or forced progression is added.
+
+## Picture symbols (15 September, evening)
+
+Word pictures now use Mulberry Symbols (Steve Lee, CC BY-SA 4.0) instead of emoji,
+chosen because they are the closest freely licensed match to the Widgit symbols on
+Arthur's Grid device and at school; Widgit itself needs a licence and is still the
+preferred end state. Twenty-four SVGs live in `assets/symbols/` with the licence and
+the original Mulberry names in `NOTICE.txt`; the full Mulberry release and its
+categories page stay local and untracked. FLY and COLD (no Mulberry verb or plain
+adjective) became JUMP and DRY, with voice clips regenerated. The allow-list adds
+every symbol named in learning.js automatically.

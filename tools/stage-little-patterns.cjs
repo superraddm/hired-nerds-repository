@@ -9,6 +9,10 @@ const files = [
   'assets/nook.png', 'LICENSE.txt', 'content.html', 'voice-library.js',
   'assets/voice/manifest.json', 'assets/voice/NOTICE.txt'
 ];
+// Picture symbols follow the word map in learning.js, so a new word cannot ship without its picture.
+const L = require('../public/fireworks/little-patterns/learning.js');
+files.push('assets/symbols/NOTICE.txt');
+for (const stem of new Set(Object.values(L.WORD_SYMBOLS))) files.push('assets/symbols/' + stem + '.svg');
 const voice = JSON.parse(fs.readFileSync(path.join(source, 'assets/voice/manifest.json'), 'utf8'));
 for (const clip of Object.values(voice.clips)) {
   if (!/^assets\/voice\/[a-f0-9]{16}\.wav$/.test(clip.file)) throw Error('Invalid voice asset path');

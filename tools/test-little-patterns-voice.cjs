@@ -9,7 +9,7 @@ const manifest = JSON.parse(fs.readFileSync(path.join(root, 'assets/voice/manife
 const key = text => text.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[.!?]+$/, '');
 
 test('the bundled voice covers all built-in spoken content and its browser index matches', () => {
-  const texts = [...Object.keys(L.WORD_EMOJIS), ...L.NUMBER_WORDS.slice(1), ...L.PICTURES.map(p => p.word), ...Object.values(L.FEEDBACK), "Hello! I'm Nook. Let's play."];
+  const texts = [...Object.keys(L.WORD_SYMBOLS), ...L.NUMBER_WORDS.slice(1), ...L.PICTURES.map(p => p.word), ...Object.values(L.FEEDBACK), "Hello! I'm Nook. Let's play."];
   for (let i = 0; i < L.SENTENCES.length; i++) {
     const round = L.sentenceRound(i, L.defaults);
     texts.push(L.sentencePrompt(round)); round.done = true; texts.push(L.sentencePrompt(round));

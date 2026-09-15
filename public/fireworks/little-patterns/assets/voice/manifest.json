@@ -43,13 +43,13 @@
       "file": "assets/voice/77af778b51abd4a3.wav",
       "seconds": 0.436
     },
-    "cold": {
-      "file": "assets/voice/e272deecde720ffc.wav",
-      "seconds": 0.524
-    },
     "dog": {
       "file": "assets/voice/cd6357efdd966de8.wav",
       "seconds": 0.547
+    },
+    "dry": {
+      "file": "assets/voice/b755cb248c3c4a7d.wav",
+      "seconds": 0.45
     },
     "eight": {
       "file": "assets/voice/c195d2d875623436.wav",
@@ -71,10 +71,6 @@
       "file": "assets/voice/c06b0cfe0cc5e900.wav",
       "seconds": 0.465
     },
-    "fly": {
-      "file": "assets/voice/f4debdb7ab7dd958.wav",
-      "seconds": 0.488
-    },
     "four": {
       "file": "assets/voice/04efaf080f5a3e74.wav",
       "seconds": 0.395
@@ -86,6 +82,10 @@
     "hot": {
       "file": "assets/voice/7f5d1618e7d28cc7.wav",
       "seconds": 0.506
+    },
+    "jump": {
+      "file": "assets/voice/6bdaf554e42029bd.wav",
+      "seconds": 0.403
     },
     "loud": {
       "file": "assets/voice/db1a60bbff220d09.wav",

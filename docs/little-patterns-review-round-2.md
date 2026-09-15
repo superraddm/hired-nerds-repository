@@ -176,7 +176,7 @@ default with the A–Z keys, choices as the support option, matching the rest.
 
 **E2. Sentence bank is small (14).** Fine for a first release, but it will be
 exhausted in one sitting. Add a second bank around a second scene (bath time, bed
-time, the garden itself) using the same 24 emoji words, and let the parent add a
+time, the garden itself) using the same 24 symbol words, and let the parent add a
 whole sentence with a gap word in Grown-ups ("Arthur likes TRAINS."), since custom
 words already exist for Missing letter.
 
@@ -420,7 +420,7 @@ shape. Small commits, one numbered item each where possible. Do not publish;
 ### 6. Later enrichment (C3, D1, E2, E3, B4)
 
 23. Missing addend (`2 + ? = 5`) as its own level with its own clue model.
-24. Second sentence bank (new scene, same 24 emoji words), longer sentences for
+24. Second sentence bank (new scene, same 24 symbol words), longer sentences for
     Word order, then grown-up custom sentences with gap choice and distractors.
 25. Make-your-own bead string with readback (needs edit, delete, length limit).
 

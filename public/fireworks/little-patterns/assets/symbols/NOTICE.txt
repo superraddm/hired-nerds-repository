@@ -1,0 +1,42 @@
+Little Patterns picture symbols
+
+Mulberry Symbols by Steve Lee are licenced under the Creative Commons
+Attribution-ShareAlike 4.0 License. See https://mulberrysymbols.org for details.
+Source: Mulberry Symbols version: 3.6.1 (EN-symbols). Copies in this folder are unmodified except for renaming.
+These symbols remain free of charge; they must not be sold.
+
+Game word -> Mulberry symbol
+APPLE    apple.svg
+SUN      sun.svg
+TREE     tree.svg
+BALL     ball.svg
+CAT      cat.svg
+DOG      dog.svg
+BUS      bus.svg
+FISH     fish.svg
+MOON     Moon.svg
+FLOWER   flower.svg
+RUN      run_,_to.svg
+SWIM     swim_,_to.svg
+TALL     tall.svg
+HOT      hot.svg
+BIG      large.svg
+JUMP     jump_,_to.svg
+READ     read_,_to.svg
+SING     sing_,_to.svg
+LOUD     loud.svg
+FAST     fast_2.svg
+DRY      dry.svg
+WET      wet.svg
+ASLEEP   sleep_on_side_,_to.svg
+SOFT     soft.svg
+
+--- Original LICENSE.txt from the Mulberry release ---
+The Mulberry Symbol set
+=======================
+
+Copyright 2018-2026 Steve Lee
+
+This work is licensed under the Creative Commons Attribution-Share Alike License. 
+
+To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/4.0/
