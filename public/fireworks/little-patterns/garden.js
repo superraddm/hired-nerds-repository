@@ -85,8 +85,9 @@
     const r=current();if(r)r.feedback='retry';
     $('speech').textContent=L.FEEDBACK.retry;
     const feedback=$('answer-feedback');
-    if(feedback){feedback.textContent=L.FEEDBACK.retry;$('word-input')?.setAttribute('aria-invalid','true');LP.status('');}
-    else LP.status(L.FEEDBACK.retry+' '+detail);
+    // One neutral line in the bubble (and beside Enter for typed answers); the status carries only the hint.
+    if(feedback){feedback.textContent=L.FEEDBACK.retry;$('word-input')?.setAttribute('aria-invalid','true');}
+    LP.status(detail);
     save();
     LP.audio.speak(L.FEEDBACK.retry,{auto:true});
   }
@@ -98,9 +99,9 @@
   function typeKey(key){const input=$('word-input');if(!input)return;const text=key.length===1?letters(key):key;const result=L.editText(input.value,cursor.start,cursor.end,text);input.value=result.value;setDraft(result.value);cursor={start:result.caret,end:result.caret};input.setSelectionRange(result.caret,result.caret);$('next').hidden=true;$('repeat').hidden=true;LP.status('');}
   function typePad(key){const r=current();if(!r||r.done)return;clearFeedback();r.draft=key==='Backspace'?r.draft.slice(0,-1):(r.draft+key).slice(0,2);save();const typed=$('task').querySelector('.typed');if(typed)typed.textContent=r.draft||'?';LP.status('');}
   function checkSum(){const r=current();if(!r||r.done)return;if(!r.draft){LP.status('Type a number first.');return;}if(Number(r.draft)!==r.answer){retryAnswer('Count all the apples together.');return;}succeed();}
-  function checkWord(){const r=current();if(!r)return;const expected=wordTab==='sentence'?r.gap:r.word;if(!String(r.draft).trim()){$('answer-feedback').textContent='Type a word first.';return;}if(!L.matches(r.draft,expected)){retryAnswer('Look at the picture and try another word.');return;}succeed();}
+  function checkWord(){const r=current();if(!r)return;const expected=wordTab==='sentence'?r.gap:r.word;if(!String(r.draft).trim()){$('answer-feedback').textContent='Type a word first.';return;}if(!L.matches(r.draft,expected)){retryAnswer('Look at the picture. Which word fits?');return;}succeed();}
   function speakCurrent(){const r=current();if(wordTab==='sentence'){LP.audio.speak(L.sentencePrompt(r));return;}if(wordTab==='numbers')LP.audio.speak(r.word);else if(wordTab==='letter')LP.audio.speak(r.word);else LP.audio.speak(r.words.join(' ').toLowerCase()+'.');}
-  function choose(value){const r=current();if(!r||r.done)return;const answer=mode==='count'?r.target:mode==='add'?r.answer:mode==='patterns'?r.answer:wordTab==='sentence'?r.gap:wordTab==='letter'?r.letter:r.word;if(String(value)!==String(answer)){retryAnswer(mode==='patterns'?'Look at the repeating group. You can try another piece.':mode==='words'?(wordTab==='sentence'?'Read the sentence again. The picture is a clue.':wordTab==='letter'?'Look at the letters around the gap. You can try again.':'Look at the number and its apples. You can try again.'):'Look at the apples. You can count them and try again.');return;}succeed();}
+  function choose(value){const r=current();if(!r||r.done)return;const answer=mode==='count'?r.target:mode==='add'?r.answer:mode==='patterns'?r.answer:wordTab==='sentence'?r.gap:wordTab==='letter'?r.letter:r.word;if(String(value)!==String(answer)){retryAnswer(mode==='patterns'?'Look at the group that repeats.':mode==='words'?(wordTab==='sentence'?'Read the sentence once more. The picture is a clue.':wordTab==='letter'?'Look at the letters around the gap.':'Look at the number and its apples.'):'Look at the apples and count them.');return;}succeed();}
   function placeTile(index){const r=current();if(r.done||r.used.includes(index))return;if(r.tiles[index]!==r.words[r.used.length]){retryAnswer('Which word comes '+(r.used.length?'next':'first')+'?');return;}r.used.push(index);r.feedback='';if(r.used.length===r.words.length){succeed();return;}render();const next=$('task').querySelector('[data-tile]:not(:disabled)');if(next)next.focus({preventScroll:true});}
   function countFruit(index){const r=current(),focused=document.activeElement?.dataset.fruit;if(!r.seen.includes(index))r.seen.push(index);countView();if(focused!==undefined)$('task').querySelector('[data-fruit="'+focused+'"]')?.focus({preventScroll:true});LP.status(r.seen.length===r.target?r.target+' '+(r.target===1?'apple':'apples')+' altogether.':r.seen.length+' counted.');save();}
   function hint(selector){$('task').querySelectorAll('.choice').forEach(b=>b.classList.toggle('hint',b.matches(selector)));}

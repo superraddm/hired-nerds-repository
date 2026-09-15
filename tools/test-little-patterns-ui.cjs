@@ -509,3 +509,17 @@ test('success is announced once: the completed model stays, no duplicate result 
   a.click('[data-mode="count"]');
   assert.equal(a.query('#status').textContent, 'Again, or the next picnic.', 'a re-render carries an instruction, not the announcement again');
 });
+
+test('a wrong answer gives one neutral line in the bubble and one hint in the status, never a repeated "try again"', t => {
+  const a = app(t);
+  const wrong = () => Array.from(a.w.document.querySelectorAll('[data-choice]')).find(b => b.dataset.choice !== String(a.store('garden-rounds')[a.store('garden-position').mode === 'words' ? a.store('garden-position').wordTab : a.store('garden-position').mode].target)).click();
+  wrong();
+  assert.equal(a.query('#speech').textContent, 'Whoops! Try again.');
+  assert.equal(a.query('#status').textContent, 'Look at the apples and count them.');
+  a.click('[data-mode="words"]');
+  for (const key of ['C', 'A', 'T']) a.click(`[data-key="${key}"]`);
+  a.click('#check-word');
+  assert.equal(a.query('#answer-feedback').textContent, 'Whoops! Try again.');
+  assert.equal(a.query('#status').textContent, 'Look at the picture. Which word fits?');
+  assert.ok(!/try/i.test(a.query('#status').textContent));
+});
