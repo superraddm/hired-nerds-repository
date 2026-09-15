@@ -109,3 +109,18 @@ button.word-tile.bank{position:relative;width:100%;min-width:0;min-height:76px;p
 
 /* Named practice sets in the Add picker. */
 .set-picker{display:flex;flex-direction:column;gap:8px;margin:8px 0 12px}.set-picker button{min-height:48px;text-align:left;font-size:15px;padding:10px 14px}.set-picker button[aria-pressed=true]{background:#fff0ad;border-color:#d3b863;color:#66542a;outline:3px solid #66542a;outline-offset:2px}
+
+/* Counting tray: tens and ones are 48 px tap targets; a counted ten or apple shows its running total. */
+.tray.counting{align-items:flex-end}
+.tray button.five-frame{position:relative;cursor:pointer;font:inherit;color:inherit}
+.tray button.five-frame.counted{border-color:#477b59;background:#e2efd7}
+.tray button.five-frame>.count-tag{position:absolute;top:-10px;right:-10px;width:auto;min-width:26px;height:26px;padding:0 6px;font-size:13px;border-radius:13px;background:#fff9d5;border:2px solid #477b59}
+button.stick{min-width:48px;width:48px;cursor:pointer;padding:5px 0}
+button.stick.counted{background:#8fb28a;border-color:#477b59}
+button.stick>.count-tag{position:absolute;top:-12px;left:50%;transform:translateX(-50%);width:auto;min-width:26px;height:24px;padding:0 6px;font-size:12px;border-radius:12px;background:#fff9d5;border:2px solid #477b59}
+.tray.counting button.pocket{cursor:pointer;font:inherit;color:inherit;min-height:48px;height:48px}
+.tray.counting button.pocket.counted{border:3px solid #477b59;background:#e2efd7}
+.tray.counting button.pocket .count-tag{font-size:11px;width:22px;height:22px;bottom:0;right:0}
+.equation.count-answer{margin:6px 0 2px}
+@media(max-width:780px){.tray button.stick{width:48px}.tray button.five-frame{grid-template-columns:repeat(5,40px)}}
+@media(max-width:550px){.tray button.five-frame{grid-template-columns:repeat(5,minmax(0,1fr));width:100%;max-width:250px}}

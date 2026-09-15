@@ -324,10 +324,16 @@ test('levels are separate per activity, the Next level action is explicit, and a
   a.click('[data-choice="1"]');
   assert.equal(a.query('#next-level').hidden, false);
   a.click('#next-level');
-  assert.match(a.query('#support').textContent, /Level 2 of 2/);
+  assert.match(a.query('#support').textContent, /Level 2 of 6/);
+  assert.equal(a.query('#next-level').hidden, true, 'a fresh round at the new level has not been answered yet');
+  a.click('[data-mode="patterns"]'); a.click('#support');
+  a.w.document.querySelectorAll('.level-picker button')[6].click(); a.click('[data-close]');
+  a.click(`[data-choice="${a.store('garden-rounds').patterns.answer}"]`);
+  assert.equal(a.query('#next').hidden, false);
   assert.equal(a.query('#next-level').hidden, true, 'the top level offers no further step');
+  a.click('[data-mode="count"]');
   const position = a.store('garden-position');
-  assert.deepEqual(position.levels, { count: 2, add: 1, numbers: 1, patterns: 1 });
+  assert.deepEqual(position.levels, { count: 2, add: 1, numbers: 1, patterns: 7 });
   assert.match(a.query('#next-level').textContent, /Next level/);
   assert.equal(position.operation, 'add');
   a.click('[data-mode="add"]');
@@ -348,7 +354,7 @@ test('an older save with the shared 1 to 10 range and a pattern index restores o
   });
   assert.match(a.query('#support').textContent, /Level 5 of 7/);
   a.click('[data-mode="count"]');
-  assert.match(a.query('#support').textContent, /Level 2 of 2/);
+  assert.match(a.query('#support').textContent, /Level 2 of 6/);
   assert.equal(a.store('garden-rounds').count.target, 7);
   assert.deepEqual(a.store('garden-rounds').count.seen, [0, 1]);
 });
@@ -738,4 +744,68 @@ test('the Add picker offers Doubles and Make ten; Next cycles inside the set and
   assert.match(a.query('#support').textContent, /Level 1 of 5 · Add/);
   const b = app(t, 'garden.html', { 'lp-player-player-1-garden-position': { mode: 'add', operation: 'take', selection: { addSet: { set: 'ten', index: 3 } } } });
   assert.match(b.query('.equation').textContent, /6 \+ 4 = \?/, 'a saved set restores at its place');
+});
+
+test('Count levels 3 to 6: a full ten-frame first, then sticks; Count with me counts tens then ones with spoken running totals; the keypad is optional', async t => {
+  const a = app(t);
+  a.click('#support');
+  const levels = a.w.document.querySelectorAll('.level-picker button');
+  assert.equal(levels.length, 6);
+  levels[2].click();
+  assert.equal(a.w.document.querySelectorAll('.puzzle-picker button').length, 10, 'level 3 offers 11 to 20');
+  Array.from(a.w.document.querySelectorAll('.puzzle-picker button')).find(b => b.textContent === '13').click();
+  assert.match(a.query('#support').textContent, /Level 3 of 6/);
+  assert.ok(a.query('.tray.counting'));
+  assert.equal(a.w.document.querySelectorAll('button.five-frame.ten[data-stick]').length, 1, 'the ten is one tappable full frame');
+  assert.equal(a.query('button.five-frame.ten').querySelectorAll('.pocket.full').length, 10);
+  assert.equal(a.w.document.querySelectorAll('button.pocket[data-fruit]').length, 3);
+  assert.equal(a.query('.stick'), null, 'no sticks until a level has established the ten');
+  a.click('[data-sound]');
+  a.click('#help');
+  assert.equal(a.query('button.five-frame.ten .count-tag').textContent, '10', 'Count with me counts the ten first');
+  assert.equal(a.query('#status').textContent, '10 counted.');
+  assert.equal(a.plays.at(-1), a.w.LPVoiceLibrary.clips.ten.file);
+  a.click('#help');
+  assert.equal(a.query('button.pocket.counted .count-tag').textContent, '11');
+  assert.equal(a.plays.at(-1), a.w.LPVoiceLibrary.clips.eleven.file);
+  a.click('button.five-frame.ten');
+  assert.deepEqual(a.store('garden-rounds').count.seen, ['t0', 'o0'], 'each group counts once');
+  a.click('#help'); a.click('#help');
+  assert.equal(a.query('#status').textContent, '13 apples altogether.');
+  a.click('#help');
+  assert.ok(a.query('[data-choice="13"].hint'));
+  assert.ok(Array.from(a.w.document.querySelectorAll('[data-choice]')).every(b => Number(b.dataset.choice) >= 11 && Number(b.dataset.choice) <= 20), 'numeral choices remain at every level');
+  a.click('[data-choice="13"]');
+  assert.match(a.query('#speech').textContent, /13 apples\./);
+  a.click('#next-level');
+  assert.match(a.query('#support').textContent, /Level 4 of 6/);
+  assert.ok(a.w.document.querySelectorAll('button.stick').length >= 1, 'tens to 50 are sticks');
+  assert.equal(a.w.document.querySelectorAll('button.pocket[data-fruit]').length, 0, 'nothing loose at level 4');
+  a.click('#help');
+  assert.equal(a.query('button.stick.counted .count-tag').textContent, '10');
+  a.w.LP.savePrefs({ ...a.w.LP.prefs, countAnswer: 'type' });
+  a.click('#support');
+  a.w.document.querySelectorAll('.level-picker button')[5].click();
+  Array.from(a.w.document.querySelectorAll('.puzzle-picker button')).find(b => b.textContent === '73').click();
+  assert.equal(a.w.document.querySelectorAll('button.stick').length, 7);
+  assert.equal(a.w.document.querySelectorAll('button.pocket[data-fruit]').length, 3);
+  assert.ok(a.query('#check-sum'), 'the keypad is available at any level');
+  for (const key of ['7', '3']) a.click(`[data-pad="${key}"]`);
+  assert.equal(a.query('.count-answer .typed').textContent, '73');
+  a.click('#check-sum');
+  assert.match(a.query('#speech').textContent, /73 apples\./);
+  a.click('[data-mode="add"]'); a.click('[data-mode="count"]');
+  assert.match(a.query('#speech').textContent, /73 apples\./);
+  const b = app(t, 'garden.html', {
+    'lp-player-player-1-little-patterns-v1': { countAnswer: 'type' },
+    'lp-player-player-1-garden-position': { mode: 'count', levels: { count: 6 }, selection: { count: 100 } },
+    'lp-player-player-1-garden-rounds': { count: { id: 'count:v2:L6:count:100', target: 100, seen: ['t0', 't1', 't9', 'o0', 'x1', 3], draft: '10', done: false } }
+  });
+  assert.equal(b.w.document.querySelectorAll('button.stick').length, 10, 'one hundred is ten sticks, never a hundred apples');
+  assert.deepEqual(b.store('garden-rounds').count.seen, ['t0', 't1', 't9'], 'only valid tokens restore');
+  assert.equal(b.query('.count-answer .typed').textContent, '10');
+  b.click('[data-pad="0"]'); b.click('#check-sum');
+  assert.match(b.query('#speech').textContent, /100 apples\./);
+  b.click('[data-mode="count"]');
+  assert.equal(b.query('#next').hidden, false);
 });

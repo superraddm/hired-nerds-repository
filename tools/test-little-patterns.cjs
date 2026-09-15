@@ -62,7 +62,7 @@ test('every picture word has a bundled Mulberry symbol that is a plain local SVG
 
 // Per-activity levels: chosen explicitly, clamped safely, and each level has its own sequence of examples.
 test('levels are per activity, clamped to the published maximum and drive their own example sequences',()=>{
-  assert.deepEqual(learning.LEVELS,{count:2,add:5,numbers:2,patterns:7});
+  assert.deepEqual(learning.LEVELS,{count:6,add:5,numbers:2,patterns:7});
   assert.deepEqual(learning.OPERATIONS,['add','take']);
   for(const kind of Object.keys(learning.LEVELS)){assert.equal(learning.clampLevel(kind,0),1);assert.equal(learning.clampLevel(kind,'2'),1);assert.equal(learning.clampLevel(kind,learning.LEVELS[kind]+1),1);assert.equal(learning.clampLevel(kind,learning.LEVELS[kind]),learning.LEVELS[kind]);}
   assert.deepEqual(learning.countSequence(1),[1,2,3,4,5]);assert.equal(learning.countSequence(2).length,10);
@@ -133,4 +133,21 @@ test('Doubles and Make ten are fixed addition sets that fit within ten and cycle
   assert.deepEqual(learning.SUM_SETS.ten.sums[0],[9,1]);assert.deepEqual(learning.SUM_SETS.ten.sums[8],[1,9]);
   for(const name of Object.keys(learning.SUM_SETS)){const set=learning.SUM_SETS[name];for(let i=0;i<set.sums.length+2;i++){const r=learning.setRound(name,i,p);assert.equal(r.set,name);assert.equal(r.operation,'add');assert.deepEqual([r.a,r.b],set.sums[i%set.sums.length]);assert.equal(r.answer,r.a+r.b);assert.ok(r.choices.includes(r.answer));assert.equal(new Set(r.choices).size,3);assert.equal(r.level,2);assert.match(r.id,/^add:v2:L2:add:/);}}
   assert.equal(learning.setRound('nothing',0,p),null);
+});
+
+// Count to 100: six levels, tens-and-ones tokens counted tens first, a keypad answer mode independent of level.
+test('count levels 3 to 6 span 11 to 100 in tens and ones, with tokens that count each group once',()=>{
+  const p=learning.defaults;
+  assert.deepEqual(learning.RANGES.count,[5,10,20,50,50,100]);
+  assert.deepEqual(learning.countSequence(1),[1,2,3,4,5]);assert.equal(learning.countSequence(2).length,10);
+  assert.deepEqual([...learning.countSequence(3)].sort((a,b)=>a-b),[11,12,13,14,15,16,17,18,19,20]);
+  assert.deepEqual([...learning.countSequence(4)].sort((a,b)=>a-b),[10,20,30,40,50]);
+  const l5=[...learning.countSequence(5)].sort((a,b)=>a-b);assert.equal(l5[0],21);assert.equal(l5[l5.length-1],50);assert.equal(l5.length,30);
+  const l6=[...learning.countSequence(6)].sort((a,b)=>a-b);assert.equal(l6[0],51);assert.equal(l6[l6.length-1],100);assert.equal(l6.length,50);
+  for(let level=1;level<=6;level++){const seq=learning.countSequence(level);const seen=new Set();for(let i=0;i<seq.length;i++){const r=learning.countRound(i,p,level);seen.add(r.target);assert.equal(r.level,level);assert.ok(r.choices.includes(r.target));assert.equal(new Set(r.choices).size,p.choices);assert.ok(r.choices.every(n=>seq.includes(n)),'numeral choices stay inside the level');assert.equal(r.draft,'');assert.ok(learning.successLine('count',r).speech.length>=3);}assert.equal(seen.size,seq.length);}
+  assert.deepEqual(learning.countTokens(23),['t0','t1','o0','o1','o2']);assert.deepEqual(learning.countTokens(40),['t0','t1','t2','t3']);assert.deepEqual(learning.countTokens(7),['o0','o1','o2','o3','o4','o5','o6']);
+  assert.deepEqual(learning.runningTotals(['t0','t1','o0','o1']),{t0:10,t1:20,o0:21,o1:22});
+  assert.deepEqual(learning.runningTotals([0,1,2]),{0:1,1:2,2:3},'levels 1 and 2 keep plain ordinals');
+  assert.equal(learning.usesTray('count',2),false);assert.equal(learning.usesTray('count',3),true);assert.equal(learning.usesSticks('count',3),false,'level 3 shows a full ten-frame so a ten is visibly ten apples');assert.equal(learning.usesSticks('count',4),true);
+  assert.equal(learning.normalisePrefs({countAnswer:'type'}).countAnswer,'type');assert.equal(learning.normalisePrefs({countAnswer:'demo'}).countAnswer,'choose');
 });
