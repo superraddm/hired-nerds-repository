@@ -7,9 +7,9 @@ const C = require('../public/fireworks/little-patterns/core.js');
 const prefs = L.normalisePrefs({ range: 10, choices: 3 });
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const patterns = new Map();
-// Saved indices are normalised to this range. Later level-seven rounds repeat.
-for (let index = 0; index < 10000; index++) {
-  const r = L.patternRound(index, prefs);
+// Levels are explicit; within a level the round index rotates shapes and gap positions and repeats after a short cycle.
+for (let level = 1; level <= L.LEVELS.patterns; level++) for (let index = 0; index < 200; index++) {
+  const r = L.patternRound(index, prefs, level);
   const key = JSON.stringify([r.level, r.sequence, r.gap]);
   if (!patterns.has(key)) patterns.set(key, { ...r, index });
 }
@@ -36,21 +36,21 @@ const sections = [
   },
   {
     title: 'Counting and number words',
-    note: 'Count and Number words use quantities 1–10. The starting range is 1–5; every quantity can be chosen directly. Typed answers ignore case and surrounding spaces.',
+    note: 'Count and Number words have levels chosen in the activity: level 1 is 1–5 and level 2 is 1–10. Every quantity in the level can be chosen directly. Typed answers ignore case and surrounding spaces.',
     headers: ['Apples / numeral', 'Number word'],
     rows: L.NUMBER_WORDS.slice(1).map((word, index) => [index + 1, word])
   },
   {
     title: 'Every Garden addition',
-    note: 'All 45 ordered sums with two positive groups and a total up to 10. Totals up to 5 form the default set. The picker allows every sum below; reversed groups are separate examples. Zero is not part of this release.',
+    note: 'All 45 ordered sums with two positive groups and a total up to 10. Level 1 (totals up to 5) is the default; level 2 adds totals up to 10. The picker allows every sum in the level; reversed groups are separate examples. Zero is not part of this release.',
     headers: ['First group', 'Second group', 'Answer', 'Equation'],
-    rows: Array.from({ length: 45 }, (_, index) => { const r = L.sumRound(index, prefs); return [r.a, r.b, r.total, `${r.a} + ${r.b} = ${r.total}`]; })
+    rows: Array.from({ length: 45 }, (_, index) => { const r = L.sumRound(index, prefs, 2); return [r.a, r.b, r.total, `${r.a} + ${r.b} = ${r.total}`]; })
   },
   {
     title: 'Every pattern and missing-shape answer',
-    note: `${patterns.size} distinct sequence/gap combinations. Each row shows the first round index that produces it. Levels 1–6 have three successive rounds each; level 7 continues cycling. Answer-choice order and distractors can vary, but these are all the underlying answers. All levels are open.`,
+    note: `${patterns.size} distinct sequence/gap combinations. Each row shows the first round index within its level that produces it. Levels are chosen in the activity and never advance on their own; Next gives another example at the same level. Answer-choice order and distractors can vary, but these are all the underlying answers. All levels are open.`,
     headers: ['Level', 'First round index', 'Repeating unit', 'Puzzle (? is the gap)', 'Answer'],
-    rows: [...patterns.values()].map(r => [r.level + 1, r.index, r.unit.join(' · '), r.sequence.map((shape, i) => i === r.gap ? '?' : shape).join(' · '), r.answer])
+    rows: [...patterns.values()].map(r => [r.level, r.index, r.unit.join(' · '), r.sequence.map((shape, i) => i === r.gap ? '?' : shape).join(' · '), r.answer])
   },
   {
     title: 'Colour Blocks pieces',

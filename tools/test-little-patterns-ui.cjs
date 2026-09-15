@@ -48,11 +48,13 @@ test('Count, immediate addition and every pattern level remain directly availabl
   assert.match(a.query('.equation').textContent, /1 \+ 1 = 2/);
   a.click('[data-mode="patterns"]');
   a.click('#support');
-  const levels = a.w.document.querySelectorAll('.puzzle-picker button');
+  const levels = a.w.document.querySelectorAll('.level-picker button');
   assert.equal(levels.length, 7);
   levels[6].click();
-  assert.match(a.query('#support').textContent, /Level 7/);
+  assert.match(a.query('#support').textContent, /Level 7 of 7/);
+  a.click('[data-close]');
   assert.equal(a.query('.lp-modal'), null);
+  assert.equal(a.store('garden-position').levels.patterns, 7);
 });
 
 test('missing-word input is typed, checked and retained separately for each player', t => {
@@ -288,12 +290,64 @@ test('Count with me and direct taps count an apple only once and retain keyboard
   assert.equal(a.w.document.activeElement.dataset.fruit, '0');
 });
 
-test('an explicitly chosen number continues from that number', t => {
+test('an explicitly chosen number continues from that number within its level', t => {
   const a = app(t);
   a.click('#choose-puzzle');
+  assert.equal(a.w.document.querySelectorAll('.puzzle-picker button').length, 5, 'level 1 offers 1 to 5');
+  a.w.document.querySelectorAll('.level-picker button')[1].click();
+  assert.equal(a.w.document.querySelectorAll('.puzzle-picker button').length, 10, 'level 2 offers 1 to 10');
   Array.from(a.w.document.querySelectorAll('.puzzle-picker button')).find(b => b.textContent === '7').click();
+  assert.equal(a.query('.lp-modal'), null);
   a.click('[data-choice="7"]'); a.click('#next');
   assert.equal(a.store('garden-rounds').count.target, 8);
+  assert.equal(a.store('garden-rounds').count.level, 2);
+});
+
+test('a chosen sum continues to the next sum at the same level instead of jumping back', t => {
+  const a = app(t);
+  a.click('[data-mode="add"]'); a.click('#next'); a.click('#next');
+  a.click('#support');
+  const form = a.query('#pick-sum'); form.elements.a.value = '2'; form.elements.b.value = '2';
+  a.submit('#pick-sum');
+  assert.match(a.query('.equation').textContent, /2 \+ 2 = \?/);
+  a.click('[data-choice="4"]'); a.click('#next');
+  assert.match(a.query('.equation').textContent, /1 \+ 3 = \?/);
+});
+
+test('levels are separate per activity, the Next level action is explicit, and a level change keeps other drafts', t => {
+  const a = app(t);
+  a.click('[data-mode="words"]'); a.click('[data-key="A"]');
+  a.click('[data-mode="count"]');
+  assert.equal(a.query('#next-level').hidden, true, 'no level action before the round is answered');
+  a.click('[data-choice="1"]');
+  assert.equal(a.query('#next-level').hidden, false);
+  a.click('#next-level');
+  assert.match(a.query('#support').textContent, /Level 2 of 2/);
+  assert.equal(a.query('#next-level').hidden, true, 'the top level offers no further step');
+  const position = a.store('garden-position');
+  assert.deepEqual(position.levels, { count: 2, add: 1, numbers: 1, patterns: 1 });
+  assert.equal(position.operation, 'add');
+  a.click('[data-mode="add"]');
+  assert.match(a.query('#support').textContent, /Level 1 of 2/);
+  a.click('[data-mode="words"]');
+  assert.equal(a.query('#word-input').value, 'A', 'changing the Count level never touches a Words draft');
+  a.w.LP.savePrefs({ ...a.w.LP.prefs, choices: 3 });
+  assert.equal(a.query('#word-input').value, 'A', 'a choices change rebuilds Count, not Missing word');
+  a.click('[data-mode="count"]');
+  assert.equal(a.w.document.querySelectorAll('[data-choice]').length, 3);
+});
+
+test('an older save with the shared 1 to 10 range and a pattern index restores onto explicit levels', t => {
+  const a = app(t, 'garden.html', {
+    'lp-player-player-1-little-patterns-v1': { range: 10 },
+    'lp-player-player-1-garden-position': { mode: 'patterns', indices: { patterns: 12, count: 6 } },
+    'lp-player-player-1-garden-rounds': { count: { target: 7, seen: [0, 1], done: false } }
+  });
+  assert.match(a.query('#support').textContent, /Level 5 of 7/);
+  a.click('[data-mode="count"]');
+  assert.match(a.query('#support').textContent, /Level 2 of 2/);
+  assert.equal(a.store('garden-rounds').count.target, 7);
+  assert.deepEqual(a.store('garden-rounds').count.seen, [0, 1]);
 });
 
 test('muting cancels a voice request even before its async start finishes', async t => {

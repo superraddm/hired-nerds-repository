@@ -73,7 +73,7 @@ Any letter position in these words can be the answer over repeated rounds. Space
 
 ## Counting and number words
 
-Count and Number words use quantities 1–10. The starting range is 1–5; every quantity can be chosen directly. Typed answers ignore case and surrounding spaces.
+Count and Number words have levels chosen in the activity: level 1 is 1–5 and level 2 is 1–10. Every quantity in the level can be chosen directly. Typed answers ignore case and surrounding spaces.
 
 | Apples / numeral | Number word |
 | --- | --- |
@@ -90,7 +90,7 @@ Count and Number words use quantities 1–10. The starting range is 1–5; every
 
 ## Every Garden addition
 
-All 45 ordered sums with two positive groups and a total up to 10. Totals up to 5 form the default set. The picker allows every sum below; reversed groups are separate examples. Zero is not part of this release.
+All 45 ordered sums with two positive groups and a total up to 10. Level 1 (totals up to 5) is the default; level 2 adds totals up to 10. The picker allows every sum in the level; reversed groups are separate examples. Zero is not part of this release.
 
 | First group | Second group | Answer | Equation |
 | --- | --- | --- | --- |
@@ -142,40 +142,70 @@ All 45 ordered sums with two positive groups and a total up to 10. Totals up to 
 
 ## Every pattern and missing-shape answer
 
-30 distinct sequence/gap combinations. Each row shows the first round index that produces it. Levels 1–6 have three successive rounds each; level 7 continues cycling. Answer-choice order and distractors can vary, but these are all the underlying answers. All levels are open.
+60 distinct sequence/gap combinations. Each row shows the first round index within its level that produces it. Levels are chosen in the activity and never advance on their own; Next gives another example at the same level. Answer-choice order and distractors can vary, but these are all the underlying answers. All levels are open.
 
 | Level | First round index | Repeating unit | Puzzle (? is the gap) | Answer |
 | --- | --- | --- | --- | --- |
 | 1 | 0 | circle · square | circle · square · circle · square · circle · ? | square |
 | 1 | 1 | square · triangle | square · triangle · square · triangle · square · ? | triangle |
 | 1 | 2 | triangle · diamond | triangle · diamond · triangle · diamond · triangle · ? | diamond |
+| 1 | 3 | diamond · circle | diamond · circle · diamond · circle · diamond · ? | circle |
+| 2 | 0 | circle · square | circle · square · ? · square · circle · square | circle |
+| 2 | 1 | square · triangle | square · triangle · square · ? · square · triangle | triangle |
+| 2 | 2 | triangle · diamond | triangle · diamond · triangle · diamond · ? · diamond | triangle |
 | 2 | 3 | diamond · circle | diamond · circle · ? · circle · diamond · circle | diamond |
 | 2 | 4 | circle · square | circle · square · circle · ? · circle · square | square |
 | 2 | 5 | square · triangle | square · triangle · square · triangle · ? · triangle | square |
-| 3 | 6 | triangle · diamond · diamond | triangle · diamond · diamond · triangle · diamond · ? | diamond |
-| 3 | 7 | diamond · diamond · circle | diamond · diamond · circle · diamond · diamond · ? | circle |
-| 3 | 8 | circle · square · square | circle · square · square · circle · square · ? | square |
-| 4 | 9 | square · triangle · diamond | square · triangle · diamond · square · ? · diamond | triangle |
-| 4 | 10 | triangle · diamond · circle | triangle · diamond · circle · ? · diamond · circle | triangle |
-| 4 | 11 | diamond · circle · square | diamond · circle · square · diamond · ? · square | circle |
-| 5 | 12 | circle · circle · square · square | circle · circle · square · square · ? · circle · square · square | circle |
-| 5 | 13 | square · square · triangle · triangle | square · square · triangle · triangle · square · ? · triangle · triangle | square |
-| 5 | 14 | triangle · triangle · diamond · diamond | triangle · triangle · diamond · diamond · triangle · triangle · ? · diamond | diamond |
-| 6 | 15 | diamond · circle · diamond · square | diamond · circle · diamond · square · ? · circle · diamond · square | diamond |
-| 6 | 16 | circle · square · triangle · square | circle · square · triangle · square · circle · ? · triangle · square | square |
-| 6 | 17 | square · triangle · square · diamond | square · triangle · square · diamond · square · triangle · ? · diamond | square |
-| 7 | 18 | triangle · diamond · circle · square | triangle · diamond · circle · square · ? · diamond · circle · square | triangle |
-| 7 | 19 | diamond · circle · square · triangle | diamond · circle · square · triangle · diamond · ? · square · triangle | circle |
-| 7 | 20 | circle · square · triangle · diamond | circle · square · triangle · diamond · circle · square · ? · diamond | triangle |
-| 7 | 21 | square · triangle · diamond · circle | square · triangle · diamond · circle · ? · triangle · diamond · circle | square |
-| 7 | 22 | triangle · diamond · circle · square | triangle · diamond · circle · square · triangle · ? · circle · square | diamond |
-| 7 | 23 | diamond · circle · square · triangle | diamond · circle · square · triangle · diamond · circle · ? · triangle | square |
-| 7 | 24 | circle · square · triangle · diamond | circle · square · triangle · diamond · ? · square · triangle · diamond | circle |
-| 7 | 25 | square · triangle · diamond · circle | square · triangle · diamond · circle · square · ? · diamond · circle | triangle |
-| 7 | 26 | triangle · diamond · circle · square | triangle · diamond · circle · square · triangle · diamond · ? · square | circle |
-| 7 | 27 | diamond · circle · square · triangle | diamond · circle · square · triangle · ? · circle · square · triangle | diamond |
-| 7 | 28 | circle · square · triangle · diamond | circle · square · triangle · diamond · circle · ? · triangle · diamond | square |
-| 7 | 29 | square · triangle · diamond · circle | square · triangle · diamond · circle · square · triangle · ? · circle | diamond |
+| 2 | 6 | triangle · diamond | triangle · diamond · ? · diamond · triangle · diamond | triangle |
+| 2 | 7 | diamond · circle | diamond · circle · diamond · ? · diamond · circle | circle |
+| 2 | 8 | circle · square | circle · square · circle · square · ? · square | circle |
+| 2 | 9 | square · triangle | square · triangle · ? · triangle · square · triangle | square |
+| 2 | 10 | triangle · diamond | triangle · diamond · triangle · ? · triangle · diamond | diamond |
+| 2 | 11 | diamond · circle | diamond · circle · diamond · circle · ? · circle | diamond |
+| 3 | 0 | circle · square · square | circle · square · square · circle · square · ? | square |
+| 3 | 1 | square · square · triangle | square · square · triangle · square · square · ? | triangle |
+| 3 | 2 | triangle · diamond · diamond | triangle · diamond · diamond · triangle · diamond · ? | diamond |
+| 3 | 3 | diamond · diamond · circle | diamond · diamond · circle · diamond · diamond · ? | circle |
+| 4 | 0 | circle · square · triangle | circle · square · triangle · ? · square · triangle | circle |
+| 4 | 1 | square · triangle · diamond | square · triangle · diamond · square · ? · diamond | triangle |
+| 4 | 2 | triangle · diamond · circle | triangle · diamond · circle · ? · diamond · circle | triangle |
+| 4 | 3 | diamond · circle · square | diamond · circle · square · diamond · ? · square | circle |
+| 5 | 0 | circle · circle · square · square | circle · circle · square · square · ? · circle · square · square | circle |
+| 5 | 1 | square · square · triangle · triangle | square · square · triangle · triangle · square · ? · triangle · triangle | square |
+| 5 | 2 | triangle · triangle · diamond · diamond | triangle · triangle · diamond · diamond · triangle · triangle · ? · diamond | diamond |
+| 5 | 3 | diamond · diamond · circle · circle | diamond · diamond · circle · circle · ? · diamond · circle · circle | diamond |
+| 5 | 4 | circle · circle · square · square | circle · circle · square · square · circle · ? · square · square | circle |
+| 5 | 5 | square · square · triangle · triangle | square · square · triangle · triangle · square · square · ? · triangle | triangle |
+| 5 | 6 | triangle · triangle · diamond · diamond | triangle · triangle · diamond · diamond · ? · triangle · diamond · diamond | triangle |
+| 5 | 7 | diamond · diamond · circle · circle | diamond · diamond · circle · circle · diamond · ? · circle · circle | diamond |
+| 5 | 8 | circle · circle · square · square | circle · circle · square · square · circle · circle · ? · square | square |
+| 5 | 9 | square · square · triangle · triangle | square · square · triangle · triangle · ? · square · triangle · triangle | square |
+| 5 | 10 | triangle · triangle · diamond · diamond | triangle · triangle · diamond · diamond · triangle · ? · diamond · diamond | triangle |
+| 5 | 11 | diamond · diamond · circle · circle | diamond · diamond · circle · circle · diamond · diamond · ? · circle | circle |
+| 6 | 0 | circle · square · triangle · square | circle · square · triangle · square · ? · square · triangle · square | circle |
+| 6 | 1 | square · triangle · square · diamond | square · triangle · square · diamond · square · ? · square · diamond | triangle |
+| 6 | 2 | triangle · diamond · circle · diamond | triangle · diamond · circle · diamond · triangle · diamond · ? · diamond | circle |
+| 6 | 3 | diamond · circle · diamond · square | diamond · circle · diamond · square · ? · circle · diamond · square | diamond |
+| 6 | 4 | circle · square · triangle · square | circle · square · triangle · square · circle · ? · triangle · square | square |
+| 6 | 5 | square · triangle · square · diamond | square · triangle · square · diamond · square · triangle · ? · diamond | square |
+| 6 | 6 | triangle · diamond · circle · diamond | triangle · diamond · circle · diamond · ? · diamond · circle · diamond | triangle |
+| 6 | 7 | diamond · circle · diamond · square | diamond · circle · diamond · square · diamond · ? · diamond · square | circle |
+| 6 | 8 | circle · square · triangle · square | circle · square · triangle · square · circle · square · ? · square | triangle |
+| 6 | 9 | square · triangle · square · diamond | square · triangle · square · diamond · ? · triangle · square · diamond | square |
+| 6 | 10 | triangle · diamond · circle · diamond | triangle · diamond · circle · diamond · triangle · ? · circle · diamond | diamond |
+| 6 | 11 | diamond · circle · diamond · square | diamond · circle · diamond · square · diamond · circle · ? · square | diamond |
+| 7 | 0 | circle · square · triangle · diamond | circle · square · triangle · diamond · ? · square · triangle · diamond | circle |
+| 7 | 1 | square · triangle · diamond · circle | square · triangle · diamond · circle · square · ? · diamond · circle | triangle |
+| 7 | 2 | triangle · diamond · circle · square | triangle · diamond · circle · square · triangle · diamond · ? · square | circle |
+| 7 | 3 | diamond · circle · square · triangle | diamond · circle · square · triangle · ? · circle · square · triangle | diamond |
+| 7 | 4 | circle · square · triangle · diamond | circle · square · triangle · diamond · circle · ? · triangle · diamond | square |
+| 7 | 5 | square · triangle · diamond · circle | square · triangle · diamond · circle · square · triangle · ? · circle | diamond |
+| 7 | 6 | triangle · diamond · circle · square | triangle · diamond · circle · square · ? · diamond · circle · square | triangle |
+| 7 | 7 | diamond · circle · square · triangle | diamond · circle · square · triangle · diamond · ? · square · triangle | circle |
+| 7 | 8 | circle · square · triangle · diamond | circle · square · triangle · diamond · circle · square · ? · diamond | triangle |
+| 7 | 9 | square · triangle · diamond · circle | square · triangle · diamond · circle · ? · triangle · diamond · circle | square |
+| 7 | 10 | triangle · diamond · circle · square | triangle · diamond · circle · square · triangle · ? · circle · square | diamond |
+| 7 | 11 | diamond · circle · square · triangle | diamond · circle · square · triangle · diamond · circle · ? · triangle | square |
 
 ## Colour Blocks pieces
 
