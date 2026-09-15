@@ -1,8 +1,10 @@
 # Nook's Garden: learning design and visual revision
 
-14 September 2026. Revised learning-game previews only. The approved Colour
-Blocks previews are unchanged. These are static visual examples, not playable
-activities or a claim of tested learning outcomes.
+Updated 14 September 2026. Nook's Garden is now playable locally, including
+Fable's subsequent literacy, addition and pattern revisions. This document records
+its teaching rationale and original visual direction; [the current scope and status](arthur-games-scope.md)
+records implemented behaviour and outstanding device checks. Learning outcomes
+have not been evaluated with Arthur.
 
 ## What the programme review suggests
 
@@ -15,38 +17,36 @@ these programmes do not endorse this project.
 | [Yakka Dee](https://www.yakkadee.com/) | Early series focus an episode on one word, showing it in different visual contexts with repetition; the later Sounds series introduces letter sounds. | Keep a familiar picnic theme across activities. Repeat APPLE in pictures, written words and optional whole-word audio. Use deliberate replay and later vary examples. Tapping, choosing and typing are complete responses; never ask Arthur to say a word to continue. |
 | [Hey Duggee](https://www.heyduggee.com/products/hey-duggee-the-be-careful-badge-other-stories/) and [official counting app](https://www.heyduggee.com/applications/hey-duggee-the-counting-badge/) | Stories turn activities into practical adventures. The counting app uses different early-years counting tasks and variations with several difficulty levels. | Give each activity an understandable purpose: pack a picnic, add another apple, finish a bead string. A friendly companion invites participation. Keep difficulty parent-selected and omit daily rewards, pressure and automatic progression. |
 | [Numberblocks: NCETM Series 1 resources](https://www.ncetm.org.uk/classroom-resources/ey-numberblocks-series-1/) | One-to-one counting, linking the last count to a group's quantity, recognising small groups without counting, number composition, and the same total in different arrangements. | Start with actual objects in a five-space tray. Connect three objects to 3; then show two objects and one more joining into three. Later rearrange the same three objects to explore what stays the same. Number sequencing alone is not evidence of quantity understanding. |
-| [Alphablocks: How it works](https://www.blocksuniverse.tv/alphablocks/how-it-works) | Systematic phonics connects letters and letter teams to sounds, including blending and segmenting. Two or more written letters may represent one sound. | Preserve Arthur's independent typing. Offer meaningful word-picture and number-word connections. Optional later sound exploration must group real graphemes correctly and use checked phoneme recordings; a device voice reading letter names is not a phonics implementation. Do not force him through beginner spelling lessons. |
+| [Alphablocks: How it works](https://www.blocksuniverse.tv/alphablocks/how-it-works) | Systematic phonics connects letters and letter teams to sounds, including blending and segmenting. Two or more written letters may represent one sound. | Build on Arthur's independent spelling with meaningful sentence, word-picture and number-word puzzles. Optional later sound exploration must group real graphemes correctly and use checked phoneme recordings; a device voice reading letter names is not a phonics implementation. Do not force him through beginner spelling lessons. |
 
 NCETM's [composition guidance](https://www.ncetm.org.uk/classroom-resources/ey-composition/)
 also supports showing a whole alongside its smaller groups. The two coloured
-group containers in the addition preview express the two parts. Objects keep
+group containers in the addition activity express the two parts. Objects keep
 their identity when joined: the third apple is outlined rather than transformed
 into a different kind of object.
 
-## What changes in the actual game design
+## Current learning design
 
-- A predictable cycle: see a small example, try by tapping or typing, see the
-  result, choose Repeat or Next. No spoken response is required at any stage.
-- One learning idea at a time; start with 1–5 quantities rather than rehearsing
-  long number sequences. Keep a familiar context for several rounds, then vary
-  the objects to explore whether the idea transfers.
-- Counting support will touch-highlight each object once, then show the group
-  total. Start with a stable arrangement; introduce different arrangements as
-  a separate parent-selected step. Avoid duplicate counting or relying on colour.
-- Addition starts in demonstration mode: two visible objects, deliberately add
-  one, see the three together. The written equation accompanies that action.
-  The preview shows both parts and the combined result at once for review; a
-  playable demonstration should stage the joining at Arthur's pace. Keep totals
-  at five or less initially; optionally ask for a number after modelling.
-- Word pictures reuse a word in different concrete contexts rather than
-  demanding repetition aloud. Free typing remains freely available. Number
-  words may connect Arthur's spelling interest to numerals and quantities.
-- Pattern play uses repeated pairs and a missing place. A hint marks the
-  repeating pair; incorrect choices receive a neutral invitation to look again.
-- Nook's expression stays friendly whatever the response. No disappointment,
-  lost lives, badges to earn, timed rewards, forced speed-ups or voice gating.
-- Any voice, music or short movement is opt-in. Keep manual replay, quiet defaults,
-  static scenery, reduced-motion support and a future softer-colour setting.
+- A predictable cycle: look, try by tapping or typing, receive a result, choose Again
+  or Next. Speech is never required. No puzzle advances on a timer.
+- Quantities begin at 1-5, with 1-10 and any individual number available directly.
+  Tapping an apple marks it once; Count with me supports one-to-one correspondence
+  and the final total. Different arrangements are a later extension.
+- Addition presents both groups and their combined quantity immediately. The child
+  chooses one of three totals or uses a number keypad. Demonstration is an optional
+  grown-up setting, replacing the earlier staged-joining plan. Objects remain apples;
+  the additional group is outlined as well as coloured.
+- Arthur already writes freely on Grid. Missing-word, missing-letter and sentence-order
+  puzzles now provide meaningful reading and spelling tasks instead of a free typing
+  pad. Missing words are typed from a visible bank; optional whole-word/sentence speech
+  is deliberate. Number words connect spelling to numerals and quantities.
+- Patterns progress through seven repeating units and gap positions at the child's
+  pace. Every level is open. Hints mark the repeating group, including units longer
+  than two. Incorrect choices receive a neutral prompt and another attempt.
+- No disappointed mascot, lost lives, badges to earn, timed rewards, forced speed-ups
+  or voice gating. Sound is opt-in; softer colours and keyboard choice are available.
+- Remembering a player resumes their place and preferences. It never restricts content
+  or measures ability. Players can revisit or skip any activity.
 
 ## Visual direction
 
@@ -69,7 +69,7 @@ and task objects use HTML/CSS, no animation loop or additional illustration
 requests. The iPad 5 still needs an actual device pass; these previews do not
 establish performance.
 
-## Preview files
+## Historical preview files
 
 - `public/fireworks/little-patterns/workshop-preview-quantities.html`
 - `public/fireworks/little-patterns/workshop-preview-addition.html`
@@ -78,8 +78,10 @@ establish performance.
 - Shared new stylesheet: `public/fireworks/little-patterns/garden-preview.css`
 - Character: `public/fireworks/little-patterns/assets/nook.png`
 
-Only the four navigation tabs operate; activity controls are illustrations of
-the intended interface. No learning-game code is implemented by these previews.
+These files preserve the approved visual direction. Their controls are illustrations.
+The playable game is now `garden.html`, using `garden.js`, `learning.js`, the base
+`garden-preview.css` and `garden-live.css`. The old words preview shows an earlier
+typing concept and is not the current learning design.
 
 ## Character generation record
 
@@ -104,28 +106,10 @@ the generation folder; a copy is included in the project. Prompt:
 > creature, letter-headed figure, or rainbow number coding. This is a reusable
 > transparent PNG illustration for a lightweight children's browser game.
 
-## Revision after review (14 September 2026, evening)
+## Review decisions retained
 
-Jof reviewed the playable build on a laptop and asked for two changes, both now
-implemented:
-
-- **Add needs an answer step.** Joining the groups now shows `2 + 1 = ?` and asks
-  for the total: choose from three numbers by default, or type it on a number
-  keypad (Grown-ups setting). The show-only demonstration remains a parent
-  option rather than the default.
-- **Word Garden is a literacy corner, not a typing pad.** Arthur already writes
-  freely on Grid, so free typing, saved words and copy-the-word were removed.
-  The tab now holds Finish the sentence (one missing word, picture as the clue,
-  candidate words shown as a bank, answer typed rather than tapped; nouns, doing
-  words and describing words), Find the missing letter (picture
-  words plus parent-supplied familiar words), Put the words in order (tap the
-  scrambled tiles first to last) and the unchanged Number words. Wrong taps
-  get a neutral prompt and stay available; Give me a clue outlines the answer;
-  Hear it speaks the word or sentence only on deliberate tap.
-- **Patterns must get harder.** The bead puzzles now climb seven levels as
-  Next is pressed: pairs with the last bead missing, a gap mid-string, AAB and
-  ABB, ABC, AABB over eight beads, mixed fours, then four different shapes.
-  The level is shown in the support tag and Choose a puzzle jumps to any
-  level. Progression is still manual, so the pace stays Arthur's.
-- **Stored settings from the first build** kept the old show-only addition
-  default; that value is retired so every saved player gets the answer step.
+Jof's additions remain: immediate unanswered sums, equally styled addition choices,
+typed missing words with a word bank, missing-letter and word-order puzzles, seven
+directly selectable pattern levels, and the activity pill opening the puzzle chooser.
+The old stored addition value `show` migrates to the new default `choose`; an
+explicitly chosen show-answer demonstration uses `demo`.

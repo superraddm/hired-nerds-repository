@@ -4,9 +4,16 @@
   const colours=['#e9ce7f','#81b6a9','#bda3d7','#a8c887','#db9ca7','#8eafcf','#e2ac82'],soft=['#d3c398','#adc5bc','#c3b7d1','#bfcba9','#cbb1b6','#b0bfd0','#d3bfae'];
   let paused=false,timer=null,hold=null,heldPlaced=false,suppressClick=false;
   function saveGame(){LP.storage.set('blocks-board',{board:g.board,active:g.active,next:g.next,bag:g.bag,rows:g.rows,full:g.full,lastSum:g.lastSum,previous:g.previous});}
-  function validSnapshot(s){return s&&Array.isArray(s.board)&&s.board.length===20&&s.board.every(r=>Array.isArray(r)&&r.length===10&&r.every(v=>Number.isInteger(v)&&v>=0&&v<=7))&&s.active&&Number.isInteger(s.active.id)&&s.active.id>=0&&s.active.id<7&&Number.isInteger(s.active.x)&&Number.isInteger(s.active.y)&&s.active.y>=0&&s.active.y<20&&Array.isArray(s.active.matrix)&&s.active.matrix.length>=1&&s.active.matrix.length<=4&&s.active.matrix.every(r=>Array.isArray(r)&&r.length===s.active.matrix[0].length&&r.length>=1&&r.length<=4&&r.every(v=>v===0||v===1))&&s.active.matrix.flat().filter(Boolean).length===4&&Number.isInteger(s.next)&&s.next>=0&&s.next<7&&Array.isArray(s.bag)&&s.bag.every(v=>Number.isInteger(v)&&v>=0&&v<7)&&Number.isSafeInteger(s.rows)&&s.rows>=0;}
+  function validSnapshot(s){
+    if(!s||!Array.isArray(s.board)||s.board.length!==20||!s.board.every(row=>Array.isArray(row)&&row.length===10&&row.every(v=>Number.isInteger(v)&&v>=0&&v<=7)))return false;
+    const p=s.active;
+    if(!p||!Number.isInteger(p.id)||p.id<0||p.id>=7||!Number.isInteger(p.x)||!Number.isInteger(p.y))return false;
+    let matrix=C.SHAPES[p.id],matching=false;
+    for(let turn=0;turn<4;turn++){if(JSON.stringify(matrix)===JSON.stringify(p.matrix))matching=true;matrix=C.rotate(matrix);}
+    return matching&&C.fits(C.emptyBoard(),p)&&Number.isInteger(s.next)&&s.next>=0&&s.next<7&&Array.isArray(s.bag)&&s.bag.length<=7&&new Set(s.bag).size===s.bag.length&&s.bag.every(v=>Number.isInteger(v)&&v>=0&&v<7)&&Number.isSafeInteger(s.rows)&&s.rows>=0;
+  }
   function validSum(s){return s&&Number.isInteger(s.before)&&Number.isInteger(s.added)&&s.before>=0&&s.added>0&&s.before+s.added===10&&s.total===10;}
-  function restoreGame(){g.reset();const s=LP.storage.get('blocks-board',null);if(validSnapshot(s)){for(const key of ['board','active','next','bag','rows'])g[key]=s[key];g.full=!C.fits(g.board,g.active);g.lastSum=validSum(s.lastSum)?s.lastSum:null;g.previous=validSnapshot(s.previous)?{board:s.previous.board,active:s.previous.active,next:s.previous.next,bag:s.previous.bag,rows:s.previous.rows,lastSum:validSum(s.previous.lastSum)?s.previous.lastSum:null}:null;paused=true;}else paused=false;}
+  function restoreGame(){g.reset();const s=LP.storage.get('blocks-board',null);if(validSnapshot(s)){for(const key of ['board','active','next','bag','rows'])g[key]=s[key];g.full=!C.fits(g.board,g.active);g.lastSum=validSum(s.lastSum)?s.lastSum:null;g.previous=validSnapshot(s.previous)&&C.fits(s.previous.board,s.previous.active)?{board:s.previous.board,active:s.previous.active,next:s.previous.next,bag:s.previous.bag,rows:s.previous.rows,lastSum:validSum(s.previous.lastSum)?s.previous.lastSum:null}:null;paused=true;}else paused=false;if(paused||g.full)LP.audio.pause();else LP.audio.resume();}
   LP.audio.setMusic(true);$('pace').value=String(LP.prefs.pace);
   function palette(){return LP.prefs.soft?soft:colours;}
   function cell(x,y,id,ghost){const px=x*30,py=y*30;ctx.fillStyle=palette()[id];if(ghost){ctx.strokeStyle=palette()[id];ctx.lineWidth=1.5;ctx.strokeRect(px+3,py+3,24,24);}else{ctx.fillRect(px+1.5,py+1.5,27,27);ctx.fillStyle='#ffffff30';ctx.fillRect(px+3,py+3,24,2);ctx.fillStyle='#243e43';}ctx.font='bold 15px Trebuchet MS,Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('1',px+15,py+16);}
@@ -23,7 +30,7 @@
   function step(action){if(paused||g.full||LP.dialogOpen||document.hidden)return false;let placed=false;if(action==='left')g.move(-1,0);if(action==='right')g.move(1,0);if(action==='turn')g.turn();if(action==='place')placed=place();if(action==='down'&&!g.move(0,1))placed=place();draw();schedule();return placed;}
   document.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>{if(b.dataset.action==='down'&&suppressClick){suppressClick=false;return;}step(b.dataset.action);});
   const down=document.querySelector('[data-action="down"]');down.addEventListener('pointerdown',e=>{if(e.button!==0||paused||g.full)return;stopHold();heldPlaced=false;suppressClick=false;down.setPointerCapture(e.pointerId);hold=setTimeout(function repeat(){suppressClick=true;heldPlaced=step('down');if(!heldPlaced&&!paused&&!g.full)hold=setTimeout(repeat,100);},280);});['pointerup','pointercancel','lostpointercapture'].forEach(name=>down.addEventListener(name,stopHold));
-  function pause(value){paused=value;stopHold();if(paused)LP.audio.pause();else LP.audio.resume();draw();schedule();}
+  function pause(value){paused=value;stopHold();if(paused)LP.audio.pause();else LP.audio.resume();draw();schedule();saveGame();}
   $('pause').onclick=()=>{if(!g.full)pause(!paused);};$('resume').onclick=()=>{if(g.full)fresh();else pause(false);};
   function fresh(){g.reset();LP.status('A fresh space to build. Every square is one.');pause(false);saveGame();}
   $('restart').onclick=async()=>{const approved=await LP.confirm('Start a fresh board?','Your current blocks will be cleared.','Fresh board');if(approved)fresh();};

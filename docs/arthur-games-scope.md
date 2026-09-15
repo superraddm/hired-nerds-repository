@@ -1,145 +1,153 @@
-# Arthur's browser games — proposed scope
+﻿# Little Patterns: approved scope and implementation status
 
-Status: block-game visual direction approved, 14 September 2026. The approved
-static previews are `blocks-preview.html` and `blocks-preview-t.html` in
-`public/fireworks/little-patterns/`. User requested a commit of these previews
-and similar visual previews of the second game. Gameplay implementation and
-publication remain separate steps; the earlier local playable prototype does
-not yet implement this scope. The existing deployment script is unchanged.
+Updated 15 September 2026 after reviewing Fable's playable build and Jof's additions.
+Both games are implemented locally. This document replaces the preview-only plan.
+The current baseline includes Fable's revisions through commit 301eb0c.
 
-## Arthur and the design brief
+## Design brief
 
-- Five years old, non-verbal and autistic. Enjoys the alphabet, jigsaws and patterns.
-- Already spells well, copies or remembers words from videos, and enjoys typing
-  wants on Grid for iPad. Do not assume beginning literacy or require speech.
-- Sequences numbers well. Counting quantities and understanding arithmetic are
-  the learning priorities; the starting level needs to be adjustable.
-- Main devices: Android phone in a browser and iPad 5 in Safari. The existing
-  fireworks handoff identifies the iPad configuration as iPadOS 16.7.16.
-- Two separate games in a small shared hub, on the existing Kpopboom host.
+Arthur is five, non-verbal and autistic. His strengths are spelling, remembered
+words, number sequences, jigsaws and patterns. Quantity and arithmetic are the main
+learning opportunities. His Grid device already provides independent writing;
+this project complements it with puzzles. No spoken response is required.
 
-## Shared experience
+Target devices are Android phones and iPad 5 / Safari on iPadOS 16.7.16, using the
+constraints in [the fireworks handoff](../public/fireworks/IPAD5-OPTIMISATION-HANDOFF.md).
+The games share the existing Kpopboom host under /little-patterns/.
 
-Quiet by default, no music, flashing effects, countdowns, streaks, lost lives,
-automatic puzzle progression, or requirement to answer aloud. Large touch
-controls, stable positions, symbols alongside words, colour never the only cue,
-and an explicit Next button. Wrong selections remain available, with a neutral
-visual hint and unlimited attempts. Optional on-demand device speech; the games
-must remain usable without it. Parent controls for difficulty and support.
-Preferences and parent-supplied words stay on the device. No accounts, tracking,
-external content feed, generative API calls, microphone or video access.
+## Implemented games
 
-## Game 1: Colour Blocks, with visible arithmetic
+| Area | Current behaviour |
+| --- | --- |
+| Colour Blocks | Ten-column, twenty-row board; seven four-square shapes; every square is 1. Left, right, turn, down, place, landing outline, next piece and one-placement undo. |
+| Block arithmetic | Every affected landing row has its own prospective sum. Movement and rotation immediately recalculate it. Row totals align with the board. The most recent completed row retains its worked example; simultaneous clears use the lowest completed row. |
+| Block pace and audio | Manual movement by default; optional very slow or steady descent; hold Down for faster movement. Pause, mute, deliberate restart, and a full board that waits for undo or restart. Optional newly synthesised folk melody; no copied soundtrack. |
+| Count | Apples in a five- or ten-space tray. Tap the numeral; tap apples or Count with me to mark each object once. Choose any number from 1 to 10 directly. |
+| Add | Both groups and the joined group appear immediately with an unanswered equation. Choose among three equally styled number buttons by default. Optional number keypad or show-answer demonstration. Totals start within 5; choose quantities up to 10. |
+| Missing word | Read or play a sentence with blank in the gap, then type the missing word. Always three tappable words; taps pronounce the word. The sentence picture stays visible. Show pictures / Hide pictures toggles the candidate emojis, which start hidden. Includes nouns, doing words and describing words. |
+| Missing letter | Choose a missing letter in a picture word or a grown-up's familiar word. Repeated letters can be hidden at different positions. |
+| Word order | Tap scrambled sentence tiles first to last. Placed tiles remain in their original positions, disabled, while the sentence fills. |
+| Number words | Connect quantities, numerals and ONE through TEN; show, choose or type the word. |
+| Patterns | Seven levels: AB end gap, AB middle gap, AAB/ABB, ABC, AABB, mixed four-item units, four distinct shapes. Next advances manually; every level is directly available. |
 
-Familiar falling-block rules: rotate and position seven four-square shapes in a
-ten-column board, complete horizontal rows, and clear them. Original name,
-interface, graphics and code; no copied branding, music or artwork. The original
-project code can be MIT-licensed, without representing this as clearance of all
-possible third-party rights.
-Do your best to create an approximation of the Licensed Tetris theme. Original version is https://en.wikipedia.org/wiki/Korobeiniki
+Nook's Garden uses the approved playful garden and original sprout mascot. Colour
+Blocks retains its approved quieter visual style. See [learning design](arthur-learning-design.md)
+for the programme research and distinctions from those characters.
 
-### First release
+## Access, players and privacy
 
-1. **A number on each small square.** Start with `1` per square, so the written
-   value corresponds directly to one visible unit. A four-square piece adds four
-   units, sometimes distributed across several rows. Numbers stay upright when
-   the shape rotates.
-2. **Row quantities.** Show an aligned running total alongside each occupied row.
-   A full row of ten unit squares totals ten. The landing outline distinguishes
-   prospective additions from blocks already placed.
-   Approved preview behaviour: show a separate prospective equation for every
-   row touched by the landing piece, including incomplete rows. Recalculate
-   immediately on movement or rotation. An upright T adds one square to one row
-   and three to the next; a sideways T distributes them over three rows, 1/2/1.
-3. **A concrete addition example.** When a placement completes a row, show the
-   quantity already there and the quantity just added: `7 + 3 = 10`. Match the
-   parts of the equation to the two groups visually. Keep the most recent sum
-   visible until another completed row replaces it; never interrupt movement
-   with a quiz. For multiple simultaneous clears, use the bottommost completed
-   row for the worked example and clear all completed rows normally.
-4. **At-your-pace default.** Pieces move when tapped. Large Left, Turn, Right,
-   Down and Place buttons, landing outline, next-piece preview and one-piece
-   undo. Optional very slow and steady automatic descent without acceleration.
-   Offer ability to accelerate drop of piece.
-5. **A full board is a resting point.** Offer undo or a fresh board. Restart is
-   deliberate; it does not happen automatically. Pause on leaving the browser.
-6. Add pause function nad Mute function
+- Every game, activity, puzzle and pattern level is open immediately. Remembering a
+  player never unlocks or restricts content. The activity pill also opens the picker.
+- Up to twelve local player slots: optional nickname and avatar, individual settings,
+  current rounds, typed drafts, block board and undo state. Switch using the player
+  button; delete through a confirmation. This limit concerns saved profiles only.
+- Names, writing, preferences and IDs stay in this browser's storage. There is no
+  player database, account, server sync, tracking or game network API.
+- Other people sharing this browser can see local profiles. These are not private
+  password-protected accounts. Another device or browser has separate profiles.
+  Clearing browser data removes saved progress.
+- If persistence is blocked, separate players work in memory for the current page
+  visit. Navigation or closing that page may lose them; saving reports the limitation.
+- Any future cross-device system needs a separate design. An opaque ID is not
+  authentication. Names must remain local; remote identifiers are not needed now.
 
-### Later, only if useful
+## Accessibility and performance choices
 
-Numbers 1–3 on individual squares, with row sums that may exceed ten. Row clearing
-must still depend on physical fullness; arithmetic should not secretly change
-the block rules. A whole-board total is optional later: its larger numbers and
-sudden decrease when rows clear may distract from the initial small additions.
-Subtraction can be introduced explicitly later using that removal.
+Quiet start; no flashing, time limits, lost lives, rewards economy, required speech
+or automatic puzzle transitions. Incorrect answers get neutral prompts and another
+attempt. Clues and optional speech are deliberate actions. Upper/lowercase, two/three
+choices, device/A-Z keyboard and softer colours are player preferences. Addition
+always has three choices in its default answer mode. Missing-word sentences always
+show three words, independent of the support setting.
 
-## Game 2: Number Workshop, using words and patterns as strengths
+Game logic paints on input, with a scheduled step only for automatic block descent.
+The board canvas is fixed at 300 x 600; there is no high-DPR full-screen canvas,
+permanent animation loop or particle system. Nook is a reused 560 x 672 PNG, about
+212 KiB compressed / 1.5 MiB decoded. Native fonts and CSS task objects avoid font
+or illustration downloads beyond that local asset. Accessibility zoom stays enabled.
 
-Visual revision: the user rejected the minimalist learning-game previews and
-requested a more playful preschool presentation, informed by the teaching
-techniques of Yakka Dee, Hey Duggee, Numberblocks and Alphablocks, with entirely
-distinct characters. The revised working title is **Nook's Garden**. See
-[the programme review and learning design](arthur-learning-design.md). This
-revision does not change the approved Colour Blocks visual style.
+## Cleanup after Fable's handoff
 
-Three activities for the first release, with manual progression and two-choice
-support that can be expanded to three choices:
+- Corrected restored typing caret position and immediate typed-number feedback.
+  Editing a completed answer removes the previous success display.
+- Preserved player separation when browser storage is blocked; deletion clears the
+  in-memory copy too. Fixed focus trapping around hidden forms.
+- Kept word-order tiles stable and keyboard focus on counted apples.
+- Chosen quantities continue in sequence (7 then 8), rather than jumping to 2.
+- Reject punctuation-only familiar words and avoid duplicate answer options. Tightened
+  distractors that previously admitted reasonable alternative answers.
+- Prevented queued voice from starting after mute. Restored blocks stay paused,
+  including music; malformed saved undo data is discarded safely.
+- Added wrapping for large apple groups, long writing and small-screen choices.
+- Added a runtime allow-list to Kpopboom publication. Static mockups, abandoned
+  prototypes and source artwork are excluded from it.
 
-1. **Match a quantity.** Match a numeral to 1–5 visible counters in a stable
-   arrangement, or put that many counters into a tray. Extend to ten when wanted.
-   This is distinct from rehearsing a number sequence Arthur already knows.
-2. **Build an addition.** Show two groups of counters, the joined group with the
-   new counters outlined, and `2 + 1 = ?` beside them, all at once; then ask
-   for the answer: choose
-   from three numbers (default) or type it on a number keypad (parent setting).
-   A show-only demonstration remains available as a parent setting. Quantities
-   total five or less to begin. No timed response or forced difficulty rise.
-3. **Word garden and pattern corner.** Arthur already writes freely on Grid, so
-   the games do not duplicate free typing. Instead the word garden holds short
-   literacy puzzles in the same picnic theme: finish the sentence (one missing
-   word, the picture as the clue, the candidate words shown as a word bank and
-   the answer typed on the A–Z keys; nouns, doing words and describing words),
-   find the missing letter in a picture word (parent-supplied familiar words
-   join this set), and put the words of a sentence in order by tapping them
-   first to last. Number words ONE–TEN are paired with quantities, shown,
-   chosen or typed on an A–Z keyboard. Optional Hear it on deliberate tap.
-   Provide a small repeating-pattern puzzle activity as a familiar alternative.
-   Patterns climb seven levels as Next is pressed (AB, a gap mid-string,
-   AAB/ABB, ABC, AABB, mixed fours, four shapes); the level is shown and any
-   level can be chosen directly. Next stays manual.
+## Validation and release
 
-Do not build Grid integration, YouTube integration, speech recognition,
-automatic ability assessment, a learning dashboard or rewards economy for this
-release. This is a play companion alongside his existing communication tools.
+Dependency-free logic checks:
 
-## iPad 5 and Android implementation constraints
+~~~sh
+node --test tools/test-little-patterns.cjs
+~~~
 
-Apply the findings in `public/fireworks/IPAD5-OPTIMISATION-HANDOFF.md`:
+For DOM interaction checks, install the isolated development dependency once:
 
-- Small, bounded 2D canvas allocations; no high-DPR full-screen backing store,
-  image-layer caches, glow effects, particle systems or background audio timer.
-- Render on state changes. No permanent animation loop for static puzzles,
-  menus or manual block play. Automatic descent needs only a scheduled step.
-- One consistent visible-viewport layout, with controls staying visible through
-  browser-bar changes, rotation and opening/dismissing the typing keyboard.
-- Native button appearance explicitly reset. Touch targets at least 48 CSS px,
-  larger for primary game actions. Do not disable accessibility zoom.
-- Independent lightweight static assets; no changes to the fireworks runtime.
+~~~sh
+npm install --prefix .wrangler/test-runtime --no-save --package-lock=false --ignore-scripts jsdom@26.1.0
+node --test tools/test-little-patterns.cjs tools/test-little-patterns-ui.cjs tools/test-little-patterns-voice.cjs
+node tools/stage-little-patterns.cjs --check
+~~~
 
-## Delivery and validation
+Current result: 50 passing checks covering arithmetic, rotation, clearing, undo,
+puzzle solvability, typing, settings, player switching/deletion, mute and restoration.
+DOM checks do not render a browser or validate real speech output. Browser automation
+was unavailable during this cleanup; CSS changes still require visual/device review.
 
-Agree this scope before further implementation or publishing. Complete the
-numbered block game first; then the quantity and addition activities; then the
-typing/pattern corner. Keep work in small batches without image-generation or
-runtime API dependencies.
+Local preview: run `node tools/serve-fireworks.cjs`, then open
+http://localhost:8788/little-patterns/ on this computer. Use this computer's LAN
+address with port 8788 for a phone/tablet on the same network, if firewall rules allow.
 
-Test actual arithmetic, line clearing, totals after clearing, multi-row placement,
-rotation of numbered squares, undo restoring totals and the displayed equation,
-and puzzle solvability. Check browser layouts and controls on phone and iPad
-viewport sizes, orientation, keyboard, pause/resume and missing device speech.
+Publication has not been performed in this cleanup. The direct-upload script is
+`bash tools/deploy-kpopboom.sh`; its optional branch argument creates a preview.
+Wrangler authentication is required. A git push is not the Kpopboom publishing step.
+The staged games contain 81 runtime files, including the content reference and 61 voice clips.
 
-Before describing iPad performance as verified, perform a real-device pass:
-portrait and landscape, browser bars, keyboard open/close, two rotations,
-background/foreground and ten minutes of play. Desktop tests alone cannot prove
-iPad performance. Publish under a separate path on the existing host when the
-scope and release are ready, preserving the existing fireworks game.
+Before calling iPad performance verified, check both orientations, browser bars,
+device keyboard open/close, two rotations, background/foreground, sound off/on,
+player switching and ten minutes of play on the actual iPad. Also inspect large
+sums, long familiar words and all seven pattern levels on a narrow Android phone.
+
+## Deliberately deferred
+
+Variable square values, whole-board totals, subtraction, rearranged counting
+examples, verified phonics recordings and cross-device syncing are future options.
+No Grid/YouTube integration, microphone, speech recognition, ability assessment,
+learning dashboard, locked progression or reward economy is part of this release.
+Old preview files remain design records, not the current playable specification.
+
+## Content reference and speech direction (15 September)
+
+All built-in sentences, candidate words and emojis, 45 Garden sums, 30 distinct
+patterns, number words and block-row equations are listed in
+[little-patterns-content.md](little-patterns-content.md). The same reference is
+available in the browser at /little-patterns/content.html and from the hub privacy
+section. Regenerate it with `node tools/build-little-patterns-content.cjs`.
+
+Suggested words currently use whole-word pronunciation, not segmented phonics.
+For private familiar words outside the bundled library, the fallback permits only installed local English voices,
+with a mild pitch lift and unhurried pace. It does not fall back to remote voices.
+Voice age and quality vary between devices; a true child voice is not guaranteed.
+Reference: [localService specification documentation](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisVoice/localService).
+
+The shared library is now implemented: 61 bundled Jenny (Dioco) clips, about
+2.11 MiB, generated entirely offline. See [voice implementation and rebuild notes](little-patterns-voice.md).
+Built-in speech is identical across devices; private custom words retain the
+local-device fallback. No runtime LLM, TTS API, model download or server language
+pack is needed. The underlying voice is adult, with a gentle pace and mild pitch
+lift; a genuine child voice has not been sourced. Phonics remains separate from
+the implemented whole-word pronunciation.
+
+Incorrect answers now show "Whoops! Try again" in Nook's bubble. Typed-word
+feedback also appears immediately beneath Enter and marks the input gently;
+the draft stays editable. The matching shared voice clip plays only with sound
+enabled. No penalty, reset, flash or forced progression is added.

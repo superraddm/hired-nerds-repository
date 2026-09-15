@@ -1,0 +1,251 @@
+{
+  "version": 1,
+  "voice": "Jenny (Dioco), gentle pitch adjustment",
+  "lang": "en-GB",
+  "clips": {
+    "a blank can grow": {
+      "file": "assets/voice/318737ba812203d6.wav",
+      "seconds": 1.152
+    },
+    "a fish can blank": {
+      "file": "assets/voice/a53140d5bdb890dd.wav",
+      "seconds": 1.067
+    },
+    "a fish can swim": {
+      "file": "assets/voice/de2b9df1ad40e761.wav",
+      "seconds": 1.017
+    },
+    "a flower can grow": {
+      "file": "assets/voice/8ef20b3c7328254f.wav",
+      "seconds": 1.137
+    },
+    "apple": {
+      "file": "assets/voice/3a7bd3e2360a3d29.wav",
+      "seconds": 0.396
+    },
+    "asleep": {
+      "file": "assets/voice/ea51ae6e548ffbb8.wav",
+      "seconds": 0.546
+    },
+    "ball": {
+      "file": "assets/voice/e9de08263f4ad491.wav",
+      "seconds": 0.456
+    },
+    "big": {
+      "file": "assets/voice/2a21fe6d592a19b7.wav",
+      "seconds": 0.396
+    },
+    "bus": {
+      "file": "assets/voice/04e027e4990a203f.wav",
+      "seconds": 0.508
+    },
+    "cat": {
+      "file": "assets/voice/77af778b51abd4a3.wav",
+      "seconds": 0.436
+    },
+    "cold": {
+      "file": "assets/voice/e272deecde720ffc.wav",
+      "seconds": 0.524
+    },
+    "dog": {
+      "file": "assets/voice/cd6357efdd966de8.wav",
+      "seconds": 0.547
+    },
+    "eight": {
+      "file": "assets/voice/c195d2d875623436.wav",
+      "seconds": 0.526
+    },
+    "fast": {
+      "file": "assets/voice/115dc3606fbf8691.wav",
+      "seconds": 0.55
+    },
+    "fish": {
+      "file": "assets/voice/b474a99a2705e23c.wav",
+      "seconds": 0.495
+    },
+    "five": {
+      "file": "assets/voice/222b0bd51fcef7e6.wav",
+      "seconds": 0.574
+    },
+    "flower": {
+      "file": "assets/voice/c06b0cfe0cc5e900.wav",
+      "seconds": 0.465
+    },
+    "fly": {
+      "file": "assets/voice/f4debdb7ab7dd958.wav",
+      "seconds": 0.488
+    },
+    "four": {
+      "file": "assets/voice/04efaf080f5a3e74.wav",
+      "seconds": 0.395
+    },
+    "hello! i'm nook. let's play": {
+      "file": "assets/voice/cd845c4b46d3d15f.wav",
+      "seconds": 1.749
+    },
+    "hot": {
+      "file": "assets/voice/7f5d1618e7d28cc7.wav",
+      "seconds": 0.506
+    },
+    "loud": {
+      "file": "assets/voice/db1a60bbff220d09.wav",
+      "seconds": 0.654
+    },
+    "moon": {
+      "file": "assets/voice/9e78b43ea00edcac.wav",
+      "seconds": 0.495
+    },
+    "nine": {
+      "file": "assets/voice/edcd8e701a2df0cd.wav",
+      "seconds": 0.571
+    },
+    "nook eats an apple": {
+      "file": "assets/voice/4cbe16d017ce61b6.wav",
+      "seconds": 1.008
+    },
+    "nook eats an blank": {
+      "file": "assets/voice/4570116a308e8a37.wav",
+      "seconds": 1.15
+    },
+    "nook has a ball": {
+      "file": "assets/voice/486982f46b8ca8c1.wav",
+      "seconds": 0.913
+    },
+    "nook has a blank": {
+      "file": "assets/voice/ecdd73d4e551aa04.wav",
+      "seconds": 0.951
+    },
+    "one": {
+      "file": "assets/voice/7692c3ad3540bb80.wav",
+      "seconds": 0.464
+    },
+    "read": {
+      "file": "assets/voice/3316348dbadfb7b1.wav",
+      "seconds": 0.567
+    },
+    "run": {
+      "file": "assets/voice/acba25512100f80b.wav",
+      "seconds": 0.472
+    },
+    "seven": {
+      "file": "assets/voice/3ba8d02b16fd2a01.wav",
+      "seconds": 0.533
+    },
+    "sing": {
+      "file": "assets/voice/6342d0648a746457.wav",
+      "seconds": 0.429
+    },
+    "six": {
+      "file": "assets/voice/44778d82365e4af6.wav",
+      "seconds": 0.439
+    },
+    "soft": {
+      "file": "assets/voice/f5f445528f4a0134.wav",
+      "seconds": 0.623
+    },
+    "sun": {
+      "file": "assets/voice/27756f050e14a1cb.wav",
+      "seconds": 0.471
+    },
+    "swim": {
+      "file": "assets/voice/d493f8869139bac7.wav",
+      "seconds": 0.386
+    },
+    "tall": {
+      "file": "assets/voice/241daf2e753a6a2f.wav",
+      "seconds": 0.47
+    },
+    "ten": {
+      "file": "assets/voice/e4432baa90819aae.wav",
+      "seconds": 0.448
+    },
+    "the blank can run": {
+      "file": "assets/voice/39ca6e3ce816e821.wav",
+      "seconds": 1.011
+    },
+    "the blank can swim": {
+      "file": "assets/voice/6b777fcce352e2a4.wav",
+      "seconds": 1.125
+    },
+    "the blank is asleep": {
+      "file": "assets/voice/2e7b07640841494a.wav",
+      "seconds": 1.187
+    },
+    "the blank is big": {
+      "file": "assets/voice/94281d9ffd832655.wav",
+      "seconds": 1.036
+    },
+    "the blank is hot": {
+      "file": "assets/voice/125ae1d727261b9c.wav",
+      "seconds": 1.023
+    },
+    "the blank is out": {
+      "file": "assets/voice/9e3ce4c5b421b661.wav",
+      "seconds": 0.974
+    },
+    "the bus is big": {
+      "file": "assets/voice/cf49fdc89a611a78.wav",
+      "seconds": 0.951
+    },
+    "the bus is blank": {
+      "file": "assets/voice/553d0f8f579a8a4e.wav",
+      "seconds": 1.125
+    },
+    "the cat is asleep": {
+      "file": "assets/voice/5c71bfd2211a2a2a.wav",
+      "seconds": 1.195
+    },
+    "the dog can blank": {
+      "file": "assets/voice/265fd8540a581790.wav",
+      "seconds": 1.046
+    },
+    "the dog can run": {
+      "file": "assets/voice/299f4a270d4aa1c1.wav",
+      "seconds": 1.101
+    },
+    "the fish can swim": {
+      "file": "assets/voice/1023a92b7ee7138c.wav",
+      "seconds": 1.049
+    },
+    "the moon is out": {
+      "file": "assets/voice/028f7e44a18871bf.wav",
+      "seconds": 0.922
+    },
+    "the sun is blank": {
+      "file": "assets/voice/b53b586b4d12870c.wav",
+      "seconds": 1.102
+    },
+    "the sun is hot": {
+      "file": "assets/voice/a9713ed03c06a734.wav",
+      "seconds": 1.086
+    },
+    "the tree is blank": {
+      "file": "assets/voice/eccc960503b5fff9.wav",
+      "seconds": 1.095
+    },
+    "the tree is tall": {
+      "file": "assets/voice/c44adc9f2857ee0b.wav",
+      "seconds": 0.918
+    },
+    "three": {
+      "file": "assets/voice/8b5b9db0c13db242.wav",
+      "seconds": 0.408
+    },
+    "tree": {
+      "file": "assets/voice/dc9c5edb8b2d479e.wav",
+      "seconds": 0.447
+    },
+    "two": {
+      "file": "assets/voice/3fc4ccfe745870e2.wav",
+      "seconds": 0.383
+    },
+    "wet": {
+      "file": "assets/voice/534c51e17770c9b7.wav",
+      "seconds": 0.525
+    },
+    "whoops! try again": {
+      "file": "assets/voice/15ec5b852f9542e7.wav",
+      "seconds": 1.426
+    }
+  }
+}

@@ -27,6 +27,10 @@ cp "$SRC/assets/glowgirls/sol/master.png" "$STAGE/assets/glowgirls/sol/"
 cp "$SRC/assets/glowgirls/sol/layers.json" "$STAGE/assets/glowgirls/sol/"   # alpha-bounds manifest the compositor crops by
 cp -r "$SRC/assets/glowgirls/sol/final" "$STAGE/assets/glowgirls/sol/"
 
+# The approved games share this host under their own path. Only runtime files
+# are copied; visual drafts, old prototypes and source artwork remain local.
+node "$ROOT/tools/stage-little-patterns.cjs" "$STAGE"
+
 # Anything index.html asks for must exist in the staged copy, or the game 404s live.
 missing=0
 while read -r ref; do
