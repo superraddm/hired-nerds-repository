@@ -45,3 +45,6 @@ button.word-tile.bank{position:relative;width:100%;min-width:0;min-height:76px;p
 
 /* Activity-local level control inside the puzzle picker, and the explicit Next level action. */
 .level-picker{display:flex;flex-direction:column;gap:8px;margin:16px 0 4px}.level-picker button{min-height:48px;text-align:left;font-size:15px;padding:10px 14px}.level-picker button[aria-pressed=true]{background:#e1d3f1;border-color:#b09bd0;color:#594777;outline:3px solid #594777;outline-offset:2px}.puzzle-picker:empty{display:none}.next-level{min-height:51px;padding:11px 21px;border:2px solid #b09bd0;border-bottom-width:5px;border-radius:17px;background:#f0e7fa;color:#594777;font-size:15px;font-weight:900}@media(max-width:780px){.next-level{font-size:12px;min-height:48px;padding:10px 13px}}@media(max-width:550px){.actions .next-level{font-size:12px;padding:10px}}
+
+/* Nook's bubble carries success: a still tint change for that round, no motion. */
+.speech.success{background:#dff3e4;border-color:#77ad91;color:#2f5a44}.speech.success:after{background:#dff3e4;border-color:#77ad91}

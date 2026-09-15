@@ -24,6 +24,10 @@ window.LPVoiceLibrary={
       "file": "assets/voice/3a7bd3e2360a3d29.wav",
       "seconds": 0.396
     },
+    "apples": {
+      "file": "assets/voice/f5903f51e341a783.wav",
+      "seconds": 0.615
+    },
     "asleep": {
       "file": "assets/voice/ea51ae6e548ffbb8.wav",
       "seconds": 0.546
@@ -55,6 +59,10 @@ window.LPVoiceLibrary={
     "eight": {
       "file": "assets/voice/c195d2d875623436.wav",
       "seconds": 0.526
+    },
+    "equals": {
+      "file": "assets/voice/e93cb41d4a7d2395.wav",
+      "seconds": 0.665
     },
     "fast": {
       "file": "assets/voice/115dc3606fbf8691.wav",
@@ -92,6 +100,10 @@ window.LPVoiceLibrary={
       "file": "assets/voice/db1a60bbff220d09.wav",
       "seconds": 0.654
     },
+    "lovely counting": {
+      "file": "assets/voice/66768c7c98a9998e.wav",
+      "seconds": 1.004
+    },
     "moon": {
       "file": "assets/voice/9e78b43ea00edcac.wav",
       "seconds": 0.495
@@ -120,6 +132,10 @@ window.LPVoiceLibrary={
       "file": "assets/voice/7692c3ad3540bb80.wav",
       "seconds": 0.464
     },
+    "plus": {
+      "file": "assets/voice/383ef36928344f56.wav",
+      "seconds": 0.531
+    },
     "read": {
       "file": "assets/voice/3316348dbadfb7b1.wav",
       "seconds": 0.567
@@ -144,6 +160,10 @@ window.LPVoiceLibrary={
       "file": "assets/voice/f5f445528f4a0134.wav",
       "seconds": 0.623
     },
+    "spot on": {
+      "file": "assets/voice/701039022100b133.wav",
+      "seconds": 0.532
+    },
     "sun": {
       "file": "assets/voice/27756f050e14a1cb.wav",
       "seconds": 0.471
@@ -159,6 +179,10 @@ window.LPVoiceLibrary={
     "ten": {
       "file": "assets/voice/e4432baa90819aae.wav",
       "seconds": 0.448
+    },
+    "that’s the one": {
+      "file": "assets/voice/d1d4be35e20c529d.wav",
+      "seconds": 0.769
     },
     "the blank can run": {
       "file": "assets/voice/39ca6e3ce816e821.wav",
@@ -212,6 +236,10 @@ window.LPVoiceLibrary={
       "file": "assets/voice/028f7e44a18871bf.wav",
       "seconds": 0.922
     },
+    "the pattern fits": {
+      "file": "assets/voice/ae257bdf0b20f846.wav",
+      "seconds": 0.918
+    },
     "the sun is blank": {
       "file": "assets/voice/b53b586b4d12870c.wav",
       "seconds": 1.102
@@ -247,6 +275,14 @@ window.LPVoiceLibrary={
     "whoops! try again": {
       "file": "assets/voice/15ec5b852f9542e7.wav",
       "seconds": 1.426
+    },
+    "yes": {
+      "file": "assets/voice/8a798890fe938171.wav",
+      "seconds": 0.518
+    },
+    "you found it": {
+      "file": "assets/voice/d456801d10208a77.wav",
+      "seconds": 0.743
     }
   }
 };

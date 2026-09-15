@@ -26,15 +26,9 @@ PITCH_RATE = 24000  # A small fixed pitch lift from 22050 Hz, identical on every
 def bank():
     program = """
 const L=require('./public/fireworks/little-patterns/learning.js');
-const texts=[...Object.keys(L.WORD_SYMBOLS),...L.NUMBER_WORDS.slice(1),...L.PICTURES.map(p=>p.word),...Object.values(L.FEEDBACK)];
-for(let i=0;i<L.SENTENCES.length;i++){
- const r=L.sentenceRound(i,L.defaults);texts.push(L.sentencePrompt(r));r.done=true;texts.push(L.sentencePrompt(r));
-}
-texts.push("Hello! I'm Nook. Let's play.");
-const key=s=>s.trim().toLowerCase().replace(/\\s+/g,' ').replace(/[.!?]+$/,'');
-console.log(JSON.stringify([...new Set(texts.map(key))].sort()));
+console.log(JSON.stringify(L.spokenBank()));
 """
-    result = subprocess.run(['node', '-e', program], cwd=ROOT, check=True, capture_output=True, text=True)
+    result = subprocess.run(['node', '-e', program], cwd=ROOT, check=True, capture_output=True, text=True, encoding='utf-8')
     return json.loads(result.stdout)
 
 
@@ -75,8 +69,8 @@ def main():
     entries = []
     for text in bank():
         name = hashlib.sha256(text.encode()).hexdigest()[:16] + '.wav'
-        # READ is the present-tense verb in this word bank, pronounced "reed".
-        spoken = 'reed.' if text == 'read' else text + '.'
+        # READ is the present-tense verb in this word bank, pronounced "reed". Openers keep their exclamation for a brighter delivery.
+        spoken = {'read': 'reed.', 'yes': 'Yes!', 'spot on': 'Spot on!'}.get(text, text + '.')
         entries.append({'key': text, 'name': name, 'text': spoken, 'output_file': str(raw / name)})
     pending = [e for e in entries if '--force' in sys.argv or not pathlib.Path(e['output_file']).exists()]
     script = '\n'.join(json.dumps({'text': e['text'], 'output_file': e['output_file']}) for e in pending) + '\n'

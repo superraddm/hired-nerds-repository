@@ -9,12 +9,26 @@ const manifest = JSON.parse(fs.readFileSync(path.join(root, 'assets/voice/manife
 const key = text => text.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[.!?]+$/, '');
 
 test('the bundled voice covers all built-in spoken content and its browser index matches', () => {
-  const texts = [...Object.keys(L.WORD_SYMBOLS), ...L.NUMBER_WORDS.slice(1), ...L.PICTURES.map(p => p.word), ...Object.values(L.FEEDBACK), "Hello! I'm Nook. Let's play."];
-  for (let i = 0; i < L.SENTENCES.length; i++) {
-    const round = L.sentenceRound(i, L.defaults);
-    texts.push(L.sentencePrompt(round)); round.done = true; texts.push(L.sentencePrompt(round));
+  assert.deepEqual(Object.keys(manifest.clips).sort(), L.spokenBank());
+  for (const text of ["Hello! I'm Nook. Let's play.", 'Whoops! Try again.', 'nook eats an blank', 'the pattern fits', 'plus', 'equals', 'apples', 'ten']) assert.ok(manifest.clips[key(text)], text);
+  // Every success line the game can produce is speakable from the bundled clips alone.
+  const p = L.defaults;
+  const rounds = [];
+  for (let level = 1; level <= L.LEVELS.count; level++) for (let i = 0; i < 10; i++) rounds.push(['count', L.countRound(i, p, level)]);
+  for (let level = 1; level <= L.LEVELS.add; level++) for (const op of L.OPERATIONS) for (let i = 0; i < 45; i++) rounds.push(['add', L.sumRound(i, p, level, op)]);
+  for (let level = 1; level <= L.LEVELS.patterns; level++) rounds.push(['patterns', L.patternRound(level, p, level)]);
+  for (let level = 1; level <= L.LEVELS.numbers; level++) for (let i = 0; i < 10; i++) rounds.push(['numbers', L.numberWordRound(i, p, level)]);
+  for (let i = 0; i < L.SENTENCES.length; i++) { rounds.push(['sentence', L.sentenceRound(i, p)]); rounds.push(['order', L.orderRound(i, p)]); }
+  for (let i = 0; i < L.PICTURES.length; i++) rounds.push(['letter', L.letterRound(i, p)]);
+  for (const [kind, round] of rounds) {
+    round.done = true;
+    const line = L.successLine(kind, round);
+    assert.ok(line.speech.length >= 2, kind + ' ' + round.id);
+    for (const part of line.speech) assert.ok(manifest.clips[key(part)], 'missing clip for ' + JSON.stringify(part) + ' in ' + line.text);
   }
-  assert.deepEqual(Object.keys(manifest.clips).sort(), [...new Set(texts.map(key))].sort());
+  const custom = L.successLine('letter', { id: 'letter:v2:L1:letter:DINOSAUR#1', word: 'DINOSAUR' });
+  assert.ok(custom.speech.length === 1 && L.OPENERS.includes(custom.speech[0]), 'a private familiar word gets the opener only; the word itself is never sent to any voice automatically');
+  assert.match(custom.text, /DINOSAUR/);
   const context = { window: {} };
   vm.runInNewContext(fs.readFileSync(path.join(root, 'voice-library.js'), 'utf8'), context);
   assert.deepEqual(JSON.parse(JSON.stringify(context.window.LPVoiceLibrary)), manifest);

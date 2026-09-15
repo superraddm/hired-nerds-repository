@@ -38,17 +38,24 @@
   function sentenceRound(index,prefs){const e=SENTENCES[index%SENTENCES.length];const words=sentenceWords(e.text);return {id:identify('sentence',1,'gap',e.text),text:e.text,words,gap:e.gap,gapAt:words.indexOf(e.gap),picture:e.picture,choices:options(e.gap,sentencePool(e),3,index),draft:'',hint:false,done:false};}
   function letterRound(index,prefs){const entries=PICTURES.concat(prefs.customWords.map(word=>({word,picture:(PICTURES.find(p=>p.word===word)||{}).picture||null})));const e=entries[index%entries.length];const positions=Array.from(e.word).map((c,i)=>/[A-Z]/.test(c)?i:-1).filter(i=>i>=0);const position=positions[(index+Math.floor(index/entries.length))%positions.length];const letter=e.word[position];const pool=[...new Set(Array.from(e.word.replace(/[^A-Z]/g,'')).concat(Array.from('AEIOUBTSLMNRDP')))];return {id:identify('letter',1,'letter',e.word+'#'+position),word:e.word,picture:e.picture,position,letter,choices:options(letter,pool,prefs.choices,index),done:false};}
   function orderRound(index,prefs){const e=SENTENCES[index%SENTENCES.length];const words=sentenceWords(e.text);const shift=1+index%(words.length-1);let tiles=words.slice(shift).concat(words.slice(0,shift));if(index%2)tiles=tiles.reverse();if(tiles.join(' ')===words.join(' '))tiles=words.slice().reverse();return {id:identify('order',1,'order',e.text+'#'+tiles.join(',')),text:e.text,words,tiles,picture:e.picture,used:[],done:false};}
-  // Success feedback is derived from the finished round, never stored: the same puzzle always gets the same line.
-  function successLine(kind,round){const plural=n=>n+(n===1?' apple':' apples');let text;
-    if(kind==='count')text=plural(round.target)+' altogether.';
-    else if(kind==='add')text=round.a+' + '+round.b+' = '+round.answer+'.';
-    else if(kind==='patterns')text='The pattern fits.';
-    else if(kind==='numbers')text=round.word+'. '+plural(round.target)+'.';
-    else if(kind==='letter')text=round.word+'.';
-    else text=round.words.join(' ')+'.';
-    return {text,speech:[]};}
+  // Success feedback: short, factual and warm. The line restates the answer; the opener is chosen deterministically per puzzle so the same puzzle always gets the same words.
+  const OPENERS=['Yes!','You found it.','That’s the one.','Spot on!'];
+  const SPOKEN_EXTRAS=['Yes!','You found it.','That’s the one.','Spot on!','Lovely counting.','apples','plus','equals','The pattern fits.'];
+  function hashText(text){let h=0;for(const c of String(text))h=(h*31+c.charCodeAt(0))>>>0;return h;}
+  function successLine(kind,round){const plural=n=>n+(n===1?' apple':' apples');const pick=hashText(round.id||'')%(OPENERS.length+(kind==='count'?1:0));const opener=pick<OPENERS.length?OPENERS[pick]:'Lovely counting.';const first=hashText(round.id||'x')%3!==2;let fact,speech;
+    if(kind==='count'){fact=plural(round.target)+'.';speech=[NUMBER_WORDS[round.target]||'',round.target===1?'apple':'apples'];}
+    else if(kind==='add'){fact=round.a+' + '+round.b+' = '+round.answer+'.';speech=[NUMBER_WORDS[round.a]||'','plus',NUMBER_WORDS[round.b]||'','equals',NUMBER_WORDS[round.answer]||''];}
+    else if(kind==='patterns'){fact='The pattern fits.';speech=['The pattern fits.'];}
+    else if(kind==='numbers'){fact=round.word+'.';speech=[round.word];}
+    else if(kind==='letter'){fact=round.word+'.';speech=PICTURES.some(p=>p.word===round.word)?[round.word]:[];}
+    else{const words=round.words.map(w=>w.toLowerCase());words[0]=words[0][0].toUpperCase()+words[0].slice(1);fact=words.join(' ')+'.';speech=[round.words.join(' ').toLowerCase()+'.'];}
+    const text=first?opener+' '+fact:fact+' '+opener;
+    const parts=first?[opener,...speech]:[...speech,opener];
+    return {text,speech:parts.every(Boolean)?parts:[]};}
+  // Everything the bundled voice must be able to say. The voice builder and its test both read this list.
+  function spokenBank(){const texts=[...Object.keys(WORD_SYMBOLS),...NUMBER_WORDS.slice(1),...PICTURES.map(p=>p.word),...Object.values(FEEDBACK),...SPOKEN_EXTRAS,"Hello! I'm Nook. Let's play."];for(let i=0;i<SENTENCES.length;i++){const r=sentenceRound(i,defaults);texts.push(sentencePrompt(r));r.done=true;texts.push(sentencePrompt(r));}const key=s=>s.trim().toLowerCase().replace(/\s+/g,' ').replace(/[.!?]+$/,'');return [...new Set(texts.map(key))].sort();}
   function matches(typed,expected){return String(typed).trim().replace(/\s+/g,' ').toLocaleUpperCase('en-GB')===String(expected).toLocaleUpperCase('en-GB');}
   function editText(value,start,end,key){value=String(value);start=Math.max(0,Math.min(value.length,start));end=Math.max(start,Math.min(value.length,end));if(key==='Backspace'){if(start===end&&start>0)start-=Array.from(value.slice(0,start)).pop().length;return {value:value.slice(0,start)+value.slice(end),caret:start};}const insert=key==='Space'?' ':key;const next=value.slice(0,start)+insert+value.slice(end);if(next.length>500)return {value,caret:end};return {value:next,caret:start+insert.length};}
-  const api={NUMBER_WORDS,FEEDBACK,PICTURES,SENTENCES,WORD_SYMBOLS,PATTERN_LEVELS,LEVELS,OPERATIONS,VERSION,identify,clampLevel,levelRange,countSequence,sumSequence,sentenceWords,sentencePool,sentencePrompt,sentenceRound,letterRound,orderRound,defaults,normalisePrefs,cleanWord,options,countRound,sumRound,patternRound,wordRound,numberWordRound,successLine,matches,editText};
+  const api={NUMBER_WORDS,FEEDBACK,PICTURES,SENTENCES,WORD_SYMBOLS,PATTERN_LEVELS,LEVELS,OPERATIONS,VERSION,identify,clampLevel,levelRange,countSequence,sumSequence,sentenceWords,sentencePool,sentencePrompt,sentenceRound,letterRound,orderRound,defaults,normalisePrefs,cleanWord,options,countRound,sumRound,patternRound,wordRound,numberWordRound,OPENERS,successLine,spokenBank,matches,editText};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.GardenLearning=api;
 })(typeof window!=='undefined'?window:globalThis);

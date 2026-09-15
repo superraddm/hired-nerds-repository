@@ -74,8 +74,8 @@ test('missing-word input is typed, checked and retained separately for each play
   for (const key of ['P', 'P', 'L', 'E']) a.click(`[data-key="${key}"]`);
   a.click('#check-word');
   assert.equal(a.query('#next').hidden, false);
-  assert.match(a.query('#status').textContent, /NOOK EATS AN APPLE/);
-  assert.equal(a.query('#speech').textContent, 'NOOK EATS AN APPLE.');
+  assert.match(a.query('#status').textContent, /Nook eats an apple/);
+  assert.equal(a.query('#speech').textContent, a.w.GardenLearning.successLine('sentence', a.store('garden-rounds').sentence).text);
 });
 
 test('word pictures toggle both ways while the sentence picture and writing stay visible', t => {
@@ -424,9 +424,11 @@ test('saved rounds restore by puzzle id: a matching id keeps its state, a mismat
 
 test('every correct answer goes through one path: bubble and announcement come from round state, audio only when sound is already on', async t => {
   const a = app(t);
+  const L = a.w.GardenLearning, line = (kind, round) => L.successLine(kind, round).text;
   a.click('[data-choice="1"]');
-  assert.equal(a.query('#speech').textContent, '1 apple altogether.');
-  assert.equal(a.query('#status').textContent, '1 apple altogether.');
+  assert.equal(a.query('#speech').textContent, line('count', a.store('garden-rounds').count));
+  assert.match(a.query('#speech').textContent, /1 apple\./);
+  assert.equal(a.query('#status').textContent, a.query('#speech').textContent);
   assert.ok(a.query('#speech').classList.contains('success'));
   assert.equal(a.plays.length, 0); assert.equal(a.spoken.length, 0);
   a.click('#next');
@@ -436,18 +438,24 @@ test('every correct answer goes through one path: bubble and announcement come f
   a.click('[data-choice="2"]');
   await new Promise(resolve => setTimeout(resolve, 0));
   assert.equal(a.spoken.length, 0, 'automatic feedback never falls back to a device voice');
+  const speech = L.successLine('count', a.store('garden-rounds').count).speech;
+  assert.equal(a.plays.length, 1, 'encouragement plays once, from the answering tap');
+  assert.equal(a.plays[0], a.w.LPVoiceLibrary.clips[speech[0].toLowerCase().replace(/[.!?]+$/, '')].file);
+  a.players[0].onended();
+  assert.equal(a.plays[1], a.w.LPVoiceLibrary.clips[speech[1].toLowerCase().replace(/[.!?]+$/, '')].file);
   a.click('[data-mode="add"]');
   const wrong = Array.from(a.w.document.querySelectorAll('[data-choice]')).find(b => b.dataset.choice !== '2');
   wrong.click();
   assert.equal(a.query('#speech').textContent, 'Whoops! Try again.');
   assert.equal(a.store('garden-rounds').add.feedback, 'retry');
   a.click('[data-choice="2"]');
-  assert.equal(a.query('#speech').textContent, '1 + 1 = 2.');
+  assert.equal(a.query('#speech').textContent, line('add', a.store('garden-rounds').add));
+  assert.match(a.query('#speech').textContent, /1 \+ 1 = 2\./);
   assert.equal(a.store('garden-rounds').add.feedback, '');
   a.click('[data-mode="words"]'); a.click('[data-word-tab="order"]');
   const words = a.store('garden-rounds').order.words;
   for (const word of words) Array.from(a.w.document.querySelectorAll('[data-tile]')).find(b => b.textContent === word && !b.disabled).click();
-  assert.equal(a.query('#speech').textContent, words.join(' ') + '.');
+  assert.equal(a.query('#speech').textContent, line('order', a.store('garden-rounds').order));
   assert.equal(a.query('#next').hidden, false);
 });
 
@@ -456,7 +464,7 @@ test('a restored finished round shows its success line without replaying anythin
     'lp-player-player-1-garden-position': { mode: 'count', indices: { count: 2 }, levels: { count: 1 } },
     'lp-player-player-1-garden-rounds': { count: { id: 'count:v2:L1:count:3', target: 3, seen: [], done: true, feedback: 'retry' } }
   });
-  assert.equal(a.query('#speech').textContent, '3 apples altogether.');
+  assert.match(a.query('#speech').textContent, /3 apples\./);
   assert.equal(a.query('#next').hidden, false);
   assert.equal(a.plays.length, 0);
 });

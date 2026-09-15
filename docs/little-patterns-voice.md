@@ -1,7 +1,7 @@
 # Shared voice library
 
-Implemented 15 September 2026. The built-in game speech now uses 61 bundled WAV
-clips, about 2.11 MiB in total. Every device receives the same audio, with no
+Implemented 15 September 2026; encouragement added later the same day. The built-in
+game speech now uses 70 bundled WAV clips, about 2.39 MiB in total. Every device receives the same audio, with no
 runtime TTS model, LLM request, speech API or server language pack.
 
 ## Voice and rights record
@@ -27,6 +27,13 @@ player data is used for generation.
   say "blank" while an answer is merely typed; it changes after a correct check.
 - Gentle incorrect-answer feedback: "Whoops! Try again." It plays only when sound
   is already enabled, alongside visible feedback.
+- Success lines are assembled from short clips played in order from the one player:
+  an opener ("Yes!", "You found it.", "That’s the one.", "Spot on!", and
+  "Lovely counting." for Count) plus the restated answer ("three", "apples";
+  "two", "plus", "one", "equals", "three"; "The pattern fits."; the finished
+  sentence). No equation needs a clip of its own. Automatic lines play only while
+  sound is already on and never fall back to a device voice; a private familiar
+  word gets the opener alone.
 - A greeting sample: "Hello! I'm Nook. Let's play."
 - A generated `voice-library.js` provides a normalised text-to-file lookup.
   Hash filenames contain no user names or writing.
@@ -57,7 +64,7 @@ The builder verifies the engine archive and model hashes before execution:
 
 Run `python tools/build-little-patterns-voice.py` from the repository root.
 Python's standard library, Node and the downloaded Piper executable suffice.
-The phrase bank is derived from `learning.js`; it does not inspect browser storage.
+The phrase bank is `spokenBank()` in `learning.js`, shared with the voice test; it does not inspect browser storage.
 Generation uses length scale 1.15, noise scale 0.4 and noise width 0.65. Output
 is mono PCM16 at 24000 Hz (pitch raised from the original 22050 Hz), with silence
 trimmed and volume balanced below clipping. These settings are baked into files.
