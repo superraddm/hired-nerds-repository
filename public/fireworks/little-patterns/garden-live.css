@@ -48,3 +48,6 @@ button.word-tile.bank{position:relative;width:100%;min-width:0;min-height:76px;p
 
 /* Nook's bubble carries success: a still tint change for that round, no motion. */
 .speech.success{background:#dff3e4;border-color:#77ad91;color:#2f5a44}.speech.success:after{background:#dff3e4;border-color:#77ad91}
+
+/* The status line is the live region and the instruction carrier; feedback lives in Nook's bubble. */
+.garden-status{font-size:13px;font-weight:normal;color:#5b6a52}

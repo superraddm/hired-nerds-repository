@@ -486,3 +486,26 @@ test('automatic speech plays only bundled clips while sound is on, and chained c
   await a.w.LP.audio.speak(['apple', 'not in the library']);
   assert.equal(a.spoken.at(-1), 'apple not in the library', 'a tapped request still falls back to the local voice as one phrase');
 });
+
+test('success is announced once: the completed model stays, no duplicate result line is drawn', t => {
+  const a = app(t);
+  a.click('[data-choice="1"]');
+  assert.equal(a.query('.result-note'), null);
+  assert.equal(a.query('#task .number-total').textContent, '1', 'the numeral stays beside the tray');
+  assert.equal(a.query('#status').textContent, a.query('#speech').textContent, 'one live announcement of the same line');
+  a.click('[data-mode="add"]'); a.click('[data-choice="2"]');
+  assert.equal(a.query('.result-note'), null);
+  assert.match(a.query('.equation').textContent, /1 \+ 1 = 2/);
+  assert.equal(a.query('.sum-result strong').textContent, '2');
+  a.click('[data-mode="patterns"]');
+  a.click(`[data-choice="${a.store('garden-rounds').patterns.answer}"]`);
+  assert.equal(a.query('.result-note'), null);
+  assert.equal(a.query('.bead-slot.missing'), null, 'the bead fills the gap');
+  a.click('[data-mode="words"]'); a.click('[data-word-tab="letter"]');
+  a.click(`[data-choice="${a.store('garden-rounds').letter.letter}"]`);
+  assert.equal(a.query('.result-note'), null);
+  assert.equal(a.query('.letter-tile.gap'), null);
+  assert.ok(a.query('.letter-tile.filled'));
+  a.click('[data-mode="count"]');
+  assert.equal(a.query('#status').textContent, 'Again, or the next picnic.', 'a re-render carries an instruction, not the announcement again');
+});
