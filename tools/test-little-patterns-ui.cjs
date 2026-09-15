@@ -404,3 +404,19 @@ test('removing the active player clears their local drafts and starts another pl
   a.click('[data-close]'); a.click('[data-mode="words"]');
   assert.equal(a.query('#word-input').value, '');
 });
+
+test('saved rounds restore by puzzle id: a matching id keeps its state, a mismatched one starts that activity fresh only', t => {
+  const a = app(t, 'garden.html', {
+    'lp-player-player-1-garden-position': { mode: 'count', indices: { count: 2, sentence: 0 }, levels: { count: 1, add: 2 } },
+    'lp-player-player-1-garden-rounds': {
+      count: { id: 'count:v2:L1:count:3', target: 3, seen: [0], done: false },
+      add: { id: 'add:v2:L1:add:1+1', a: 1, b: 1, draft: '5', done: false },
+      sentence: { id: 'sentence:v2:L1:gap:Nook eats an APPLE.', text: 'Nook eats an APPLE.', draft: 'APP', done: false }
+    }
+  });
+  assert.deepEqual(a.store('garden-rounds').count.seen, [0], 'same id, state kept');
+  assert.equal(a.store('garden-rounds').add.draft, '', 'the saved add belonged to level 1; level 2 starts fresh');
+  assert.equal(a.store('garden-rounds').add.id, 'add:v2:L2:add:1+1');
+  a.click('[data-mode="words"]');
+  assert.equal(a.query('#word-input').value, 'APP', 'other activities are untouched');
+});

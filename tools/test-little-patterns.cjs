@@ -73,3 +73,20 @@ test('levels are per activity, clamped to the published maximum and drive their 
   assert.equal(learning.sumRound(0,p,1,'take').operation,'add','unknown operations fall back to addition');
   assert.equal(learning.numberWordRound(0,p,2).choices.length,p.choices);
 });
+// Puzzle identity: stable for the same puzzle, distinct across levels and operations, and versioned for future migrations.
+test('every round carries a stable, versioned puzzle id that includes its level and operation',()=>{
+  const p=learning.defaults;
+  assert.equal(learning.VERSION,2);
+  assert.equal(learning.countRound(2,p,1).id,learning.countRound(2,p,1).id);
+  assert.equal(learning.countRound(2,p,1).id,'count:v2:L1:count:3');
+  assert.notEqual(learning.countRound(2,p,1).id,learning.countRound(2,p,2).id,'the same target at another level is another puzzle');
+  assert.equal(learning.sumRound(0,p,1).id,'add:v2:L1:add:1+1');
+  assert.equal(learning.sumRound(0,p,1,'add',[2,3]).id,'add:v2:L1:add:2+3','a directly chosen sum is identified by its own operands');
+  assert.equal(learning.sumRound(0,p,1,'add',[9,9]).a,1,'a chosen sum outside the level falls back to the sequence');
+  assert.match(learning.patternRound(0,p,3).id,/^patterns:v2:L3:repeat:[a-z,]+#\d$/);
+  assert.match(learning.sentenceRound(0,p).id,/^sentence:v2:L1:gap:/);
+  assert.match(learning.letterRound(0,p).id,/^letter:v2:L1:letter:APPLE#\d$/);
+  assert.match(learning.orderRound(0,p).id,/^order:v2:L1:order:/);
+  assert.match(learning.numberWordRound(0,p,2).id,/^numbers:v2:L2:word:1$/);
+  const ids=new Set();for(let i=0;i<45;i++)ids.add(learning.sumRound(i,p,2).id);assert.equal(ids.size,45);
+});

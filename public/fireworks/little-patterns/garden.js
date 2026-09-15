@@ -16,7 +16,7 @@
   function itemIndex(kind){if(kind==='count'&&selection.count)return Math.max(0,L.countSequence(levelOf('count')).indexOf(selection.count));if(kind==='numbers'&&selection.numbers)return Math.max(0,selection.numbers-1);if(kind==='add'&&Array.isArray(selection.add))return Math.max(0,L.sumSequence(levelOf('add'),operation).findIndex(([a,b])=>a===selection.add[0]&&b===selection.add[1]));return indices[kind]||0;}
   function createRound(kind){const index=itemIndex(kind),p=LP.prefs,level=levelOf(kind);
     if(kind==='count')return L.countRound(index,p,level);
-    if(kind==='add'){const r=L.sumRound(index,p,level,operation);r.stage='joined';if(p.addition==='demo')r.done=true;if(Array.isArray(selection.add)){r.a=selection.add[0];r.b=selection.add[1];r.total=r.answer=r.a+r.b;r.choices=L.options(r.total,Array.from({length:Math.max(L.levelRange(level),r.total)},(_,i)=>i+1),3,index);}return r;}
+    if(kind==='add'){const r=L.sumRound(index,p,level,operation,selection.add);r.stage='joined';if(p.addition==='demo')r.done=true;return r;}
     if(kind==='patterns')return L.patternRound(index,p,level);
     if(kind==='sentence')return L.sentenceRound(index,p);
     if(kind==='letter')return L.letterRound(index,p);
@@ -33,7 +33,8 @@
       const add=saved.selection?.add;if(Array.isArray(add)&&add.length===2&&add.every(n=>Number.isInteger(n)&&n>=1)&&add[0]+add[1]<=L.levelRange(levels.add))selection.add=add;}
     for(const kind of levelled)levels[kind]=L.clampLevel(kind,levels[kind]);
     rounds={};const old=LP.storage.get('garden-rounds',{});for(const kind of Object.keys(indices))rounds[kind]=restoreRound(kind,createRound(kind),old&&old[kind]);cursor={start:0,end:0};}
-  function sameRound(kind,s,r){return kind==='count'?s.target===r.target:kind==='add'?s.a===r.a&&s.b===r.b&&(s.operation||'add')===r.operation:kind==='sentence'||kind==='order'?s.text===r.text:kind==='letter'?s.word===r.word&&s.position===r.position:kind==='numbers'?s.target===r.target:JSON.stringify(s.sequence)===JSON.stringify(r.sequence)&&s.gap===r.gap;}
+  // Saved rounds match on their puzzle id. Saves from before ids existed match on content instead, so nobody's place is reset by the upgrade.
+  function sameRound(kind,s,r){if(typeof s.id==='string')return s.id===r.id;return kind==='count'?s.target===r.target:kind==='add'?s.a===r.a&&s.b===r.b&&(s.operation||'add')===r.operation:kind==='sentence'||kind==='order'?s.text===r.text:kind==='letter'?s.word===r.word&&s.position===r.position:kind==='numbers'?s.target===r.target:JSON.stringify(s.sequence)===JSON.stringify(r.sequence)&&s.gap===r.gap;}
   function restoreRound(kind,r,s){if(s&&typeof s==='object'&&sameRound(kind,s,r)){r.done=s.done===true;if(kind==='count'&&Array.isArray(s.seen))r.seen=[...new Set(s.seen.filter(i=>Number.isInteger(i)&&i>=0&&i<r.target))];if(kind==='sentence')r.hint=s.hint===true;if('draft' in r)r.draft=typeof s.draft==='string'?s.draft.slice(0,500):'';if(kind==='order'){const used=Array.isArray(s.used)?s.used.filter(i=>Number.isInteger(i)&&i>=0&&i<r.tiles.length):[];r.used=used.every((tile,n)=>r.tiles[tile]===r.words[n])&&new Set(used).size===used.length?used:[];r.done=r.used.length===r.words.length;}}if(kind==='add'&&LP.prefs.addition==='demo')r.done=true;return r;}
   function setLevel(kind,level){levels[kind]=L.clampLevel(kind,level);delete selection[kind];rounds[kind]=createRound(kind);}
   function levelLabel(kind){return 'Level '+levelOf(kind)+' of '+L.LEVELS[kind];}
