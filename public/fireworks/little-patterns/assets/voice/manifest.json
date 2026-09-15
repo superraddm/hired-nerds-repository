@@ -19,6 +19,14 @@
       "file": "assets/voice/8ef20b3c7328254f.wav",
       "seconds": 1.137
     },
+    "a wet blank can swim": {
+      "file": "assets/voice/6ec83d37028ce3b3.wav",
+      "seconds": 1.451
+    },
+    "a wet fish can swim": {
+      "file": "assets/voice/0850135ee07514d8.wav",
+      "seconds": 1.463
+    },
     "apple": {
       "file": "assets/voice/3a7bd3e2360a3d29.wav",
       "seconds": 0.396
@@ -167,6 +175,14 @@
       "file": "assets/voice/ecdd73d4e551aa04.wav",
       "seconds": 0.951
     },
+    "nook has a soft ball": {
+      "file": "assets/voice/85b7de6b48557ac4.wav",
+      "seconds": 1.36
+    },
+    "nook has a soft blank": {
+      "file": "assets/voice/37552dcec6b75fab.wav",
+      "seconds": 1.507
+    },
     "one": {
       "file": "assets/voice/7692c3ad3540bb80.wav",
       "seconds": 0.464
@@ -247,6 +263,18 @@
       "file": "assets/voice/d1d4be35e20c529d.wav",
       "seconds": 0.769
     },
+    "the ball is wet": {
+      "file": "assets/voice/1b81e1b68c53c98b.wav",
+      "seconds": 0.997
+    },
+    "the big blank can run": {
+      "file": "assets/voice/be0e617423d184fb.wav",
+      "seconds": 1.241
+    },
+    "the big dog can run": {
+      "file": "assets/voice/84f9cd86601b8fc4.wav",
+      "seconds": 1.212
+    },
     "the blank can run": {
       "file": "assets/voice/39ca6e3ce816e821.wav",
       "seconds": 1.011
@@ -263,6 +291,10 @@
       "file": "assets/voice/94281d9ffd832655.wav",
       "seconds": 1.036
     },
+    "the blank is dry": {
+      "file": "assets/voice/104193e406959a03.wav",
+      "seconds": 0.968
+    },
     "the blank is hot": {
       "file": "assets/voice/125ae1d727261b9c.wav",
       "seconds": 1.023
@@ -270,6 +302,10 @@
     "the blank is out": {
       "file": "assets/voice/9e3ce4c5b421b661.wav",
       "seconds": 0.974
+    },
+    "the blank is wet": {
+      "file": "assets/voice/0cea167cb2d1ba21.wav",
+      "seconds": 1.025
     },
     "the bus is big": {
       "file": "assets/voice/cf49fdc89a611a78.wav",
@@ -283,17 +319,57 @@
       "file": "assets/voice/5c71bfd2211a2a2a.wav",
       "seconds": 1.195
     },
+    "the cat is asleep now": {
+      "file": "assets/voice/b51599eaa1927024.wav",
+      "seconds": 1.455
+    },
+    "the cat is blank now": {
+      "file": "assets/voice/129ff7d4a0a4874f.wav",
+      "seconds": 1.347
+    },
+    "the cat is dry": {
+      "file": "assets/voice/354a987ac212b525.wav",
+      "seconds": 1.105
+    },
     "the dog can blank": {
       "file": "assets/voice/265fd8540a581790.wav",
+      "seconds": 1.046
+    },
+    "the dog can jump": {
+      "file": "assets/voice/2979e9ef8cf5d55a.wav",
       "seconds": 1.046
     },
     "the dog can run": {
       "file": "assets/voice/299f4a270d4aa1c1.wav",
       "seconds": 1.101
     },
+    "the dog is wet": {
+      "file": "assets/voice/91458c0859da1f73.wav",
+      "seconds": 1.043
+    },
     "the fish can swim": {
       "file": "assets/voice/1023a92b7ee7138c.wav",
       "seconds": 1.049
+    },
+    "the fish is blank": {
+      "file": "assets/voice/ccdad5e75baa8a84.wav",
+      "seconds": 1.015
+    },
+    "the fish is wet": {
+      "file": "assets/voice/684ee3b431243b36.wav",
+      "seconds": 1.074
+    },
+    "the little blank is fast": {
+      "file": "assets/voice/3e7a77cc6b8486f4.wav",
+      "seconds": 1.482
+    },
+    "the little bus is fast": {
+      "file": "assets/voice/d4c8bc9e7701c11a.wav",
+      "seconds": 1.459
+    },
+    "the moon is big": {
+      "file": "assets/voice/85f92e09b11b213c.wav",
+      "seconds": 0.93
     },
     "the moon is out": {
       "file": "assets/voice/028f7e44a18871bf.wav",
@@ -310,6 +386,14 @@
     "the sun is hot": {
       "file": "assets/voice/a9713ed03c06a734.wav",
       "seconds": 1.086
+    },
+    "the tall blank is dry": {
+      "file": "assets/voice/2f943b63fbadd164.wav",
+      "seconds": 1.315
+    },
+    "the tall tree is dry": {
+      "file": "assets/voice/55b4c94f5a29f819.wav",
+      "seconds": 1.378
     },
     "the tree is blank": {
       "file": "assets/voice/eccc960503b5fff9.wav",

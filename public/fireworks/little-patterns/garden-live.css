@@ -153,3 +153,6 @@ button.bead-slot{cursor:pointer;font:inherit;min-width:48px;min-height:48px;padd
 /* Missing part: the second group is unknown; the joined group shows it outlined. */
 .number-group.missing-part{border-style:dashed}.number-group.missing-part .apples .none{font-size:34px;color:#6a558a}
 .equation .unknown{color:#805da7}
+
+/* A familiar word without a Mulberry symbol keeps the bank tile's shape without a picture. */
+.word-emoji .no-picture{display:block;width:44px;height:44px;margin:0 auto;border:2px dashed #d4bd71;border-radius:10px}

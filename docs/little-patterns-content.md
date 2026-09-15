@@ -4,24 +4,36 @@ This reference is generated from learning.js and core.js. It contains all built-
 
 ## Sentences and missing-word answers
 
-The same fourteen sentences are also used for Word order. Play sentence says “blank” until the answer is checked. Each missing-word round offers its answer plus two alternatives from the listed pool. The sentence picture is always visible. Show pictures / Hide pictures toggles only the word-bank pictures, which start hidden. Tapping a word pronounces it; the answer is still typed.
+Two banks: the picnic (fourteen sentences) and bath and bed time (twelve, several of five words for Word order), all using the same symbol words. The same sentences are also used for Word order. Grown-ups can add up to twelve familiar sentences locally (missing word in capitals); those private additions cannot be listed here. Play sentence says “blank” until the answer is checked. Each missing-word round offers its answer plus two alternatives from the listed pool. The sentence picture is always visible. Show pictures / Hide pictures toggles only the word-bank pictures, which start hidden. Tapping a word pronounces it; the answer is still typed.
 
-| Sentence with gap | Answer | Full sentence / word order | Possible word-bank words |
-| --- | --- | --- | --- |
-| nook eats an blank. | APPLE | NOOK EATS AN APPLE. | APPLE, SUN, CAT, BUS, MOON, BALL, FLOWER, DOG, FISH |
-| the blank is hot. | SUN | THE SUN IS HOT. | SUN, APPLE, CAT, BUS, MOON, BALL, FLOWER, DOG, FISH |
-| the blank is asleep. | CAT | THE CAT IS ASLEEP. | CAT, APPLE, SUN, BUS, MOON, BALL, FLOWER, DOG, FISH |
-| the dog can blank. | RUN | THE DOG CAN RUN. | RUN, JUMP, READ |
-| the blank is big. | BUS | THE BUS IS BIG. | BUS, APPLE, SUN, CAT, MOON, BALL, FLOWER, DOG, FISH |
-| a fish can blank. | SWIM | A FISH CAN SWIM. | SWIM, READ, SING |
-| the blank is out. | MOON | THE MOON IS OUT. | MOON, APPLE, SUN, CAT, BUS, BALL, FLOWER, DOG, FISH |
-| nook has a blank. | BALL | NOOK HAS A BALL. | BALL, APPLE, SUN, CAT, BUS, MOON, FLOWER, DOG, FISH |
-| the tree is blank. | TALL | THE TREE IS TALL. | TALL, LOUD, FAST |
-| a blank can grow. | FLOWER | A FLOWER CAN GROW. | FLOWER, APPLE, SUN, CAT, BUS, MOON, BALL, DOG, FISH |
-| the sun is blank. | HOT | THE SUN IS HOT. | HOT, DRY, WET |
-| the blank can run. | DOG | THE DOG CAN RUN. | DOG, APPLE, SUN, CAT, BUS, MOON, BALL, FLOWER, FISH |
-| the bus is blank. | BIG | THE BUS IS BIG. | BIG, ASLEEP, SOFT |
-| the blank can swim. | FISH | THE FISH CAN SWIM. | FISH, APPLE, SUN, CAT, BUS, MOON, BALL, FLOWER, DOG |
+| Scene | Sentence with gap | Answer | Full sentence / word order | Possible word-bank words |
+| --- | --- | --- | --- | --- |
+| picnic | nook eats an blank. | APPLE | NOOK EATS AN APPLE. | APPLE, SUN, CAT, BUS, MOON, BALL, FLOWER, DOG, FISH, TREE |
+| picnic | the blank is hot. | SUN | THE SUN IS HOT. | SUN, APPLE, CAT, BUS, MOON, BALL, FLOWER, DOG, FISH, TREE |
+| picnic | the blank is asleep. | CAT | THE CAT IS ASLEEP. | CAT, APPLE, SUN, BUS, MOON, BALL, FLOWER, DOG, FISH, TREE |
+| picnic | the dog can blank. | RUN | THE DOG CAN RUN. | RUN, JUMP, READ |
+| picnic | the blank is big. | BUS | THE BUS IS BIG. | BUS, APPLE, SUN, CAT, MOON, BALL, FLOWER, DOG, FISH, TREE |
+| picnic | a fish can blank. | SWIM | A FISH CAN SWIM. | SWIM, READ, SING |
+| picnic | the blank is out. | MOON | THE MOON IS OUT. | MOON, APPLE, SUN, CAT, BUS, BALL, FLOWER, DOG, FISH, TREE |
+| picnic | nook has a blank. | BALL | NOOK HAS A BALL. | BALL, APPLE, SUN, CAT, BUS, MOON, FLOWER, DOG, FISH, TREE |
+| picnic | the tree is blank. | TALL | THE TREE IS TALL. | TALL, LOUD, FAST |
+| picnic | a blank can grow. | FLOWER | A FLOWER CAN GROW. | FLOWER, APPLE, SUN, CAT, BUS, MOON, BALL, DOG, FISH, TREE |
+| picnic | the sun is blank. | HOT | THE SUN IS HOT. | HOT, DRY, WET |
+| picnic | the blank can run. | DOG | THE DOG CAN RUN. | DOG, APPLE, SUN, CAT, BUS, MOON, BALL, FLOWER, FISH, TREE |
+| picnic | the bus is blank. | BIG | THE BUS IS BIG. | BIG, ASLEEP, SOFT |
+| picnic | the blank can swim. | FISH | THE FISH CAN SWIM. | FISH, APPLE, SUN, CAT, BUS, MOON, BALL, FLOWER, DOG, TREE |
+| bath | the blank is wet. | BALL | THE BALL IS WET. | BALL, APPLE, SUN, CAT, BUS, MOON, FLOWER, DOG, FISH, TREE |
+| bath | the blank is wet. | DOG | THE DOG IS WET. | DOG, APPLE, SUN, CAT, BUS, MOON, BALL, FLOWER, FISH, TREE |
+| bath | the blank is dry. | CAT | THE CAT IS DRY. | CAT, APPLE, SUN, BUS, MOON, BALL, FLOWER, DOG, FISH, TREE |
+| bath | the fish is blank. | WET | THE FISH IS WET. | WET, TALL, LOUD |
+| bath | the blank is big. | MOON | THE MOON IS BIG. | MOON, APPLE, SUN, CAT, BUS, BALL, FLOWER, DOG, FISH, TREE |
+| bath | the dog can blank. | JUMP | THE DOG CAN JUMP. | JUMP, READ, SING |
+| bath | nook has a soft blank. | BALL | NOOK HAS A SOFT BALL. | BALL, APPLE, SUN, CAT, BUS, MOON, FLOWER, DOG, FISH, TREE |
+| bath | the big blank can run. | DOG | THE BIG DOG CAN RUN. | DOG, APPLE, SUN, CAT, BUS, MOON, BALL, FLOWER, FISH, TREE |
+| bath | a wet blank can swim. | FISH | A WET FISH CAN SWIM. | FISH, APPLE, SUN, CAT, BUS, MOON, BALL, FLOWER, DOG, TREE |
+| bath | the tall blank is dry. | TREE | THE TALL TREE IS DRY. | TREE, APPLE, SUN, CAT, BUS, MOON, BALL, FLOWER, DOG, FISH |
+| bath | the little blank is fast. | BUS | THE LITTLE BUS IS FAST. | BUS, APPLE, SUN, CAT, MOON, BALL, FLOWER, DOG, FISH, TREE |
+| bath | the cat is blank now. | ASLEEP | THE CAT IS ASLEEP NOW. | ASLEEP, TALL, LOUD |
 
 ## Word picture symbols
 

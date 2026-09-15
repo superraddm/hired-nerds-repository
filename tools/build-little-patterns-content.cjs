@@ -16,11 +16,11 @@ for (let level = 1; level <= L.LEVELS.patterns; level++) for (let index = 0; ind
 const sections = [
   {
     title: 'Sentences and missing-word answers',
-    note: 'The same fourteen sentences are also used for Word order. Play sentence says “blank” until the answer is checked. Each missing-word round offers its answer plus two alternatives from the listed pool. The sentence picture is always visible. Show pictures / Hide pictures toggles only the word-bank pictures, which start hidden. Tapping a word pronounces it; the answer is still typed.',
-    headers: ['Sentence with gap', 'Answer', 'Full sentence / word order', 'Possible word-bank words'],
+    note: 'Two banks: the picnic (fourteen sentences) and bath and bed time (twelve, several of five words for Word order), all using the same symbol words. The same sentences are also used for Word order. Grown-ups can add up to twelve familiar sentences locally (missing word in capitals); those private additions cannot be listed here. Play sentence says “blank” until the answer is checked. Each missing-word round offers its answer plus two alternatives from the listed pool. The sentence picture is always visible. Show pictures / Hide pictures toggles only the word-bank pictures, which start hidden. Tapping a word pronounces it; the answer is still typed.',
+    headers: ['Scene', 'Sentence with gap', 'Answer', 'Full sentence / word order', 'Possible word-bank words'],
     rows: L.SENTENCES.map((entry, index) => {
       const round = L.sentenceRound(index, prefs);
-      return [L.sentencePrompt(round), entry.gap, round.words.join(' ') + '.', L.sentencePool(entry).join(', ')];
+      return [entry.scene || 'picnic', L.sentencePrompt(round), entry.gap, round.words.join(' ') + '.', L.sentencePool(entry).join(', ')];
     })
   },
   {

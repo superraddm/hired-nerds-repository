@@ -983,3 +983,49 @@ test('the missing part level shows the joined group with the hidden part outline
   a.click('#support');
   assert.equal(a.w.document.querySelectorAll('.level-picker button').length, 5);
 });
+
+test('grown-up sentences join Missing word and Word order with a chosen gap, distractors, no picture and the local voice', async t => {
+  const a = app(t);
+  a.w.LP.savePrefs({ ...a.w.LP.prefs, customSentences: ['Arthur likes TRAINS.', 'We go to the PARK.'] });
+  a.click('[data-mode="words"]'); a.click('#support');
+  const buttons = Array.from(a.w.document.querySelectorAll('.puzzle-picker button'));
+  assert.equal(buttons.length, L.SENTENCES.length + 2);
+  buttons.find(b => b.textContent === 'ARTHUR LIKES TRAINS.').click();
+  assert.equal(a.query('.sentence').getAttribute('aria-label'), 'arthur likes blank');
+  assert.equal(a.query('#sentence-picture').querySelector('img'), null, 'no picture when the word has no symbol');
+  const bank = Array.from(a.w.document.querySelectorAll('.word-bank button'));
+  assert.equal(bank.length, 3);
+  assert.ok(bank.some(b => b.dataset.word === 'TRAINS'));
+  assert.ok(bank.some(b => b.dataset.word === 'PARK'), 'the other custom gap is a distractor');
+  assert.ok(bank.find(b => b.dataset.word === 'TRAINS').querySelector('.no-picture'));
+  a.click('[data-word="TRAINS"]');
+  await new Promise(resolve => setTimeout(resolve, 0));
+  assert.equal(a.spoken.at(-1), 'trains', 'a private word uses the local device voice');
+  a.click('#hear-model');
+  await new Promise(resolve => setTimeout(resolve, 0));
+  assert.equal(a.spoken.at(-1), 'arthur likes blank.');
+  for (const key of ['T', 'R', 'A', 'I', 'N', 'S']) a.click(`[data-key="${key}"]`);
+  a.click('#check-word');
+  assert.equal(a.query('#next').hidden, false);
+  assert.match(a.query('#speech').textContent, /Arthur likes trains\./);
+  assert.equal(a.plays.length, 1, 'only the opener plays for a private sentence');
+  assert.ok(L.OPENERS.map(o => o.toLowerCase().replace(/[.!?]+$/, '')).some(k => a.w.LPVoiceLibrary.clips[k].file === a.plays[0]));
+  assert.equal(a.spoken.filter(x => /trains/.test(x)).length, 1, 'the sentence itself never goes to a voice automatically');
+  a.click('[data-word-tab="order"]'); a.click('#support');
+  Array.from(a.w.document.querySelectorAll('.puzzle-picker button')).find(b => b.textContent === 'WE GO TO THE PARK.').click();
+  assert.equal(a.w.document.querySelectorAll('[data-tile]').length, 5);
+  for (const word of ['WE', 'GO', 'TO', 'THE', 'PARK']) Array.from(a.w.document.querySelectorAll('[data-tile]')).find(b => b.textContent === word && !b.disabled).click();
+  assert.equal(a.query('#next').hidden, false);
+});
+
+test('the bath-time bank offers five-word sentences for Word order and keeps stable tile positions', t => {
+  const a = app(t);
+  a.click('[data-mode="words"]'); a.click('[data-word-tab="order"]'); a.click('#support');
+  Array.from(a.w.document.querySelectorAll('.puzzle-picker button')).find(b => b.textContent === 'THE BIG DOG CAN RUN.').click();
+  const tiles = Array.from(a.w.document.querySelectorAll('[data-tile]'));
+  assert.equal(tiles.length, 5);
+  const order = tiles.map(b => b.textContent);
+  Array.from(a.w.document.querySelectorAll('[data-tile]')).find(b => b.textContent === 'THE').click();
+  assert.deepEqual(Array.from(a.w.document.querySelectorAll('[data-tile]')).map(b => b.textContent), order, 'tiles keep their places');
+  a.click('#hear-model');
+});
