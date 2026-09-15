@@ -50,9 +50,9 @@ test('Count, immediate addition and every pattern level remain directly availabl
   a.click('[data-mode="patterns"]');
   a.click('#support');
   const levels = a.w.document.querySelectorAll('.level-picker button');
-  assert.equal(levels.length, 7);
+  assert.equal(levels.length, 14);
   levels[6].click();
-  assert.match(a.query('#support').textContent, /Level 7 of 7/);
+  assert.match(a.query('#support').textContent, /Level 7 of 14/);
   a.click('[data-close]');
   assert.equal(a.query('.lp-modal'), null);
   assert.equal(a.store('garden-position').levels.patterns, 7);
@@ -330,13 +330,13 @@ test('levels are separate per activity, the Next level action is explicit, and a
   assert.match(a.query('#support').textContent, /Level 2 of 6/);
   assert.equal(a.query('#next-level').hidden, true, 'a fresh round at the new level has not been answered yet');
   a.click('[data-mode="patterns"]'); a.click('#support');
-  a.w.document.querySelectorAll('.level-picker button')[6].click(); a.click('[data-close]');
+  a.w.document.querySelectorAll('.level-picker button')[13].click(); a.click('[data-close]');
   a.click(`[data-choice="${a.store('garden-rounds').patterns.answer}"]`);
   assert.equal(a.query('#next').hidden, false);
   assert.equal(a.query('#next-level').hidden, true, 'the top level offers no further step');
   a.click('[data-mode="count"]');
   const position = a.store('garden-position');
-  assert.deepEqual(position.levels, { count: 2, add: 1, numbers: 1, patterns: 7 });
+  assert.deepEqual(position.levels, { count: 2, add: 1, numbers: 1, patterns: 14 });
   assert.match(a.query('#next-level').textContent, /Next level/);
   assert.equal(position.operation, 'add');
   a.click('[data-mode="add"]');
@@ -355,7 +355,7 @@ test('an older save with the shared 1 to 10 range and a pattern index restores o
     'lp-player-player-1-garden-position': { mode: 'patterns', indices: { patterns: 12, count: L.countSequence(2).indexOf(7) } },
     'lp-player-player-1-garden-rounds': { count: { target: 7, seen: [0, 1], done: false } }
   });
-  assert.match(a.query('#support').textContent, /Level 5 of 7/);
+  assert.match(a.query('#support').textContent, /Level 5 of 14/);
   a.click('[data-mode="count"]');
   assert.match(a.query('#support').textContent, /Level 2 of 6/);
   assert.equal(a.store('garden-rounds').count.target, 7);
@@ -869,4 +869,88 @@ test('Number words to one hundred reuse the tray and can be chosen or typed', t 
   assert.equal(a.query('#word-input').value, 'ONE HUNDRED');
   a.click('#check-word');
   assert.equal(a.query('#next').hidden, false);
+});
+
+test('two-gap patterns: gaps are buttons, the chosen gap takes the piece, partial fills are kept, and the last piece finishes', t => {
+  const a = app(t);
+  a.click('[data-mode="patterns"]'); a.click('#support');
+  a.w.document.querySelectorAll('.level-picker button')[7].click(); a.click('[data-close]');
+  assert.match(a.query('#support').textContent, /Level 8 of 14/);
+  assert.equal(a.query('.repeat-label'), null, 'from level 8 the unit is not spelt out');
+  const round = a.store('garden-rounds').patterns;
+  const gaps = a.w.document.querySelectorAll('button[data-gap]');
+  assert.equal(gaps.length, 2);
+  assert.equal(a.query('button[data-gap].active').dataset.gap, String(round.gaps[0]));
+  gaps[1].click();
+  assert.equal(a.query('button[data-gap].active').dataset.gap, String(round.gaps[1]));
+  assert.equal(a.store('garden-rounds').patterns.selected, round.gaps[1]);
+  const wrong = Array.from(a.w.document.querySelectorAll('[data-choice]')).find(b => b.dataset.choice !== round.sequence[round.gaps[1]]);
+  if (wrong) { wrong.click(); assert.equal(a.query('#speech').textContent, 'Whoops! Try again.'); }
+  a.click(`[data-choice="${round.sequence[round.gaps[1]]}"]`);
+  assert.equal(a.query('#next').hidden, true, 'one gap left');
+  assert.match(a.query('#status').textContent, /1 of 2 beads placed/);
+  assert.deepEqual(a.store('garden-rounds').patterns.filled, { [round.gaps[1]]: round.sequence[round.gaps[1]] });
+  assert.equal(a.w.document.querySelectorAll('.bead-slot.filled').length, 1);
+  assert.equal(a.query('button[data-gap].active').dataset.gap, String(round.gaps[0]), 'the remaining gap is active');
+  a.click('#help');
+  assert.equal(a.w.document.querySelectorAll('.bead-slot.emphasis').length, 2, 'the clue outlines the repeating group');
+  a.click('#help');
+  assert.ok(a.query(`[data-choice="${round.sequence[round.gaps[0]]}"].hint`));
+  a.click(`[data-choice="${round.sequence[round.gaps[0]]}"]`);
+  assert.equal(a.query('#next').hidden, false);
+  assert.equal(a.query('button[data-gap]'), null);
+  assert.match(a.query('#speech').textContent, /The pattern fits\./);
+  const b = app(t, 'garden.html', {
+    'lp-player-player-1-garden-position': { mode: 'patterns', levels: { patterns: 8 }, indices: { patterns: 0 } },
+    'lp-player-player-1-garden-rounds': { patterns: { id: round.id, sequence: round.sequence, gaps: round.gaps, filled: { [round.gaps[0]]: round.sequence[round.gaps[0]], [round.gaps[1]]: 'nonsense' }, selected: 99, done: false } }
+  });
+  assert.deepEqual(b.store('garden-rounds').patterns.filled, { [round.gaps[0]]: round.sequence[round.gaps[0]] }, 'only correct fills restore');
+  assert.equal(b.query('button[data-gap].active').dataset.gap, String(round.gaps[1]));
+});
+
+test('growing, mirror and number patterns are named rules with their own hints, clues and answers; ten beads keep reading order', t => {
+  const a = app(t);
+  a.w.LP.savePrefs({ ...a.w.LP.prefs, choices: 3 });
+  a.click('[data-mode="patterns"]'); a.click('#support');
+  const levels = a.w.document.querySelectorAll('.level-picker button');
+  assert.match(levels[11].getAttribute('aria-label'), /Growing pattern/);
+  assert.match(levels[12].getAttribute('aria-label'), /Mirror pattern/);
+  assert.match(levels[13].getAttribute('aria-label'), /Number pattern/);
+  assert.ok(levels[9].querySelector('.shape.oval'), 'the picker shows the fifth shape');
+  levels[9].click(); a.click('[data-close]');
+  assert.ok(a.query('.pattern-strip.long'));
+  assert.equal(a.w.document.querySelectorAll('.bead-slot').length, 10);
+  assert.equal(a.w.document.querySelectorAll('.bead-index').length, 10, 'position numbers keep the reading order of a wrapped string');
+  assert.ok(a.query('.shape.oval'));
+  a.click('#support'); a.w.document.querySelectorAll('.level-picker button')[11].click(); a.click('[data-close]');
+  assert.match(a.query('#support').textContent, /Growing pattern/);
+  assert.equal(a.query('#activity-title').textContent, 'The pattern grows');
+  assert.equal(a.query('.repeat-label').textContent, 'Each group has one more bead.');
+  assert.equal(a.w.document.querySelectorAll('.bead-group').length, 4);
+  assert.deepEqual(Array.from(a.w.document.querySelectorAll('.bead-group')).map(g => g.querySelectorAll('.bead-slot').length), [1, 2, 3, 4]);
+  a.click('#help');
+  assert.equal(a.w.document.querySelectorAll('.bead-group.emphasis').length, 4);
+  a.click(`[data-choice="${a.store('garden-rounds').patterns.answer}"]`);
+  assert.match(a.query('#speech').textContent, /The pattern fits\./);
+  a.click('#support'); a.w.document.querySelectorAll('.level-picker button')[12].click(); a.click('[data-close]');
+  assert.equal(a.query('#activity-title').textContent, 'The pattern turns around');
+  assert.ok(a.query('.mirror-line'));
+  const mirror = a.store('garden-rounds').patterns;
+  a.click('#help');
+  const twin = a.w.document.querySelectorAll('.bead-slot')[mirror.sequence.length - 1 - mirror.gaps[0]];
+  assert.ok(twin.classList.contains('emphasis'), 'the clue outlines the mirrored bead');
+  a.click(`[data-choice="${mirror.answer}"]`);
+  assert.equal(a.query('#next').hidden, false);
+  a.click('#support'); a.w.document.querySelectorAll('.level-picker button')[13].click(); a.click('[data-close]');
+  assert.equal(a.query('#activity-title').textContent, 'What number comes next?');
+  const number = a.store('garden-rounds').patterns;
+  assert.match(a.query('.repeat-label').textContent, /^Count on in (ones|twos|fives|tens)\.$/);
+  assert.equal(a.w.document.querySelectorAll('.bead-slot.number').length, 5);
+  assert.equal(a.w.document.querySelectorAll('.shape').length, 0, 'number beads carry numerals, not shapes');
+  assert.ok(Array.from(a.w.document.querySelectorAll('[data-choice]')).every(b => /^\d+$/.test(b.dataset.choice)));
+  a.click('#help');
+  assert.match(a.query('#status').textContent, /Count on in/);
+  a.click(`[data-choice="${number.answer}"]`);
+  assert.match(a.query('#speech').textContent, /The pattern fits\./);
+  assert.equal(a.query('#next-level').hidden, true, 'level 14 is the top');
 });

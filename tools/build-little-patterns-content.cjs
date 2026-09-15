@@ -10,7 +10,7 @@ const patterns = new Map();
 // Levels are explicit; within a level the round index rotates shapes and gap positions and repeats after a short cycle.
 for (let level = 1; level <= L.LEVELS.patterns; level++) for (let index = 0; index < 200; index++) {
   const r = L.patternRound(index, prefs, level);
-  const key = JSON.stringify([r.level, r.sequence, r.gap]);
+  const key = JSON.stringify([r.level, r.sequence, r.gaps]);
   if (!patterns.has(key)) patterns.set(key, { ...r, index });
 }
 const sections = [
@@ -54,9 +54,9 @@ const sections = [
   },
   {
     title: 'Every pattern and missing-shape answer',
-    note: `${patterns.size} distinct sequence/gap combinations. Each row shows the first round index within its level that produces it. Levels are chosen in the activity and never advance on their own; Next gives another example at the same level. Answer-choice order and distractors can vary, but these are all the underlying answers. All levels are open.`,
-    headers: ['Level', 'First round index', 'Repeating unit', 'Puzzle (? is the gap)', 'Answer'],
-    rows: [...patterns.values()].map(r => [r.level, r.index, r.unit.join(' · '), r.sequence.map((shape, i) => i === r.gap ? '?' : shape).join(' · '), r.answer])
+    note: `${patterns.size} distinct sequence/gap combinations. Each row shows the first round index within its level that produces it. Levels are chosen in the activity and never advance on their own; Next gives another example at the same level. Levels 1 to 11 are repeating patterns (longer units and two gaps from level 8); 12 is a growing pattern, 13 a mirror pattern and 14 a number pattern, each named as its own rule with its own hint. Answer-choice order and distractors can vary, but these are all the underlying answers. All levels are open.`,
+    headers: ['Level', 'Rule', 'First round index', 'Unit / groups / step', 'Puzzle (? marks a gap)', 'Answers in order'],
+    rows: [...patterns.values()].map(r => [r.level, L.PATTERN_RULES[r.rule].name, r.index, r.rule === 'grow' ? r.groups.map(g => g.join(' ')).join(' | ') : r.rule === 'number' ? 'count on in ' + r.step + 's' : r.unit.join(' · '), r.sequence.map((v, i) => r.gaps.includes(i) ? '?' : v).join(' · '), r.gaps.map(g => r.sequence[g]).join(', ')])
   },
   {
     title: 'Colour Blocks pieces',

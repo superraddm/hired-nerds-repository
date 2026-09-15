@@ -506,70 +506,122 @@ Take away lives inside the Add activity behind an Add / Take away switch and sha
 
 ## Every pattern and missing-shape answer
 
-60 distinct sequence/gap combinations. Each row shows the first round index within its level that produces it. Levels are chosen in the activity and never advance on their own; Next gives another example at the same level. Answer-choice order and distractors can vary, but these are all the underlying answers. All levels are open.
+112 distinct sequence/gap combinations. Each row shows the first round index within its level that produces it. Levels are chosen in the activity and never advance on their own; Next gives another example at the same level. Levels 1 to 11 are repeating patterns (longer units and two gaps from level 8); 12 is a growing pattern, 13 a mirror pattern and 14 a number pattern, each named as its own rule with its own hint. Answer-choice order and distractors can vary, but these are all the underlying answers. All levels are open.
 
-| Level | First round index | Repeating unit | Puzzle (? is the gap) | Answer |
-| --- | --- | --- | --- | --- |
-| 1 | 0 | circle · square | circle · square · circle · square · circle · ? | square |
-| 1 | 1 | square · triangle | square · triangle · square · triangle · square · ? | triangle |
-| 1 | 2 | triangle · diamond | triangle · diamond · triangle · diamond · triangle · ? | diamond |
-| 1 | 3 | diamond · circle | diamond · circle · diamond · circle · diamond · ? | circle |
-| 2 | 0 | circle · square | circle · square · ? · square · circle · square | circle |
-| 2 | 1 | square · triangle | square · triangle · square · ? · square · triangle | triangle |
-| 2 | 2 | triangle · diamond | triangle · diamond · triangle · diamond · ? · diamond | triangle |
-| 2 | 3 | diamond · circle | diamond · circle · ? · circle · diamond · circle | diamond |
-| 2 | 4 | circle · square | circle · square · circle · ? · circle · square | square |
-| 2 | 5 | square · triangle | square · triangle · square · triangle · ? · triangle | square |
-| 2 | 6 | triangle · diamond | triangle · diamond · ? · diamond · triangle · diamond | triangle |
-| 2 | 7 | diamond · circle | diamond · circle · diamond · ? · diamond · circle | circle |
-| 2 | 8 | circle · square | circle · square · circle · square · ? · square | circle |
-| 2 | 9 | square · triangle | square · triangle · ? · triangle · square · triangle | square |
-| 2 | 10 | triangle · diamond | triangle · diamond · triangle · ? · triangle · diamond | diamond |
-| 2 | 11 | diamond · circle | diamond · circle · diamond · circle · ? · circle | diamond |
-| 3 | 0 | circle · square · square | circle · square · square · circle · square · ? | square |
-| 3 | 1 | square · square · triangle | square · square · triangle · square · square · ? | triangle |
-| 3 | 2 | triangle · diamond · diamond | triangle · diamond · diamond · triangle · diamond · ? | diamond |
-| 3 | 3 | diamond · diamond · circle | diamond · diamond · circle · diamond · diamond · ? | circle |
-| 4 | 0 | circle · square · triangle | circle · square · triangle · ? · square · triangle | circle |
-| 4 | 1 | square · triangle · diamond | square · triangle · diamond · square · ? · diamond | triangle |
-| 4 | 2 | triangle · diamond · circle | triangle · diamond · circle · ? · diamond · circle | triangle |
-| 4 | 3 | diamond · circle · square | diamond · circle · square · diamond · ? · square | circle |
-| 5 | 0 | circle · circle · square · square | circle · circle · square · square · ? · circle · square · square | circle |
-| 5 | 1 | square · square · triangle · triangle | square · square · triangle · triangle · square · ? · triangle · triangle | square |
-| 5 | 2 | triangle · triangle · diamond · diamond | triangle · triangle · diamond · diamond · triangle · triangle · ? · diamond | diamond |
-| 5 | 3 | diamond · diamond · circle · circle | diamond · diamond · circle · circle · ? · diamond · circle · circle | diamond |
-| 5 | 4 | circle · circle · square · square | circle · circle · square · square · circle · ? · square · square | circle |
-| 5 | 5 | square · square · triangle · triangle | square · square · triangle · triangle · square · square · ? · triangle | triangle |
-| 5 | 6 | triangle · triangle · diamond · diamond | triangle · triangle · diamond · diamond · ? · triangle · diamond · diamond | triangle |
-| 5 | 7 | diamond · diamond · circle · circle | diamond · diamond · circle · circle · diamond · ? · circle · circle | diamond |
-| 5 | 8 | circle · circle · square · square | circle · circle · square · square · circle · circle · ? · square | square |
-| 5 | 9 | square · square · triangle · triangle | square · square · triangle · triangle · ? · square · triangle · triangle | square |
-| 5 | 10 | triangle · triangle · diamond · diamond | triangle · triangle · diamond · diamond · triangle · ? · diamond · diamond | triangle |
-| 5 | 11 | diamond · diamond · circle · circle | diamond · diamond · circle · circle · diamond · diamond · ? · circle | circle |
-| 6 | 0 | circle · square · triangle · square | circle · square · triangle · square · ? · square · triangle · square | circle |
-| 6 | 1 | square · triangle · square · diamond | square · triangle · square · diamond · square · ? · square · diamond | triangle |
-| 6 | 2 | triangle · diamond · circle · diamond | triangle · diamond · circle · diamond · triangle · diamond · ? · diamond | circle |
-| 6 | 3 | diamond · circle · diamond · square | diamond · circle · diamond · square · ? · circle · diamond · square | diamond |
-| 6 | 4 | circle · square · triangle · square | circle · square · triangle · square · circle · ? · triangle · square | square |
-| 6 | 5 | square · triangle · square · diamond | square · triangle · square · diamond · square · triangle · ? · diamond | square |
-| 6 | 6 | triangle · diamond · circle · diamond | triangle · diamond · circle · diamond · ? · diamond · circle · diamond | triangle |
-| 6 | 7 | diamond · circle · diamond · square | diamond · circle · diamond · square · diamond · ? · diamond · square | circle |
-| 6 | 8 | circle · square · triangle · square | circle · square · triangle · square · circle · square · ? · square | triangle |
-| 6 | 9 | square · triangle · square · diamond | square · triangle · square · diamond · ? · triangle · square · diamond | square |
-| 6 | 10 | triangle · diamond · circle · diamond | triangle · diamond · circle · diamond · triangle · ? · circle · diamond | diamond |
-| 6 | 11 | diamond · circle · diamond · square | diamond · circle · diamond · square · diamond · circle · ? · square | diamond |
-| 7 | 0 | circle · square · triangle · diamond | circle · square · triangle · diamond · ? · square · triangle · diamond | circle |
-| 7 | 1 | square · triangle · diamond · circle | square · triangle · diamond · circle · square · ? · diamond · circle | triangle |
-| 7 | 2 | triangle · diamond · circle · square | triangle · diamond · circle · square · triangle · diamond · ? · square | circle |
-| 7 | 3 | diamond · circle · square · triangle | diamond · circle · square · triangle · ? · circle · square · triangle | diamond |
-| 7 | 4 | circle · square · triangle · diamond | circle · square · triangle · diamond · circle · ? · triangle · diamond | square |
-| 7 | 5 | square · triangle · diamond · circle | square · triangle · diamond · circle · square · triangle · ? · circle | diamond |
-| 7 | 6 | triangle · diamond · circle · square | triangle · diamond · circle · square · ? · diamond · circle · square | triangle |
-| 7 | 7 | diamond · circle · square · triangle | diamond · circle · square · triangle · diamond · ? · square · triangle | circle |
-| 7 | 8 | circle · square · triangle · diamond | circle · square · triangle · diamond · circle · square · ? · diamond | triangle |
-| 7 | 9 | square · triangle · diamond · circle | square · triangle · diamond · circle · ? · triangle · diamond · circle | square |
-| 7 | 10 | triangle · diamond · circle · square | triangle · diamond · circle · square · triangle · ? · circle · square | diamond |
-| 7 | 11 | diamond · circle · square · triangle | diamond · circle · square · triangle · diamond · circle · ? · triangle | square |
+| Level | Rule | First round index | Unit / groups / step | Puzzle (? marks a gap) | Answers in order |
+| --- | --- | --- | --- | --- | --- |
+| 1 | Repeating pattern | 0 | circle · square | circle · square · circle · square · circle · ? | square |
+| 1 | Repeating pattern | 1 | square · triangle | square · triangle · square · triangle · square · ? | triangle |
+| 1 | Repeating pattern | 2 | triangle · diamond | triangle · diamond · triangle · diamond · triangle · ? | diamond |
+| 1 | Repeating pattern | 3 | diamond · circle | diamond · circle · diamond · circle · diamond · ? | circle |
+| 2 | Repeating pattern | 0 | circle · square | circle · square · ? · square · circle · square | circle |
+| 2 | Repeating pattern | 1 | square · triangle | square · triangle · square · ? · square · triangle | triangle |
+| 2 | Repeating pattern | 2 | triangle · diamond | triangle · diamond · triangle · diamond · ? · diamond | triangle |
+| 2 | Repeating pattern | 3 | diamond · circle | diamond · circle · ? · circle · diamond · circle | diamond |
+| 2 | Repeating pattern | 4 | circle · square | circle · square · circle · ? · circle · square | square |
+| 2 | Repeating pattern | 5 | square · triangle | square · triangle · square · triangle · ? · triangle | square |
+| 2 | Repeating pattern | 6 | triangle · diamond | triangle · diamond · ? · diamond · triangle · diamond | triangle |
+| 2 | Repeating pattern | 7 | diamond · circle | diamond · circle · diamond · ? · diamond · circle | circle |
+| 2 | Repeating pattern | 8 | circle · square | circle · square · circle · square · ? · square | circle |
+| 2 | Repeating pattern | 9 | square · triangle | square · triangle · ? · triangle · square · triangle | square |
+| 2 | Repeating pattern | 10 | triangle · diamond | triangle · diamond · triangle · ? · triangle · diamond | diamond |
+| 2 | Repeating pattern | 11 | diamond · circle | diamond · circle · diamond · circle · ? · circle | diamond |
+| 3 | Repeating pattern | 0 | circle · square · square | circle · square · square · circle · square · ? | square |
+| 3 | Repeating pattern | 1 | square · square · triangle | square · square · triangle · square · square · ? | triangle |
+| 3 | Repeating pattern | 2 | triangle · diamond · diamond | triangle · diamond · diamond · triangle · diamond · ? | diamond |
+| 3 | Repeating pattern | 3 | diamond · diamond · circle | diamond · diamond · circle · diamond · diamond · ? | circle |
+| 4 | Repeating pattern | 0 | circle · square · triangle | circle · square · triangle · ? · square · triangle | circle |
+| 4 | Repeating pattern | 1 | square · triangle · diamond | square · triangle · diamond · square · ? · diamond | triangle |
+| 4 | Repeating pattern | 2 | triangle · diamond · circle | triangle · diamond · circle · ? · diamond · circle | triangle |
+| 4 | Repeating pattern | 3 | diamond · circle · square | diamond · circle · square · diamond · ? · square | circle |
+| 5 | Repeating pattern | 0 | circle · circle · square · square | circle · circle · square · square · ? · circle · square · square | circle |
+| 5 | Repeating pattern | 1 | square · square · triangle · triangle | square · square · triangle · triangle · square · ? · triangle · triangle | square |
+| 5 | Repeating pattern | 2 | triangle · triangle · diamond · diamond | triangle · triangle · diamond · diamond · triangle · triangle · ? · diamond | diamond |
+| 5 | Repeating pattern | 3 | diamond · diamond · circle · circle | diamond · diamond · circle · circle · ? · diamond · circle · circle | diamond |
+| 5 | Repeating pattern | 4 | circle · circle · square · square | circle · circle · square · square · circle · ? · square · square | circle |
+| 5 | Repeating pattern | 5 | square · square · triangle · triangle | square · square · triangle · triangle · square · square · ? · triangle | triangle |
+| 5 | Repeating pattern | 6 | triangle · triangle · diamond · diamond | triangle · triangle · diamond · diamond · ? · triangle · diamond · diamond | triangle |
+| 5 | Repeating pattern | 7 | diamond · diamond · circle · circle | diamond · diamond · circle · circle · diamond · ? · circle · circle | diamond |
+| 5 | Repeating pattern | 8 | circle · circle · square · square | circle · circle · square · square · circle · circle · ? · square | square |
+| 5 | Repeating pattern | 9 | square · square · triangle · triangle | square · square · triangle · triangle · ? · square · triangle · triangle | square |
+| 5 | Repeating pattern | 10 | triangle · triangle · diamond · diamond | triangle · triangle · diamond · diamond · triangle · ? · diamond · diamond | triangle |
+| 5 | Repeating pattern | 11 | diamond · diamond · circle · circle | diamond · diamond · circle · circle · diamond · diamond · ? · circle | circle |
+| 6 | Repeating pattern | 0 | circle · square · triangle · square | circle · square · triangle · square · ? · square · triangle · square | circle |
+| 6 | Repeating pattern | 1 | square · triangle · square · diamond | square · triangle · square · diamond · square · ? · square · diamond | triangle |
+| 6 | Repeating pattern | 2 | triangle · diamond · circle · diamond | triangle · diamond · circle · diamond · triangle · diamond · ? · diamond | circle |
+| 6 | Repeating pattern | 3 | diamond · circle · diamond · square | diamond · circle · diamond · square · ? · circle · diamond · square | diamond |
+| 6 | Repeating pattern | 4 | circle · square · triangle · square | circle · square · triangle · square · circle · ? · triangle · square | square |
+| 6 | Repeating pattern | 5 | square · triangle · square · diamond | square · triangle · square · diamond · square · triangle · ? · diamond | square |
+| 6 | Repeating pattern | 6 | triangle · diamond · circle · diamond | triangle · diamond · circle · diamond · ? · diamond · circle · diamond | triangle |
+| 6 | Repeating pattern | 7 | diamond · circle · diamond · square | diamond · circle · diamond · square · diamond · ? · diamond · square | circle |
+| 6 | Repeating pattern | 8 | circle · square · triangle · square | circle · square · triangle · square · circle · square · ? · square | triangle |
+| 6 | Repeating pattern | 9 | square · triangle · square · diamond | square · triangle · square · diamond · ? · triangle · square · diamond | square |
+| 6 | Repeating pattern | 10 | triangle · diamond · circle · diamond | triangle · diamond · circle · diamond · triangle · ? · circle · diamond | diamond |
+| 6 | Repeating pattern | 11 | diamond · circle · diamond · square | diamond · circle · diamond · square · diamond · circle · ? · square | diamond |
+| 7 | Repeating pattern | 0 | circle · square · triangle · diamond | circle · square · triangle · diamond · ? · square · triangle · diamond | circle |
+| 7 | Repeating pattern | 1 | square · triangle · diamond · circle | square · triangle · diamond · circle · square · ? · diamond · circle | triangle |
+| 7 | Repeating pattern | 2 | triangle · diamond · circle · square | triangle · diamond · circle · square · triangle · diamond · ? · square | circle |
+| 7 | Repeating pattern | 3 | diamond · circle · square · triangle | diamond · circle · square · triangle · ? · circle · square · triangle | diamond |
+| 7 | Repeating pattern | 4 | circle · square · triangle · diamond | circle · square · triangle · diamond · circle · ? · triangle · diamond | square |
+| 7 | Repeating pattern | 5 | square · triangle · diamond · circle | square · triangle · diamond · circle · square · triangle · ? · circle | diamond |
+| 7 | Repeating pattern | 6 | triangle · diamond · circle · square | triangle · diamond · circle · square · ? · diamond · circle · square | triangle |
+| 7 | Repeating pattern | 7 | diamond · circle · square · triangle | diamond · circle · square · triangle · diamond · ? · square · triangle | circle |
+| 7 | Repeating pattern | 8 | circle · square · triangle · diamond | circle · square · triangle · diamond · circle · square · ? · diamond | triangle |
+| 7 | Repeating pattern | 9 | square · triangle · diamond · circle | square · triangle · diamond · circle · ? · triangle · diamond · circle | square |
+| 7 | Repeating pattern | 10 | triangle · diamond · circle · square | triangle · diamond · circle · square · triangle · ? · circle · square | diamond |
+| 7 | Repeating pattern | 11 | diamond · circle · square · triangle | diamond · circle · square · triangle · diamond · circle · ? · triangle | square |
+| 8 | Repeating pattern | 0 | circle · square | circle · square · ? · ? · circle · square · circle · square | circle, square |
+| 8 | Repeating pattern | 1 | square · triangle | square · triangle · square · ? · square · triangle · ? · triangle | triangle, square |
+| 8 | Repeating pattern | 2 | triangle · diamond | triangle · diamond · triangle · ? · ? · diamond · triangle · diamond | diamond, triangle |
+| 8 | Repeating pattern | 3 | diamond · circle | diamond · circle · diamond · circle · diamond · ? · ? · circle | circle, diamond |
+| 8 | Repeating pattern | 4 | circle · square | circle · square · circle · ? · circle · square · ? · square | square, circle |
+| 8 | Repeating pattern | 5 | square · triangle | square · triangle · square · triangle · square · triangle · ? · ? | square, triangle |
+| 8 | Repeating pattern | 6 | triangle · diamond | triangle · diamond · ? · ? · triangle · diamond · triangle · diamond | triangle, diamond |
+| 8 | Repeating pattern | 7 | diamond · circle | diamond · circle · diamond · ? · diamond · circle · ? · circle | circle, diamond |
+| 8 | Repeating pattern | 8 | circle · square | circle · square · circle · ? · ? · square · circle · square | square, circle |
+| 8 | Repeating pattern | 9 | square · triangle | square · triangle · square · triangle · square · ? · ? · triangle | triangle, square |
+| 8 | Repeating pattern | 10 | triangle · diamond | triangle · diamond · triangle · ? · triangle · diamond · ? · diamond | diamond, triangle |
+| 8 | Repeating pattern | 11 | diamond · circle | diamond · circle · diamond · circle · diamond · circle · ? · ? | diamond, circle |
+| 9 | Repeating pattern | 0 | circle · square · triangle | circle · square · triangle · ? · ? · triangle · circle · square · triangle | circle, square |
+| 9 | Repeating pattern | 1 | square · triangle · diamond | square · triangle · diamond · square · ? · diamond · square · ? · diamond | triangle, triangle |
+| 9 | Repeating pattern | 2 | triangle · diamond · circle | triangle · diamond · circle · triangle · ? · ? · triangle · diamond · circle | diamond, circle |
+| 9 | Repeating pattern | 3 | diamond · circle · square | diamond · circle · square · diamond · circle · square · ? · ? · square | diamond, circle |
+| 9 | Repeating pattern | 4 | circle · square · triangle | circle · square · triangle · circle · ? · triangle · circle · ? · triangle | square, square |
+| 9 | Repeating pattern | 5 | square · triangle · diamond | square · triangle · diamond · square · triangle · diamond · square · ? · ? | triangle, diamond |
+| 9 | Repeating pattern | 6 | triangle · diamond · circle | triangle · diamond · circle · ? · ? · circle · triangle · diamond · circle | triangle, diamond |
+| 9 | Repeating pattern | 7 | diamond · circle · square | diamond · circle · square · diamond · ? · square · diamond · ? · square | circle, circle |
+| 9 | Repeating pattern | 8 | circle · square · triangle | circle · square · triangle · circle · ? · ? · circle · square · triangle | square, triangle |
+| 9 | Repeating pattern | 9 | square · triangle · diamond | square · triangle · diamond · square · triangle · diamond · ? · ? · diamond | square, triangle |
+| 9 | Repeating pattern | 10 | triangle · diamond · circle | triangle · diamond · circle · triangle · ? · circle · triangle · ? · circle | diamond, diamond |
+| 9 | Repeating pattern | 11 | diamond · circle · square | diamond · circle · square · diamond · circle · square · diamond · ? · ? | circle, square |
+| 10 | Repeating pattern | 0 | circle · square · triangle · diamond · oval | circle · square · triangle · diamond · oval · ? · square · triangle · diamond · oval | circle |
+| 10 | Repeating pattern | 1 | square · triangle · diamond · oval · circle | square · triangle · diamond · oval · circle · square · ? · diamond · oval · circle | triangle |
+| 10 | Repeating pattern | 2 | triangle · diamond · oval · circle · square | triangle · diamond · oval · circle · square · triangle · diamond · ? · circle · square | oval |
+| 10 | Repeating pattern | 3 | diamond · oval · circle · square · triangle | diamond · oval · circle · square · triangle · diamond · oval · circle · ? · triangle | square |
+| 10 | Repeating pattern | 4 | oval · circle · square · triangle · diamond | oval · circle · square · triangle · diamond · oval · circle · square · triangle · ? | diamond |
+| 11 | Repeating pattern | 0 | circle · square · triangle · diamond · oval | circle · square · triangle · diamond · oval · ? · ? · triangle · diamond · oval | circle, square |
+| 11 | Repeating pattern | 1 | square · triangle · diamond · oval · circle | square · triangle · diamond · oval · circle · square · ? · diamond · oval · ? | triangle, circle |
+| 11 | Repeating pattern | 2 | triangle · diamond · oval · circle · square | triangle · diamond · oval · circle · square · triangle · diamond · ? · ? · square | oval, circle |
+| 11 | Repeating pattern | 3 | diamond · oval · circle · square · triangle | diamond · oval · circle · square · triangle · ? · oval · circle · ? · triangle | diamond, square |
+| 11 | Repeating pattern | 4 | oval · circle · square · triangle · diamond | oval · circle · square · triangle · diamond · oval · circle · square · ? · ? | triangle, diamond |
+| 12 | Growing pattern | 0 | circle | circle square | circle square square | circle square square square | circle · circle · square · circle · square · square · ? · square · square · square | circle |
+| 12 | Growing pattern | 1 | triangle | triangle square | triangle square square | triangle square square square | triangle · triangle · square · triangle · square · square · triangle · ? · square · square | square |
+| 12 | Growing pattern | 2 | triangle | triangle diamond | triangle diamond diamond | triangle diamond diamond diamond | triangle · triangle · diamond · triangle · diamond · diamond · triangle · diamond · ? · diamond | diamond |
+| 12 | Growing pattern | 3 | circle | circle diamond | circle diamond diamond | circle diamond diamond diamond | circle · circle · diamond · circle · diamond · diamond · circle · diamond · diamond · ? | diamond |
+| 13 | Mirror pattern | 0 | circle · square · triangle | circle · square · triangle · ? · square · circle | triangle |
+| 13 | Mirror pattern | 1 | square · triangle · diamond · circle | square · triangle · diamond · circle · circle · ? · triangle · square | diamond |
+| 13 | Mirror pattern | 2 | triangle · diamond · circle | triangle · diamond · circle · circle · diamond · ? | triangle |
+| 13 | Mirror pattern | 3 | diamond · circle · square · triangle | diamond · circle · square · triangle · triangle · square · circle · ? | diamond |
+| 13 | Mirror pattern | 4 | circle · square · triangle | circle · square · triangle · triangle · ? · circle | square |
+| 13 | Mirror pattern | 6 | triangle · diamond · circle | triangle · diamond · circle · ? · diamond · triangle | circle |
+| 13 | Mirror pattern | 8 | circle · square · triangle | circle · square · triangle · triangle · square · ? | circle |
+| 13 | Mirror pattern | 10 | triangle · diamond · circle | triangle · diamond · circle · circle · ? · triangle | diamond |
+| 14 | Number pattern | 0 | count on in 1s | 1 · 2 · 3 · 4 · ? | 5 |
+| 14 | Number pattern | 1 | count on in 2s | 2 · 4 · 6 · ? · 10 | 8 |
+| 14 | Number pattern | 2 | count on in 5s | 5 · 10 · 15 · 20 · ? | 25 |
+| 14 | Number pattern | 3 | count on in 10s | 10 · 20 · 30 · ? · 50 | 40 |
+| 14 | Number pattern | 4 | count on in 1s | 2 · 3 · 4 · 5 · ? | 6 |
+| 14 | Number pattern | 8 | count on in 1s | 3 · 4 · 5 · 6 · ? | 7 |
 
 ## Colour Blocks pieces
 
