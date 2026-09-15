@@ -59,6 +59,14 @@
       "file": "assets/voice/77af778b51abd4a3.wav",
       "seconds": 0.436
     },
+    "circle": {
+      "file": "assets/voice/8a39178d327e72a9.wav",
+      "seconds": 0.523
+    },
+    "diamond": {
+      "file": "assets/voice/81c9d6128b5fcd7b.wav",
+      "seconds": 0.645
+    },
     "dog": {
       "file": "assets/voice/cd6357efdd966de8.wav",
       "seconds": 0.547
@@ -191,6 +199,10 @@
       "file": "assets/voice/a86a6a017586300c.wav",
       "seconds": 0.804
     },
+    "oval": {
+      "file": "assets/voice/3fb847f1d0c26c90.wav",
+      "seconds": 0.509
+    },
     "plus": {
       "file": "assets/voice/383ef36928344f56.wav",
       "seconds": 0.531
@@ -238,6 +250,10 @@
     "spot on": {
       "file": "assets/voice/701039022100b133.wav",
       "seconds": 0.532
+    },
+    "square": {
+      "file": "assets/voice/4ba3e8e3765f2970.wav",
+      "seconds": 0.497
     },
     "sun": {
       "file": "assets/voice/27756f050e14a1cb.wav",
@@ -418,6 +434,10 @@
     "tree": {
       "file": "assets/voice/dc9c5edb8b2d479e.wav",
       "seconds": 0.447
+    },
+    "triangle": {
+      "file": "assets/voice/0a3f13c673af2389.wav",
+      "seconds": 0.65
     },
     "twelve": {
       "file": "assets/voice/d1a749ad879b6c07.wav",

@@ -156,3 +156,9 @@ button.bead-slot{cursor:pointer;font:inherit;min-width:48px;min-height:48px;padd
 
 /* A familiar word without a Mulberry symbol keeps the bank tile's shape without a picture. */
 .word-emoji .no-picture{display:block;width:44px;height:44px;margin:0 auto;border:2px dashed #d4bd71;border-radius:10px}
+
+/* Make your own bead string. */
+.pattern-tabs{margin:0 0 10px}.pattern-tabs button[aria-pressed=true]{background:#e0d4f0;border-color:#b09acb;color:#594777}
+.pattern-strip.making .bead-slot.empty{border-style:dashed;background:#fffdf0;opacity:.7}
+.pattern-strip.making button.bead-slot{cursor:pointer}
+.make-tools button{min-height:48px}

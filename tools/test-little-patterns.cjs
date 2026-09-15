@@ -221,3 +221,16 @@ test('the second sentence bank uses the same symbol words with safe distractors,
   const first=learning.sentenceRound(learning.SENTENCES.length,prefs);assert.ok(first.choices.includes('PARK')||first.choices.includes('CAT'),'other custom gaps serve as distractors first');
   assert.equal(learning.cleanSentence("ARTHUR's DOG barks"),"Arthur's DOG barks.",'only the one capitals word is the gap; the first word keeps sentence case');assert.equal(learning.cleanSentence("my DOG barks"),"My DOG barks.");assert.equal(learning.cleanSentence('one two three four five six seven eight NINE ten'),'');
 });
+
+test('make your own bead string: add, remove any bead, delete the last, clear, a ten-bead limit, and a readable readback',()=>{
+  let r=learning.makeRound();assert.deepEqual(r.beads,[]);assert.equal(r.done,false);
+  const step=(action,value)=>{const out=learning.makeEdit(r,action,value);r={...r,beads:out.beads};return out.changed;};
+  assert.equal(step('add','circle'),true);assert.equal(step('add','square'),true);assert.equal(step('add','hexagon'),false,'only the five shapes');
+  assert.equal(learning.readBack(r.beads),'Circle, Square.');
+  assert.equal(step('remove',0),true);assert.deepEqual(r.beads,['square']);assert.equal(step('remove',5),false);
+  assert.equal(step('last'),true);assert.deepEqual(r.beads,[]);assert.equal(step('last'),false);assert.equal(step('clear'),false);
+  for(let i=0;i<12;i++)step('add',learning.SHAPES[i%5]);
+  assert.equal(r.beads.length,learning.MAKE_LIMIT,'ten beads at most');assert.equal(step('add','oval'),false);
+  assert.equal(step('clear'),true);assert.deepEqual(r.beads,[]);assert.equal(learning.readBack([]),'');
+  assert.ok(learning.SHAPES.every(shape=>learning.spokenBank().includes(shape)),'every shape can be read back with the bundled voice');
+});
