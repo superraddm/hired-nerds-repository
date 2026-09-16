@@ -6,7 +6,9 @@ instructions and yours and Codex's interpretation were not good enough. Too many
 buttons, too much on screen to complete the task of spelling out the missing word."
 
 Two passes each from Claude (Fable 5.1) and Codex (gpt-6-astra), then a fix brief
-for Sonnet. Baseline: commit a23709a on main (landscape layout and phonetic keys, 16 September); live at https://kpopboom.party/little-patterns/garden.html#words.
+for Sonnet. **Reviewed and accepted by Jof, 16 September 2026, with two notes**,
+folded into brief items 3 and 13: a Clear key beside Delete (established by
+Arthur's AAC use), and alignment with the iPad display fixes. Baseline: commit a23709a on main (landscape layout and phonetic keys, 16 September); live at https://kpopboom.party/little-patterns/garden.html#words.
 
 Constraints that still bind: quiet by default; no timers, lives, streaks, rewards or
 locked progression; wrong answers neutral and re-tryable; Arthur types the answer
@@ -291,11 +293,17 @@ this brief and a pass disagree, the brief follows Codex Pass 2.
    (`bindInput` must not jump to the end unless the round changed). Tapping the gap
    in device-keyboard mode focuses it so the iPad keyboard reopens.
 3. **Keys with an action row.** The one-line typing row, its label and the "Use
-   device keyboard" button go. The keyboard ends in a stable action row: Delete and
-   a green Enter, visible in both keyboard modes (in device mode the row shows on its
-   own). Space appears only in Number words. Checking happens only on Enter or the
-   physical Enter key; an empty Enter is announced through the live region ("Type a
-   word first."), not a separate feedback element.
+   device keyboard" button go. The keyboard ends in a stable action row of three
+   keys: Delete (one letter), Clear (wipes the gap in one tap, no confirmation, the
+   draft is not recoverable and nothing else changes) and a green Enter, visible in
+   both keyboard modes (in device mode the row shows on its own). Jof's note: a
+   Clear key is established by Arthur's AAC use, where wiping everything is easier
+   than repeated backspacing; it earns its place on screen because it replaces
+   several taps, and it is the only addition to the simplified screen. Space appears
+   only in Number words (a four-key row there). Checking happens only on Enter or
+   the physical Enter key; an empty Enter is announced through the live region
+   ("Type a word first."), not a separate feedback element. Clear is silent and
+   announces "Cleared." through the live region only.
 4. **One prompt.** The large title and instruction line go; a small heading names
    the activity ("Missing word") and keeps the section's accessible label. Nook's
    bubble carries "Type the missing word." and afterwards the success or retry line
@@ -357,6 +365,27 @@ this brief and a pass disagree, the brief follows Codex Pass 2.
     48 CSS px in both dimensions, adding a key row rather than shrinking keys. The
     landscape media block in garden-live.css may then gain Words rules (picture
     beside the sentence, cards beside the clue) that were deliberately held back.
+
+13. **Alignment with the iPad display fixes** (Jof's second note). The Words screen
+    is built against the same iPad facts that drove the 16 September fixes, not
+    against a desktop preview:
+    - The landscape grid in garden-live.css (`@media (min-width:820px) and
+      (max-height:840px) and (orientation:landscape)`, commit a23709a) is the
+      layout the simplified screen must fit inside: Nook, status and the action
+      buttons in the 160 px left column, the task in the remaining width, no
+      scrolling at 1024 by 698. The Words rules that were held back (picture beside
+      the sentence, cards beside the clue, a wider key grid) are to be designed for
+      the new screen, not restored from the old one.
+    - Buttons never lay out their contents with CSS grid; use flex, opt out of Safari
+      text autosizing (`text-size-adjust:100%`), and size multi-character content by
+      length, as the answer pills now do (commits 7434bdd and c8f6634). The new gap
+      input, the cards and the Clear / Delete / Enter keys follow that rule.
+    - Stylesheet and script links keep their version query so the iPad fetches new
+      files; bump it in the same commit as any CSS change to this screen.
+    - Acceptance (item 12) is measured with the headless harness at the three sizes
+      and confirmed by Jof on the iPad with a photo, as with the round-2 fixes; the
+      digit-count and letter-spacing lessons mean a check on the real device, not
+      only in jsdom, before the phase is called done.
 
 ### Not in this brief
 
