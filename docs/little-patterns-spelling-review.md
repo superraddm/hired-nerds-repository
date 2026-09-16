@@ -392,3 +392,52 @@ this brief and a pass disagree, the brief follows Codex Pass 2.
 Tap-to-fill answers, auto-checking on each letter, auto-advance, changing the
 symbol set, phonics beyond the existing letter-sound approximation, and the portrait
 Add levels 3+ scroll (a separate layout item).
+
+---
+
+## Build record (16 September 2026)
+
+Built by Claude Fable 5.1 from the brief above (Jof asked for the build in the
+session he had expected to be Sonnet; same brief, same checks). Every commit ran
+the three test files and `node tools/stage-little-patterns.cjs --check` first.
+
+| Items | Commit | Notes |
+| --- | --- | --- |
+| 9, 10 (data) | 5048cee | RUN and HOT distractors replaced; an also-plausible list per gap in the unit test; `sentenceProblem()` gives a reason; `editText` takes the 40-character limit. |
+| 1 to 8, 10 (form), 11, 12, 13 | e66f692 | The simplified Missing word screen, the picker with the four Word activities, the Grown-ups inline validation, the behaviour tests, the landscape Words rules and the version bump. |
+| Docs | (this commit) | Scope row, this record. |
+
+Decisions taken where the brief left room, following Codex Pass 2:
+
+- A familiar sentence longer than 60 characters or eight words is refused with
+  its reason rather than trimmed to fit, so a validated sentence is never cut
+  short of its gap.
+- On save, the valid sentences are stored at once and the dialog stays open only
+  while some lines need a change, listing each with its reason. Sentences saved
+  under the older rule (an apostrophe in the gap) are listed once as "saved
+  earlier, no longer used" and put back in the box to mend.
+- The sentence words form one "Hear the sentence" button; when the gap sits
+  mid-sentence the later words are plain text that forwards a tap to that button,
+  so there is still exactly one control and one accessible name. The sentence
+  container is a group labelled with the sentence ("the blank is hot").
+- Missing letter, Word order and Number words make the word tiles, the placed
+  sentence and the number-and-word the Hear control (a visually hidden "Hear the
+  word:" prefix names it), so no separate tool row remains anywhere in Words.
+- With the A to Z keys the gap keeps focus after every key, card tap and render,
+  so its caret stays visible; with the device keyboard nothing focuses the gap
+  except a tap on it.
+- Missing word's status line is empty on entry (the bubble carries the one
+  prompt); it carries only Cleared., Type a word first., the sound-off note, the
+  clue text and the retry hint.
+
+Headless Chrome measurements (item 12), sentence top to keys bottom, all targets
+at least 48 by 48 CSS px, no horizontal overflow:
+
+| Viewport | Before | After | Notes |
+| --- | --- | --- | --- |
+| 1024 by 698 (iPad landscape) | page 985 tall, span 568 | page 698 tall, span 331 | no page scroll at all; Nook, status and the clue in the left column |
+| 768 by 954 (iPad portrait, 300 px keyboard allowance = 654 usable) | span 630 | span 396 | familiar six-word sentence: 407 |
+| 360 by 640 (Android) | span 728, scrolled | span 514 | familiar sentence 582; five key columns, six letter rows plus the action row |
+
+Not yet done: confirmation on the real iPad with a photo (item 13, last point).
+That is Jof's check before the phase is called done.
