@@ -162,3 +162,11 @@ button.bead-slot{cursor:pointer;font:inherit;min-width:48px;min-height:48px;padd
 .pattern-strip.making .bead-slot.empty{border-style:dashed;background:#fffdf0;opacity:.7}
 .pattern-strip.making button.bead-slot{cursor:pointer}
 .make-tools button{min-height:48px}
+
+/* iPad Safari: stop text autosizing from inflating multi-digit answers, lay the numeral out with flex (grid inside a button is unreliable in WebKit), and size by digit count so 18 and 100 fit the same button as 3. */
+.choice{display:inline-flex;align-items:center;justify-content:center;padding:0;line-height:1;white-space:nowrap;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.choice.digits-2{font-size:52px}.choice.digits-3{font-size:40px;letter-spacing:-1px}
+.equation span,.equation .typed,.equation .unknown{letter-spacing:0}
+.equation{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+@media(max-width:780px){.choice.digits-2{font-size:42px}.choice.digits-3{font-size:32px}}
+@media(max-width:550px){.choice.digits-2{font-size:40px}.choice.digits-3{font-size:30px}}

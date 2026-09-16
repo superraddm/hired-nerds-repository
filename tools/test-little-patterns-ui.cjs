@@ -1069,3 +1069,20 @@ test('Make your own pattern: beads are added, removed and read back, the string 
   assert.deepEqual(b.store('garden-rounds').make.beads, ['circle', 'oval'], 'only real shapes restore');
   assert.equal(b.query('#next').hidden, true);
 });
+
+test('numeral answer buttons are sized by digit count so 18 and 100 fit the same button as 3', t => {
+  const a = app(t);
+  a.click('[data-mode="add"]'); a.click('#support');
+  a.w.document.querySelectorAll('.level-picker button')[2].click(); a.click('[data-close]');
+  const classes = Array.from(a.w.document.querySelectorAll('[data-choice]')).map(b => [b.dataset.choice, b.className]);
+  for (const [value, cls] of classes) assert.equal(/digits-2/.test(cls), value.length === 2, value);
+  a.click('#support'); a.w.document.querySelectorAll('.level-picker button')[4].click(); a.click('[data-close]');
+  a.click('#support');
+  const form = a.query('#pick-sum'); form.elements.a.value = '50'; form.elements.b.value = '50'; a.submit('#pick-sum');
+  assert.ok(a.query('[data-choice="100"].digits-3'));
+  a.click('[data-mode="count"]');
+  assert.ok(Array.from(a.w.document.querySelectorAll('[data-choice]')).every(b => !/digits/.test(b.className)), 'single digits keep the approved size');
+  const css = fs.readFileSync(path.join(root, 'garden-live.css'), 'utf8');
+  assert.match(css, /\.choice\{display:inline-flex[^}]*text-size-adjust:100%/);
+  assert.match(css, /\.equation span[^{]*\{letter-spacing:0\}/);
+});
