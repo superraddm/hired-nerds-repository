@@ -612,7 +612,11 @@ test('the gap is the input: bounded width, readonly with the A to Z keys, Delete
   assert.equal(input.getAttribute('maxlength'), '40');
   assert.equal(input.hasAttribute('readonly'), true, 'A to Z keys feed the gap without the device keyboard');
   assert.equal(input.getAttribute('inputmode'), 'none');
-  assert.match(input.getAttribute('style'), /--gap-ch:[4-9]\b|--gap-ch:1[0-2]\b/, 'width follows the longest bank word, capped at twelve');
+  assert.match(input.getAttribute('style'), /--gap-ch:6\b/, 'width starts one letter wider than the longest bank word (APPLE), never under six');
+  for (const key of ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']) a.click(`[data-key="${key}"]`);
+  assert.equal(input.style.getPropertyValue('--gap-ch'), '9', 'the gap grows with the draft');
+  a.click('[data-key="Clear"]');
+  assert.equal(input.style.getPropertyValue('--gap-ch'), '6', 'and shrinks back to its base width, never below it');
   assert.equal(a.query('.word-tile.gap'), null, 'no separate gap tile');
   assert.equal(a.query('.typing-row'), null); assert.equal(a.query('.word-label'), null); assert.equal(a.query('#keyboard-toggle'), null);
   assert.equal(a.query('#task .word-tabs'), null, 'no activity tab row on the task'); assert.equal(a.query('#choose-puzzle'), null, 'no header chooser');
@@ -1169,7 +1173,7 @@ test('the task container names the current view so landscape CSS can lay each ac
   const css = fs.readFileSync(path.join(root, 'garden-live.css'), 'utf8');
   assert.match(css, /@media \(min-width:820px\) and \(max-height:840px\) and \(orientation:landscape\)\{[^@]*main\.garden\{display:grid/);
   assert.match(css, /\.word-tabs button\{min-width:48px\}/);
-  const landscape = css.slice(css.lastIndexOf('@media (min-width:820px) and (max-height:840px) and (orientation:landscape)'));
+  const landscape = css.slice(css.indexOf('iPad landscape: the picture sits beside the sentence'));
   assert.match(landscape, /#task\[data-view="sentence"\] \.sentence-row\{display:flex/, 'picture beside the sentence in landscape');
   assert.match(landscape, /button\.word-card\{flex-direction:row/, 'card pictures beside their words in landscape');
   assert.match(css, /button\.word-card\{display:flex/); assert.match(css, /\.key-actions\{grid-column:1\/-1;display:flex/);
@@ -1320,4 +1324,41 @@ test('Grown-ups: a familiar sentence that cannot be used is listed with its reas
   assert.equal(a.query('#sentence-problems').hidden, true, 'nothing is listed once every saved sentence is valid');
   assert.match(a.query('#lp-settings').textContent, /used as the wrong answers/);
   assert.match(a.query('#lp-settings').textContent, /spoken only while it is on/);
+});
+
+test('after a correct answer the Next button sits full width under the result in every activity, and returns to the column, hidden, for the next round', t => {
+  const a = app(t);
+  const underResult = (selector) => {
+    const row = a.query('#task .go-row');
+    assert.ok(row, 'a Next row inside the task');
+    assert.equal(a.query('#next').parentElement, row, 'the one Next button moved into it');
+    assert.equal(a.query('#next').hidden, false);
+    assert.ok(a.query(selector).compareDocumentPosition(row) & 4, 'the row follows ' + selector);
+    assert.equal(a.w.document.activeElement, a.query('#next'), 'focus lands on it');
+    assert.equal(a.query('.actions #repeat').hidden, false, 'Again stays in the column');
+  };
+  assert.equal(a.query('#task .go-row'), null);
+  a.click('[data-choice="1"]'); underResult('.number-total');
+  a.click('#next');
+  assert.equal(a.query('#task .go-row'), null, 'a fresh round has no Next row');
+  assert.equal(a.query('#next').parentElement, a.query('.actions'), 'the button is back in the column');
+  assert.equal(a.query('#next').hidden, true);
+  assert.equal(a.query('#next').nextElementSibling, a.query('#next-level'), 'in its old place');
+  a.click('[data-mode="add"]'); a.click('[data-choice="2"]'); underResult('.equation');
+  a.click('[data-mode="patterns"]'); a.click(`[data-choice="${a.store('garden-rounds').patterns.answer}"]`); underResult('.pattern-strip');
+  a.click('[data-mode="words"]');
+  for (const key of ['A', 'P', 'P', 'L', 'E']) a.click(`[data-key="${key}"]`);
+  a.click('#check-word'); underResult('.sentence-row');
+  assert.equal(a.query('.keyboard'), null, 'no keys under a finished sentence');
+  wordTab(a, 'letter'); a.click(`[data-choice="${a.store('garden-rounds').letter.letter}"]`); underResult('.hear-tiles');
+  wordTab(a, 'order');
+  for (const word of a.store('garden-rounds').order.words) Array.from(a.w.document.querySelectorAll('[data-tile]')).find(b => b.textContent === word && !b.disabled).click();
+  underResult('.hear-tiles');
+  wordTab(a, 'numbers');
+  assert.equal(a.query('#next').parentElement, a.query('#task .go-row'), 'Number words in show mode always offers the next number under the word');
+  a.click('[data-mode="patterns"]'); a.click('[data-pattern-mode="make"]');
+  assert.equal(a.query('#task .go-row'), null, 'Make your own has no Next');
+  assert.equal(a.query('#next').parentElement, a.query('.actions'));
+  const css = fs.readFileSync(path.join(root, 'garden-live.css'), 'utf8');
+  assert.match(css, /\.go-row \.next\{width:100%;max-width:560px;min-height:76px/);
 });

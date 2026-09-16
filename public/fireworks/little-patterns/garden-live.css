@@ -247,12 +247,13 @@ button.bead-slot{display:inline-flex;align-items:center;justify-content:center}
 button.sentence-words{cursor:pointer;border-radius:12px}
 button.sentence-words:active{background:#f4edc4}
 .sentence .stop{font-size:30px;font-weight:900;color:#3f4a5c;line-height:1}
-.sentence input.gap-input{box-sizing:border-box;width:calc(var(--gap-ch,6)*1ch + 30px);max-width:100%;min-width:84px;min-height:52px;margin:0;padding:6px 12px;border:3px dashed #839979;border-radius:14px;background:#fffdf0;color:#594777;font:900 26px/1.2 "Trebuchet MS",Arial,sans-serif;letter-spacing:1px;text-align:center;caret-color:#6a558a;outline:3px solid #b2c393;outline-offset:3px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.sentence input.gap-input{box-sizing:border-box;width:calc(var(--gap-ch,6)*1ch + 34px);max-width:100%;min-width:130px;min-height:60px;margin:0;padding:6px 14px;border:3px dashed #839979;border-radius:14px;background:#fffdf0;color:#594777;font:900 26px/1.2 "Trebuchet MS",Arial,sans-serif;letter-spacing:1px;text-align:center;caret-color:#6a558a;outline:3px solid #b2c393;outline-offset:3px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .sentence input.gap-input:focus,.sentence input.gap-input:focus-visible{outline:4px solid #594777;outline-offset:3px;border-color:#594777}
 .sentence input.gap-input[aria-invalid=true]{border-color:#b28e51;background:#fff6e8}
 .hear-tiles{display:block;width:100%;margin:0;padding:0;border:0;background:transparent;font:inherit;color:inherit;cursor:pointer;border-radius:16px}
 .hear-tiles .letter-tiles,.hear-tiles .sentence{margin:12px 0}
-.word-bank.word-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:8px 0}
+/* Cards, keys and the action row share one gap so their column edges line up. */
+.word-bank.word-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:8px 0}
 button.word-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:100%;min-width:0;min-height:76px;margin:0;padding:8px 6px;border:2px solid #d4bd71;border-radius:16px;background:#fff4c9;color:#594777;font:900 clamp(15px,3.5vw,23px)/1.2 "Trebuchet MS",Arial,sans-serif;box-shadow:none;overflow-wrap:anywhere;text-align:center;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 button.word-card.hint{outline:4px solid #477b59;outline-offset:4px}
 .card-picture{display:block;width:44px;height:44px;flex:0 0 auto;visibility:hidden}
@@ -261,7 +262,7 @@ button.word-card.hint{outline:4px solid #477b59;outline-offset:4px}
 .card-word{display:block;min-width:0}
 .keyboard{gap:6px;margin-top:10px}
 .key{border-bottom-width:3px;padding:2px;-webkit-text-size-adjust:100%;text-size-adjust:100%}
-.key-actions{grid-column:1/-1;display:flex;gap:8px;margin-top:2px}
+.key-actions{grid-column:1/-1;display:flex;gap:6px;margin-top:0}
 .key-actions .key{flex:1 1 0;min-width:48px;min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:6px;font-size:15px;line-height:1.2}
 .key-actions .key.function{background:#f3c9b9;border-color:#cc9c8c}
 .key-actions .key.clear{background:#fbe7d0;border-color:#d1ab84;color:#5f4a2e}
@@ -272,7 +273,7 @@ button.word-card.hint{outline:4px solid #477b59;outline-offset:4px}
 .picker-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}.picker-tabs button{flex:1 1 auto;min-height:48px;font-size:14px}
 @media(min-width:551px){button.word-card{flex-direction:row;gap:10px;min-height:60px;padding:6px 10px}}
 @media(max-width:780px){.sentence-words{font-size:22px}.sentence input.gap-input{font-size:22px}.key-actions .key{font-size:13px}.key-actions .key.go{font-size:15px}}
-@media(max-width:550px){.word-scene .companion img{width:68px;height:84px}.sentence-words{font-size:20px;min-height:44px}.sentence input.gap-input{font-size:20px;min-height:48px;min-width:74px;padding:4px 8px}.sentence .stop{font-size:24px}button.word-card{min-height:72px;padding:6px 4px}.card-picture,.card-picture img.symbol{width:36px;height:36px}.key-actions{gap:5px}.key-actions .key{font-size:12px;padding:4px}.key-actions .key.go{font-size:14px}}
+@media(max-width:550px){.word-scene .companion img{width:68px;height:84px}.sentence-words{font-size:20px;min-height:44px}.sentence input.gap-input{font-size:20px;min-height:52px;min-width:104px;padding:4px 10px}.sentence .stop{font-size:24px}button.word-card{min-height:72px;padding:6px 4px}.card-picture,.card-picture img.symbol{width:36px;height:36px}.key-actions .key{font-size:12px;padding:4px}.key-actions .key.go{font-size:14px}}
 /* iPad landscape: the picture sits beside the sentence and the card pictures beside their words, so the sentence, cards and keys all fit the task column without scrolling. */
 @media (min-width:820px) and (max-height:840px) and (orientation:landscape){
   .word-scene .activity h2{font-size:15px;margin:0 0 2px}
@@ -280,13 +281,13 @@ button.word-card.hint{outline:4px solid #477b59;outline-offset:4px}
   #task[data-view="sentence"] .word-picture{min-height:0;margin:0}
   #task[data-view="sentence"] .word-picture img.symbol{width:64px;height:64px}
   #task[data-view="sentence"] .sentence{margin:0}
-  .sentence-words{font-size:24px}.sentence input.gap-input{font-size:24px;min-height:48px}
-  .word-bank.word-cards{margin:6px 0;gap:10px}
+  .sentence-words{font-size:24px}.sentence input.gap-input{font-size:24px;min-height:54px}
+  .word-bank.word-cards{margin:6px 0;gap:5px}
   button.word-card{flex-direction:row;gap:10px;min-height:56px;padding:4px 8px;font-size:20px}
   .card-picture,.card-picture img.symbol{width:40px;height:40px}
   .keyboard{margin-top:6px;gap:5px}
   .key{min-height:48px;font-size:19px}
-  .key-actions{margin-top:0}
+  .key-actions{gap:5px}
   .word-picture{min-height:0;margin:4px 0}.word-picture img.symbol{width:72px;height:72px}
   .hear-tiles .letter-tiles,.hear-tiles .sentence{margin:8px 0}
   .letter-tile{width:46px;height:54px;font-size:26px}
@@ -294,3 +295,10 @@ button.word-card.hint{outline:4px solid #477b59;outline-offset:4px}
   .choice.word-choice{min-height:52px;font-size:22px;padding:8px 12px}
   .typing-row{margin:6px 0 0}.word-line{min-height:48px;font-size:22px}
 }
+
+/* Moving on (16 September, Jof's iPad note): after a correct answer the Next button leaves the side column and sits full width under the result. Again and Next level stay in the column. */
+.go-row{display:flex;justify-content:center;margin:14px 0 4px}
+.go-row .next{width:100%;max-width:560px;min-height:76px;padding:14px 24px;border-radius:22px;border-bottom-width:7px;font-size:26px;line-height:1.2;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+@media(max-width:780px){.go-row .next{min-height:68px;font-size:23px}}
+@media(max-width:550px){.go-row{margin:10px 0 2px}.go-row .next{min-height:64px;font-size:21px;padding:10px 16px}}
+@media (min-width:820px) and (max-height:840px) and (orientation:landscape){.go-row{margin:8px 0 0}#task[data-view="add"]>.go-row{flex-basis:100%}.go-row .next{min-height:60px;font-size:22px;padding:8px 20px;border-bottom-width:5px}}
