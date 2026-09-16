@@ -234,3 +234,30 @@ test('make your own bead string: add, remove any bead, delete the last, clear, a
   assert.equal(step('clear'),true);assert.deepEqual(r.beads,[]);assert.equal(learning.readBack([]),'');
   assert.ok(learning.SHAPES.every(shape=>learning.spokenBank().includes(shape)),'every shape can be read back with the bundled voice');
 });
+
+test('built-in sentence distractors never include an also-plausible answer, and the RUN and HOT pools are fixed',()=>{
+  const ALSO_PLAUSIBLE={RUN:['JUMP','SIT','WALK','SWIM'],SWIM:['JUMP'],TALL:['BIG','WET','DRY'],HOT:['DRY','BIG'],BIG:['FAST','LOUD','TALL','WET','DRY','HOT'],WET:['BIG','FAST'],JUMP:['RUN','SWIM'],ASLEEP:['WET','DRY','SOFT','BIG']};
+  for(const [index,entry] of learning.SENTENCES.entries()){const banned=ALSO_PLAUSIBLE[entry.gap]||[];const pool=learning.sentencePool(entry);assert.ok(!pool.some(w=>banned.includes(w)),entry.text+' pool: '+pool.join(', '));assert.ok(entry.picture,'every built-in sentence keeps its picture clue');for(let i=0;i<12;i++){const r=learning.sentenceRound(index+i*learning.SENTENCES.length,learning.defaults);assert.equal(r.text,entry.text);assert.ok(!r.choices.some(w=>banned.includes(w)),entry.text+' offered '+r.choices.join(', '));}}
+  assert.deepEqual(learning.sentencePool(learning.SENTENCES.find(s=>s.gap==='RUN')),['RUN','READ','SING']);
+  assert.deepEqual(learning.sentencePool(learning.SENTENCES.find(s=>s.gap==='HOT')),['HOT','WET','SOFT']);
+});
+test('familiar sentences are validated with a reason: length first, two to eight words, one CAPITALS gap without an apostrophe, never trimmed',()=>{
+  const P=learning.sentenceProblem;
+  assert.equal(P('Arthur likes TRAINS.'),'');
+  assert.equal(P("Arthur's DOG barks"),'','an apostrophe outside the gap is fine');
+  assert.equal(P("ARTHUR'S dog barks."),'The missing word cannot have an apostrophe: the A to Z keys have none.');
+  assert.equal(P('no gap here'),'Write exactly one word in CAPITALS: the missing word.');
+  assert.equal(P('TWO CAPS here'),'Write exactly one word in CAPITALS: the missing word.');
+  assert.equal(P('DOG'),'Use two to eight words.');
+  assert.equal(P('one two three four five six seven eight NINE ten'),'Use two to eight words.');
+  assert.equal(P('x'.repeat(58)+' BIG'),'Keep it to 60 characters.');
+  assert.equal(P(''),'Use two to eight words.');
+  assert.equal(P(42),'Not a sentence.');
+  assert.equal(learning.cleanSentence('x'.repeat(58)+' is BIG'),'','a long sentence is refused, never cut short of its gap');
+  assert.equal(learning.cleanSentence('a b c d e f g HI'),'A b c d e f g HI.');
+  assert.equal(learning.cleanSentence("ARTHUR'S dog barks."),'');
+  assert.deepEqual(learning.normalisePrefs({customSentences:["ARTHUR'S dog barks.",'We go to the PARK.']}).customSentences,['We go to the PARK.']);
+  assert.equal(learning.SENTENCE_LIMIT,60);
+  assert.equal(learning.editText('ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMN',40,40,'O',40).value.length,40,'word inputs stop at their 40-character limit');
+  assert.deepEqual(learning.editText('AB',2,2,'C',40),{value:'ABC',caret:3});
+});
