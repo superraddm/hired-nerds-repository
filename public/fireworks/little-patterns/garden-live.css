@@ -170,3 +170,7 @@ button.bead-slot{cursor:pointer;font:inherit;min-width:48px;min-height:48px;padd
 .equation{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 @media(max-width:780px){.choice.digits-2{font-size:42px}.choice.digits-3{font-size:32px}}
 @media(max-width:550px){.choice.digits-2{font-size:40px}.choice.digits-3{font-size:30px}}
+
+/* Same WebKit rule for the bead gaps and the bead shape pills: flex, not grid, inside a button. */
+button.bead-slot{display:inline-flex;align-items:center;justify-content:center}
+.pattern-choices .choice{display:inline-flex;align-items:center;justify-content:center;padding:0}

@@ -28,7 +28,7 @@ function app(t, page = 'garden.html', seed = {}, blocked = false) {
   w.fetch = () => { throw new Error('A game must not send player data over the network.'); };
   for (const [key, value] of Object.entries(seed)) w.localStorage.setItem(key, JSON.stringify(value));
   if (blocked) Object.defineProperty(w, 'localStorage', { value: { getItem() { throw Error('blocked'); }, setItem() { throw Error('blocked'); }, removeItem() { throw Error('blocked'); } } });
-  for (const script of dom.window.document.querySelectorAll('script[src]')) w.eval(fs.readFileSync(path.join(root, script.getAttribute('src')), 'utf8'));
+  for (const script of dom.window.document.querySelectorAll('script[src]')) w.eval(fs.readFileSync(path.join(root, script.getAttribute('src').split('?')[0]), 'utf8'));
   t.after(async () => { await new Promise(resolve => setTimeout(resolve, 10)); assert.deepEqual(errors, [], 'no uncaught page errors'); dom.window.close(); });
   const query = selector => w.document.querySelector(selector);
   const click = selector => { const target = query(selector); assert.ok(target, selector); target.click(); return target; };
