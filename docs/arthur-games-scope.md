@@ -36,6 +36,7 @@ for the programme research and distinctions from those characters.
 
 ## Access, players and privacy
 
+- After a correct answer the Next button sits full width under the result; Again and Next level stay in the side column. Nothing advances on its own.
 - Every game, activity, puzzle and level is open immediately. Levels live in each
   activity: the pill opens a picker with the level row and the item chooser, and a
   Next level button appears after a round only as an explicit choice. Next is always

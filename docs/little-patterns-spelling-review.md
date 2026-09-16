@@ -441,3 +441,21 @@ at least 48 by 48 CSS px, no horizontal overflow:
 
 Not yet done: confirmation on the real iPad with a photo (item 13, last point).
 That is Jof's check before the phase is called done.
+
+### Same evening, from Jof's iPad photos (commit 438a354)
+
+- **Moving on.** After a correct answer the Next button leaves the side column
+  and sits full width under the result on every Garden activity (76 px, 60 px in
+  landscape). Again and Next level stay in the column. Automatic advance was
+  Jof's other option and was not taken: the scope forbids puzzle changes on a
+  timer or on success, so Arthur is never moved off a result he is still reading.
+- **The gap.** Starts one letter wider than the longest of the three words (at
+  least six), grows with the draft to fourteen letters, then scrolls inside. A
+  mid-sentence gap keeps its size and the sentence wraps around it; on the iPad
+  the words before the gap stay on the first line and the box plus the rest move
+  to the next line when they need to.
+- **Alignment.** Cards, keys and the Delete / Clear / Enter row share one gap so
+  their column edges line up.
+- Deployed from a clean worktree of HEAD, because the Feelings task (Codex) was
+  editing shared.js in the same working tree at the time; the live shared.js
+  matches the commit, not that draft.
