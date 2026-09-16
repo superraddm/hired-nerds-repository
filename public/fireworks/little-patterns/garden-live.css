@@ -174,3 +174,64 @@ button.bead-slot{cursor:pointer;font:inherit;min-width:48px;min-height:48px;padd
 /* Same WebKit rule for the bead gaps and the bead shape pills: flex, not grid, inside a button. */
 button.bead-slot{display:inline-flex;align-items:center;justify-content:center}
 .pattern-choices .choice{display:inline-flex;align-items:center;justify-content:center;padding:0}
+
+/* iPad landscape (about 1024 x 700 inside Safari): one header row, hero hidden, and the garden as a grid with Nook, the status and the actions in the left column so the activity gets the full height. Tap targets stay at 48 px. */
+@media (min-width:820px) and (max-height:840px) and (orientation:landscape){
+  .shell{padding:8px 16px;position:relative}
+  .topbar{min-height:48px}
+  .player-strip{position:absolute;top:8px;left:210px;right:270px;margin:0;justify-content:flex-start;gap:8px}
+  .hero{display:none}
+  .tabs{gap:8px;margin:6px 0 8px}.tabs button{min-height:48px;font-size:14px;border-radius:14px;box-shadow:0 3px 0 #6bb9a6;gap:8px}.tabs button:nth-child(2){box-shadow:0 3px 0 #debd50}.tabs button:nth-child(3){box-shadow:0 3px 0 #b09bd0}.tabs button:nth-child(4){box-shadow:0 3px 0 #d99389}.tabs button b{width:30px;height:30px;font-size:16px;border-radius:9px}.tabs button[aria-pressed=true]{outline-width:2px;outline-offset:2px}
+  main.garden{display:grid;grid-template-columns:160px minmax(0,1fr);grid-template-areas:"top top" "nook task" "status task" "actions task";align-items:start;border-radius:22px}
+  .garden-top{grid-area:top;padding:10px 18px 0}
+  .scene{display:contents}
+  .garden .scene .companion,.garden .scene.word-scene .companion{grid-area:nook;align-self:start;margin:6px 0 0 12px;width:140px}
+  .garden .scene .companion img{width:88px;height:106px;margin:0}
+  .garden .scene .companion .speech{font-size:13px;padding:8px 9px;max-width:140px;margin:8px 0 0;border-radius:14px}
+  .name-tag{font-size:9px;padding:3px 9px}
+  .activity{grid-area:task;padding:0 18px 8px 6px;min-height:0}
+  .garden-status{grid-area:status;text-align:left;font-size:11px;padding:0 12px;margin:6px 0 0;min-height:0}
+  .actions{grid-area:actions;flex-direction:column;align-items:stretch;padding:0 12px 12px;gap:6px}
+  .actions button{min-height:48px;font-size:12px;padding:8px 10px;border-bottom-width:4px}
+  .footer{display:none}
+  h2{font-size:22px;margin:0 0 2px}.instruction{font-size:12px;margin:0 0 6px}
+  .operation-tabs,.pattern-tabs,.word-tabs{margin:0 0 6px;gap:5px}.word-tabs button{min-height:48px;padding:6px 10px}
+  .sum-build{margin:4px 0;gap:10px}.number-group{padding:8px 10px}.number-group strong{font-size:22px;margin-top:2px}.group-label{font-size:10px;margin-bottom:4px}.apples{min-height:36px;gap:8px}
+  .join-arrow{font-size:16px;line-height:1}.sum-result{padding:6px 12px;margin:4px auto}.sum-result strong{font-size:30px}.sum-result.trays strong{font-size:26px}
+  .take-result{gap:10px;margin:4px 0}.take-result .number-group.taken img.symbol{width:28px;height:28px}
+  .equation{font-size:24px;margin:6px 0 0}.equation.count-answer{margin:2px 0}.choice-label{margin:4px 0;font-size:12px}
+  .choices{margin:6px 0 0;gap:14px}.choice{width:84px;height:72px;font-size:44px;border-bottom-width:5px}.choice.digits-2{font-size:38px}.choice.digits-3{font-size:30px}
+  .keyboard.keypad{margin-top:6px;gap:4px}.keyboard.keypad .key{min-height:48px;font-size:22px}
+  .five-frame{grid-template-columns:repeat(5,52px);padding:8px;gap:5px;margin:6px auto}.pocket{height:52px}
+  .tray{gap:8px;margin:4px auto}.tray .five-frame{grid-template-columns:repeat(5,32px);gap:3px;padding:5px;border-bottom-width:4px}.tray .pocket{height:36px;min-height:36px;border-radius:8px}
+  .tray .apple{width:22px;height:22px;margin-top:5px}.tray .apple:before{left:9px;top:-8px;height:7px;width:3px}.tray .apple:after{left:11px;top:-7px;width:10px;height:5px}
+  .stick{width:30px;height:116px;padding:4px 0}.stick i{width:7px;height:7px}.stick b{bottom:-20px;font-size:10px}.tray .stick{margin-bottom:22px}
+  .fruit .count-tag{width:18px;height:18px;font-size:10px;bottom:-6px;right:-8px}
+  .tray.counting .pocket,.tray.counting button.pocket{height:48px;min-height:48px}.tray button.five-frame{grid-template-columns:repeat(5,44px);gap:4px}.tray.counting .five-frame.ones{grid-template-columns:repeat(5,44px)}.tray.counting .apple{width:26px;height:26px}
+  button.stick{width:48px;height:140px}.tray button.stick{margin-bottom:24px}
+  .pattern-strip{margin:10px 0;gap:8px}.bead-slot{width:50px;height:56px;border-radius:14px}.bead-slot .shape{width:26px;height:26px}.bead-slot .shape.triangle{border-left-width:14px;border-right-width:14px;border-bottom-width:25px}.bead-slot .shape.oval{width:32px;height:18px}.bead-slot.missing{font-size:28px}
+  .pattern-strip.long{grid-template-columns:repeat(5,50px);gap:20px 8px;margin-bottom:26px}.mirror-line{height:56px}
+  .pattern-choices .choice{width:84px;height:72px}.pattern-choices .shape{width:34px;height:34px}.repeat-label{margin:8px 0 0;font-size:13px}
+  .number-model{margin:6px 0}.number-model strong{font-size:34px}.number-model span{font-size:22px;padding:6px 12px}.number-total{font-size:34px;margin:4px 0}
+  .make-tools button{min-height:48px;font-size:12px}
+}
+
+@media (min-width:820px) and (max-height:840px) and (orientation:landscape){
+  /* Keep the activity, Nook and the buttons above the decorative grass now that the scene is display:contents. */
+  .activity,.garden .scene .companion,.garden-status,.actions{position:relative;z-index:1}
+  /* Add and Take away: parts, arrow and result on one row when they fit, wrapping otherwise. */
+  #task[data-view="add"]{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 12px}
+  #task[data-view="add"]>.operation-tabs,#task[data-view="add"]>.equation,#task[data-view="add"]>.choice-label,#task[data-view="add"]>.choices,#task[data-view="add"]>.keypad{flex-basis:100%;margin-top:0;margin-bottom:0}
+  #task[data-view="add"]>.sum-build,#task[data-view="add"]>.sum-result,#task[data-view="add"]>.take-result{margin:0;flex:0 1 auto;max-width:100%}
+  #task[data-view="add"]>.join-arrow{transform:rotate(-90deg);margin:0;width:20px}
+  .sum-build.trays .number-group,.take-result.trays .number-group{padding:6px 8px}
+  .tray .five-frame{grid-template-columns:repeat(5,26px);gap:3px;padding:4px;border-width:2px;border-bottom-width:4px;border-radius:12px}.tray .pocket{height:30px;min-height:30px;border-radius:7px}
+  .tray .apple{width:18px;height:18px;margin-top:4px;border-width:1px}.tray .apple:before{left:7px;top:-7px;height:6px;width:3px}.tray .apple:after{left:9px;top:-6px;width:8px;height:4px}
+  .fruit.new .apple{outline-width:2px;outline-offset:1px}
+}
+.word-tabs button{min-width:48px}
+@media (min-width:820px) and (max-height:840px) and (orientation:landscape){
+  #task[data-view="add"] .sum-build,#task[data-view="add"] .take-result{width:auto;flex:0 1 auto}
+  #task[data-view="add"] .number-group{flex:0 1 auto;width:auto;min-width:0;max-width:none}
+  #task[data-view="add"] .tray{width:max-content;max-width:100%}
+}

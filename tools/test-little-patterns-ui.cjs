@@ -1005,11 +1005,12 @@ test('grown-up sentences join Missing word and Word order with a chosen gap, dis
   await new Promise(resolve => setTimeout(resolve, 0));
   assert.equal(a.spoken.at(-1), 'arthur likes blank.');
   for (const key of ['T', 'R', 'A', 'I', 'N', 'S']) a.click(`[data-key="${key}"]`);
+  const before = a.plays.length;
   a.click('#check-word');
   assert.equal(a.query('#next').hidden, false);
   assert.match(a.query('#speech').textContent, /Arthur likes trains\./);
-  assert.equal(a.plays.length, 1, 'only the opener plays for a private sentence');
-  assert.ok(L.OPENERS.map(o => o.toLowerCase().replace(/[.!?]+$/, '')).some(k => a.w.LPVoiceLibrary.clips[k].file === a.plays[0]));
+  assert.equal(a.plays.length, before + 1, 'only the opener plays for a private sentence');
+  assert.ok(L.OPENERS.map(o => o.toLowerCase().replace(/[.!?]+$/, '')).some(k => a.w.LPVoiceLibrary.clips[k].file === a.plays.at(-1)));
   assert.equal(a.spoken.filter(x => /trains/.test(x)).length, 1, 'the sentence itself never goes to a voice automatically');
   a.click('[data-word-tab="order"]'); a.click('#support');
   Array.from(a.w.document.querySelectorAll('.puzzle-picker button')).find(b => b.textContent === 'WE GO TO THE PARK.').click();
@@ -1085,4 +1086,34 @@ test('numeral answer buttons are sized by digit count so 18 and 100 fit the same
   const css = fs.readFileSync(path.join(root, 'garden-live.css'), 'utf8');
   assert.match(css, /\.choice\{display:inline-flex[^}]*text-size-adjust:100%/);
   assert.match(css, /\.equation span[^{]*\{letter-spacing:0\}/);
+});
+
+test('the typing keyboard sounds each letter phonetically, only while sound is on, without touching the draft', async t => {
+  const a = app(t);
+  a.click('[data-mode="words"]');
+  a.click('[data-key="A"]');
+  assert.equal(a.plays.length, 0, 'sound off stays silent');
+  a.click('[data-sound]');
+  a.click('[data-key="P"]');
+  await new Promise(resolve => setTimeout(resolve, 0));
+  assert.equal(a.plays.at(-1), a.w.LPVoiceLibrary.clips.puh.file);
+  assert.equal(a.spoken.length, 0);
+  a.w.document.dispatchEvent(new a.w.KeyboardEvent('keydown', { key: 'l', bubbles: true }));
+  assert.equal(a.plays.at(-1), a.w.LPVoiceLibrary.clips.luh.file, 'hardware keys sound too');
+  a.click('[data-key="Backspace"]');
+  assert.equal(a.plays.length, 2, 'delete and space are silent');
+  assert.equal(a.query('#word-input').value, 'AP');
+  assert.equal(Object.keys(L.LETTER_SOUNDS).length, 26);
+});
+
+test('the task container names the current view so landscape CSS can lay each activity out', t => {
+  const a = app(t);
+  assert.equal(a.query('#task').dataset.view, 'count');
+  a.click('[data-mode="add"]'); assert.equal(a.query('#task').dataset.view, 'add');
+  a.click('[data-mode="words"]'); assert.equal(a.query('#task').dataset.view, 'sentence');
+  a.click('[data-word-tab="numbers"]'); assert.equal(a.query('#task').dataset.view, 'numbers');
+  a.click('[data-mode="patterns"]'); a.click('[data-pattern-mode="make"]'); assert.equal(a.query('#task').dataset.view, 'make');
+  const css = fs.readFileSync(path.join(root, 'garden-live.css'), 'utf8');
+  assert.match(css, /@media \(min-width:820px\) and \(max-height:840px\) and \(orientation:landscape\)\{[^@]*main\.garden\{display:grid/);
+  assert.match(css, /\.word-tabs button\{min-width:48px\}/);
 });

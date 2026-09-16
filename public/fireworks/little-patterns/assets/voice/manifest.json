@@ -27,6 +27,10 @@
       "file": "assets/voice/0850135ee07514d8.wav",
       "seconds": 1.463
     },
+    "ah": {
+      "file": "assets/voice/70a0d5198ebb88f9.wav",
+      "seconds": 0.538
+    },
     "apple": {
       "file": "assets/voice/3a7bd3e2360a3d29.wav",
       "seconds": 0.396
@@ -51,6 +55,10 @@
       "file": "assets/voice/2a21fe6d592a19b7.wav",
       "seconds": 0.396
     },
+    "buh": {
+      "file": "assets/voice/e0fe87b9ef1bd5b3.wav",
+      "seconds": 0.38
+    },
     "bus": {
       "file": "assets/voice/04e027e4990a203f.wav",
       "seconds": 0.508
@@ -63,6 +71,10 @@
       "file": "assets/voice/8a39178d327e72a9.wav",
       "seconds": 0.523
     },
+    "cuh": {
+      "file": "assets/voice/d303d1e2da806b11.wav",
+      "seconds": 0.418
+    },
     "diamond": {
       "file": "assets/voice/81c9d6128b5fcd7b.wav",
       "seconds": 0.645
@@ -74,6 +86,14 @@
     "dry": {
       "file": "assets/voice/b755cb248c3c4a7d.wav",
       "seconds": 0.45
+    },
+    "duh": {
+      "file": "assets/voice/8bf8d03ef2ed098c.wav",
+      "seconds": 0.411
+    },
+    "eh": {
+      "file": "assets/voice/0c044a36c373b6a8.wav",
+      "seconds": 0.413
     },
     "eight": {
       "file": "assets/voice/c195d2d875623436.wav",
@@ -131,6 +151,14 @@
       "file": "assets/voice/fef8f41cdcd20386.wav",
       "seconds": 0.687
     },
+    "fuh": {
+      "file": "assets/voice/644773b2a640de10.wav",
+      "seconds": 0.373
+    },
+    "guh": {
+      "file": "assets/voice/8adc754deabcaf8e.wav",
+      "seconds": 0.382
+    },
     "hello! i'm nook. let's play": {
       "file": "assets/voice/cd845c4b46d3d15f.wav",
       "seconds": 1.749
@@ -139,9 +167,33 @@
       "file": "assets/voice/7f5d1618e7d28cc7.wav",
       "seconds": 0.506
     },
+    "huh": {
+      "file": "assets/voice/e48510d1ff85568d.wav",
+      "seconds": 0.385
+    },
+    "ih": {
+      "file": "assets/voice/8c6b0adba54cdc59.wav",
+      "seconds": 0.535
+    },
+    "juh": {
+      "file": "assets/voice/5c2ed1176c910bba.wav",
+      "seconds": 0.41
+    },
     "jump": {
       "file": "assets/voice/6bdaf554e42029bd.wav",
       "seconds": 0.403
+    },
+    "kss": {
+      "file": "assets/voice/ae82903d6c2f0fb4.wav",
+      "seconds": 0.882
+    },
+    "kuh": {
+      "file": "assets/voice/4531a6e8544d9f5a.wav",
+      "seconds": 0.388
+    },
+    "kwuh": {
+      "file": "assets/voice/57c4b8ce664bec85.wav",
+      "seconds": 0.383
     },
     "loud": {
       "file": "assets/voice/db1a60bbff220d09.wav",
@@ -151,9 +203,17 @@
       "file": "assets/voice/66768c7c98a9998e.wav",
       "seconds": 1.004
     },
+    "luh": {
+      "file": "assets/voice/4a8d845e25a6f310.wav",
+      "seconds": 0.493
+    },
     "moon": {
       "file": "assets/voice/9e78b43ea00edcac.wav",
       "seconds": 0.495
+    },
+    "muh": {
+      "file": "assets/voice/8cf5844c38045aa1.wav",
+      "seconds": 0.434
     },
     "nine": {
       "file": "assets/voice/edcd8e701a2df0cd.wav",
@@ -191,6 +251,14 @@
       "file": "assets/voice/37552dcec6b75fab.wav",
       "seconds": 1.507
     },
+    "nuh": {
+      "file": "assets/voice/dcf2e01ec4ea88bf.wav",
+      "seconds": 0.425
+    },
+    "oh": {
+      "file": "assets/voice/cf04119a706e2c45.wav",
+      "seconds": 0.406
+    },
     "one": {
       "file": "assets/voice/7692c3ad3540bb80.wav",
       "seconds": 0.464
@@ -207,9 +275,17 @@
       "file": "assets/voice/383ef36928344f56.wav",
       "seconds": 0.531
     },
+    "puh": {
+      "file": "assets/voice/6dc77b6b33cfb87c.wav",
+      "seconds": 0.42
+    },
     "read": {
       "file": "assets/voice/3316348dbadfb7b1.wav",
       "seconds": 0.567
+    },
+    "ruh": {
+      "file": "assets/voice/84cdf478eb8a88b8.wav",
+      "seconds": 0.476
     },
     "run": {
       "file": "assets/voice/acba25512100f80b.wav",
@@ -254,6 +330,10 @@
     "square": {
       "file": "assets/voice/4ba3e8e3765f2970.wav",
       "seconds": 0.497
+    },
+    "suh": {
+      "file": "assets/voice/09444a69322fe262.wav",
+      "seconds": 0.404
     },
     "sun": {
       "file": "assets/voice/27756f050e14a1cb.wav",
@@ -439,6 +519,10 @@
       "file": "assets/voice/0a3f13c673af2389.wav",
       "seconds": 0.65
     },
+    "tuh": {
+      "file": "assets/voice/56da34e117f26910.wav",
+      "seconds": 0.375
+    },
     "twelve": {
       "file": "assets/voice/d1a749ad879b6c07.wav",
       "seconds": 0.583
@@ -451,6 +535,14 @@
       "file": "assets/voice/3fc4ccfe745870e2.wav",
       "seconds": 0.383
     },
+    "uh": {
+      "file": "assets/voice/beba745afae85039.wav",
+      "seconds": 0.364
+    },
+    "vuh": {
+      "file": "assets/voice/aec36b9bd60a968b.wav",
+      "seconds": 0.393
+    },
     "wet": {
       "file": "assets/voice/534c51e17770c9b7.wav",
       "seconds": 0.525
@@ -458,6 +550,10 @@
     "whoops! try again": {
       "file": "assets/voice/15ec5b852f9542e7.wav",
       "seconds": 1.426
+    },
+    "wuh": {
+      "file": "assets/voice/de32b2ec5fa60ef8.wav",
+      "seconds": 0.458
     },
     "yes": {
       "file": "assets/voice/8a798890fe938171.wav",
@@ -467,9 +563,17 @@
       "file": "assets/voice/d456801d10208a77.wav",
       "seconds": 0.743
     },
+    "yuh": {
+      "file": "assets/voice/de9cacd3ffd7b623.wav",
+      "seconds": 0.437
+    },
     "zero": {
       "file": "assets/voice/f9194e73f9e9459e.wav",
       "seconds": 0.578
+    },
+    "zuh": {
+      "file": "assets/voice/7c4309a58cb9a93f.wav",
+      "seconds": 0.407
     }
   }
 }
