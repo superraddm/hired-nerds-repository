@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Velvet sound review · Messy Studio</title><link rel="icon" href="data:,"><style>
+*{box-sizing:border-box}body{margin:0;background:#fffbe7;color:#293f4a;font:18px/1.5 system-ui,sans-serif}main{max-width:900px;margin:auto;padding:24px}h1{color:#624582;margin:8px 0}h2{font-size:24px}section{background:#fffdf6;border:2px solid #d6cfad;border-radius:24px;padding:22px;margin:22px 0}button,select{font:inherit;min-height:52px;border:2px solid #829578;border-radius:15px;background:#e5efdf;color:#293f4a;padding:10px 16px;cursor:pointer}button:focus-visible,select:focus-visible,input:focus-visible{outline:4px solid #916caf;outline-offset:3px}button.active{background:#d9c8eb;border-color:#72588c}button:disabled{opacity:.5}a{color:#624582}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}label{display:flex;flex-direction:column;gap:8px;margin:12px 0}input{width:100%;height:38px}.line{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.small{font-size:15px}#state{min-height:28px}#stop{background:#f2d9ca}.tools{gap:10px;display:flex;flex-wrap:wrap}footer{margin:24px 0}output{font-variant-numeric:tabular-nums}
+</style></head><body><main>
+<a href="studio-lab.html">← Try the painting game</a><h1>Velvet sound table</h1>
+<p>Soft contacts, gentle textures. Start at your usual comfortable volume. Nothing plays until you choose it.</p>
+<div class="line"><button id="mute" aria-pressed="true">Sound: on</button><button id="stop">Stop all sounds</button></div><p id="state" role="status">Choose a sound to listen.</p>
+<section><h2>Paint landing</h2><div class="grid"><button data-paint="tap">A little tap</button><button data-paint="puddle">A held puddle</button><button data-paint="flick">A short flick</button><button data-paint="sweep">A sweeping flick</button><button data-paint="dribble">A small dribble</button><button data-paint="sponge">A sponge dab</button></div></section>
+<section><h2>Two materials meeting</h2><p class="small">Both materials and their physics shape the contact. Change one thing and listen again.</p>
+<div class="grid"><label>First material<select id="first"><option>glass</option><option>smoky</option><option>steel</option><option>pearl</option><option>wood</option></select></label><label>Second material<select id="second"><option>glass</option><option>smoky</option><option>steel</option><option>pearl</option><option>wood</option><option>tray</option><option>paper</option></select></label></div>
+<label>First marble's weight <output id="weight-value">1.0</output><input id="weight" type="range" min="0.3" max="5" step="0.1" value="1"></label>
+<label>Movement speed <output id="speed-value">400</output><input id="speed" type="range" min="40" max="1400" step="10" value="400"></label>
+<div class="line"><button id="contact">Hear the contact</button><button id="roll">Hear it roll · 2 seconds</button></div>
+</section>
+<section><h2>Across the paper</h2><div class="grid" id="brushes"></div><p class="small">Each sample lasts two seconds. Real strokes stop when movement stops.</p></section>
+<section><h2>Textures for future materials</h2><div class="grid" id="future"></div><p class="small">Water, oil and charcoal textures are included in this library. These painting tools have not been added to the game.</p></section>
+<footer class="small">Original sound design. No sampled game audio, voices, music or online audio service. Mute and Stop work throughout. The sound engine and bank fit within a 2 MB download budget.</footer>
+</main><script src="assets/studio-sounds/bank.js?v=2d6f4bca339f"></script><script src="studio-sound.js?v=velvet4"></script><script>
+(()=>{'use strict';const $=s=>document.querySelector(s),engine=new StudioSounds.Engine({onState:s=>{if(s==='unavailable')$('#state').textContent='Sound could not load. Tap a sound to retry.';}});let frame=0,token=0;
+function stop(){token++;cancelAnimationFrame(frame);frame=0;engine.stop();document.querySelectorAll('.active').forEach(b=>b.classList.remove('active'));}
+async function ready(b){stop();const request=token;$('#state').textContent='Preparing sound…';const ok=await engine.unlock(true);if(request!==token)return false;if(!ok){$('#state').textContent=engine.muted?'Sound is off.':'Sound is unavailable. You can try again.';return false;}b.classList.add('active');$('#state').textContent=b.textContent;return true;}
+function run(update,b){const start=performance.now(),request=token;const tick=()=>{if(request!==token)return;if(performance.now()-start>=2000){stop();return;}update();frame=requestAnimationFrame(tick);};tick();}
+$('#stop').onclick=()=>{stop();$('#state').textContent='Stopped.';};$('#mute').onclick=()=>{stop();engine.setMuted(!engine.muted);$('#mute').textContent=engine.muted?'Sound: off':'Sound: on';$('#mute').setAttribute('aria-pressed',String(!engine.muted));$('#state').textContent=engine.muted?'Sound is off.':'Choose a sound to listen.';};
+document.querySelectorAll('[data-paint]').forEach(b=>b.onclick=async()=>{if(!await ready(b))return;const kind=b.dataset.paint;if(['dribble','sponge'].includes(kind))engine.dab(kind,.55);else{const p={tap:[0,0],puddle:[0,1050],flick:[850,0],sweep:[2200,0]}[kind];engine.paint(...p,.5);}});
+const body=()=>({material:$('#first').value,weight:+$('#weight').value,bounce:.65});
+$('#contact').onclick=async function(){if(!await ready(this))return;const material=$('#second').value;engine.contact(body(),{material,weight:['tray','paper'].includes(material)?Infinity:1,bounce:.55},+$('#speed').value,'review');};
+$('#roll').onclick=async function(){if(!await ready(this))return;run(()=>engine.rolling([{...body(),speed:+$('#speed').value}]),this);};
+for(const name of StudioSounds.strokes){const b=document.createElement('button');b.textContent=name[0].toUpperCase()+name.slice(1);( ['water','oil','charcoal'].includes(name)?$('#future'):$('#brushes')).appendChild(b);b.onclick=async()=>{if(!await ready(b))return;run(()=>engine.stroke(name,400,.6),b);};}
+for(const id of ['weight','speed'])$('#'+id).oninput=()=>{$('#'+id+'-value').textContent=$('#'+id).value;};
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});window.addEventListener('pagehide',stop);
+window.studioSoundReview=engine;
+})();
+</script></body></html>

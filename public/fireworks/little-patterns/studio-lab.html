@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#fffbe7">
+<title>Paint · Nook's Garden</title>
+<link rel="icon" href="data:,">
+<!--
+  "Nook's Messy Studio": the playable lab build of the painting game. It began as a feasibility page and is now LIVE:
+  it is on the deploy allow-list (tools/stage-little-patterns.cjs) and linked from Nook's Garden as the Paint tab.
+  Drawing lives here (brushes, flick splats, potato stamps, marbles); local scripts supply material sounds and device-only draft storage. Rules: docs/messy-studio-brief.md
+  and docs/messy-studio-fable-brief.md.
+  ?lab=1    shows the read-out and the Test picture button (hidden for players arriving from Nook's Garden)
+  ?seed=N   repeatable splats and marble kinds
+  ?demo=1   scripted run for a headless screenshot (sets body[data-done])
+  ?roll=N   any TUNE key can be set this way
+  With ?lab=1 the read-out is the thing to photograph after flicking marbles on a slow device.
+-->
+<style>
+  :root{--ink:#3b2f4a;--paper:#fffdf6;--bar:#fff6d8;--line:#e6d9a8;--nook:#7b5cc4}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;position:fixed;top:0;right:0;bottom:0;left:0;overflow:hidden;background:var(--bar);color:var(--ink);
+    font:600 15px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;overscroll-behavior:none}
+  #app{position:absolute;top:0;right:0;bottom:0;left:0;display:flex;flex-direction:column}
+  #bar,#ctx,#palette{display:flex;flex-wrap:wrap;align-items:center;gap:5px;padding:5px 8px;background:var(--bar)}
+  #bar{justify-content:space-between} #ctx{border-bottom:2px solid var(--line);min-height:62px} #palette{border-top:2px solid var(--line);justify-content:center}
+  .group{display:flex;gap:5px;align-items:center} #marble-ui{display:contents}
+  #home{display:grid;place-items:center;width:52px;height:52px;border:2px solid #846a93;border-radius:16px;background:#eee3f2} #home svg{width:34px;height:34px}
+  #app.narrow #home{width:48px;height:48px;border-radius:14px} #app.narrow #home svg{width:30px;height:30px}
+  body:not(.lab) .lab-only{display:none!important}
+  button{font:inherit;color:inherit;width:52px;height:52px;padding:0;border:2px solid var(--line);border-radius:16px;background:#fff;cursor:pointer;display:grid;place-items:center}
+  button svg{width:34px;height:34px;display:block;pointer-events:none}
+  button:disabled{opacity:.35;cursor:default}
+  button[aria-pressed="true"]{border-color:var(--nook);background:#efe8ff;box-shadow:0 0 0 2px var(--nook) inset}
+  label.slide{display:flex;align-items:center;gap:4px} label.slide svg{width:26px;height:26px;flex:none} label.slide output{min-width:30px;font-size:12px;white-space:nowrap}
+  input[type=range]{width:120px;height:40px;accent-color:var(--nook)}
+  #stage{position:relative;flex:1;min-width:0;min-height:0;background:#efe6c6;overflow:hidden;touch-action:none}
+  /* the paper has a fixed size for the life of the picture; only its CSS transform changes */
+  #paper{position:absolute;left:50%;top:50%;transform-origin:50% 50%;background:var(--paper);box-shadow:0 1px 8px rgba(80,60,20,.25);
+    background-image:radial-gradient(rgba(120,100,60,.05) 1px,transparent 1.2px);background-size:7px 7px;overflow:hidden}
+  #paint{position:absolute;top:0;left:0;width:100%;height:100%;touch-action:none;display:block}
+  .marble{position:absolute;top:0;left:0;border-radius:50%;pointer-events:none;will-change:transform;box-shadow:0 3px 6px rgba(40,20,60,.35);animation:pop .28s ease-out}
+  @keyframes pop{from{scale:.2;opacity:0}to{scale:1;opacity:1}}
+  .puddle{position:absolute;border-radius:50%;pointer-events:none;opacity:.35;transform:scale(.25);transition:transform 1.2s linear}
+  .sw{width:48px;height:48px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px var(--line)}
+  .sw[aria-pressed="true"]{box-shadow:0 0 0 4px var(--ink);background-clip:padding-box}
+  .sw[data-n]::after{content:attr(data-n);display:block;color:#fff;font-size:13px;text-shadow:0 0 3px #000,0 0 2px #000}
+  #perf{position:absolute;right:6px;bottom:6px;margin:0;padding:5px 7px;border-radius:10px;background:rgba(40,30,60,.78);color:#fff;
+    font:500 10px/1.35 ui-monospace,Menlo,Consolas,monospace;pointer-events:none;white-space:pre-wrap;max-width:74%}
+  #perf.docked{position:static;max-width:none;border-radius:0;padding:6px 10px;font-size:11px;border-top:2px solid var(--line);background:#4a4060}
+  #app.narrow button{width:48px;height:48px;border-radius:14px} #app.narrow button svg{width:30px;height:30px}
+  #app.narrow .group{gap:3px} #app.narrow label.slide svg{width:22px;height:22px}
+  #app.narrow #bar,#app.narrow #ctx,#app.narrow #palette{gap:5px;padding:5px 7px} #app.narrow input[type=range]{width:82px} #app.narrow .sw{width:48px;height:48px;border-radius:50%}
+  #app.narrow #ctx{min-height:54px}
+  #app.narrow #size-ui>span[data-icon]{display:none}
+  #stamp-ui button svg{width:38px;height:38px} #app.narrow #stamp-ui button svg{width:34px;height:34px}
+  /* A phone on its side has almost no height: the controls go down the sides and the sheet gets all of it. */
+  @media (orientation:landscape) and (max-height:560px){
+    #app{flex-direction:row}
+    #bar,#ctx,#palette{flex-direction:column;flex-wrap:wrap;align-content:flex-start;justify-content:flex-start;height:100%}
+    #bar .group,#ctx .group{display:contents}
+    #ctx,#app.narrow #ctx{min-height:0;border-bottom:0;border-right:2px solid var(--line)} #palette{border-top:0;border-left:2px solid var(--line)}
+    #ctx,#app.narrow #ctx{width:64px;flex:none;align-items:center}
+    #ctx:has(#stamp-ui:not([hidden])),#app.narrow #ctx:has(#stamp-ui:not([hidden])){width:auto;max-width:132px}   /* the stamp library needs two columns on a phone held sideways */
+    #size-ui{flex-direction:column;width:48px;gap:0} #size-ui>span[data-icon]{display:none}
+    #app.narrow #size-ui input,#size-ui input{width:82px;height:40px;transform:rotate(-90deg);margin:23px -17px}
+    #perf.docked{position:absolute;right:104px;bottom:6px;min-height:0!important;max-width:45%;border-radius:10px;border:0}
+  }
+  [hidden]{display:none!important}
+  button:focus-visible,a:focus-visible{outline:3px solid var(--nook);outline-offset:3px}
+  #size-preview{width:28px;height:28px;display:grid;place-items:center;flex:none}
+  #size-preview i{display:block;border-radius:50%;background:var(--nook)}
+  #draft-status{position:absolute;bottom:8px;left:8px;right:8px;margin:0;padding:8px 12px;background:#fff6d8;border:2px solid var(--line);border-radius:14px;text-align:center;font-size:14px;pointer-events:none}
+  #export-panel{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(40,30,45,.4);z-index:10;display:grid;place-items:center;padding:16px}
+  #export-card{background:var(--paper);padding:20px;border-radius:24px;border:3px solid var(--line);max-width:650px;width:100%;max-height:95%;overflow:auto;text-align:center}
+  #export-card h2{margin:0 0 12px;font-size:24px} #export-image{width:100%;max-height:52vh;object-fit:contain;-webkit-touch-callout:default;user-select:auto}
+  #export-card .group{justify-content:center;flex-wrap:wrap;margin:12px 0}
+  #export-card button,#export-card a{width:auto;min-width:110px;min-height:48px;padding:10px 18px;border:2px solid var(--line);border-radius:14px;color:var(--ink);background:#efe8ff;text-decoration:none;display:inline-grid;place-items:center}
+  #export-card p{font-weight:400;font-size:15px} @media(prefers-reduced-motion:reduce){.marble{animation:none}.puddle{transition:none}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="bar">
+    <div class="group" id="tools">
+      <a id="home" href="garden.html" data-icon="back" aria-label="Back to Nook's Garden"></a>
+      <button data-tool="brush" data-icon="brush" aria-label="Brush" aria-pressed="true"></button>
+      <button data-tool="eraser" data-icon="rubber" aria-label="Rubber"></button>
+      <button data-tool="flick" data-icon="flick" aria-label="Flick paint"></button>
+      <button data-tool="stamp" data-icon="stamp" aria-label="Potato stamps"></button>
+      <button data-tool="marbles" data-icon="marbles" aria-label="Add a marble"></button>
+    </div>
+    <div class="group">
+      <button id="sound" aria-label="Sound on. Tap to mute." aria-pressed="true"></button>
+      <button id="undo" data-icon="undo" aria-label="Undo"></button>
+      <button id="redo" data-icon="redo" aria-label="Redo" disabled></button>
+      <button id="new" data-icon="newpage" aria-label="New picture"></button>
+      <button id="save" data-icon="save" aria-label="Save a picture"></button>
+      <button id="fit" data-icon="fit" aria-label="Show the whole sheet" hidden></button>
+      <button id="test" class="lab-only" data-icon="test" aria-label="Test picture (lab only)"></button>
+    </div>
+  </div>
+  <div id="ctx">
+    <div class="group" id="brush-ui" aria-label="Brush type">
+      <button data-brush="round" data-icon="bRound" aria-label="Round brush" aria-pressed="true"></button>
+      <button data-brush="flat" data-icon="bFlat" aria-label="Flat brush"></button>
+      <button data-brush="crayon" data-icon="bCrayon" aria-label="Crayon"></button>
+      <button data-brush="sponge" data-icon="bSponge" aria-label="Sponge"></button>
+    </div>
+    <div class="group" id="stamp-ui" aria-label="Stamp shape" hidden></div>
+    <div class="group" id="marble-ui" hidden>
+      <button id="away" data-icon="away" aria-label="Clear all the marbles"></button>
+    </div>
+    <label class="slide" id="size-ui"><span data-icon="size"></span><input id="size" type="range" min="0" max="1" step="0.01" value="0.4" aria-label="Size"><span id="size-preview" aria-hidden="true"><i></i></span></label>
+  </div>
+  <div id="stage"><div id="paper"><canvas id="paint"></canvas></div><pre id="perf" class="lab-only"></pre><p id="draft-status" role="status" hidden></p></div>
+  <div id="palette" aria-label="Colours"></div>
+</div>
+<div id="export-panel" role="dialog" aria-modal="true" aria-labelledby="export-title" hidden>
+  <div id="export-card"><h2 id="export-title">Your picture</h2><img id="export-image" alt="Your painting, ready to save" hidden>
+    <p id="export-note" role="status">Getting your picture ready…</p>
+    <div class="group"><button id="share-picture" hidden>Share picture</button><a id="download-picture" download="my-painting.png" hidden>Save picture</a><button id="close-export">Back to painting</button></div>
+  </div>
+</div>
+<script src="assets/studio-sounds/bank.js?v=2d6f4bca339f"></script>
+<script src="studio-sound.js?v=velvet4"></script>
+<script src="studio-storage.js?v=1"></script>
+<script>
+(() => {
+'use strict';
+const QS = new URLSearchParams(location.search), TAU = Math.PI * 2;
+const $ = s => document.querySelector(s), clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+const app = $('#app'), stage = $('#stage'), paper = $('#paper'), paint = $('#paint'), ctx = paint.getContext('2d'), perfEl = $('#perf');
+let soundState='on';
+const sound = window.StudioSounds && window.StudioSoundBank ? new StudioSounds.Engine({onState:state=>{soundState=state;showSound();}}) : null;
+['pointerdown','pointerup','touchend','click','keydown'].forEach(type=>document.addEventListener(type,e=>{if(!e.target.closest('#sound'))sound?.unlock();},{capture:true,passive:true}));
+const COLOURS = ['#e5383b','#f3722c','#f9c74f','#a7c957','#2a9d4a','#1fa39a','#4cc9f0','#2f5fd0',
+                 '#7b5cc4','#c9379d','#ff8fab','#8a5a3b','#2b2430','#8d8a94','#ffffff','#ffd6a5'];
+let W = 0, H = 0, DPR = 1, unit = 1;                 // the sheet's size in its own pixels; unit scales every mark to the sheet
+
+/* ---------- seeded randomness: every splat differs, a given seed repeats exactly ---------- */
+let seed = (QS.get('seed') | 0) || ((Date.now() & 0x7fffffff) | 1);
+function rnd(){ seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }
+const gauss = () => (rnd() + rnd() + rnd() - 1.5) / 1.5;
+
+/* ---------- icons: every control is a picture; the words live in aria-label ---------- */
+const I = (body, extra = '') => `<svg viewBox="0 0 32 32" fill="none" stroke="#3b2f4a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" ${extra} aria-hidden="true">${body}</svg>`;
+const ball = (x, y, r) => `<circle cx="${x}" cy="${y}" r="${r}" fill="#9fc3e6" stroke-width="2"/><circle cx="${x - r * .35}" cy="${y - r * .35}" r="${r * .28}" fill="#fff" stroke="none"/>`;
+const ICONS = {
+  brush: I('<path d="M27 5 16 16" stroke="#8a5a3b" stroke-width="4.5"/><path d="M16.5 15.5c-3.2-1.3-7.5.8-8 5-.3 2.6-2 3.7-4.2 4.2 4.2 2.6 10 1.6 12.6-2.1 1.6-2.3 1.4-5.2-.4-7.1z" fill="#2f5fd0" stroke="none"/>'),
+  rubber: I('<g transform="rotate(-35 16 16)"><rect x="4" y="10" width="24" height="12" rx="3" fill="#ff8fab"/><rect x="4" y="10" width="9" height="12" rx="3" fill="#6f8be0"/></g><path d="M6 28h9" stroke-width="2"/>'),
+  flick: I('<path d="M20 6c3-1 4.5 2 7 2.5 1.8.4 1.5 3.500-.5 4 2.5 2 1.5 5.500-1 5.5.5 3-3 4.500-5 2.500-2 2.500-6 1.500-6-1.500-3 .500-4.500-3-2.500-5-2-2.500.500-5.500 3-4.500.500-2.500 3.500-4 5-3.500z" fill="#e5383b" stroke="none"/><circle cx="28.5" cy="24" r="1.8" fill="#f9c74f" stroke="none"/><circle cx="10" cy="6" r="1.6" fill="#2f5fd0" stroke="none"/><circle cx="23" cy="29" r="1.4" fill="#2a9d4a" stroke="none"/><path d="M3 27l7-5M2 20l5-2M9 30l4-4"/>'),
+  stamp: I('<path d="M6 17c-1-8 6-13 13-12 7 0 11 6 10 13-1 6-6 10-12 10-7 0-11-4-11-11z" fill="#d9b27a" stroke="#8a5a3b"/><path d="M17 8.5l1.9 4 4.4.4-3.3 3 1 4.3-3.9-2.3-3.9 2.3 1-4.3-3.3-3 4.4-.4z" fill="#fff6d8" stroke="none"/><path d="M22 27l4 3M25 25l4 2" stroke="#8a5a3b"/>'),
+  marbles: I(ball(9, 22, 6) + ball(21, 22, 6) + ball(13, 11, 6) + '<path d="M26 3v8M22 7h8" stroke="#2a9d4a" stroke-width="3"/>'),
+  away: I(ball(9, 22, 6) + ball(21, 22, 6) + ball(15, 11, 6) + '<path d="M5 5l22 22M27 5 5 27" stroke="#e5383b" stroke-width="3.6"/>'),
+  back: I('<path d="M14 6 4 16l10 10"/><path d="M5 16h23"/>', 'stroke-width="3.2"'),
+  undo: I('<path d="M11 7 4 13l7 6"/><path d="M5 13h13a7.5 7.5 0 0 1 0 15h-6"/>', 'stroke-width="3"'),
+  redo: I('<path d="m21 7 7 6-7 6"/><path d="M27 13H14a7.5 7.5 0 0 0 0 15h6"/>', 'stroke-width="3"'),
+  save: I('<path d="M6 20v8h20v-8"/><path d="M16 3v17m-6-6 6 6 6-6" stroke-width="3"/>'),
+  newpage: I('<path d="M8 3h11l6 6v20H8z" fill="#fff"/><path d="M19 3v6h6"/><path d="M16.5 14v9M12 18.5h9" stroke="#2a9d4a" stroke-width="3"/>'),
+  fit: I('<path d="M5 12V5h7M27 12V5h-7M5 20v7h7M27 20v7h-7" stroke-width="3"/><rect x="11" y="12" width="10" height="8" rx="1.5" fill="#fff" stroke-width="2"/>'),
+  test: I('<path d="M4 9c6-5 10 5 24 0" stroke="#f3722c" stroke-width="4"/><path d="M4 16c6-5 10 5 24 0" stroke="#1fa39a" stroke-width="4"/><path d="M4 23c6-5 10 5 24 0" stroke="#c9379d" stroke-width="4"/>'),
+  play: I('<path d="M11 6l15 10-15 10z" fill="#7b5cc4" stroke="#7b5cc4"/>'), stop: I('<rect x="8" y="8" width="16" height="16" rx="3" fill="#7b5cc4" stroke="#7b5cc4"/>'),
+  bRound: I('<path d="M5 21c6-14 10 8 22-9" stroke="#2f5fd0" stroke-width="6.5"/>'),
+  bFlat: I('<path d="M3 24c6-14 10 8 22-9l4-4c-12 17-16-5-22 9z" fill="#2f5fd0" stroke="#2f5fd0" stroke-width="1"/>'),
+  bCrayon: I('<path d="M5 21c6-14 10 8 22-9" stroke="#2f5fd0" stroke-width="7" stroke-linecap="butt" stroke-dasharray="1.3 1.5"/><path d="M5 22.5c6-14 10 8 22-9" stroke="#2f5fd0" stroke-width="3" stroke-linecap="butt" stroke-dasharray="2.2 1.1"/>'),
+  bSponge: I([[9,12,4],[16,9,3.5],[23,12,4],[7,19,3],[13,18,4.5],[20,19,4],[26,20,2.5],[11,25,3],[18,26,3.5],[24,26,2.5]].map(c => `<circle cx="${c[0]}" cy="${c[1]}" r="${c[2]}" fill="#2f5fd0" stroke="none"/>`).join('')),
+  size: I('<circle cx="7" cy="20" r="3" fill="#3b2f4a"/><circle cx="21" cy="16" r="8" fill="#3b2f4a"/>')
+};
+if (QS.has('lab') || QS.has('demo')) document.body.classList.add('lab');
+/* Controls answer the finger LIFTING on them, not the browser's "click": Android Chrome swallows the click of a tap that follows
+   a fast flick on the sheet (it reads the tap as "stop the fling"), so after flicking paint or a marble the next tap on a tool
+   often did nothing. A real click (keyboard, assistive tech) still works; one that merely echoes a handled lift is ignored. */
+let lastHandledPress=-Infinity;
+document.addEventListener('click',e=>{if(e.detail>0&&performance.now()-lastHandledPress<600){lastHandledPress=-Infinity;e.preventDefault();e.stopImmediatePropagation();}},true);
+function onPress(root, handler){ let downOn = null; const pick = e => e.target.closest ? e.target.closest('button,a') : null;
+  root.addEventListener('pointerdown', e => { downOn = pick(e); });
+  root.addEventListener('pointerup', e => { const b = pick(e); if (b && b === downOn && !b.disabled){ lastHandledPress = performance.now(); handler(e, b); } downOn = null; });
+  root.addEventListener('pointercancel', () => { downOn = null; });
+  root.addEventListener('click', e => {const b = pick(e); if (b && !b.disabled) handler(e, b); }); }
+const setIcon = (el, name) => { el.innerHTML = ICONS[name]; };
+function showSound(){
+  const muted=sound?.muted,unavailable=!sound||soundState==='unavailable',b=$('#sound');
+  b.innerHTML=I('<path d="M5 12h6l7-6v20l-7-6H5z" fill="#c7dcca"/>'+(muted?'<path d="m23 12 6 8m0-8-6 8"/>':'<path d="M23 11q5 5 0 10M26 7q8 9 0 18"/>'));
+  b.setAttribute('aria-pressed',String(!muted&&!unavailable));
+  b.setAttribute('aria-label',unavailable?'Sound unavailable. Tap to retry.':muted?'Sound off. Tap to turn on.':'Sound on. Tap to mute.');
+  b.title=b.getAttribute('aria-label');
+}
+onPress($('#sound'),()=>{if(!sound)return;if(soundState==='unavailable'){sound.unlock(true);return;}sound.setMuted(!sound.muted);});
+showSound();
+document.querySelectorAll('[data-icon]').forEach(el => setIcon(el, el.dataset.icon));
+onPress($('#home'), (e,a)=>{e.preventDefault();leaveStudio(a.href);});
+
+/* ---------- the sheet of paper ----------
+   ONE sheet size on every device, for the whole life of a picture: SHEET_W x SHEET_H bitmap pixels. It is never re-made to suit
+   a screen and never re-drawn on a resize (that is what shrank the picture in the first lab). What dictates the size is the
+   weakest target: the iPad 5 and Safari's cap on canvas memory. 1600x1200 is 7.7 MB, and the sheet plus four Undo copies is
+   about 38.4 MB at rest (one extra temporary snapshot during a gesture or history swap). Every mark is sized in sheet pixels.
+
+   The view is only a CSS transform of that bitmap:
+     turn   the sheet behaves like real paper lying on the device: when the device is turned, the sheet turns with it
+            and its long side stays along the device's long side. The browser's orientation angle is used when it has
+            one; when it has not, the shape of the space decides. Nothing here needs a lock, a sensor or an install.
+     zoom   two fingers pinch and carry the sheet (mouse: wheel). Zoom 1 shows the whole sheet, so pinching all the way
+            out is always the way home. Pinch and carry are the only ways to move around the sheet. */
+const SHEET_W = 1600, SHEET_H = 1200, ZMAX = 5;
+const GEO = {cx:0, cy:0, sw:1, sh:1, fit:1, s:1}, VIEW = {z:1, tx:0, ty:0, r:0};
+const mod = a => ((a % 360) + 360) % 360;
+const rawAngle = () => { const a = (screen.orientation && typeof screen.orientation.angle === 'number') ? screen.orientation.angle : (typeof window.orientation === 'number' ? window.orientation : null); return a == null ? null : mod(a); };
+let A0 = null, R0 = null;
+function newPaper(){
+  putAway(); W = SHEET_W; H = SHEET_H; DPR = 1; unit = Math.min(W, H) / 700; undoStack.length = 0;
+  paper.style.width = W + 'px'; paper.style.height = H + 'px'; paint.width = W; paint.height = H;
+}
+function place(){
+  app.classList.toggle('narrow', Math.min(window.innerWidth, window.innerHeight) < 560);
+  if (!W) newPaper();
+  const b = stage.getBoundingClientRect(), A = rawAngle(); GEO.sw = Math.max(50, b.width); GEO.sh = Math.max(50, b.height); GEO.cx = b.left + b.width / 2; GEO.cy = b.top + b.height / 2;
+  if (R0 == null){ R0 = GEO.sw >= GEO.sh ? 0 : 90; A0 = A; }                                  // how the sheet first lay on the device
+  VIEW.r = (A == null || A0 == null) ? (GEO.sw >= GEO.sh ? 0 : 90) : mod(R0 - (A - A0));       // device turned one way = sheet turns the other way in the window, i.e. stays put on the glass
+  const odd = VIEW.r % 180 !== 0; GEO.fit = Math.min(GEO.sw / (odd ? H : W), GEO.sh / (odd ? W : H)); applyView();
+}
+function applyView(){
+  const odd = VIEW.r % 180 !== 0, sc = GEO.fit * VIEW.z, mx = Math.max(0, (odd ? H : W) * sc / 2 - GEO.sw / 2), my = Math.max(0, (odd ? W : H) * sc / 2 - GEO.sh / 2);
+  VIEW.tx = clamp(VIEW.tx, -mx, mx); VIEW.ty = clamp(VIEW.ty, -my, my); GEO.s = sc;            // the sheet can never be carried off the screen
+  paper.style.transform = `translate(-50%,-50%) translate(${VIEW.tx}px,${VIEW.ty}px) rotate(${VIEW.r}deg) scale(${sc})`;
+  $('#fit').hidden = VIEW.z < 1.02; showPerf();
+}
+function toSheet(sx, sy){ const a = -VIEW.r * Math.PI / 180, c = Math.cos(a), n = Math.sin(a), dx = sx - GEO.cx - VIEW.tx, dy = sy - GEO.cy - VIEW.ty;
+  return {x: (dx * c - dy * n) / GEO.s + W / 2, y: (dx * n + dy * c) / GEO.s + H / 2}; }
+function toScreen(x, y){ const a = VIEW.r * Math.PI / 180, c = Math.cos(a), n = Math.sin(a), qx = (x - W / 2) * GEO.s, qy = (y - H / 2) * GEO.s;
+  return {x: GEO.cx + VIEW.tx + qx * c - qy * n, y: GEO.cy + VIEW.ty + qx * n + qy * c}; }
+function zoomTo(z, q, sx, sy){                          // zoom to z while sheet point q stays under screen point (sx, sy)
+  VIEW.z = clamp(z, 1, ZMAX); GEO.s = GEO.fit * VIEW.z; VIEW.tx = VIEW.ty = 0; const at = toScreen(q.x, q.y); VIEW.tx = sx - at.x; VIEW.ty = sy - at.y; applyView(); }
+onPress($('#fit'), () => { VIEW.z = 1; VIEW.tx = VIEW.ty = 0; applyView(); });
+stage.addEventListener('wheel', e => { e.preventDefault();                                     // mouse wheel or trackpad pinch zooms about the cursor; a trackpad two-finger slide carries the sheet
+  const zoomy = e.ctrlKey || e.deltaMode === 1 || (e.deltaX === 0 && Math.abs(e.deltaY) >= 40);
+  if (zoomy) zoomTo(VIEW.z * Math.exp(-e.deltaY * (e.ctrlKey ? .01 : .0015)), toSheet(e.clientX, e.clientY), e.clientX, e.clientY);
+  else { VIEW.tx -= e.deltaX; VIEW.ty -= e.deltaY; applyView(); } }, {passive:false});
+let layT = 0; const relayout = () => { place(); clearTimeout(layT); layT = setTimeout(place, 250); };      // once now, once after the browser's own rotation animation settles
+addEventListener('resize', relayout); addEventListener('orientationchange', relayout); if (screen.orientation && screen.orientation.addEventListener) screen.orientation.addEventListener('change', relayout);
+const css = () => ctx.setTransform(DPR, 0, 0, DPR, 0, 0), dev = () => ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+/* Four history slots shared by Undo/Redo; tiny carried-paint copies are part of each action. */
+const undoStack = [], redoStack = [], undoPool = [];
+function releaseSnapshot(c){if(c.marbles)for(const m of c.marbles){m.load.width=m.load.height=1;}c.marbles=[];undoPool.push(c);}
+function captureState(){
+  const c = undoPool.pop() || document.createElement('canvas');
+  if (c.width !== paint.width || c.height !== paint.height){ c.width = paint.width; c.height = paint.height; }
+  const k = c.getContext('2d'); k.clearRect(0, 0, c.width, c.height); k.drawImage(paint, 0, 0);
+  c.marbles=M.list.map(m=>{const load=document.createElement('canvas');load.width=load.height=m.P;load.getContext('2d').drawImage(m.load,0,0);
+    return {kind:m.kind,x:m.x,y:m.y,load};});c.seed=seed;c.cycle=S.cycle;c.blank=sheetBlank;return c;
+}
+function historyButtons(){while(undoStack.length+redoStack.length+undoPool.length>4){const c=undoPool.pop();c.width=c.height=1;}$('#undo').disabled=!undoStack.length;$('#redo').disabled=!redoStack.length;}
+function pushUndo(){while(redoStack.length)releaseSnapshot(redoStack.pop());if(undoStack.length>=4)releaseSnapshot(undoStack.shift());undoStack.push(captureState());historyButtons();}
+function beginUndo(o){o.before=captureState();o.undo=true;}
+function commitUndo(o){if(!o.before)return;while(redoStack.length)releaseSnapshot(redoStack.pop());if(undoStack.length>=4)releaseSnapshot(undoStack.shift());undoStack.push(o.before);o.before=null;historyButtons();}
+function cancelUndo(o){if(!o.before)return;restoreState(o.before);releaseSnapshot(o.before);o.before=null;historyButtons();}
+function restoreState(c){putAway();dev();ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';ctx.clearRect(0,0,paint.width,paint.height);ctx.drawImage(c,0,0);
+  for(const saved of c.marbles){const m=makeMarble(saved.kind,saved.x,saved.y);m.el.style.animation='none';m.lctx.drawImage(saved.load,0,0);}seed=c.seed;S.cycle=c.cycle;sheetBlank=c.blank;historyButtons();}
+function clearGestures(){for(const o of ptrs.values()){if(o.el)o.el.remove();if(o.tool==='stamp')endStamp(o);else if(o.tool==='brush'||o.tool==='eraser')finishStroke(o,{x:o.lx,y:o.ly});commitUndo(o);}ptrs.clear();TP.clear();NAV.on=false;paint.style.cursor='';}
+function moveHistory(from,to){sound?.stop();haltMarbles();clearGestures();if(!from.length)return;const previous=from.pop(),current=captureState();restoreState(previous);releaseSnapshot(previous);to.push(current);historyButtons();changed();}
+function undo(){moveHistory(undoStack,redoStack);}
+function redo(){moveHistory(redoStack,undoStack);}
+function popUndo(){const c=undoStack.pop();if(!c)return;restoreState(c);releaseSnapshot(c);historyButtons();changed();}
+
+/* ---------- state + toolbar ---------- */
+let sheetBlank=true;
+const S = {tool:'brush', brush:'round', stamp:'star', colour:COLOURS[7], bucket:[COLOURS[0], COLOURS[2], COLOURS[7]], size:{brush:.5, eraser:.5, flick:.4, stamp:.25}, cycle:0};
+function setTool(t){ sound?.stop(); S.tool = t; document.querySelectorAll('[data-tool]').forEach(b => b.setAttribute('aria-pressed', b.dataset.tool === t));
+  $('#marble-ui').hidden = t !== 'marbles'; $('#brush-ui').hidden = t !== 'brush'; $('#stamp-ui').hidden = t !== 'stamp'; $('#size-ui').hidden = t === 'marbles'; $('#size').value = S.size[t] ?? .4; drawPalette();
+  if (t === 'marbles') thaw(); else freeze();                                    // marbles only ever move while Marbles is the chosen tool
+  const colours=t==='brush'||t==='flick'||t==='stamp';pal.style.visibility=colours?'visible':'hidden';pal.setAttribute('aria-hidden',String(!colours));pal.querySelectorAll('button').forEach(b=>b.tabIndex=colours?0:-1);
+  showSize();place();scheduleDraft(); }
+onPress($('#tools'), e => { const b = e.target.closest('[data-tool]'); if (!b||!studioReady) return; setTool(b.dataset.tool); if (b.dataset.tool === 'marbles'){pushUndo();addMarble();changed();} });
+onPress($('#away'), () => {if(!M.list.length)return;pushUndo();putAway();changed();});
+function showSize(){const v=S.size[S.tool]??.4;$('#size-preview i').style.width=$('#size-preview i').style.height=(5+22*v)+'px';}
+$('#size').addEventListener('input', e => { S.size[S.tool] = +e.target.value;showSize(); });
+onPress($('#brush-ui'), e => { const b = e.target.closest('[data-brush]'); if (!b) return; sound?.stop(); S.brush = b.dataset.brush;
+  document.querySelectorAll('[data-brush]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
+onPress($('#stamp-ui'), e => { const b = e.target.closest('[data-stamp]'); if (!b) return; sound?.stop(); S.stamp = b.dataset.stamp;
+  document.querySelectorAll('[data-stamp]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
+onPress($('#undo'), () => undo());
+onPress($('#redo'), () => redo());
+onPress($('#new'), () => {if(!studioReady)return;clearGestures();haltMarbles();if(!sheetBlank||M.list.length){pushUndo();putAway();dev();ctx.clearRect(0,0,paint.width,paint.height);sheetBlank=true;changed();}VIEW.z=1;VIEW.tx=VIEW.ty=0;applyView();});
+onPress($('#test'), () => { pushUndo(); testPicture();changed(); });
+const pal = $('#palette');
+COLOURS.forEach(c => { const b = document.createElement('button'); b.className = 'sw'; b.style.background = c; b.dataset.c = c; b.setAttribute('aria-label', 'Colour ' + c); pal.appendChild(b); });
+onPress(pal, e => { const b = e.target.closest('.sw'); if (!b) return; const c = b.dataset.c;
+  if (S.tool === 'flick'){ const i = S.bucket.indexOf(c);
+    if (i >= 0){ if (S.bucket.length > 1) S.bucket.splice(i, 1); } else { S.bucket.push(c); if (S.bucket.length > 8) S.bucket.shift(); } }   // ninth colour nudges the oldest out: never an error
+  else S.colour = c;
+  drawPalette(); });
+function drawPalette(){ const multi = S.tool === 'flick' || S.tool === 'marbles';
+  pal.querySelectorAll('.sw').forEach(b => { const i = S.bucket.indexOf(b.dataset.c), on = S.tool === 'flick' ? i >= 0 : b.dataset.c === S.colour;
+    b.setAttribute('aria-pressed', on); if (S.tool === 'flick' && i >= 0) b.dataset.n = i + 1; else delete b.dataset.n; }); void multi; }
+
+/* ---------- splats: one irregular blob + tapered streaks + droplets, all generated, batched into one path per colour ---------- */
+function blob(p, cx, cy, R, elong, ang, spiky){
+  const n = 12 + (rnd() * 5 | 0), ca = Math.cos(ang), sa = Math.sin(ang), pts = [];
+  for (let i = 0; i < n; i++){ const t = i / n * TAU + (rnd() - .5) * .25; let r = R * (.8 + rnd() * .3); if (rnd() < spiky) r *= 1.25 + rnd() * .7;
+    const x = Math.cos(t) * r * elong, y = Math.sin(t) * r; pts.push(cx + x * ca - y * sa, cy + x * sa + y * ca); }
+  p.moveTo((pts[2*n-2] + pts[0]) / 2, (pts[2*n-1] + pts[1]) / 2);
+  for (let i = 0; i < n; i++){ const j = (i + 1) % n; p.quadraticCurveTo(pts[2*i], pts[2*i+1], (pts[2*i] + pts[2*j]) / 2, (pts[2*i+1] + pts[2*j+1]) / 2); }
+  p.closePath();
+}
+function streak(p, tx, ty, hx, hy, rh){                // a lobe: wide where it leaves the blob, a pinched neck, a round bead at the end (same winding as blob(), so overlaps never punch holes)
+  const a = Math.atan2(hy - ty, hx - tx), nx = Math.cos(a - Math.PI/2), ny = Math.sin(a - Math.PI/2), wb = rh * 2.1, wn = rh * .38, qx = tx + (hx - tx) * .62, qy = ty + (hy - ty) * .62;
+  p.moveTo(tx + nx * wb, ty + ny * wb); p.quadraticCurveTo(qx + nx * wn, qy + ny * wn, hx + nx * rh, hy + ny * rh);
+  p.arc(hx, hy, rh, a - Math.PI/2, a + Math.PI/2, false); p.quadraticCurveTo(qx - nx * wn, qy - ny * wn, tx - nx * wb, ty - ny * wb); p.closePath();
+}
+function drop(p, x, y, rx, ry, a){ p.moveTo(x + Math.cos(a) * rx, y + Math.sin(a) * rx); p.ellipse(x, y, rx, ry, a, 0, TAU); }
+function splat(x, y, dx, dy, speed, holdMs, cols){
+  sheetBlank=false;
+  const e = clamp((speed - 150) / 2200, 0, 1), h = clamp(holdMs / 1200, 0, 1), k = unit * (.6 + S.size.flick);   // e = flick energy, h = how long the finger waited
+  const R = (17 + 34 * h + 13 * e) * k * (.9 + rnd() * .2), ang = Math.atan2(dy, dx), elong = 1 + 1.5 * e;
+  const fly = e * (50 * unit + .26 * Math.min(W, H)), cx = x + dx * fly, cy = y + dy * fly;                   // flicked paint lands ahead of the finger
+  const paths = new Map(), P = c => paths.get(c) || (paths.set(c, new Path2D()), paths.get(c)), pick = () => cols[rnd() * cols.length | 0];
+  const main = cols[S.cycle++ % cols.length];
+  blob(P(main), cx, cy, R, elong, ang, .1 + .3 * e - .08 * h);
+  blob(P(main), cx - dx * R * .5 * e + gauss() * R * .2, cy - dy * R * .5 * e + gauss() * R * .2, R * .62, 1 + e, ang + gauss() * .3, .25);
+  const spread = 1.25 - .8 * e, ns = Math.round(e * 8 + h * 3 + (e < .1 ? 2 : 0));
+  for (let i = 0; i < ns; i++){ const a = e < .1 ? rnd() * TAU : ang + gauss() * spread, len = R * (.35 + rnd() * (.5 + 2.6 * e));
+    streak(P(main), cx, cy, cx + Math.cos(a) * (R * .75 + len), cy + Math.sin(a) * (R * .75 + len), R * (.1 + rnd() * .13)); }
+  const nd = Math.round(6 + 30 * e + 9 * h), far = R * (2 + 9 * e);
+  for (let i = 0; i < nd; i++){
+    const radial = e < .1 || rnd() < .12, a = radial ? rnd() * TAU : ang + gauss() * spread * .8;
+    const d = radial ? R * (1.1 + rnd() * 1.5 * (.6 + h)) : R * elong + Math.pow(rnd(), .8) * far;
+    const r = R * (.04 + rnd() * .17) * (1 - .55 * d / (far + R * 3));
+    drop(P(pick()), cx + Math.cos(a) * d, cy + Math.sin(a) * d, r * (1 + 1.4 * e * rnd()), r, a);
+  }
+  css(); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+  for (const [c, p] of paths){ ctx.fillStyle = c; ctx.fill(p); }
+  ctx.fillStyle = 'rgba(255,255,255,.20)'; ctx.beginPath(); ctx.ellipse(cx - R * .28, cy - R * .3, R * .3, R * .16, -.6, 0, TAU); ctx.fill();   // and a little shine
+  LAST.splat = `splat e=${e.toFixed(2)} hold=${h.toFixed(2)} shapes=${2 + ns + nd}`;
+  sound?.paint(speed,holdMs,S.size.flick);
+}
+function dribble(x, y, speedN){sheetBlank=false;css(); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1; ctx.fillStyle = S.bucket[rnd() * S.bucket.length | 0];
+  const r = unit * (.6 + S.size.flick) * (2.5 + rnd() * 5) * (1 - .6 * speedN); ctx.beginPath(); ctx.arc(x + gauss() * 5 * unit, y + gauss() * 5 * unit, r, 0, TAU); ctx.fill(); sound?.dab('dribble',S.size.flick); }
+
+/* ---------- pointers: one finger paints; a second touch navigates the paper ---------- */
+const ptrs = new Map();
+const pos = e => { const q = toSheet(e.clientX, e.clientY); q.t = performance.now(); return q; };      // screen point -> sheet point, however the sheet is turned and zoomed
+const TP = new Map(), NAV = {on:false, d0:1, z0:1, q0:null};
+const twoPts = () => { const [a, b] = [...TP.values()]; return {x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, d: Math.hypot(a.x - b.x, a.y - b.y) || 1}; };
+const navBase = () => { const t = twoPts(); NAV.d0 = t.d; NAV.z0 = VIEW.z; NAV.q0 = toSheet(t.x, t.y); };
+function startNav(){                                   // a second finger has landed: whatever the first finger had begun was the start of a pinch, not a mark
+  sound?.stop();
+  for (const o of ptrs.values()){ if (o.el) o.el.remove(); if (o.marble){ o.marble.held = null; o.marble.vx = o.marble.vy = 0; } if (o.tool === 'stamp') endStamp(o);
+    if(o.before){if(performance.now()-o.t0<350||o.moved*GEO.s<18)cancelUndo(o);else{if(o.tool==='brush'||o.tool==='eraser')finishStroke(o,{x:o.lx,y:o.ly});commitUndo(o);changed();}} }
+  ptrs.clear(); paint.style.cursor = ''; NAV.on = true; navBase(); }
+stage.addEventListener('pointerdown', e => {
+  if(!studioReady||!$('#export-panel').hidden)return;
+  e.preventDefault(); try { stage.setPointerCapture(e.pointerId); } catch(_){}
+  if (e.pointerType === 'touch'){ TP.set(e.pointerId, {x: e.clientX, y: e.clientY}); if (TP.size >= 2){ if (NAV.on) navBase(); else startNav(); return; } if (NAV.on) return; }
+  let p=pos(e);const hit=marbleAt(p,S.tool==='marbles');if(hit&&S.tool!=='marbles'){setTool('marbles');p=pos(e);}
+  const o = {tool:S.tool, brush:S.tool === 'brush' ? S.brush : 'round',colour:S.colour,size:S.size[S.tool], x0:p.x, y0:p.y, t0:p.t, lx:p.x, ly:p.y, mx:p.x, my:p.y, moved:0, acc:0, samples:[p], el:null};
+  o.id = e.pointerId; ptrs.set(e.pointerId, o);
+  if (o.tool === 'marbles'){if(hit){o.marble=hit;hit.held={x:hit.x,y:hit.y};hit.vx=hit.vy=0;if(e.pointerType==='mouse')paint.style.cursor='grabbing';}return;}
+  beginUndo(o);
+  if (o.tool === 'flick'){ const d = document.createElement('div'), s = (49 + 8) * unit * (.6 + S.size.flick) * 2; d.className = 'puddle';
+    d.style.cssText = `width:${s}px;height:${s}px;left:${p.x - s/2}px;top:${p.y - s/2}px;background:${S.bucket[S.cycle % S.bucket.length]}`;
+    paper.appendChild(d); o.el = d; requestAnimationFrame(() => requestAnimationFrame(() => d.style.transform = 'scale(1)')); }   // the growing puddle shows what holding will do
+  else if (o.tool === 'stamp') startStamp(o, p);
+  else stroke(o, p, true);
+});
+stage.addEventListener('pointermove', e => {
+  if (TP.has(e.pointerId)){ TP.set(e.pointerId, {x: e.clientX, y: e.clientY}); if (NAV.on){ if (TP.size >= 2){ const t = twoPts(); zoomTo(NAV.z0 * t.d / NAV.d0, NAV.q0, t.x, t.y); } return; } }
+  const o = ptrs.get(e.pointerId);
+  if (!o){ if (e.pointerType === 'mouse' && M.list.length) paint.style.cursor = marbleAt(pos(e), S.tool === 'marbles') ? 'grab' : ''; return; }   // the hand cursor says "drag me"
+  const p = pos(e), d = Math.hypot(p.x - o.lx, p.y - o.ly);
+  if (o.tool === 'marbles'){if(o.marble){const m=o.marble;if(!o.undo&&Math.hypot(p.x-o.x0,p.y-o.y0)*GEO.s>2)beginUndo(o);if(o.undo){m.held={x:clamp(p.x,m.r,W-m.r),y:clamp(p.y,m.r,H-m.r)};wake();}}return;}
+  o.moved += d;
+  if (o.tool === 'stamp') return;                                                      // a potato print stays where it was pressed
+  if (o.tool === 'flick'){
+    o.samples.push(p); while (o.samples.length > 2 && p.t - o.samples[0].t > 120) o.samples.shift();
+    if (o.moved * GEO.s > 12 && o.el){ o.el.remove(); o.el = null; }
+    const v = d / Math.max(1, p.t - o.lt || 16) * 1000; o.lt = p.t; o.acc += d;
+    if (o.moved * GEO.s > 12 && o.acc > (16 + 22 * rnd()) * unit){ o.acc = 0; dribble(p.x, p.y, clamp(v * GEO.s / 1800, 0, 1)); }      // dragging dribbles
+    o.lx = p.x; o.ly = p.y;
+  } else { sound?.stroke(o.tool==='eraser'?'eraser':o.brush,d*GEO.s/Math.max(8,p.t-(o.audioTime||p.t-16))*1000,S.size[o.tool]);o.audioTime=p.t;stroke(o, p, false); }
+});
+const up = e => { if (TP.delete(e.pointerId) && NAV.on){ if (!TP.size) NAV.on = false; else if (TP.size >= 2) navBase(); return; }   // painting only starts again once every finger has lifted
+  const o = ptrs.get(e.pointerId); if (!o) return; ptrs.delete(e.pointerId); const p = pos(e);
+  sound?.end('stroke');
+  if(e.type==='pointercancel'){if(o.el)o.el.remove();if(o.tool==='stamp')endStamp(o);if(o.marble){o.marble.held=null;o.marble.vx=o.marble.vy=0;}if(o.tool==='flick'&&!o.moved)cancelUndo(o);else commitUndo(o);sound?.stop();paint.style.cursor='';changed();return;}
+  if (o.tool === 'marbles'){const m=o.marble;if(m&&m.held){m.vx*=m.gain;m.vy*=m.gain;m.held=null;paint.style.cursor='';wake();if(o.before){commitUndo(o);changed();}}return;}
+  if (o.el) o.el.remove();
+  if (o.tool !== 'flick'){if(o.tool==='stamp')endStamp(o);else finishStroke(o,p);commitUndo(o);changed();return;}
+  const s0 = o.samples.find(s => p.t - s.t <= 100) || o.samples[0], dt = Math.max(8, p.t - s0.t), vx = (p.x - s0.x) / dt * 1000, vy = (p.y - s0.y) / dt * 1000, sp = Math.hypot(vx, vy);
+  const glass = sp * GEO.s;
+  if (glass > 150 && e.type === 'pointerup') splat(p.x, p.y, vx / sp, vy / sp, glass, 0, S.bucket);
+  else if (o.moved * GEO.s <= 12) splat(o.x0, o.y0, 1, 0, 0, p.t - o.t0, S.bucket);
+  commitUndo(o);changed();
+};
+stage.addEventListener('pointerup', up); stage.addEventListener('pointercancel', up);
+stage.addEventListener('lostpointercapture',e=>{if(ptrs.has(e.pointerId)||TP.has(e.pointerId))up({type:'pointercancel',pointerId:e.pointerId,clientX:e.clientX,clientY:e.clientY});});
+function interruptStudio(){
+  sound?.suspend();haltMarbles();
+  clearGestures();
+  changed();flushDraft();
+}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)interruptStudio();});
+addEventListener('pagehide',interruptStudio);
+['gesturestart','gesturechange','contextmenu','dblclick'].forEach(t => addEventListener(t, e => {if(!e.target.closest('#export-panel'))e.preventDefault();}, {passive:false}));
+/* Four brushes, four different marks:
+     round   a smooth line                          flat    a 45-degree chisel: fat one way, thin the other
+     crayon  the round line drawn through a paper-grain pattern that is fixed to the page, so going over it again fills in
+     sponge  a blotchy stamp, turned a little each time */
+const tips = new Map();
+function crayonInk(col){
+  let p = tips.get('c' + col); if (p) return p;
+  const t = document.createElement('canvas'), n = 128; t.width = t.height = n; const g = t.getContext('2d'); g.fillStyle = col; g.fillRect(0, 0, n, n);
+  g.globalCompositeOperation = 'destination-out'; g.fillStyle = '#000';
+  for (let i = 0; i < 1500; i++){ g.globalAlpha = .35 + Math.random() * .65; g.beginPath(); g.arc(Math.random() * n, Math.random() * n, .5 + Math.random() * 1.9, 0, TAU); g.fill(); }
+  p = ctx.createPattern(t, 'repeat'); if (tips.size > 40) tips.clear(); tips.set('c' + col, p); return p;
+}
+function spongeTip(col, w){
+  const s = Math.max(8, Math.ceil(w * DPR)), key = 's' + col + s; let t = tips.get(key); if (t) return t;
+  t = document.createElement('canvas'); t.width = t.height = s; const g = t.getContext('2d'); g.fillStyle = col;
+  for (let i = 0; i < 22; i++){ const a = Math.random() * TAU, d = Math.sqrt(Math.random()) * s * .34; g.beginPath(); g.arc(s/2 + Math.cos(a) * d, s/2 + Math.sin(a) * d, s * (.06 + Math.random() * .1), 0, TAU); g.fill(); }
+  g.globalCompositeOperation = 'destination-out';
+  for (let i = 0; i < 34; i++){ const a = Math.random() * TAU, d = Math.sqrt(Math.random()) * s * .45; g.globalAlpha = .5 + Math.random() * .5; g.beginPath(); g.arc(s/2 + Math.cos(a) * d, s/2 + Math.sin(a) * d, s * (.015 + Math.random() * .04), 0, TAU); g.fill(); }
+  if (tips.size > 40) tips.clear(); tips.set(key, t); return t;
+}
+function stroke(o, p, first){
+  if(o.tool!=='eraser')sheetBlank=false;
+  const sz = o.size??S.size[o.tool],colour=o.colour||S.colour,w = (6 + 74 * sz * sz) * unit;
+  css(); ctx.lineCap = ctx.lineJoin = 'round'; ctx.globalAlpha = 1; ctx.lineWidth = w;
+  ctx.globalCompositeOperation = o.tool === 'eraser' ? 'destination-out' : 'source-over'; ctx.strokeStyle = ctx.fillStyle = colour;
+  if (o.brush === 'sponge'){
+    const tip=spongeTip(colour,w*1.5),d=Math.hypot(p.x-o.lx,p.y-o.ly),spacing=Math.max(4,w*.45,d/100);
+    const stamp=(x,y)=>{ctx.save();ctx.translate(x+gauss()*w*.08,y+gauss()*w*.08);ctx.rotate(Math.random()*TAU);ctx.globalAlpha=.93;ctx.drawImage(tip,-w*.75,-w*.75,w*1.5,w*1.5);ctx.restore();};
+    if(first){stamp(p.x,p.y);o.acc=0;}else if(d){let along=spacing-o.acc;for(;along<=d;along+=spacing)stamp(o.lx+(p.x-o.lx)*along/d,o.ly+(p.y-o.ly)*along/d);o.acc=(o.acc+d)%spacing;}
+    if(first)sound?.dab('sponge',sz);
+  } else if (o.brush === 'flat'){
+    const vx = w * .3536, vy = -w * .3536;                                  // half the chisel edge, at 45 degrees
+    if (!first){ ctx.beginPath(); ctx.moveTo(o.lx - vx, o.ly - vy); ctx.lineTo(o.lx + vx, o.ly + vy); ctx.lineTo(p.x + vx, p.y + vy); ctx.lineTo(p.x - vx, p.y - vy); ctx.closePath(); ctx.fill(); }
+    ctx.lineCap = 'butt'; ctx.lineWidth = Math.max(1.5, w * .12); ctx.beginPath(); ctx.moveTo(p.x - vx, p.y - vy); ctx.lineTo(p.x + vx, p.y + vy); ctx.stroke();     // the edge itself, so a stroke along the chisel still shows
+  } else {
+    if (o.brush === 'crayon'){ const ink = crayonInk(colour); if (first && ink.setTransform){ try { ink.setTransform(new DOMMatrix().translate(Math.random() * 64, Math.random() * 64)); } catch(_){} }
+      ctx.strokeStyle = ctx.fillStyle = ink; ctx.lineWidth = w * .9; }
+    const mx = (o.lx + p.x) / 2, my = (o.ly + p.y) / 2; ctx.beginPath();
+    if (first){ ctx.arc(p.x, p.y, ctx.lineWidth / 2, 0, TAU); ctx.fill(); }
+    else { ctx.moveTo(o.mx, o.my); ctx.quadraticCurveTo(o.lx, o.ly, mx, my); ctx.stroke(); }
+    o.mx = mx; o.my = my;
+  }
+  o.lx = p.x; o.ly = p.y; ctx.globalCompositeOperation = 'source-over';
+}
+function finishStroke(o,p){
+  stroke(o,p,false);
+  if(o.brush==='round'||o.brush==='crayon'){
+    css();ctx.globalCompositeOperation=o.tool==='eraser'?'destination-out':'source-over';ctx.beginPath();ctx.moveTo(o.mx,o.my);ctx.lineTo(p.x,p.y);ctx.stroke();ctx.globalCompositeOperation='source-over';
+  }
+}
+
+/* ---------- potato stamps ----------
+   A library of cut potato (or sponge) prints: five shapes and five animals, each a silhouette drawn as one or more polygons in a
+   100 x 100 box (the animals were redrawn on 18 Sept after Jof found the dog, horse and crocodile unrecognisable at icon size:
+   a silhouette that small needs exaggerated cues, a long jaw, a floppy ear, a steep neck). The slider sets the size of that box, from 8% of the sheet's short side up to the whole of it (so a print can
+   never be bigger than the sheet). A print is placed where the finger lands, turned a little at random as a hand would.
+
+   How much paint goes down depends on how long the press lasts, the way a real potato print does:
+     tap             a crisp print with a mottled, slightly starved texture
+     hold            more paint every tenth of a second: the fill goes solid, paint squeezes out past the edge into a thicker
+                     and more ragged outline, and blotches appear around it; it stops building after about a second and a half
+   Each layer is composed on an offscreen buffer and drawn onto the sheet, so the mottling never punches holes in paint that is
+   already there, and nothing is ever read back from the sheet. */
+const STAMPS = {
+  star:      {label:'Star',      polys:[(() => { const p = []; for (let i = 0; i < 10; i++){ const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? 20 : 48; p.push([50 + Math.cos(a) * r, 50 + Math.sin(a) * r]); } return p; })()]},
+  circle:    {label:'Circle',    polys:[(() => { const p = []; for (let i = 0; i < 48; i++){ const a = i / 48 * TAU; p.push([50 + Math.cos(a) * 47, 50 + Math.sin(a) * 47]); } return p; })()]},
+  square:    {label:'Square',    polys:[[[8,8],[92,8],[92,92],[8,92]]]},
+  rectangle: {label:'Rectangle', polys:[[[2,26],[98,26],[98,74],[2,74]]]},
+  triangle:  {label:'Triangle',  polys:[[[50,5],[96,91],[4,91]]]},
+  cat:       {label:'Cat', polys:[[[20,6],[26,20],[34,17],[42,20],[48,6],[52,22],[52,34],[48,42],[58,46],[68,54],[74,66],[74,80],[72,90],[80,93],[90,92],[96,84],[94,74],[90,72],[88,80],[82,86],[74,86],[70,94],[56,95],[44,95],[30,94],[26,88],[24,70],[24,56],[22,44],[16,36],[14,24]]]},
+  dog:       {label:'Dog',       polys:[[[3,30],[10,26],[16,22],[22,15],[30,12],[38,14],[44,22],[52,28],[62,27],[72,26],[80,27],[86,30],[90,24],[94,14],[99,10],[98,18],[95,28],[90,36],[90,46],[91,58],[93,74],[94,90],[84,90],[84,74],[82,62],[74,58],[64,56],[54,57],[48,60],[48,74],[48,90],[38,90],[38,74],[38,60],[34,52],[30,44],[22,42],[12,40],[4,38]],[[30,13],[42,15],[45,26],[43,38],[36,42],[30,34],[28,22]]]},
+  horse:     {label:'Horse',     polys:[[[2,28],[8,22],[14,14],[18,8],[20,2],[23,8],[28,10],[34,12],[40,15],[46,20],[58,20],[70,19],[80,20],[88,22],[93,26],[97,36],[99,52],[96,66],[92,66],[93,52],[91,40],[88,34],[89,42],[90,58],[91,76],[92,94],[85,94],[85,76],[82,62],[77,54],[64,52],[54,54],[53,76],[54,94],[47,94],[46,76],[45,58],[44,46],[38,40],[30,34],[22,30],[14,32],[8,34],[3,36]]]},
+  crocodile: {label:'Crocodile', polys:[[[2,30],[12,29],[24,29],[32,28],[35,22],[41,22],[44,29],[48,32],[51,26],[54,33],[58,26],[61,33],[65,26],[68,33],[72,27],[75,33],[80,35],[86,37],[92,40],[99,44],[93,47],[86,50],[78,52],[74,54],[81,62],[80,66],[70,68],[64,57],[58,56],[52,56],[57,64],[56,68],[46,68],[42,58],[36,55],[26,54],[14,53],[2,52],[4,47],[7,49],[10,44],[14,49],[18,44],[22,49],[26,44],[30,49],[34,45],[37,42],[34,38],[30,39],[27,35],[23,39],[19,35],[15,39],[11,35],[7,38],[4,34]]]},
+  hero:      {label:'Superhero', polys:[[[86,2],[93,2],[97,7],[95,13],[90,15],[84,20],[75,28],[68,36],[74,48],[77,58],[82,68],[86,78],[91,82],[98,86],[97,91],[83,91],[80,84],[76,77],[73,71],[72,78],[63,78],[59,74],[54,76],[50,80],[47,86],[47,93],[53,96],[53,100],[36,100],[35,94],[37,88],[35,80],[33,75],[27,84],[18,92],[9,95],[7,86],[3,82],[1,76],[3,70],[9,68],[13,71],[20,62],[30,52],[38,43],[42,36],[46,31],[44,25],[44,17],[48,11],[56,11],[60,17],[60,25],[58,31],[62,28],[72,18],[82,9]]]},   // Jof's caped power-lunge, hand-drawn from a family sticker (18 Sept 2026)
+  fish:      {label:'Fish', polys:[[[3,50],[12,38],[24,29],[40,24],[56,27],[68,38],[76,46],[92,30],[98,36],[90,50],[98,64],[92,70],[76,54],[68,60],[56,71],[40,76],[24,71],[12,62]],
+                                   [[34,26],[45,11],[56,27]]]} };
+const stampPath = key => STAMPS[key].polys.map(p => 'M' + p.map(q => q.join(' ')).join('L') + 'Z').join('');
+for (const key in STAMPS){ const b = document.createElement('button'); b.dataset.stamp = key; b.setAttribute('aria-label', STAMPS[key].label + ' stamp'); b.setAttribute('aria-pressed', key === S.stamp);
+  b.innerHTML = `<svg viewBox="-2 -2 104 104" aria-hidden="true"><path d="${stampPath(key)}" fill="#3b2f4a"/></svg>`; $('#stamp-ui').appendChild(b); }
+let stampBuf = null;
+function stampGeometry(x, y, key, sz, turn){                    // the template placed on the sheet: points in sheet pixels, plus its box
+  const k = (.08 + .92 * sz) * Math.min(W, H) / 100, c = Math.cos(turn), n = Math.sin(turn), polys = [];
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  for (const poly of STAMPS[key].polys){ const out = []; for (const [px, py] of poly){ const ux = (px - 50) * k, uy = (py - 50) * k, sx = x + ux * c - uy * n, sy = y + ux * n + uy * c;
+    out.push(sx, sy); x0 = Math.min(x0, sx); y0 = Math.min(y0, sy); x1 = Math.max(x1, sx); y1 = Math.max(y1, sy); } polys.push(out); }
+  return {polys, k: k * 100, x0, y0, x1, y1};
+}
+const stampPath2D = g => { const p = new Path2D(); for (const poly of g.polys){ p.moveTo(poly[0], poly[1]); for (let i = 2; i < poly.length; i += 2) p.lineTo(poly[i], poly[i + 1]); p.closePath(); } return p; };
+function edgePoint(g){ const poly = g.polys[rnd() * g.polys.length | 0], n = poly.length / 2, i = rnd() * n | 0, j = (i + 1) % n, t = rnd();
+  return [poly[2 * i] + (poly[2 * j] - poly[2 * i]) * t, poly[2 * i + 1] + (poly[2 * j + 1] - poly[2 * i + 1]) * t]; }
+function inkLayer(g, path, colour, level, first){              // one coat of paint: composed off the sheet, then laid on it
+  const m = g.k * .14 + 6, bx = Math.floor(g.x0 - m), by = Math.floor(g.y0 - m), bw = Math.ceil(g.x1 - g.x0 + 2 * m), bh = Math.ceil(g.y1 - g.y0 + 2 * m);
+  if (!stampBuf){ stampBuf = document.createElement('canvas'); } if (stampBuf.width < bw || stampBuf.height < bh){ stampBuf.width = Math.max(stampBuf.width, bw); stampBuf.height = Math.max(stampBuf.height, bh); }
+  const b = stampBuf.getContext('2d'); b.setTransform(1, 0, 0, 1, -bx, -by); b.globalCompositeOperation = 'source-over'; b.clearRect(bx, by, bw, bh);
+  b.fillStyle = b.strokeStyle = colour; b.lineJoin = b.lineCap = 'round';
+  b.globalAlpha = first ? .82 : .14 + .1 * level; b.fill(path);                                      // the body of the print
+  if (first){ b.globalCompositeOperation = 'destination-out'; const holes = Math.round(bw * bh / (g.k * g.k) * 260);   // a starved, mottled first coat
+    for (let i = 0; i < holes; i++){ b.globalAlpha = .3 + rnd() * .7; b.beginPath(); b.arc(g.x0 + rnd() * (g.x1 - g.x0), g.y0 + rnd() * (g.y1 - g.y0), g.k * (.006 + rnd() * .022), 0, TAU); b.fill(); }
+    b.globalCompositeOperation = 'source-over'; }
+  if (level > 0){                                                                                  // paint squeezed out past the edge: thicker and more ragged the longer the press
+    const w = g.k * (.01 + .075 * level), jit = g.k * .012 * level; b.lineWidth = w; b.globalAlpha = .22 + .3 * level;
+    for (let i = 0; i < 3; i++){ b.setTransform(1, 0, 0, 1, -bx + gauss() * jit, -by + gauss() * jit); b.stroke(path); } b.setTransform(1, 0, 0, 1, -bx, -by);
+    const blots = Math.round(level * 5 * (first ? 3 : 1)); b.globalAlpha = .85;
+    for (let i = 0; i < blots; i++){ const [ex, ey] = edgePoint(g), a = rnd() * TAU, d = g.k * (.01 + rnd() * .05 * level), r = g.k * (.006 + rnd() * .022 * (1 + level));
+      b.beginPath(); b.ellipse(ex + Math.cos(a) * d, ey + Math.sin(a) * d, r * (1 + rnd()), r, a, 0, TAU); b.fill(); } }
+  b.setTransform(1, 0, 0, 1, 0, 0); dev(); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1; ctx.drawImage(stampBuf, 0, 0, bw, bh, bx, by, bw, bh);
+}
+function startStamp(o, p){
+  sheetBlank = false; o.stampKey = S.stamp; o.g = stampGeometry(p.x, p.y, S.stamp, o.size ?? S.size.stamp, (rnd() - .5) * .3); o.path = stampPath2D(o.g); o.level = 0; o.lastCoat = p.t;
+  inkLayer(o.g, o.path, o.colour, 0, true); sound?.dab('sponge', o.size ?? S.size.stamp);
+  const coat = now => { if (!ptrs.has(o.id)) return; if (now - o.lastCoat >= 95 && o.level < 1){ o.lastCoat = now; o.level = Math.min(1, (now - o.t0) / 1500); inkLayer(o.g, o.path, o.colour, o.level, false); }
+    if (o.level < 1) o.raf = requestAnimationFrame(coat); else o.raf = 0; };
+  o.raf = requestAnimationFrame(coat);
+}
+function endStamp(o){ if (o.raf){ cancelAnimationFrame(o.raf); o.raf = 0; } }
+function stampAt(key, x, y, sz, level){                         // test hook: a finished print at a given press level, no pointer needed
+  const g = stampGeometry(x, y, key, sz, (rnd() - .5) * .3), path = stampPath2D(g); inkLayer(g, path, S.colour, 0, true);
+  for (let l = .1; l <= level; l += .1) inkLayer(g, path, S.colour, l, false); sheetBlank = false; }
+
+/* ---------- marbles ----------
+   Each marble carries a little square of paint (its "load"). As it rolls it blends the paint ahead of it into the load,
+   thins the paint along its track a touch, and lays the load back down along that track.
+
+   HOW IT IS KEPT CHEAP (rewritten 18 Sept 2026 after the iPad 5 showed marbles rendering slowly while everything else was quick).
+   The pixels involved are tiny; the cost was in how the canvas was driven. The first version read from the sheet and wrote to
+   the sheet for EVERY step of EVERY marble (seven draw calls a step). Safari keeps the sheet in one big surface and may copy the
+   whole of it whenever it is read after being written, so that was several full-sheet copies per frame. Now, per frame:
+     1. physics for every marble first, noting where each one needs to leave a mark
+     2. ONE read of the sheet per marble: the box its track covers this frame is copied into that marble's scratch canvas
+     3. then only writes: one clip to the track (a chain of circles), one fill to thin the paint there, and per step just two
+        small draws (scratch -> load, load -> sheet). No mask compositing, no stamp canvas, no getImageData.
+   Reads never follow writes inside a frame. If a device still struggles, Q widens the spacing between steps by itself.
+   Any future "wet" tool (water, oil, smudge, charcoal rubbing) should be built on this same read-once / write-after pattern.
+   Marbles start clean: they only move paint that is already on the page.
+
+   How they behave (Jof, 17 Sept 2026; the tilt trial and why it was dropped are in docs/messy-studio-brief.md):
+     - each tap on the Marbles button drops ONE marble at a random spot; up to three; a fourth replaces the first, and so on
+     - each is one of ten kinds (size, weight, speed, bounce), picked at random as it lands
+     - they stay on the page and only ever move because a finger (or mouse) dragged or flicked them
+     - choosing any other tool stops them dead; touching a marble switches back to Marbles and they carry on
+   The frame loop only runs while something is moving or held, so resting marbles cost nothing. */
+const M = {list:[], raf:0, last:0, frozen:true, P:0, contacts:new Set()};
+let nextMarbleId=0;
+const acoustic=m=>({material:m.kind.look,weight:m.w,bounce:m.bounce});
+const traySound={material:'tray',weight:Infinity,bounce:.25};
+const Q = {level:0, gap:[.2, .3, .44]};            // step spacing as a share of the marble's radius; a slow device moves itself up a level
+const TUNE = {max:3, pickupPx:26, fadePx:240, deposit:.7, wipe:.3, topV:1500, fric:.5, roll:70};
+for (const k in TUNE) if (QS.has(k)) TUNE[k] = +QS.get(k);
+const LOOK = {
+  glass: 'radial-gradient(circle at 32% 28%,#fff 0 9%,rgba(190,215,235,.75) 36%,rgba(60,70,110,.8) 100%)',
+  smoky: 'radial-gradient(circle at 32% 28%,#fff 0 8%,rgba(120,120,135,.8) 40%,rgba(30,30,45,.9) 100%)',
+  steel: 'radial-gradient(circle at 32% 28%,#fff 0 7%,#c9ccd3 30%,#6d717c 70%,#3c3f48 100%)',
+  pearl: 'radial-gradient(circle at 32% 28%,#fff 0 16%,#efe6d8 45%,#b9a88f 88%,#8f7f68 100%)',
+  wood:  'radial-gradient(circle at 32% 28%,#f3dcb4 0 12%,#c79a5e 55%,#7a5530 100%)' };
+/* f = size, d = density (weight = f*f*d), bounce = how much speed survives an edge. A heavy marble takes less of the finger's
+   speed, tops out lower, rolls further once going and shoves lighter ones aside. Looks stay neutral so no marble seems to "be" a paint colour. */
+const KINDS = [
+  {name:'tiny glass',   f:.62, d:1,   bounce:.74, look:'glass'}, {name:'small glass', f:.8,  d:1,   bounce:.72, look:'glass'},
+  {name:'glass',        f:1,   d:1,   bounce:.7,  look:'glass'}, {name:'big glass',   f:1.25, d:1,  bounce:.66, look:'glass'},
+  {name:'giant smoky',  f:1.5, d:1,   bounce:.62, look:'smoky'}, {name:'small steel', f:.7,  d:2.6, bounce:.45, look:'steel'},
+  {name:'steel',        f:1,   d:2.6, bounce:.42, look:'steel'}, {name:'cannonball',  f:1.32, d:2.6, bounce:.36, look:'steel'},
+  {name:'pearl',        f:.9,  d:.55, bounce:.86, look:'pearl'}, {name:'wooden',      f:1.38, d:.45, bounce:.5,  look:'wood'} ];
+function marbleKit(r){                                  // each marble has its own size, so its own load and its own scratch copy of the sheet under its track
+  const P = Math.ceil(r * 2) + 2, mk = n => { const c = document.createElement('canvas'); c.width = c.height = Math.max(n, 256); return c; };   // never below 256 px: very small canvases may not be GPU-backed in WebKit
+  M.P = Math.max(M.P, P); return {P, load: mk(P), scratch: mk(P + 180)};
+}
+const show = m => { m.el.style.transform = `translate3d(${m.x - m.r}px,${m.y - m.r}px,0)`; };
+function addMarble(){
+  if (!W) return null;
+  const free = KINDS.filter(k => !M.list.some(m => m.kind === k)), kind = free[rnd() * free.length | 0], r = 18 * unit * kind.f, w = kind.f * kind.f * kind.d;
+  if (M.list.length >= TUNE.max) removeMarble(M.list[0]);                                   // the fourth takes the first one's place
+  let x = W / 2, y = H / 2; for (let i = 0; i < 40; i++){ x = r + 8 + rnd() * (W - 2 * r - 16); y = r + 8 + rnd() * (H - 2 * r - 16); if (!M.list.some(o => Math.hypot(o.x - x, o.y - y) < o.r + r + 12)) break; }
+  const m=makeMarble(kind,x,y);sound?.contact(acoustic(m),{material:'paper',weight:Infinity,bounce:0},130,'place');return m;
+}
+function makeMarble(kind,x,y){
+  const r=18*unit*kind.f,w=kind.f*kind.f*kind.d,kit = marbleKit(r), m = {id:++nextMarbleId,kind, x, y, vx:0, vy:0, r, w, gain: clamp(.95 / Math.sqrt(1 + 1.2 * w), .22, .9), bounce: kind.bounce, held:null,
+    P: kit.P, load: kit.load, lctx: kit.load.getContext('2d'), scratch: kit.scratch, sctx: kit.scratch.getContext('2d'), path: [], bx:0, by:0, el: document.createElement('div'), sx:x, sy:y};
+  m.el.className = 'marble'; m.el.style.cssText = `width:${2*r}px;height:${2*r}px;background:${LOOK[kind.look]}`; show(m); paper.appendChild(m.el); M.list.push(m); showPerf();return m;
+}
+function removeMarble(m){ const i = M.list.indexOf(m); if (i < 0) return; M.list.splice(i, 1); m.el.remove();m.load.width=m.load.height=m.scratch.width=m.scratch.height=1;for (const o of ptrs.values()) if (o.marble === m) o.marble = null; }
+function putAway(){ sound?.stop(); while (M.list.length) removeMarble(M.list[0]);M.contacts.clear();rest(); paint.style.cursor = ''; }
+function haltMarbles(){ sound?.stop(); for (const m of M.list){ m.vx = m.vy = 0; m.held = null; } for (const o of ptrs.values()) o.marble = null; rest(); }
+const moving = m => m.held ? Math.hypot(m.held.x-m.x,m.held.y-m.y)>.25 : m.vx||m.vy;
+function wake(){ if (M.raf || M.frozen || !M.list.some(moving)) return; M.last = performance.now(); PERF.n = 0; PERF.steps = 0; M.raf = requestAnimationFrame(tick); }
+function rest(){ sound?.end('roll0');sound?.end('roll1');if (!M.raf) return; cancelAnimationFrame(M.raf); M.raf = 0; perfSummary(); showPerf(); }
+function freeze(){ M.frozen = true; for (const m of M.list) m.held = null; for (const o of ptrs.values()) o.marble = null; rest(); }    // another tool was chosen: stop dead, but remember the speed
+function thaw(){ M.frozen = false; wake(); }                                                                                          // Marbles again (or a marble was touched): carry on
+function marbleAt(p, generous){ let best = null, bd = 1e9;                       // generous while Marbles is the tool; tighter otherwise, so painting next to a marble still paints
+  for (const m of M.list){ const d = Math.hypot(m.x - p.x, m.y - p.y), reach = generous ? Math.max(m.r * 2.2, 44 / GEO.s) : Math.max(m.r * 1.25, 24 / GEO.s); if (!m.held && d < reach && d < bd){ best = m; bd = d; } }
+  return best; }
+function smearRead(m){                                 // step 2: one copy of the sheet under this frame's track
+  const P = m.P, h = P / 2, p = m.path, room = m.scratch.width; let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  for (let i = 0; i < p.length; i += 3){ const tx = Math.round(p[i] - h), ty = Math.round(p[i + 1] - h);                    // whole sheet pixels: no resampling blur
+    if (Math.max(x1, tx) - Math.min(x0, tx) + P > room || Math.max(y1, ty) - Math.min(y0, ty) + P > room){ p.length = i; break; }   // a track too long for the scratch is simply cut short
+    p[i] = tx; p[i + 1] = ty; x0 = Math.min(x0, tx); y0 = Math.min(y0, ty); x1 = Math.max(x1, tx); y1 = Math.max(y1, ty); }
+  if (!p.length) return; m.bx = x0; m.by = y0; const bw = x1 - x0 + P, bh = y1 - y0 + P, s = m.sctx;
+  const cx0 = Math.max(0, x0), cy0 = Math.max(0, y0), cx1 = Math.min(W, x0 + bw), cy1 = Math.min(H, y0 + bh);             // clipped by hand: old WebKit drew nothing when the source rect left the canvas
+  s.clearRect(0, 0, bw, bh); if (cx1 > cx0 && cy1 > cy0) s.drawImage(paint, cx0, cy0, cx1 - cx0, cy1 - cy0, cx0 - x0, cy0 - y0, cx1 - cx0, cy1 - cy0);
+}
+function smearWrite(m){                                // step 3: writes only
+  const P = m.P, h = P / 2, p = m.path, l = m.lctx, R = m.r * .9; if (!p.length) return; let dist = 0; for (let i = 2; i < p.length; i += 3) dist += p[i];
+  l.globalCompositeOperation = 'destination-out'; l.globalAlpha = 1 - Math.exp(-dist / (TUNE.fadePx * unit)); l.fillRect(0, 0, P, P);          // the load slowly runs dry
+  l.globalCompositeOperation = 'source-over';
+  ctx.save(); ctx.beginPath(); for (let i = 0; i < p.length; i += 3){ ctx.moveTo(p[i] + h + R, p[i + 1] + h); ctx.arc(p[i] + h, p[i + 1] + h, R, 0, TAU); } ctx.clip();   // the track: a chain of circles
+  ctx.globalCompositeOperation = 'destination-out'; ctx.globalAlpha = TUNE.wipe; ctx.fillRect(m.bx, m.by, m.scratch.width, m.scratch.width);      // a marble leaves a slightly thinner track
+  ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = TUNE.deposit;
+  for (let i = 0; i < p.length; i += 3){
+    l.globalAlpha = 1 - Math.exp(-p[i + 2] / (TUNE.pickupPx * unit)); l.drawImage(m.scratch, p[i] - m.bx, p[i + 1] - m.by, P, P, 0, 0, P, P);   // wet paint ahead replaces the load; bare paper leaves it alone
+    ctx.drawImage(m.load, 0, 0, P, P, p[i], p[i + 1], P, P); PERF.steps++; }
+  ctx.restore(); p.length = 0;
+}
+function edgeSound(m,axis,speed,contacts){const key='edge-'+m.id+'-'+axis+(m[axis]<m.r?'low':'high');contacts.add(key);
+  if(!m.held&&!M.contacts.has(key)&&!m.edgeTick?.has(key)){sound?.contact(acoustic(m),traySound,speed/unit,key);if(!m.edgeTick)m.edgeTick=new Set();m.edgeTick.add(key);}}
+function tick(now){
+  const w0 = performance.now(), dt = Math.min(.034, (now - M.last) / 1000) || .016; perfFrame(now - M.last); M.last = now; dev();
+  const contacts=new Set();
+  for (const m of M.list){                                                                                                   // step 1: physics, and where marks are due
+    m.audioX=m.x;m.audioY=m.y;
+    if (m.held){const dx=m.held.x-m.x,dy=m.held.y-m.y;if(Math.hypot(dx,dy)<=.25){m.vx=m.vy=0;}else{const k=.55/dt,lim=3200*unit;m.vx=clamp(dx*k,-lim,lim);m.vy=clamp(dy*k,-lim,lim);}}
+    else if (m.vx || m.vy){ const f = Math.exp(-TUNE.fric * dt / Math.sqrt(m.w)); m.vx *= f; m.vy *= f;                                                  // a heavy marble keeps rolling for longer
+      const v = Math.hypot(m.vx, m.vy), drag = TUNE.roll * unit * dt, cap = TUNE.topV * unit * m.gain;
+      if (v <= drag + 4 * unit){ m.vx = m.vy = 0; } else { const k = Math.min(1, cap / v) * (1 - drag / v); m.vx *= k; m.vy *= k; } }
+    const sp = Math.hypot(m.vx, m.vy); m.path.length = 0; if (!sp) continue;
+    const gap = Math.max(2, m.r * Q.gap[Q.level]), n = Math.max(1, Math.ceil(sp * dt / gap));
+    for (let i = 0; i < n; i++){
+      m.x += m.vx * dt / n; m.y += m.vy * dt / n;
+      if(m.x<m.r||m.x>W-m.r)edgeSound(m,'x',Math.abs(m.vx),contacts);
+      if(m.y<m.r||m.y>H-m.r)edgeSound(m,'y',Math.abs(m.vy),contacts);
+      if (m.x < m.r){ m.x = m.r; m.vx = Math.abs(m.vx) * m.bounce; } else if (m.x > W - m.r){ m.x = W - m.r; m.vx = -Math.abs(m.vx) * m.bounce; }
+      if (m.y < m.r){ m.y = m.r; m.vy = Math.abs(m.vy) * m.bounce; } else if (m.y > H - m.r){ m.y = H - m.r; m.vy = -Math.abs(m.vy) * m.bounce; }
+      const moved = Math.hypot(m.x - m.sx, m.y - m.sy); if (moved >= gap * .9){ m.path.push(m.x, m.y, moved); m.sx = m.x; m.sy = m.y; }
+    }
+  }
+  for (let i = 0; i < M.list.length; i++) for (let j = i + 1; j < M.list.length; j++){                    // marbles knock each other; the heavy one shoves the light one
+    const a = M.list[i], b = M.list[j], dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy), min = a.r + b.r;
+    const key='pair-'+a.id+'-'+b.id;if(d<min+1)contacts.add(key);
+    if (d > 0 && d < min){ const nx = dx / d, ny = dy / d, wa = a.held ? 1e6 : a.w, wb = b.held ? 1e6 : b.w, push = min - d;
+      a.x -= nx * push * wb / (wa + wb); a.y -= ny * push * wb / (wa + wb); b.x += nx * push * wa / (wa + wb); b.y += ny * push * wa / (wa + wb);
+      const rel = (b.vx - a.vx) * nx + (b.vy - a.vy) * ny; if (rel < 0){ const j2 = -(1 + (a.bounce + b.bounce) / 2) * rel / (1 / wa + 1 / wb);
+        if(!M.contacts.has(key))sound?.contact(acoustic(a),acoustic(b),-rel/unit,key);
+        if (!a.held){ a.vx -= j2 / wa * nx; a.vy -= j2 / wa * ny; } if (!b.held){ b.vx += j2 / wb * nx; b.vy += j2 / wb * ny; } } } }
+  for (const m of M.list) if (m.path.length) smearRead(m);                                                  // every read of the sheet happens here, before any write
+  for (const m of M.list) if (m.path.length) smearWrite(m);
+  for (const m of M.list){ m.x = clamp(m.x, m.r, W - m.r); m.y = clamp(m.y, m.r, H - m.r); show(m); }
+  M.contacts=contacts;
+  sound?.rolling(M.list.map(m=>{if(m.edgeTick)m.edgeTick.clear();return {id:m.id,material:m.kind.look,weight:m.w,speed:Math.hypot(m.x-m.audioX,m.y-m.audioY)/dt/unit};}));
+  PERF.work[PERF.n % PERF.work.length] = performance.now() - w0;
+  if (PERF.n && PERF.n % 90 === 0) judge();
+  if (M.frozen || !M.list.some(moving)){ M.raf = 0;sound?.end('roll0');sound?.end('roll1');perfSummary();showPerf();changed();return; }
+  M.raf = requestAnimationFrame(tick);
+}
+function judge(){                                      // a device that cannot keep up gets wider step spacing; it never goes back up mid-session
+  const n = Math.min(PERF.n, 90), fr = [], wk = []; for (let i = 0; i < n; i++){ const j = (PERF.n - 1 - i) % PERF.ring.length; fr.push(PERF.ring[j]); wk.push(PERF.work[j]); }
+  fr.sort((a, b) => a - b); wk.sort((a, b) => a - b); const f95 = fr[Math.floor(.95 * (n - 1))], w95 = wk[Math.floor(.95 * (n - 1))];
+  if (n >= 45 && Q.level < Q.gap.length - 1 && (w95 > 9 || f95 > 27)) Q.level++;
+}
+
+/* ---------- read-out (lab only): the frame figures are for the last burst of marble movement ---------- */
+const PERF = {ring:new Float32Array(1500), work:new Float32Array(1500), n:0, steps:0}, LAST = {splat:'', run:''};
+function perfFrame(ms){ if (ms > 0 && ms < 1000) PERF.ring[PERF.n++ % PERF.ring.length] = ms; }
+const pct = (arr, n, q) => { const a = Array.from(arr.subarray(0, Math.min(n, arr.length))).sort((x, y) => x - y); return a.length ? a[Math.floor(q * (a.length - 1))] : 0; };
+function perfSummary(){ const n = PERF.n; if (n < 5) return; let sum = 0; for (let i = 0; i < Math.min(n, PERF.ring.length); i++) sum += PERF.ring[i];
+  LAST.run = `marbles: ${(1000 / (sum / Math.min(n, PERF.ring.length))).toFixed(1)} fps avg  frame p95 ${pct(PERF.ring, n, .95).toFixed(1)} ms  work p95 ${pct(PERF.work, n, .95).toFixed(2)} ms\n         ${PERF.steps} steps in ${n} frames  spacing level ${Q.level}`;
+  window.__lab.lastRun = {fps: 1000 / (sum / Math.min(n, PERF.ring.length)), p95: pct(PERF.ring, n, .95), workP95: pct(PERF.work, n, .95), smears: PERF.steps, frames: n, level: Q.level}; }
+function showPerf(){if(!document.body.classList.contains('lab'))return;perfEl.textContent = `${paint.width}x${paint.height} dpr ${DPR.toFixed(2)}  patch ${M.P || '-'} px  sheet  turn ${VIEW.r}  zoom x${VIEW.z.toFixed(2)}\n${M.list.map(m => m.kind.name).join(', ') || 'no marbles'}\n${LAST.splat}\n${LAST.run}`.trim(); }
+
+/* ---------- one local draft and deliberate export; never write artwork to the server ---------- */
+let studioReady=true,draftTimer=0,draftRevision=0,savedRevision=0,draftWriting=false,draftPromise=null,leaving=false,exportUrl='',exportFile=null,exportEpoch=0;
+const draft=window.StudioDraft&&!QS.has('lab')&&!QS.has('demo')&&QS.get('draft')!=='off'?new StudioDraft():null;
+function draftNotice(text){const el=$('#draft-status');el.textContent=text;el.hidden=!text;}
+function changed(){draftRevision++;scheduleDraft();}
+function scheduleDraft(){if(!draft||!studioReady||draft.failed||savedRevision===draftRevision)return;clearTimeout(draftTimer);draftTimer=setTimeout(flushDraft,1000);}
+function canvasBlob(canvas){return new Promise((resolve,reject)=>{try{canvas.toBlob(blob=>blob?resolve(blob):reject(Error('Picture unavailable')),'image/png');}catch(e){reject(e);}});}
+async function flushDraft(){
+  clearTimeout(draftTimer);draftTimer=0;
+  if(draftWriting)return draftPromise;
+  if(!draft||!studioReady||draft.failed||draftRevision===savedRevision)return;
+  if(ptrs.size||M.raf){scheduleDraft();return;}
+  draftWriting=true;const revision=draftRevision;
+  draftPromise=(async()=>{try{const blank=sheetBlank,blob=await canvasBlob(paint);await draft.write(blob,blank);savedRevision=revision;draftNotice('');}
+  catch(_){draft.failed=true;draftNotice('Device saving is unavailable. Use the save arrow to keep your picture.');}
+  finally{draftWriting=false;draftPromise=null;if(draftRevision!==savedRevision)scheduleDraft();}})();return draftPromise;
+}
+async function leaveStudio(url){
+  if(leaving)return;leaving=true;sound?.stop();haltMarbles();clearGestures();changed();app.style.pointerEvents='none';
+  try{await Promise.race([(async()=>{await flushDraft();if(draftRevision!==savedRevision)await flushDraft();})(),new Promise(r=>setTimeout(r,1800))]);}
+  finally{location.href=url;}
+}
+async function restoreDraft(){
+  if(!draft)return;studioReady=false;draftNotice('Opening your picture…');
+  try{const record=await draft.read();
+    if(record){if(record.version!==1||record.width!==W||record.height!==H||(!(record.blob instanceof Blob)&&!(record.data instanceof ArrayBuffer)))throw Error('Draft not recognised');
+      await new Promise((resolve,reject)=>{const image=new Image(),url=URL.createObjectURL(record.blob||new Blob([record.data],{type:'image/png'}));let done=false;
+        const finish=error=>{if(done)return;done=true;clearTimeout(timer);URL.revokeObjectURL(url);error?reject(error):resolve();};
+        const timer=setTimeout(()=>finish(Error('Draft unavailable')),2500);
+        image.onload=()=>{if(done)return;dev();ctx.drawImage(image,0,0);sheetBlank=record.blank===true;finish();};image.onerror=()=>finish(Error('Draft unavailable'));image.src=url;
+      });
+    }draftNotice('');
+  }catch(_){draft.failed=true;draftNotice('Device saving is unavailable. Use the save arrow to keep your picture.');}
+  finally{studioReady=true;}
+}
+function closeExport(){exportEpoch++;$('#export-panel').hidden=true;app.removeAttribute('aria-hidden');if(exportUrl){URL.revokeObjectURL(exportUrl);exportUrl='';}exportFile=null;$('#export-image').removeAttribute('src');$('#download-picture').removeAttribute('href');$('#save').focus();}
+async function openExport(){
+  if(!studioReady)return;sound?.stop();haltMarbles();clearGestures();changed();const epoch=++exportEpoch;
+  $('#export-panel').hidden=false;app.setAttribute('aria-hidden','true');$('#export-image').hidden=true;$('#download-picture').hidden=true;$('#share-picture').hidden=true;
+  $('#export-note').textContent='Getting your picture ready…';$('#close-export').focus();
+  const c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');g.fillStyle='#fffdf6';g.fillRect(0,0,W,H);g.drawImage(paint,0,0);
+  try{const blob=await canvasBlob(c);if(epoch!==exportEpoch)return;exportUrl=URL.createObjectURL(blob);$('#export-image').src=exportUrl;$('#export-image').hidden=false;$('#download-picture').href=exportUrl;$('#download-picture').hidden=false;
+    try{exportFile=new File([blob],'my-painting.png',{type:'image/png'});$('#share-picture').hidden=!(navigator.canShare&&navigator.canShare({files:[exportFile]}));}catch(_){exportFile=null;}
+    $('#export-note').textContent='Save your picture, or press and hold the picture to save it. Your artwork stays on this device.';
+  }catch(_){if(epoch===exportEpoch)$('#export-note').textContent='The picture could not be prepared. Go back and try again.';}
+  finally{c.width=c.height=1;}
+}
+onPress($('#save'),openExport);onPress($('#close-export'),closeExport);
+$('#share-picture').addEventListener('click',()=>{if(exportFile&&navigator.share)navigator.share({files:[exportFile]}).catch(e=>{if(e.name!=='AbortError')$('#export-note').textContent='Use Save picture, or press and hold the picture to save it.';});});
+$('#export-panel').addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();closeExport();}else if(e.key==='Tab'){const items=[...$('#export-card').querySelectorAll('button,a')].filter(el=>!el.hidden);const first=items[0],last=items[items.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
+
+/* ---------- test picture + scripted demo ---------- */
+function testPicture(){
+  css(); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1; ctx.lineCap = 'round';
+  for (let i = 0; i < 6; i++){ ctx.strokeStyle = COLOURS[(i * 2 + 1) % 16]; ctx.lineWidth = 46 * unit; ctx.beginPath(); const y = H * (.14 + i * .145);
+    ctx.moveTo(W * .08, y); ctx.bezierCurveTo(W * .3, y - 60 * unit, W * .6, y + 60 * unit, W * .92, y); ctx.stroke(); }
+  const b = S.bucket; S.bucket = COLOURS.slice(0, 8);
+  splat(W * .25, H * .3, 1, 0, 0, 900, S.bucket); splat(W * .2, H * .75, .8, -.6, 2300, 0, S.bucket); splat(W * .7, H * .6, -.7, -.7, 1200, 0, S.bucket); splat(W * .8, H * .25, 1, 0, 0, 80, S.bucket);
+  S.bucket = b;
+}
+window.__lab = {splat, testPicture, addMarble, putAway, setTool, stampAt, STAMPS, toScreen, toSheet, KINDS, TUNE, M, S, GEO, VIEW, sound, lastRun:null,
+  undo,redo,pushUndo,changed,flushDraft,openExport,closeExport,get history(){return {undo:undoStack.length,redo:redoStack.length};},get draftState(){return {ready:studioReady,failed:!!draft?.failed,revision:draftRevision,saved:savedRevision,writing:draftWriting};},
+  inked(){ const d = ctx.getImageData(0, 0, W, H).data; let n = 0; for (let i = 3; i < d.length; i += 4 * 97) if (d[i]) n++; return n; },   /* test hook only: never call getImageData in play */
+  get paper(){ return {W, H, bw: paint.width, bh: paint.height}; }};
+place(); setTool('brush');historyButtons();restoreDraft();
+if (QS.has('demo')){ testPicture(); setTool('marbles'); for (let i = 0; i < 3; i++){ const m = addMarble(), a = rnd() * TAU; m.vx = Math.cos(a) * 900 * unit; m.vy = Math.sin(a) * 900 * unit; } wake();
+  const t = setInterval(() => { if (!M.raf){ clearInterval(t); document.body.dataset.done = '1'; } }, 100); }
+})();
+</script>
+</body>
+</html>
