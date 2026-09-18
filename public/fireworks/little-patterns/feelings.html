@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#fffbe7">
+  <meta name="description" content="Match pictures, meet people and explore feeling words with Nook. Quiet, optional and at your own pace.">
+  <title>Feelings · Nook's Garden</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="shared.css?v=20260917i">
+  <link rel="stylesheet" href="feelings.css?v=20260917i">
+  <script src="feelings-data.js?v=20260917i" defer></script>
+  <script src="feelings-art.js?v=20260917i" defer></script>
+  <script src="learning.js?v=20260917i" defer></script>
+  <script src="voice-library.js?v=20260917i" defer></script>
+  <script src="shared.js?v=20260917i" defer></script>
+  <script src="feelings.js?v=20260917i" defer></script>
+</head>
+<body data-game="feelings">
+  <a class="skip-link" href="#activity">Skip to activity</a>
+  <div id="page" class="feelings-shell">
+    <header class="feelings-header">
+      <button id="back" type="button">‹ Back</button>
+      <h1 id="screen-title">Feelings</h1>
+      <button id="menu-open" type="button">Menu</button>
+    </header>
+    <div class="page-sound"><button id="page-sound" type="button" data-sound aria-pressed="true">Sound: on</button></div>
+    <main id="activity" tabindex="-1" aria-labelledby="screen-title">
+      <p id="status" class="feeling-prompt" role="status" aria-live="polite" aria-atomic="true"></p>
+      <div id="task"></div>
+      <section id="feelings-menu" hidden aria-label="Feelings menu">
+        <div class="menu-buttons">
+          <button type="button" id="hear-again">Hear again</button>
+          <button type="button" data-player>Player 1</button>
+          <button type="button" id="choose-puzzle">Choose a feeling</button>
+          <button type="button" id="choose-activity">Change activity</button>
+          <button type="button" id="open-settings">Letters and colours</button>
+          <button type="button" id="open-about">For grown-ups</button>
+        </div>
+      </section>
+    </main>
+    <div class="garden-edge" aria-hidden="true"></div>
+  </div>
+  <noscript><p>Enable JavaScript to play Feelings. <a href="garden.html">Back to Nook's Garden</a></p></noscript>
+</body>
+</html>

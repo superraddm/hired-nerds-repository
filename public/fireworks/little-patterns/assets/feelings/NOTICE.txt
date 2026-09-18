@@ -1,0 +1,13 @@
+Nook's Garden: Feelings illustrations
+
+The four human characters, expression drawings, seated poses and everyday story scenes in
+feelings-art.js are original SVG artwork authored for this project in September
+2026. They extend the project's original Feelings design sheet. No third-party
+characters, photographs, commercial emotion cards, stock art or emoji are used.
+
+These original illustrations may be used, modified and redistributed under the
+same terms as the game's LICENSE.txt. They are examples of expressions and poses,
+not diagnostic pictures or a universal dictionary of a person's internal state.
+
+The existing Nook mascot is reused from this project's assets/nook.png. Existing
+Mulberry symbols elsewhere retain their separate assets/symbols/NOTICE.txt.

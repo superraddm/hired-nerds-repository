@@ -53,3 +53,10 @@ test('every bundled clip is a bounded, non-silent mono WAV without clipped sampl
     assert.ok(peak > 1000 && peak < 32767, text);
   }
 });
+
+test('corrected alphabet keys use explicit model phonemes rather than respellings',()=>{
+ const specs=JSON.parse(fs.readFileSync(path.join(__dirname,'little-patterns-phonics.json'),'utf8'));
+ assert.deepEqual(Object.values(specs).map(s=>s.letter),['A','E','I','L','O','R','X','Z']);
+ for(const[key,spec]of Object.entries(specs)){assert.equal(L.LETTER_SOUNDS[spec.letter],key);assert.ok(manifest.clips[key]);assert.ok(spec.phonemes.length>0);}
+ assert.equal(specs['phonics-o'].phonemes,'ˈɒ');assert.equal(specs['phonics-i'].phonemes,'ˈɪ');assert.equal(specs['phonics-z'].phonemes,'zːə');
+});

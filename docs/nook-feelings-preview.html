@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nook's Garden — Feelings design sheet</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#edf1eb;color:#243b54;font-family:system-ui,sans-serif}main{max-width:1400px;margin:auto;padding:28px}h1{font-size:30px;margin:0 0 8px}p{line-height:1.5}.intro{max-width:950px;margin:0 0 28px;color:#475a60}.sheet{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}.label{margin:0 0 12px;font-size:18px}.screen{min-height:610px;background:#fffce6;border:2px solid #cad4b9;border-radius:28px;overflow:hidden;position:relative;padding:18px 20px 28px;box-shadow:0 6px 0 #d5dfd0}.screen:after{content:'';height:14px;background:#cbdc9f;position:absolute;bottom:0;left:0;right:0;border-radius:60% 70% 0 0}header{display:flex;align-items:center;justify-content:space-between;gap:8px}.control{display:flex;min-height:48px;align-items:center;justify-content:center;padding:10px 16px;border:2px solid #b3c4a0;border-radius:16px;background:#fffef3;font-weight:650;color:#243b54}header .control{font-size:14px;padding:10px 12px}h2{font-size:18px;margin:0}.prompt{text-align:center;min-height:54px;margin:18px 0 8px;font-size:20px;font-weight:650;line-height:1.35}.portrait{display:block;width:162px;height:180px;margin:auto}.word{text-align:center;font-size:25px;letter-spacing:.05em;font-weight:750;margin:0}.hear{font-size:13px;font-weight:550;letter-spacing:0;margin:4px 0 18px;text-align:center}.answers{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}.answer{background:#fff5cf;border:2px solid #c8b46c;border-radius:22px;padding:8px;min-height:114px;display:flex;align-items:center;justify-content:center}.answer svg{width:85px;height:100px}.actions{display:flex;gap:12px;justify-content:center;margin:20px 0}.primary{background:#386b5b;color:white;border-color:#2e594e}.caption{font-size:15px;color:#43575e;margin:16px 3px 0}.context{margin:6px 0 0;text-align:center;font-size:18px}.scene{position:relative}.puzzle{position:absolute;bottom:5px;left:calc(50% + 42px);width:38px;height:38px;background:#d8c4e6;border:3px solid #846799;border-radius:6px;transform:rotate(8deg)}.people .answers .answer{font-size:21px;min-height:60px;padding:14px 8px}.people .prompt{margin-bottom:18px}.people .actions{margin:12px 0}.me .prompt{margin:30px 0 24px}.me-list{display:grid;gap:12px}.me-card{display:flex;gap:20px;align-items:center;justify-content:flex-start;background:#fff5cf;border:2px solid #c8b46c;border-radius:19px;padding:6px 24px;min-height:87px;font-size:23px;font-weight:700}.me-card svg{width:53px;height:69px}.me .actions{margin:18px 0 12px}.note{font-size:14px;color:#526265;margin:22px 0 0}svg{overflow:visible}.hidden-defs{position:absolute;width:0;height:0;overflow:hidden}@media(max-width:1000px){.sheet{grid-template-columns:1fr;max-width:420px;margin:auto}main{padding:20px}.screen{min-height:600px}}
+</style>
+<svg class="hidden-defs" aria-hidden="true"><defs>
+<g id="body"><path d="M23 169 Q24 119 55 115 L85 115 Q116 119 117 169" fill="#8b75b1"/><path d="M59 106 L59 126 Q70 135 81 126 L81 106" fill="#ce906b"/><ellipse cx="70" cy="67" rx="43" ry="51" fill="#eab08a"/><path d="M27 66 Q17 15 59 12 Q102 -1 115 42 L111 67 L100 42 Q77 49 59 32 Q43 48 30 47" fill="#3d303d"/><ellipse cx="53" cy="72" rx="3.6" ry="4.5" fill="#353445"/><ellipse cx="87" cy="72" rx="3.6" ry="4.5" fill="#353445"/><path d="M70 76 L66 85 L73 86" fill="none" stroke="#a66e57" stroke-width="2.6" stroke-linecap="round"/></g>
+<g id="sad"><use href="#body"/><path d="M43 61 L58 55 M82 55 L97 61 M57 101 Q70 89 84 101" fill="none" stroke="#4b3b44" stroke-width="3.4" stroke-linecap="round"/></g>
+<g id="happy"><use href="#body"/><path d="M43 57 Q52 52 60 57 M80 57 Q88 52 97 57 M55 94 Q70 113 85 94" fill="none" stroke="#4b3b44" stroke-width="3.4" stroke-linecap="round"/></g>
+<g id="angry"><use href="#body"/><path d="M43 55 L59 61 M81 61 L97 55 M57 98 L84 98" fill="none" stroke="#4b3b44" stroke-width="3.4" stroke-linecap="round"/></g>
+</defs></svg>
+<main>
+<h1>Nook's Garden · Feelings</h1>
+<p class="intro">Three separate, quiet activities. Each panel below represents a different screen, never one combined game screen. This is a static design sheet: the controls do not play a game. The original expression drawings are early art studies, not a finished content bank.</p>
+<div class="sheet">
+<section><h3 class="label">1 · Match a picture</h3><div class="screen">
+<header><span class="control">‹ Back</span><h2>Match</h2><span class="control">Menu</span></header>
+<p class="prompt">Find the same picture.</p>
+<svg class="portrait" viewBox="0 0 140 175" role="img" aria-label="An illustrated person with a gently downturned mouth"><use href="#sad"/></svg>
+<p class="word">SAD</p><p class="hear">Hear the word</p>
+<div class="answers"><div class="answer"><svg viewBox="0 0 140 175" role="img" aria-label="A smiling expression"><use href="#happy"/></svg></div><div class="answer"><svg viewBox="0 0 140 175" role="img" aria-label="The matching expression"><use href="#sad"/></svg></div></div>
+<div class="actions"><span class="control">Next ›</span></div>
+</div><p class="caption">An exact picture match introduces the word. Afterwards: <strong>Try the pose</strong> or <strong>Next</strong>. Copying is always optional.</p></section>
+<section><h3 class="label">2 · Ask a person</h3><div class="screen people">
+<header><span class="control">‹ Back</span><h2>People</h2><span class="control">Menu</span></header>
+<p class="prompt">How might they feel?</p>
+<div class="scene"><svg class="portrait" viewBox="0 0 140 175" role="img" aria-label="An illustrated person with slightly drawn brows and a closed mouth"><use href="#angry"/></svg><span class="puzzle" aria-hidden="true"></span></div>
+<p class="context">Ali's puzzle piece will not fit.</p>
+<div class="answers"><span class="answer">ANGRY</span><span class="answer">WORRIED</span></div>
+<div class="actions"><span class="control">Not sure</span><span class="control primary">Ask Ali</span><span class="control">Next ›</span></div>
+</div><p class="caption">A guess is optional. Ask reveals: <strong>“I feel angry.”</strong> No guess is marked wrong. Faces offer clues; people can tell us more.</p></section>
+<section><h3 class="label">3 · A word for me</h3><div class="screen me">
+<header><span class="control">‹ Back</span><h2>Me</h2><span class="control">Menu</span></header>
+<p class="prompt">A word for my feeling.</p>
+<div class="me-list"><div class="me-card"><svg viewBox="0 0 140 175" aria-hidden="true"><use href="#happy"/></svg>HAPPY</div><div class="me-card"><svg viewBox="0 0 140 175" aria-hidden="true"><use href="#sad"/></svg>SAD</div><div class="me-card"><svg viewBox="0 0 140 175" aria-hidden="true"><use href="#angry"/></svg>ANGRY</div></div>
+<div class="actions"><span class="control">More feelings</span></div><div class="actions"><span class="control">Not sure</span></div>
+</div><p class="caption">All choices are valid. More feelings includes <strong>calm, worried, excited</strong> and <strong>something else</strong>. A selection stays only on this screen.</p></section>
+</div>
+<p class="note">Revised after Fable 5.1's text-design review, 16 September 2026. No camera, microphone, scoring, automatic progression or recorded feeling history. Original human art; no TV characters or emoji. Sad and angry receive the same calm treatment as every other word.</p>
+</main>
+</html>

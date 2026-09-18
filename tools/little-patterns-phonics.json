@@ -1,0 +1,10 @@
+{
+  "phonics-a": {"letter": "A", "phonemes": "ˈa", "example": "Short a, as in apple; Ah"},
+  "phonics-e": {"letter": "E", "phonemes": "ˈɛ", "example": "Short e, as in egg; Eh"},
+  "phonics-i": {"letter": "I", "phonemes": "ˈɪ", "example": "Short i, as in in; not eye"},
+  "phonics-l": {"letter": "L", "phonemes": "əl", "example": "Ul, ending in l"},
+  "phonics-o": {"letter": "O", "phonemes": "ˈɒ", "example": "Short o, as in off or on"},
+  "phonics-r": {"letter": "R", "phonemes": "ɹː", "example": "Sustained r; rurrrr"},
+  "phonics-x": {"letter": "X", "phonemes": "kəs", "example": "Kus, one sound sequence rather than letter names"},
+  "phonics-z": {"letter": "Z", "phonemes": "zːə", "example": "Voiced zzzuh, not s"}
+}

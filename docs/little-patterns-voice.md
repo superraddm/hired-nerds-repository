@@ -1,7 +1,7 @@
 # Shared voice library
 
 Implemented 15 September 2026; extended the same day for review round 2. The
-built-in game speech now uses 117 bundled WAV clips, about 4.31 MiB in total. Every device receives the same audio, with no
+built-in game speech now uses 255 bundled WAV clips, about 13.26 MiB in total, including the locally implemented Feelings activity. Every device receives the same audio, with no
 runtime TTS model, LLM request, speech API or server language pack.
 
 ## Voice and rights record
@@ -39,13 +39,18 @@ player data is used for generation.
 - A greeting sample: "Hello! I'm Nook. Let's play."
 - A generated `voice-library.js` provides a normalised text-to-file lookup.
   Hash filenames contain no user names or writing.
-- One reusable audio element; clips load on a deliberate tap, never in bulk.
+- One reusable audio element. Ordinary clips load on a deliberate tap or an
+  opted-in automatic prompt. Feelings' Me screen is the privacy exception: all
+  twelve generic acknowledgement clips load as a fixed set before a choice, then
+  play from local Blob URLs through the same player. Selecting a feeling does
+  not request its individual file from the server. Failed clips stay silent;
+  there is no selection-dependent fallback.
   Pause, mute, changing activity, changing player, and hiding the page cancel
   playback. A failed clip does not silently switch to another voice.
 - Grown-up-supplied familiar words outside the library use an explicitly local
   English device voice. They never go to a speech server. This is the one case
   where the voice can differ between devices.
-- Whole-word pronunciation is implemented. This is not a phonics library.
+- Whole-word readback is available. Eight keyboard sounds now use explicit phoneme synthesis; the remaining eighteen retain their earlier spelling-based approximations.
 
 ## Rebuilding
 
@@ -66,7 +71,8 @@ The builder verifies the engine archive and model hashes before execution:
 
 Run `python tools/build-little-patterns-voice.py` from the repository root.
 Python's standard library, Node and the downloaded Piper executable suffice.
-The phrase bank is `spokenBank()` in `learning.js`, shared with the voice test; it does not inspect browser storage.
+The phrase bank is `spokenBank()` in `learning.js`, shared with the voice test;
+it also includes `feelings-data.js`'s spoken bank. It does not inspect browser storage.
 Generation uses length scale 1.15, noise scale 0.4 and noise width 0.65. Output
 is mono PCM16 at 24000 Hz (pitch raised from the original 22050 Hz), with silence
 trimmed and volume balanced below clipping. These settings are baked into files.
@@ -86,3 +92,51 @@ serves WAV MIME types and byte ranges for media playback.
 These checks do not establish perceived voice quality, phonics correctness or
 real iPad audio behaviour. Audition the greeting, single words and sentences on
 the target devices. The current preview is implemented locally, not published.
+
+
+17 September, latest Me UI revision: selection and character replay now use the
+existing bare feeling-name clips. The fixed twelve-name bundle preloads on page
+entry; no selection-dependent request occurs. The old “You chose…” recordings
+remain in the library but are no longer used by Me. No recordings were regenerated
+or replaced for this change. Cadence improvements are discussed in the Feelings
+build record and await a sample comparison.
+
+
+## Typed text and corrected phonics (17 September)
+
+Something else opens a 160-character text area. Tapping its text reads it through
+`audio.speakPrivate`, which bypasses the bundled voice lookup entirely, uses only
+an English `localService === true` voice, respects mute and cancels on edits or
+navigation. Even typing a known word such as HAPPY makes no selected-clip request.
+No typed feeling enters storage, logs, URLs, speech APIs or the server. If the
+browser has no offline English voice, the UI says so and preserves the visible
+text. This is a device voice, not the identical Jenny recording across devices.
+
+In Words, clicking the input reads the current whole word/phrase: existing bundled
+content uses Jenny; other text uses the existing offline device fallback. Merely
+focusing the field while typing does not trigger readback. This is pronunciation,
+not automatic grapheme segmentation or blending of arbitrary English words.
+
+The eight reported keyboard sounds A/E/I/L/O/R/X/Z now use the explicit phonemes
+in `tools/little-patterns-phonics.json`. A copied build-only model configuration
+sets `phoneme_type` to `text`, retaining the original pinned phoneme ID map and
+model. Thus an input such as kss is no longer interpreted as letter names. The
+normal model configuration is untouched. Cache filenames include the phoneme
+recipe so old files cannot mask corrections. All 203 shared keys retain byte
+identical recordings. The build also repaired a stale corrupted-apostrophe key
+for “That’s the one”, regenerating that existing line from the current source.
+Nook's voice model, accent, pacing and pitch settings were not changed.
+
+I is interpreted as the short vowel in “in”, since the reported “eye” was a letter
+name. A is the short vowel in apple; O is the British short vowel in off/on. L,
+R, X and Z follow the parent's requested Ul, sustained r, Kus and voiced zzzuh.
+These examples are generated, not teacher-verified phonics recordings. A parent
+listening page is available at `/little-patterns/phonics-review.html`; actual
+pronunciation and older-device audio still require listening on target devices.
+
+Rebuild the bank with `python tools/build-little-patterns-voice.py`, then rebuild
+the listening page with `node tools/build-little-patterns-phonics-review.cjs`.
+No live speech service or LLM was added, and nothing was deployed.
+
+
+Match praise now uses six rotating approved openers and forty complete character/feeling statements, for example ?Good matching! Jo is disappointed.? Playback joins an opener with the complete statement using the existing single audio player. Four new opener clips and forty statements were generated locally using the same Jenny model and settings; the unused ?Same picture? entry leaves the manifest. No runtime speech service or deployment was added.

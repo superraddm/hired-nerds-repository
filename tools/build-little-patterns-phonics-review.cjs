@@ -1,0 +1,9 @@
+// Parent listening page; no speech services or runtime model.
+const fs=require('node:fs'),path=require('node:path');
+const root=path.join(__dirname,'../public/fireworks/little-patterns');
+const specs=require('./little-patterns-phonics.json');
+const voice=JSON.parse(fs.readFileSync(path.join(root,'assets/voice/manifest.json'),'utf8'));
+const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const cards=Object.entries(specs).map(([key,spec])=>`<section><h2>${spec.letter}</h2><p>${esc(spec.example)}</p><audio controls preload="none" src="${voice.clips[key].file}" aria-label="Hear the ${spec.letter} sound"></audio></section>`).join('');
+fs.writeFileSync(path.join(root,'phonics-review.html'),`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Alphabet sounds · Listening review</title><style>body{font:18px/1.5 "Trebuchet MS",Arial,sans-serif;background:#fffbe7;color:#253e59;margin:0}main{max-width:850px;padding:24px;margin:auto}a{color:#345980;display:inline-block;padding:12px 0}h1{line-height:1.2}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px}section{padding:18px;border:2px solid #82956f;border-radius:20px;background:#fffef3}h2{margin:0;font-size:2rem}audio{width:100%;min-height:54px}a:focus-visible{outline:3px solid #6c4892}</style></head><body><main><a href="garden.html">Back to the Garden</a><h1>Alphabet sounds</h1><p>Eight revised sounds using Nook’s existing voice with explicit phoneme instructions. Tap a player to listen. Nothing plays automatically.</p><p>These are generated examples for listening review, not recordings verified by a phonics teacher. I uses the short sound in “in”. The other eighteen keyboard sounds keep their existing recordings.</p><div class="cards">${cards}</div></main></body></html>\n`);
+console.log('Built eight-sound listening page.');

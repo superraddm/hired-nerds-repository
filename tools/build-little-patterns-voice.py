@@ -21,6 +21,7 @@ MODEL_SHA256 = '469c630d209e139dd392a66bf4abde4ab86390a0269c1e47b4e5d7ce81526b01
 ENGINE_SHA256 = 'f3c58906402b24f3a96d92145f58acba6d86c9b5db896d207f78dc80811efcea'
 CONFIG_SHA256 = 'a9a7a93a317c9a3cb6563e37eb057df9ef09c06188a8a4341b0fcb58cba54dd4'
 PITCH_RATE = 24000  # A small fixed pitch lift from 22050 Hz, identical on every device.
+PHONICS = json.loads((ROOT / 'tools' / 'little-patterns-phonics.json').read_text(encoding='utf-8'))
 
 
 def bank():
@@ -68,16 +69,31 @@ def main():
     raw.mkdir(exist_ok=True)
     entries = []
     for text in bank():
-        name = hashlib.sha256(text.encode()).hexdigest()[:16] + '.wav'
+        phonics = PHONICS.get(text)
+        recipe = 'phonics-v1:' + phonics['phonemes'] if phonics else text
+        name = hashlib.sha256(recipe.encode()).hexdigest()[:16] + '.wav'
         # READ is the present-tense verb in this word bank, pronounced "reed". Openers keep their exclamation for a brighter delivery.
-        spoken = {'read': 'reed.', 'yes': 'Yes!', 'spot on': 'Spot on!'}.get(text, text + '.')
-        entries.append({'key': text, 'name': name, 'text': spoken, 'output_file': str(raw / name)})
+        spoken = phonics['phonemes'] + '.' if phonics else {'read': 'reed.', 'yes': 'Yes!', 'spot on': 'Spot on!', 'correct': 'Correct!', 'good matching': 'Good matching!', "that's right": "That's right!", 'well done': 'Well done!'}.get(text, text + '.')
+        entries.append({'key': text, 'name': name, 'text': spoken, 'phonics': bool(phonics), 'output_file': str(raw / name)})
     pending = [e for e in entries if '--force' in sys.argv or not pathlib.Path(e['output_file']).exists()]
-    script = '\n'.join(json.dumps({'text': e['text'], 'output_file': e['output_file']}) for e in pending) + '\n'
     command = [str(BUILD / 'piper' / 'piper.exe'), '--model', str(BUILD / 'jenny.onnx'),
                '--json-input', '--length_scale', '1.15', '--noise_scale', '0.4', '--noise_w', '0.65', '--quiet']
-    if pending:
-        subprocess.run(command, input=script, text=True, encoding='utf-8', cwd=BUILD / 'piper', stdout=subprocess.DEVNULL, check=True)
+    # Text-phoneme mode passes explicit IPA codepoints through the pinned model's
+    # existing phoneme map, bypassing eSpeak's spelling/letter-name interpretation.
+    config = json.loads((BUILD / 'jenny.onnx.json').read_text(encoding='utf-8'))
+    for spec in PHONICS.values():
+        if any(c not in config['phoneme_id_map'] for c in spec['phonemes']):
+            raise ValueError('Phoneme absent from pinned voice: ' + spec['letter'])
+    config['phoneme_type'] = 'text'
+    phonics_config = BUILD / 'phonics.config.json'
+    phonics_config.write_text(json.dumps(config), encoding='utf-8')
+    for is_phonics in (False, True):
+        batch = [e for e in pending if e['phonics'] == is_phonics]
+        if not batch:
+            continue
+        script = '\n'.join(json.dumps({'text': e['text'], 'output_file': e['output_file']}) for e in batch) + '\n'
+        args = command + (['--config', str(phonics_config)] if is_phonics else [])
+        subprocess.run(args, input=script, text=True, encoding='utf-8', cwd=BUILD / 'piper', stdout=subprocess.DEVNULL, check=True)
     clips = {}
     for entry in entries:
         target = OUTPUT / entry['name']
