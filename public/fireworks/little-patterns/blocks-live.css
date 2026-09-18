@@ -3,3 +3,29 @@
 /* The pause overlay stacks vertically, so the shared flex:1 on .primary must not stretch Keep playing through the whole board. */
 .overlay .primary{flex:0 0 auto;width:auto;min-width:170px;max-width:100%;margin-top:6px}
 .controls button small{display:block;font-size:9px;font-weight:normal;letter-spacing:.5px;opacity:.75;line-height:1}
+
+/* Round 3: Nook under the board, a pop on Rows made, a soft band on each finished row and stars for several rows at once. */
+canvas.fx-canvas{position:fixed;inset:0;width:100%;height:100%;aspect-ratio:auto;background:transparent;border-radius:0;pointer-events:none;z-index:20}
+.board-frame.glow{animation:frame-glow .7s ease-in-out}
+.board-frame.glow-big{animation:frame-glow-big 1.6s ease-in-out}
+@keyframes frame-glow{0%,100%{box-shadow:0 5px 0 #cfd6cd}40%{box-shadow:0 5px 0 #cfd6cd,0 0 0 4px #ffe38a,0 0 26px 6px #ffe38aaa}}
+@keyframes frame-glow-big{0%,100%{box-shadow:0 5px 0 #cfd6cd;transform:none}12%{transform:translateY(3px) rotate(-.4deg)}24%{transform:translateY(-2px) rotate(.4deg)}36%{transform:none}30%,70%{box-shadow:0 5px 0 #cfd6cd,0 0 0 5px #ffd866,0 0 44px 12px #ffd866cc}}
+.rows strong{display:inline-block;transform-origin:right center}
+.rows strong.pop{animation:rows-pop .6s ease-in-out}
+.rows strong.pop-big{animation:rows-pop-big .95s ease-in-out}
+@keyframes rows-pop{0%{transform:scale(1)}45%{transform:scale(1.55)}100%{transform:scale(1)}}
+@keyframes rows-pop-big{0%{transform:scale(1);color:inherit}30%{transform:scale(2) rotate(-6deg);color:#a36526}55%{transform:scale(1.7) rotate(5deg);color:#a36526}100%{transform:scale(1);color:inherit}}
+.nook-row{display:flex;align-items:center;gap:12px;height:72px;margin:10px auto 0;width:min(100%,calc(var(--board-limit,520px)/2 + 82px));max-width:350px;padding-left:6px}
+.nook-row img{height:72px;width:auto;flex:0 0 auto;transform-origin:50% 100%}
+.nook-row.bounce img{animation:nook-bounce .6s ease-in-out}
+.nook-say{position:relative;padding:8px 14px;border:2px solid #c0b1d7;background:#f0e7fa;border-radius:16px;font-size:18px;font-weight:900;line-height:1.2;white-space:nowrap;transform-origin:0 60%}
+.nook-say:after{content:"";position:absolute;left:-8px;top:50%;width:11px;height:11px;margin-top:-6px;background:#f0e7fa;border-left:2px solid #c0b1d7;border-bottom:2px solid #c0b1d7;transform:rotate(45deg)}
+.nook-say.pop{animation:say-pop .45s ease-in-out}
+@keyframes say-pop{0%{transform:scale(.6);opacity:.2}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+@keyframes nook-bounce{0%,100%{transform:translateY(0) scale(1)}35%{transform:translateY(-9px) scale(1.04,.97)}70%{transform:translateY(0) scale(.98,1.03)}}
+@media(min-width:750px){.board-frame{--board-limit:calc(100svh - 412px)}.nook-row{--board-limit:calc(100svh - 412px)}}
+@media(max-width:749px){.board-frame{--board-limit:calc(100svh - 345px)}.nook-row{--board-limit:calc(100svh - 345px);height:52px;margin-top:8px;gap:9px}.nook-row img{height:52px}.nook-say{font-size:14px;padding:6px 10px;border-radius:13px}}
+@media(max-height:600px) and (min-width:600px){.nook-row{width:200px;height:44px;margin-top:6px}.nook-row img{height:44px}.nook-say{font-size:13px;padding:5px 9px}}
+.softer .board-frame.glow-big{animation-name:frame-glow}
+@media(max-width:749px){@keyframes rows-pop-big{0%{transform:scale(1);color:inherit}30%{transform:scale(1.6) rotate(-6deg);color:#a36526}55%{transform:scale(1.4) rotate(5deg);color:#a36526}100%{transform:scale(1);color:inherit}}}
+@media(max-width:749px){.board-frame,.nook-row{width:min(100%,calc(var(--board-limit)/2 + 47px))}}

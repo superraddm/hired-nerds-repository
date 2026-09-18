@@ -4,7 +4,7 @@ This reference is generated from learning.js and core.js. It contains all built-
 
 ## Sentences and missing-word answers
 
-Two banks: the picnic (fourteen sentences) and bath and bed time (twelve, several of five words for Word order), all using the same symbol words. The same sentences are also used for Word order. Grown-ups can add up to twelve familiar sentences locally (missing word in capitals); those private additions cannot be listed here. Tapping the sentence says it with “blank” until the answer is checked. Each missing-word round offers its answer plus two alternatives from the listed pool; the answer is typed into the gap. The sentence picture is always visible. Give me a clue first shows the three words’ pictures, then outlines the word that fits. Tapping a word says it, only while sound is on.
+Two banks: the picnic (fourteen sentences) and bath and bed time (twelve, several of five words for Word order), all using the same symbol words. The same sentences are also used for Word order. Grown-ups can add up to twelve familiar sentences locally (missing word in capitals); those private additions cannot be listed here. Tapping the sentence says it with “blank” until the answer is checked. Each missing-word round offers its answer plus two alternatives from the listed pool; the answer is typed into the gap. The sentence picture is always visible. Help! (the button with the hand sign for help) first shows the three words’ pictures, then outlines the word that fits. Tapping a word says it, only while sound is on.
 
 | Scene | Sentence with gap | Answer | Full sentence / word order | Possible word-bank words |
 | --- | --- | --- | --- | --- |
@@ -350,12 +350,7 @@ Take away lives inside the Add activity behind an Add / Take away switch and sha
 
 | Level | Start with | Taken away | Answer | Equation |
 | --- | --- | --- | --- | --- |
-| 2 | 1 | 0 | 1 | 1 − 0 = 1 |
-| 2 | 1 | 1 | 0 | 1 − 1 = 0 |
-| 2 | 2 | 0 | 2 | 2 − 0 = 2 |
 | 2 | 2 | 1 | 1 | 2 − 1 = 1 |
-| 2 | 2 | 2 | 0 | 2 − 2 = 0 |
-| 2 | 3 | 0 | 3 | 3 − 0 = 3 |
 | 2 | 3 | 1 | 2 | 3 − 1 = 2 |
 | 2 | 3 | 2 | 1 | 3 − 2 = 1 |
 | 2 | 3 | 3 | 0 | 3 − 3 = 0 |
@@ -363,29 +358,21 @@ Take away lives inside the Add activity behind an Add / Take away switch and sha
 | 2 | 4 | 1 | 3 | 4 − 1 = 3 |
 | 2 | 4 | 2 | 2 | 4 − 2 = 2 |
 | 2 | 4 | 3 | 1 | 4 − 3 = 1 |
-| 2 | 4 | 4 | 0 | 4 − 4 = 0 |
-| 2 | 5 | 0 | 5 | 5 − 0 = 5 |
 | 2 | 5 | 1 | 4 | 5 − 1 = 4 |
 | 2 | 5 | 2 | 3 | 5 − 2 = 3 |
 | 2 | 5 | 3 | 2 | 5 − 3 = 2 |
 | 2 | 5 | 4 | 1 | 5 − 4 = 1 |
-| 2 | 5 | 5 | 0 | 5 − 5 = 0 |
-| 2 | 6 | 0 | 6 | 6 − 0 = 6 |
 | 2 | 6 | 1 | 5 | 6 − 1 = 5 |
 | 2 | 6 | 2 | 4 | 6 − 2 = 4 |
 | 2 | 6 | 3 | 3 | 6 − 3 = 3 |
 | 2 | 6 | 4 | 2 | 6 − 4 = 2 |
 | 2 | 6 | 5 | 1 | 6 − 5 = 1 |
-| 2 | 6 | 6 | 0 | 6 − 6 = 0 |
-| 2 | 7 | 0 | 7 | 7 − 0 = 7 |
 | 2 | 7 | 1 | 6 | 7 − 1 = 6 |
 | 2 | 7 | 2 | 5 | 7 − 2 = 5 |
 | 2 | 7 | 3 | 4 | 7 − 3 = 4 |
 | 2 | 7 | 4 | 3 | 7 − 4 = 3 |
 | 2 | 7 | 5 | 2 | 7 − 5 = 2 |
 | 2 | 7 | 6 | 1 | 7 − 6 = 1 |
-| 2 | 7 | 7 | 0 | 7 − 7 = 0 |
-| 2 | 8 | 0 | 8 | 8 − 0 = 8 |
 | 2 | 8 | 1 | 7 | 8 − 1 = 7 |
 | 2 | 8 | 2 | 6 | 8 − 2 = 6 |
 | 2 | 8 | 3 | 5 | 8 − 3 = 5 |
@@ -393,8 +380,6 @@ Take away lives inside the Add activity behind an Add / Take away switch and sha
 | 2 | 8 | 5 | 3 | 8 − 5 = 3 |
 | 2 | 8 | 6 | 2 | 8 − 6 = 2 |
 | 2 | 8 | 7 | 1 | 8 − 7 = 1 |
-| 2 | 8 | 8 | 0 | 8 − 8 = 0 |
-| 2 | 9 | 0 | 9 | 9 − 0 = 9 |
 | 2 | 9 | 1 | 8 | 9 − 1 = 8 |
 | 2 | 9 | 2 | 7 | 9 − 2 = 7 |
 | 2 | 9 | 3 | 6 | 9 − 3 = 6 |
@@ -403,8 +388,6 @@ Take away lives inside the Add activity behind an Add / Take away switch and sha
 | 2 | 9 | 6 | 3 | 9 − 6 = 3 |
 | 2 | 9 | 7 | 2 | 9 − 7 = 2 |
 | 2 | 9 | 8 | 1 | 9 − 8 = 1 |
-| 2 | 9 | 9 | 0 | 9 − 9 = 0 |
-| 2 | 10 | 0 | 10 | 10 − 0 = 10 |
 | 2 | 10 | 1 | 9 | 10 − 1 = 9 |
 | 2 | 10 | 2 | 8 | 10 − 2 = 8 |
 | 2 | 10 | 3 | 7 | 10 − 3 = 7 |
@@ -414,7 +397,6 @@ Take away lives inside the Add activity behind an Add / Take away switch and sha
 | 2 | 10 | 7 | 3 | 10 − 7 = 3 |
 | 2 | 10 | 8 | 2 | 10 − 8 = 2 |
 | 2 | 10 | 9 | 1 | 10 − 9 = 1 |
-| 2 | 10 | 10 | 0 | 10 − 10 = 0 |
 | 3 | 11 | 1 | 10 | 11 − 1 = 10 |
 | 3 | 12 | 1 | 11 | 12 − 1 = 11 |
 | 3 | 12 | 2 | 10 | 12 − 2 = 10 |
@@ -496,34 +478,28 @@ Take away lives inside the Add activity behind an Add / Take away switch and sha
 | 4 | 17 | 8 | 9 | 17 − 8 = 9 |
 | 4 | 17 | 9 | 8 | 17 − 9 = 8 |
 | 4 | 18 | 9 | 9 | 18 − 9 = 9 |
-| 5 | 10 | 10 | 0 | 10 − 10 = 0 |
 | 5 | 20 | 10 | 10 | 20 − 10 = 10 |
-| 5 | 20 | 20 | 0 | 20 − 20 = 0 |
 | 5 | 30 | 10 | 20 | 30 − 10 = 20 |
 | 5 | 30 | 20 | 10 | 30 − 20 = 10 |
 | 5 | 30 | 30 | 0 | 30 − 30 = 0 |
 | 5 | 40 | 10 | 30 | 40 − 10 = 30 |
 | 5 | 40 | 20 | 20 | 40 − 20 = 20 |
 | 5 | 40 | 30 | 10 | 40 − 30 = 10 |
-| 5 | 40 | 40 | 0 | 40 − 40 = 0 |
 | 5 | 50 | 10 | 40 | 50 − 10 = 40 |
 | 5 | 50 | 20 | 30 | 50 − 20 = 30 |
 | 5 | 50 | 30 | 20 | 50 − 30 = 20 |
 | 5 | 50 | 40 | 10 | 50 − 40 = 10 |
-| 5 | 50 | 50 | 0 | 50 − 50 = 0 |
 | 5 | 60 | 10 | 50 | 60 − 10 = 50 |
 | 5 | 60 | 20 | 40 | 60 − 20 = 40 |
 | 5 | 60 | 30 | 30 | 60 − 30 = 30 |
 | 5 | 60 | 40 | 20 | 60 − 40 = 20 |
 | 5 | 60 | 50 | 10 | 60 − 50 = 10 |
-| 5 | 60 | 60 | 0 | 60 − 60 = 0 |
 | 5 | 70 | 10 | 60 | 70 − 10 = 60 |
 | 5 | 70 | 20 | 50 | 70 − 20 = 50 |
 | 5 | 70 | 30 | 40 | 70 − 30 = 40 |
 | 5 | 70 | 40 | 30 | 70 − 40 = 30 |
 | 5 | 70 | 50 | 20 | 70 − 50 = 20 |
 | 5 | 70 | 60 | 10 | 70 − 60 = 10 |
-| 5 | 70 | 70 | 0 | 70 − 70 = 0 |
 | 5 | 80 | 10 | 70 | 80 − 10 = 70 |
 | 5 | 80 | 20 | 60 | 80 − 20 = 60 |
 | 5 | 80 | 30 | 50 | 80 − 30 = 50 |
@@ -531,7 +507,6 @@ Take away lives inside the Add activity behind an Add / Take away switch and sha
 | 5 | 80 | 50 | 30 | 80 − 50 = 30 |
 | 5 | 80 | 60 | 20 | 80 − 60 = 20 |
 | 5 | 80 | 70 | 10 | 80 − 70 = 10 |
-| 5 | 80 | 80 | 0 | 80 − 80 = 0 |
 | 5 | 90 | 10 | 80 | 90 − 10 = 80 |
 | 5 | 90 | 20 | 70 | 90 − 20 = 70 |
 | 5 | 90 | 30 | 60 | 90 − 30 = 60 |
@@ -540,7 +515,6 @@ Take away lives inside the Add activity behind an Add / Take away switch and sha
 | 5 | 90 | 60 | 30 | 90 − 60 = 30 |
 | 5 | 90 | 70 | 20 | 90 − 70 = 20 |
 | 5 | 90 | 80 | 10 | 90 − 80 = 10 |
-| 5 | 90 | 90 | 0 | 90 − 90 = 0 |
 | 5 | 100 | 10 | 90 | 100 − 10 = 90 |
 | 5 | 100 | 20 | 80 | 100 − 20 = 80 |
 | 5 | 100 | 30 | 70 | 100 − 30 = 70 |
@@ -550,7 +524,6 @@ Take away lives inside the Add activity behind an Add / Take away switch and sha
 | 5 | 100 | 70 | 30 | 100 − 70 = 30 |
 | 5 | 100 | 80 | 20 | 100 − 80 = 20 |
 | 5 | 100 | 90 | 10 | 100 − 90 = 10 |
-| 5 | 100 | 100 | 0 | 100 − 100 = 0 |
 
 ## Every pattern and missing-shape answer
 
@@ -725,3 +698,5 @@ The active piece can add 1–4 squares to an affected row. A completed row alway
 | 8 | 1 | 9 |
 | 8 | 2 | 10 |
 | 9 | 1 | 10 |
+
+Feelings: [all pictures and story words](../public/fireworks/little-patterns/feelings-content.html), generated from feelings-data.js and feelings-art.js.

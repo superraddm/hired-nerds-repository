@@ -96,12 +96,12 @@ test('take away rounds start from a group, remove none, some or all, and keep th
   const p=learning.defaults;
   assert.deepEqual(learning.OPERATIONS,['add','take']);
   for(const level of [1,2]){const seq=learning.sumSequence(level,'take');const range=learning.levelRange(level);
-    assert.ok(seq.some(([a,b])=>b===0),'taking nothing is included');assert.ok(seq.some(([a,b])=>a===b),'taking everything is included');
+    assert.equal(seq.filter(([a,b])=>b===0).length,1,'taking nothing is met once');assert.equal(seq.filter(([a,b])=>a===b).length,1,'taking everything is met once');assert.ok(seq.findIndex(([a,b])=>b===0||a===b)>=seq.length/2,'and only late in the run');
     assert.ok(seq.every(([a,b])=>a>=1&&a<=range&&b>=0&&b<=a));
     for(let i=0;i<seq.length;i++){const r=learning.sumRound(i,p,level,'take');assert.equal(r.operation,'take');assert.equal(r.answer,r.a-r.b);assert.equal(r.total,r.answer);assert.ok(r.answer>=0);assert.ok(r.choices.includes(r.answer));assert.equal(new Set(r.choices).size,3);assert.ok(r.choices.every(n=>n>=0&&n<=range));assert.match(r.id,/^add:v2:L\d:take:\d+-\d+$/);}}
-  assert.equal(learning.sumSequence(1,'take').length,20);
+  assert.equal(learning.sumSequence(1,'take').length,12);assert.equal(learning.sumSequence(5,'take').filter(([a,b])=>a===b).length,1);
   assert.notEqual(learning.sumRound(0,p,1,'add',[3,2]).id,learning.sumRound(0,p,1,'take',[3,2]).id,'3 + 2 and 3 - 2 are different puzzles');
-  assert.equal(learning.sumRound(0,p,1,'take',[3,0]).answer,3);
+  assert.equal(learning.sumRound(0,p,1,'take',[4,0]).answer,4);
   assert.equal(learning.sumRound(0,p,1,'take',[2,5]).b<=learning.sumRound(0,p,1,'take',[2,5]).a,true,'an impossible take away falls back to the sequence');
   assert.ok(learning.sumRound(0,p,1,'add').choices.every(n=>n>=1),'addition never offers zero');
   const line=learning.successLine('add',learning.sumRound(0,p,1,'take',[5,2]));
@@ -159,7 +159,7 @@ test('count targets and sums follow a fixed mixed order, and levels 1 and 2 rear
   assert.deepEqual(learning.mixed([1,2]),[1,2]);
   for(const n of [5,9,10,20,30,45,50,54]){const list=Array.from({length:n},(_,i)=>i+1);const m=learning.mixed(list);assert.equal(m[0],1,'the first example is unchanged');assert.deepEqual([...m].sort((a,b)=>a-b),list,'every item once');let steps=0;for(let i=1;i<m.length;i++)if(m[i]===m[i-1]+1)steps++;assert.ok(steps<=n/4,'no long runs of consecutive answers for n='+n);}
   assert.equal(learning.countSequence(1)[0],1);assert.equal(learning.countSequence(2)[0],1);assert.notDeepEqual(learning.countSequence(2),[1,2,3,4,5,6,7,8,9,10]);
-  assert.deepEqual(learning.sumSequence(1,'add')[0],[1,1]);assert.deepEqual(learning.sumSequence(3,'add')[0],[10,1]);assert.deepEqual(learning.sumSequence(1,'take')[0],[1,1]);
+  assert.deepEqual(learning.sumSequence(1,'add')[0],[1,1]);assert.deepEqual(learning.sumSequence(3,'add')[0],[10,1]);assert.deepEqual(learning.sumSequence(1,'take')[0],[2,1]);
   assert.deepEqual(learning.SUM_SETS.doubles.sums.map(s=>s[0]),[1,2,3,4,5],'named sets stay in order');
   assert.deepEqual(learning.arrangement(3,0),[0,1,2]);assert.deepEqual(learning.arrangement(3,1),[0,2,4]);assert.deepEqual(learning.arrangement(4,1),[0,2,4,1]);assert.deepEqual(learning.arrangement(3,2),[4,3,2]);assert.deepEqual(learning.arrangement(7,1),[0,2,4,6,8,1,3]);
   const first=learning.countRound(0,p,1),second=learning.countRound(5,p,1),third=learning.countRound(10,p,1);
@@ -260,4 +260,16 @@ test('familiar sentences are validated with a reason: length first, two to eight
   assert.equal(learning.SENTENCE_LIMIT,60);
   assert.equal(learning.editText('ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMN',40,40,'O',40).value.length,40,'word inputs stop at their 40-character limit');
   assert.deepEqual(learning.editText('AB',2,2,'C',40),{value:'ABC',caret:3});
+});
+test('round 3b: pattern families walk a fixed ladder; two whole units always stay visible, every answer is on offer, and a new cycle changes the shapes',()=>{
+  const p=learning.normalisePrefs({});
+  for(const family of [2,3,4]){const ladder=learning.PATTERN_FAMILIES[family];
+    for(let i=0;i<ladder.length*2;i++){const r=learning.familyRound(i,p,family);
+      assert.equal(new Set(r.unit).size,family);assert.equal(r.sequence.length,ladder[i%ladder.length][1]);
+      assert.ok(r.gaps.length>=1&&r.gaps.length<=3);assert.ok(r.sequence.length<=8,'one row of at most eight');assert.ok(r.gaps.every(g=>g>=r.unit.length),'the first whole unit is never hidden');
+      assert.ok(r.gaps.every(g=>r.choices.includes(r.sequence[g])));assert.equal(new Set(r.choices).size,r.choices.length);assert.match(r.id,new RegExp('^patterns:v[0-9]+:LF'+family+':repeat:'));}
+    assert.deepEqual(learning.familyRound(0,p,family).gaps,[learning.familyRound(0,p,family).sequence.length-1],'each family opens with one gap at the end');
+    assert.notDeepEqual(learning.familyRound(0,p,family).unit,learning.familyRound(ladder.length,p,family).unit);}
+  assert.equal(learning.familyRound(0,p,9).family,2,'an unknown family falls back to two shapes');
+  assert.equal(learning.normalisePrefs({}).numberWords,'type','Number words asks for the spelling by default');
 });

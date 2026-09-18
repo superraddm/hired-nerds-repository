@@ -302,3 +302,131 @@ button.word-card.hint{outline:4px solid #477b59;outline-offset:4px}
 @media(max-width:780px){.go-row .next{min-height:68px;font-size:23px}}
 @media(max-width:550px){.go-row{margin:10px 0 2px}.go-row .next{min-height:64px;font-size:21px;padding:10px 16px}}
 @media (min-width:820px) and (max-height:840px) and (orientation:landscape){.go-row{margin:8px 0 0}#task[data-view="add"]>.go-row{flex-basis:100%}.go-row .next{min-height:60px;font-size:22px;padding:8px 20px;border-bottom-width:5px}}
+
+/* Feelings and Paint live on their own pages. Preserve existing four activity sizes: the two links share the row under them. */
+.tabs .feelings-link{grid-column:span 2;min-height:48px;font-size:16px;background:#eee3f2;border:2px solid #846a93;border-radius:15px;box-shadow:none;color:#293e60;padding:10px;text-decoration:none}
+.tabs .paint-link{background:#fdebd2;border-color:#b0793a}
+@media(min-width:700px){.tabs{grid-template-columns:repeat(6,minmax(0,1fr))}.tabs .feelings-link{grid-column:auto;min-height:48px}}
+
+/* Round 3: the level strip. Every level (and, in Words, every activity) is a tile in view all the time, so nobody has to find a chooser to change how hard it is. */
+.garden-top{flex-wrap:nowrap;align-items:stretch;gap:10px}
+.garden-top #scene-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.level-strip{flex:1 1 auto;min-width:0;display:flex;gap:7px;overflow-x:auto;overflow-y:hidden;padding:3px 3px 7px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
+.level-strip::-webkit-scrollbar{display:none}
+.level-strip .tile{flex:1 0 auto;min-width:74px;min-height:54px;padding:4px 10px;border:2px solid #e3cf8d;border-bottom-width:4px;border-radius:15px;background:#fff8d9;color:#2c4258;font:inherit;font-weight:900;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.level-strip .tile b{font-size:17px;white-space:nowrap;letter-spacing:.2px}
+.level-strip .tile small{font-size:10px;font-weight:bold;color:#5a6b58;white-space:nowrap}
+.level-strip .tile[aria-pressed="true"]{background:#fffef8;border-color:#2f5d50;box-shadow:0 0 0 3px #2f5d5033;transform:translateY(-1px)}
+.level-strip .tile:active{transform:translateY(2px);border-bottom-width:2px}
+.level-strip .tile:focus-visible{outline:4px solid #a36526;outline-offset:1px}
+.level-strip .strip-gap{flex:0 0 2px;align-self:stretch;margin:6px 3px;background:#e3cf8d;border-radius:2px}
+.level-strip .bead-tile{flex:0 0 auto;min-width:64px;font-size:10px;flex-direction:row;flex-wrap:wrap;gap:3px}
+.level-strip .bead-tile .level-beads{display:inline-flex;gap:2px;align-items:center}
+.level-strip .bead-tile .shape{width:14px;height:14px;flex:0 0 14px}
+.level-strip .bead-tile .level-beads b{font-size:13px;margin:0 2px}
+.level-strip .bead-tile .mini-group{display:inline-flex;gap:1px;margin-right:4px}
+.level-strip .mini{display:flex;align-items:center;gap:3px;font-size:13px;line-height:1}
+.level-strip .mini i{font-style:normal}
+.level-strip .mini .gap{width:24px;height:16px;border:2px dashed #7e9a78;border-radius:5px;background:#fff}
+.level-strip .mini .gap.small{width:13px}
+.level-strip .mini .chip{padding:2px 4px;border:1.5px solid #d8c17a;border-radius:5px;background:#fff1c4;font-size:10px}
+.level-strip .mini .chip:nth-child(2){transform:translateY(-3px) rotate(-5deg)}
+.level-strip .mini .chip:nth-child(3){transform:translateY(2px) rotate(4deg)}
+button.support{flex:0 0 auto;align-self:center;font-size:0!important;padding:0 12px;min-width:48px}
+button.support::before{content:"⋯";font-size:24px;line-height:1}
+.actions .help{display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.help .help-sign{flex:0 0 auto;width:34px;height:34px}
+@media(max-width:550px){.level-strip .tile{min-width:62px;min-height:50px;padding:3px 7px}.level-strip .tile b{font-size:14px}.help .help-sign{width:28px;height:28px}}
+.level-strip .bead-tile .shape.square{border-radius:3px}
+.level-strip .bead-tile .shape.diamond{width:11px;height:11px;flex-basis:11px;margin:0 2px;border-radius:2px}
+.level-strip .bead-tile .shape.oval{width:18px;height:11px;flex-basis:18px}
+.level-strip .bead-tile .shape.triangle{width:0;height:0;flex-basis:auto;background:transparent;border-left:7px solid transparent;border-right:7px solid transparent;border-top:0;border-bottom:13px solid #c28a45;border-radius:0;box-shadow:none}
+.level-strip .bead-tile .hole{width:14px;height:14px;flex:0 0 14px;border:2px dashed #5b4a7d;border-radius:4px;background:#efe6fb}
+
+/* Round 3b. A ten is a row of ten small apples (five, a space, five) in a pale tray with its 10; left-over ones are loose apples. */
+.tray{align-items:center;max-width:580px}
+.stick,button.stick{position:relative;display:grid;grid-template-columns:repeat(10,auto);grid-template-rows:auto;align-items:end;justify-content:center;gap:3px;width:auto;min-width:0;height:auto;min-height:48px;padding:12px 10px 6px 34px;margin:0 0 4px;background:#fff4cf;border:2px solid #e0c983;border-bottom-width:4px;border-radius:14px;box-shadow:none}
+.tray .stick,.tray button.stick{margin-bottom:4px;width:auto}
+.stick i.apple,.tray .stick i.apple{display:block;width:17px;height:17px;margin:0;border-width:1.5px;border-radius:42% 44% 48% 48%;background:#e67b69;box-shadow:inset 2px 0 0 #ffffff24}
+.stick i.apple:nth-of-type(6){margin-left:9px}
+.stick i.apple:before,.tray .stick i.apple:before{left:7px;top:-6px;width:2px;height:5px}
+.stick i.apple:after,.tray .stick i.apple:after{left:8px;top:-6px;width:7px;height:4px}
+.stick b,.tray .stick b{position:absolute;left:6px;top:50%;bottom:auto;transform:translateY(-50%);font-size:12px;padding:1px 5px}
+button.stick.counted{background:#e2efd7;border-color:#477b59}
+button.stick>.count-tag{top:-11px;left:auto;right:-6px;transform:none}
+.tray .five-frame.ones.loose{display:flex;flex-wrap:wrap;gap:4px;max-width:170px;padding:0;background:none;border:0;box-shadow:none}
+.tray .five-frame.ones.loose .pocket{width:48px;height:48px;min-height:48px;border:0;background:none}
+.tray .five-frame.ones.loose span.pocket{width:24px;height:30px;min-height:0}
+.tray .five-frame.ones.loose span.pocket .apple{width:17px;height:17px;margin:0;border-width:1.5px}
+.tray .five-frame.ones.loose span.pocket .apple:before{left:7px;top:-6px;width:2px;height:5px}
+.tray .five-frame.ones.loose span.pocket .apple:after{left:8px;top:-6px;width:7px;height:4px}
+.tray .five-frame.ones.loose button.pocket .apple{width:24px;height:24px;margin:0}
+.tray .five-frame.ones.loose button.pocket.counted{background:#e2efd7;border:2px solid #477b59;border-radius:12px}
+@media(max-width:780px){.stick,button.stick,.tray button.stick{width:auto;height:auto;padding:11px 8px 5px 30px;gap:2px}.stick i.apple,.tray .stick i.apple{width:14px;height:14px}.stick i.apple:nth-of-type(6){margin-left:6px}.stick i.apple:before,.tray .stick i.apple:before{left:5px}.stick i.apple:after,.tray .stick i.apple:after{left:6px;width:6px}}
+/* Only Nook congratulates. The status line keeps its place and still speaks to a screen reader. */
+.garden-status.unseen{color:transparent;user-select:none;-webkit-user-select:none}
+/* Pattern families and two-line level tiles. */
+.level-strip .family-tile{flex:0 1 190px;min-height:60px;gap:4px}
+.level-strip .family-tile .level-beads{display:inline-flex;gap:5px;align-items:center}
+.level-strip .family-tile .shape{width:22px;height:22px;flex:0 0 22px}
+.level-strip .family-tile .shape.square{border-radius:5px}
+.level-strip .family-tile .shape.diamond{width:17px;height:17px;flex-basis:17px;margin:0 3px;border-radius:3px}
+.level-strip .family-tile .shape.triangle{width:0;height:0;flex-basis:auto;background:transparent;border-left:11px solid transparent;border-right:11px solid transparent;border-top:0;border-bottom:20px solid #c28a45;border-radius:0;box-shadow:none}
+.level-strip .family-tile small{font-size:12px}
+.level-strip .level-tile b+small{font-size:10px;font-weight:bold;color:#6a7763}
+/* A family's bead string wraps in whole units (rows of six, or four for a four-bead unit), so each row starts the pattern again and the repeat lines up in columns. */
+.pattern-strip.long.per-6{grid-template-columns:repeat(6,65px)}
+.pattern-strip.long.per-4{grid-template-columns:repeat(4,65px)}
+.pattern-strip.long.per-6 .bead-slot:nth-child(5n):after,.pattern-strip.long.per-4 .bead-slot:nth-child(5n):after{display:block}
+.pattern-strip.long.per-6 .bead-slot:nth-child(6n):after,.pattern-strip.long.per-4 .bead-slot:nth-child(4n):after,.pattern-strip.long .bead-slot:last-child:after{display:none}
+@media(max-width:780px){.pattern-strip.long.per-6{grid-template-columns:repeat(6,48px)}.pattern-strip.long.per-4{grid-template-columns:repeat(4,48px)}}
+@media(max-width:550px){.pattern-strip.long.per-6{grid-template-columns:repeat(6,42px);gap:20px 5px}.pattern-strip.long.per-6 .bead-slot{width:42px}}
+/* Word order: tiles are dragged onto the sentence. */
+.word-options .word-choice{touch-action:none;cursor:grab}
+.word-options .word-choice.dragging{opacity:.25}
+.drag-ghost{position:fixed;left:0;top:0;z-index:30;margin:0;pointer-events:none;box-shadow:0 10px 22px #2c425833;cursor:grabbing;will-change:transform}
+.drag-ghost.reject{animation:tile-reject .36s ease-in-out;border-color:#c9837a!important;background:#fbe3dd!important}
+.word-choice.reject{animation:tile-reject .36s ease-in-out}
+.sentence.drop-ready .word-tile.gap:not([aria-hidden]){background:#e9f5dd;outline-color:#477b59;transform:scale(1.06)}
+@keyframes tile-reject{0%,100%{margin-left:0}20%{margin-left:-9px}40%{margin-left:9px}60%{margin-left:-6px}80%{margin-left:5px}}
+.level-strip .family-tile{flex:1 0 auto;min-width:98px;max-width:200px;padding:4px 12px}
+@media(max-width:550px){.level-strip .family-tile{min-width:68px;padding:4px 3px}.level-strip .family-tile .level-beads{gap:3px}.level-strip .family-tile .shape{width:15px;height:15px;flex-basis:15px}.level-strip .family-tile .shape.diamond{width:12px;height:12px;flex-basis:12px}.level-strip .family-tile .shape.triangle{border-left-width:8px;border-right-width:8px;border-bottom-width:14px}.level-strip .family-tile small{font-size:10px}}
+/* Round 3c: the two groups EQUAL the joined group, so the sign between them is =, upright in every layout. */
+.join-arrow.equals{font-size:34px;font-weight:900;color:#2c4258;line-height:1}
+#task[data-view="add"]>.join-arrow.equals{transform:none;width:auto;margin:0 4px;font-size:28px}
+/* Round 3c: a family's bead string is always ONE row of at most eight beads, which share the width of the task. */
+.pattern-strip.one-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,72px);justify-content:center;gap:10px;flex-wrap:nowrap;margin:26px 0}
+.pattern-strip.one-row .bead-slot{width:100%;min-width:0}
+.pattern-strip.one-row .bead-slot:after{width:10px;right:-12px}
+@media(max-width:780px){.pattern-strip.one-row{gap:7px}.pattern-strip.one-row .bead-slot:after{width:7px;right:-9px}}
+@media(max-width:550px){.pattern-strip.one-row{gap:4px}.pattern-strip.one-row .bead-slot{height:50px;border-radius:9px}.pattern-strip.one-row .bead-slot:after{display:none}.pattern-strip.one-row .shape{transform:scale(.62)}.pattern-strip.one-row .shape.diamond{transform:rotate(45deg) scale(.62)}.pattern-strip.one-row button.bead-slot{font-size:15px}}
+/* The first whole unit is the model: a shared pale band sits under those beads so "this bit repeats" can be seen. */
+.pattern-strip.one-row .bead-slot.model{background:#e6f1d6;border-color:#9fbd86;box-shadow:0 7px 0 -3px #9fbd86}
+/* Round 3c: take away is one group. Eaten apples are pale with one clear stroke; once answered they vanish and the rest keep their places. */
+.take-one{display:flex;justify-content:center;margin:18px auto 6px}
+.take-one .apples{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;max-width:520px;padding:16px 22px;background:#fff1cb;border:2px solid #e0c983;border-bottom-width:5px;border-radius:22px;min-height:84px;min-width:120px}
+.take-one .fruit{position:relative;display:inline-grid;place-items:center}
+.take-one .fruit.gone .apple,.tray i.apple.gone,.tray .fruit.gone .apple{opacity:.38}
+.take-one .fruit.gone:after,.tray .fruit.gone:after{content:"";position:absolute;left:-4px;right:-4px;top:54%;height:5px;border-radius:3px;background:#7a4a3f;transform:rotate(-38deg)}
+.tray .stick i.apple.gone{position:relative;overflow:visible}
+.tray .stick i.apple.gone:after,.tray .stick i.apple.gone:before{all:unset}
+.tray .stick i.apple.gone{background-image:linear-gradient(128deg,transparent 42%,#5e362d 42%,#5e362d 58%,transparent 58%);opacity:.5}
+.take-one .fruit.away,.tray i.apple.away,.tray .fruit.away{visibility:hidden}
+.take-one .tray .fruit{position:relative}
+.take-one .count-tag{position:absolute;right:-8px;bottom:-8px}
+.take-one .tray{flex-direction:column;align-items:flex-start;gap:6px;margin:0;padding:14px 18px;background:#fff1cb;border:2px solid #e0c983;border-bottom-width:5px;border-radius:22px}
+.take-one .tray .stick{padding:9px 4px 3px;margin:0;background:none;border:0;gap:5px;min-height:0}
+.take-one .tray .stick i.apple{width:25px;height:25px;border-width:2px}
+.take-one .tray .stick i.apple:nth-of-type(6){margin-left:14px}
+.take-one .tray .stick i.apple:before{left:10px;top:-8px;width:3px;height:7px}
+.take-one .tray .stick i.apple:after{left:12px;top:-8px;width:10px;height:5px}
+.take-one .tray .stick i.apple.gone{opacity:.55;background-color:#f3c9bf;background-image:linear-gradient(128deg,transparent 43%,#5e362d 43%,#5e362d 57%,transparent 57%)}
+.take-one .tray .five-frame.ones.loose{max-width:none;gap:5px;padding:9px 4px 3px;flex-wrap:nowrap}
+.take-one .tray .five-frame.ones.loose span.pocket{width:25px;height:25px}
+.take-one .tray .five-frame.ones.loose span.pocket:nth-child(6){margin-left:14px}
+.take-one .tray .five-frame.ones.loose span.pocket .apple{width:25px;height:25px;border-width:2px}
+.take-one .tray .five-frame.ones.loose span.pocket .apple:before{left:10px;top:-8px;width:3px;height:7px}
+.take-one .tray .five-frame.ones.loose span.pocket .apple:after{left:12px;top:-8px;width:10px;height:5px}
+.take-one .tray .fruit.gone .apple{opacity:.55}
+.take-one .tray .fruit.gone:after{left:-2px;right:-2px;top:50%;height:4px}
+@media(max-width:550px){.take-one .tray{padding:10px 8px}.take-one .tray .stick,.take-one .tray .five-frame.ones.loose{gap:3px}.take-one .tray .stick i.apple,.take-one .tray .five-frame.ones.loose span.pocket,.take-one .tray .five-frame.ones.loose span.pocket .apple{width:19px;height:19px}.take-one .tray .stick i.apple:nth-of-type(6),.take-one .tray .five-frame.ones.loose span.pocket:nth-child(6){margin-left:8px}.take-one .tray .stick i.apple:before,.take-one .tray .five-frame.ones.loose span.pocket .apple:before{left:7px}.take-one .tray .stick i.apple:after,.take-one .tray .five-frame.ones.loose span.pocket .apple:after{left:8px;width:8px}.take-one .apples{gap:8px;padding:12px}}

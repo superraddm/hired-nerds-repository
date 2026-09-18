@@ -7,7 +7,12 @@ const files = [
   'blocks.html', 'blocks.css', 'blocks-live.css', 'blocks.js', 'core.js',
   'garden.html', 'garden-preview.css', 'garden-live.css', 'garden.js',
   'assets/nook.png', 'LICENSE.txt', 'content.html', 'voice-library.js',
-  'assets/voice/manifest.json', 'assets/voice/NOTICE.txt'
+  'assets/voice/manifest.json', 'assets/voice/NOTICE.txt',
+  'feelings.html', 'feelings.css', 'feelings.js', 'feelings-data.js', 'feelings-art.js',
+  'feelings-content.html', 'assets/feelings/NOTICE.txt', 'phonics-review.html',
+  'studio-lab.html', 'studio-sound.js', 'studio-sound-review.html', 'studio-storage.js',
+  'assets/studio-sounds/bank.js', 'assets/studio-sounds/manifest.json',
+  'assets/studio-sounds/velvet-bank.wav', 'assets/studio-sounds/NOTICE.txt'
 ];
 // Picture symbols follow the word map in learning.js, so a new word cannot ship without its picture.
 const L = require('../public/fireworks/little-patterns/learning.js');
@@ -27,6 +32,7 @@ function validate() {
     for (const match of html.matchAll(/(?:src|href)="([^"]+)"/g)) {
       const ref = match[1].split(/[?#]/)[0];
       if (!ref) continue;
+      if (ref === 'data:,') continue; // Empty local favicon; no browser icon request on interaction.
       if (/^(?:[a-z]+:|\/)/i.test(ref)) throw Error(`Unexpected external reference in ${file}: ${ref}`);
       const resolved = path.posix.normalize(ref.endsWith('/') ? `${ref}index.html` : ref);
       if (!files.includes(resolved)) throw Error(`Runtime file is not included: ${file} -> ${ref}`);

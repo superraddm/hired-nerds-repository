@@ -20,7 +20,8 @@
   let prefs=L.normalisePrefs(storage.get(KEY,rawStorage.get(KEY,{})));
   function savePrefs(value){prefs=L.normalisePrefs(value);const saved=storage.set(KEY,prefs);document.body.classList.toggle('softer',prefs.soft);document.dispatchEvent(new CustomEvent('lp:preferences',{detail:{...prefs}}));return saved;}
   function status(text){const target=document.getElementById('status');if(target)target.textContent=text;}
-  let muted=true,context=null,noteTimer=null,musicWanted=false,musicPaused=false,noteIndex=0,speechRequest=0,clipPlayer=null;const voices=new Set();
+  let muted=false,context=null,noteTimer=null,musicWanted=false,musicPaused=false,noteIndex=0,speechRequest=0,clipPlayer=null;const voices=new Set();
+  let musicActivated=false,musicStarting=false;
   // A gentle, newly synthesised arrangement of the traditional folk melody.
   // Source melody: https://en.wikipedia.org/wiki/Korobeiniki#Melody
   // No recording, game soundtrack, accompaniment or licensed arrangement is used.
@@ -66,7 +67,17 @@
     musicBeat+=beats;
     noteTimer=setTimeout(nextNote,duration*1000);
   }
-  async function setMuted(value){muted=value;updateSound();if(muted){stopNotes();stopSpeech();if(context)context.suspend().catch(()=>{});return;}if(musicWanted&&!musicPaused){try{await wake();if(!muted&&!musicPaused){stopNotes();nextNote();}}catch(_){muted=true;updateSound();status('Sound is unavailable. You can keep playing.');}}}
+  function stopBackgroundAudio(){stopNotes();stopSpeech();if(context)context.suspend().catch(()=>{});}
+  // A very quiet bell for a finished row in Colour Blocks: one soft note, or a quick climbing run that lands on a brighter ringing note when several rows go at once. Silent when Sound is off.
+  async function chime(count=1){if(muted||document.hidden)return;try{await wake();}catch(_){return;}const notes=[523.25,659.25,783.99,1046.5],n=Math.max(1,Math.min(4,count)),t0=context.currentTime+.02;const ring=(f,at,level,len)=>{const o=context.createOscillator(),g=context.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0,at);g.gain.linearRampToValueAtTime(level,at+.012);g.gain.exponentialRampToValueAtTime(.0001,at+len);o.connect(g);g.connect(context.destination);o.start(at);o.stop(at+len+.05);};for(let i=0;i<n-1;i++)ring(notes[i],t0+i*.085,.03,.2);const last=t0+(n-1)*.085;ring(notes[n-1],last,.045,1);ring(notes[n-1]*2,last,.014,.6);if(n>1)ring(notes[n-1]*1.5,last+.004,.02,.85);}
+  async function startMusic(){
+    if(!musicActivated||musicStarting||noteTimer!==null||muted||!musicWanted||musicPaused||document.hidden)return;
+    musicStarting=true;
+    try{await wake();if(!muted&&!musicPaused&&!document.hidden)nextNote();}
+    catch(_){status('Music is unavailable. You can keep playing.');}
+    finally{musicStarting=false;}
+  }
+  async function setMuted(value){muted=value;updateSound();if(muted){stopBackgroundAudio();return;}await startMusic();}
   function localEnglishVoices(){
     if(!window.speechSynthesis||typeof window.speechSynthesis.getVoices!=='function')return [];
     return window.speechSynthesis.getVoices().filter(voice=>voice.localService===true&&/^en(?:[-_]|$)/i.test(voice.lang));
@@ -92,14 +103,16 @@
     const play=()=>{if(request!==speechRequest||muted||document.hidden||next>=clips.length)return;clipPlayer.src=clips[next++].file;clipPlayer.onended=play;clipPlayer.onerror=failed;try{const playing=clipPlayer.play();if(playing?.catch)playing.catch(failed);}catch(_){failed();}};
     play();
   }
-  // options.auto marks feedback the game starts by itself: it plays only bundled clips, only while sound is already on, and never unmutes.
+  // Automatic feedback uses bundled clips only and respects mute. The explicit
+  // private-text entry point also respects mute, but bypasses clips entirely and
+  // uses only an installed local voice, avoiding selection-dependent requests.
   async function speak(text,options={}){
     stopSpeech();const request=speechRequest;
     const auto=options.auto===true;
     if(auto&&muted)return;
     const parts=(Array.isArray(text)?text:[text]).map(clipKey).filter(Boolean);
     const library=window.LPVoiceLibrary?.clips;
-    const clips=parts.map(key=>library&&Object.prototype.hasOwnProperty.call(library,key)?library[key]:null);
+    const clips=parts.map(key=>!options.private&&library&&Object.prototype.hasOwnProperty.call(library,key)?library[key]:null);
     if(clips.length&&clips.every(Boolean)){
       // Start from the tap itself for iPad audio permissions; no fetch/decoding queue.
       // One reusable player, no preload, no text or player data in requests.
@@ -108,11 +121,11 @@
       playClips(clips,request);
       return;
     }
-    if(auto)return;
+    if(auto&&!options.private)return;
     text=Array.isArray(text)?text.join(' '):text;
     // Private familiar words outside the fixed library stay on the device.
     if(!('speechSynthesis' in window)){status('Voice is unavailable on this device. You can keep playing.');return;}
-    await setMuted(false);
+    if(!options.private)await setMuted(false);
     if(request!==speechRequest||muted||document.hidden)return;
     const available=await waitForLocalVoices();
     if(request!==speechRequest||muted||document.hidden)return;
@@ -126,15 +139,39 @@
     utterance.onerror=e=>{if(request===speechRequest&&!['canceled','interrupted'].includes(e.error))status('Voice is unavailable. You can keep playing.');};
     window.speechSynthesis.speak(utterance);
   }
-  const audio={speak,stopSpeech,mute:()=>setMuted(true),setMusic(value){musicWanted=value;if(!value)stopNotes();},pause(){musicPaused=true;stopNotes();stopSpeech();},async resume(){musicPaused=false;if(!muted&&musicWanted){try{await wake();stopNotes();nextNote();}catch(_){setMuted(true);}}},get muted(){return muted;}};
+  // Self-report screens must not request a different asset for each answer. Fetch
+  // the entire fixed vocabulary first, then use Blob URLs with the SAME player.
+  // A late response may fill the bundle, but can never replay an earlier choice.
+  function prepareLocalClips(texts){
+    const clips=new Map();let disposed=false;
+    const keys=[...new Set(texts.map(clipKey))];
+    const ready=Promise.all(keys.map(async key=>{
+      const entry=window.LPVoiceLibrary?.clips?.[key];
+      if(!entry||!/^assets\/voice\/[a-f0-9]{16}\.wav$/.test(entry.file))return;
+      try{
+        const response=await fetch(entry.file,{credentials:'omit',referrerPolicy:'no-referrer'});
+        if(!response.ok)return;const blob=await response.blob();
+        if(disposed)return;
+        clips.set(key,{file:URL.createObjectURL(blob)});
+      }catch(_){/* Text remains usable; never request a selected clip as fallback. */}
+    }));
+    return {ready,
+      speak(text){stopSpeech();const clip=clips.get(clipKey(text));if(disposed||muted||document.hidden||!clip)return false;playClips([clip],speechRequest);return true;},
+      dispose(){disposed=true;stopSpeech();for(const clip of clips.values())URL.revokeObjectURL(clip.file);clips.clear();}
+    };
+  }
+  const audio={chime,speak,speakPrivate:text=>speak(text,{auto:true,private:true}),stopSpeech,prepareLocalClips,mute:()=>setMuted(true),setMusic(value){musicWanted=value;if(!value)stopNotes();},pause(){musicPaused=true;stopNotes();stopSpeech();},async resume(){musicPaused=false;await startMusic();},get muted(){return muted;}};
   document.querySelectorAll('[data-sound]').forEach(b=>b.addEventListener('click',()=>setMuted(!muted)));
-  document.addEventListener('visibilitychange',()=>{if(document.hidden)setMuted(true);});window.addEventListener('pagehide',()=>setMuted(true));
+  // Browsers unlock music on interaction. Never need a separate Sound toggle.
+  // Use bubbling so a tap on Mute/Pause takes effect before trying to play.
+  ['click','keydown'].forEach(name=>window.addEventListener(name,()=>{musicActivated=true;startMusic();}));
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)stopBackgroundAudio();});window.addEventListener('pagehide',stopBackgroundAudio);
   let modal=null,previousFocus=null,closed=null;
   function closeModal(result=false){if(!modal)return;modal.remove();modal=null;const page=document.getElementById('page');if(page)page.removeAttribute('inert');document.body.style.overflow='';if(previousFocus&&document.contains(previousFocus))previousFocus.focus({preventScroll:true});const callback=closed;closed=null;if(callback)callback(result);document.dispatchEvent(new Event('lp:dialogclosed'));}
   function openModal(html,callback){if(modal)closeModal();previousFocus=document.activeElement;closed=callback||null;audio.pause();document.dispatchEvent(new Event('lp:dialogopened'));modal=document.createElement('div');modal.className='lp-modal';modal.innerHTML='<section class="lp-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title" tabindex="-1">'+html+'</section>';document.body.appendChild(modal);const page=document.getElementById('page');if(page)page.setAttribute('inert','');document.body.style.overflow='hidden';modal.querySelector('button,input,select,textarea')?.focus();modal.addEventListener('click',e=>{if(e.target.closest('[data-close]'))closeModal();});return modal;}
   document.addEventListener('keydown',e=>{if(!modal)return;if(e.key==='Escape'){e.preventDefault();closeModal();return;}if(e.key==='Tab'){const items=Array.from(modal.querySelectorAll('button,input,select,textarea,a[href]')).filter(el=>!el.disabled&&!el.closest('[hidden]'));const first=items[0],last=items[items.length-1];if(e.shiftKey&&(document.activeElement===first||!items.includes(document.activeElement))){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
   function confirmAction(title,copy,action='Start fresh'){return new Promise(resolve=>{const el=openModal('<h2 id="dialog-title"></h2><p id="confirm-copy"></p><div class="lp-dialog-actions"><button data-close>Keep playing</button><button class="lp-primary" id="confirm-action"></button></div>',resolve);el.querySelector('#dialog-title').textContent=title;el.querySelector('#confirm-copy').textContent=copy;el.querySelector('#confirm-action').textContent=action;el.querySelector('#confirm-action').onclick=()=>closeModal(true);});}
-  function settings(){const block=document.body.dataset.game==='blocks';const html='<div class="lp-dialog-heading"><h2 id="dialog-title">Make it feel right</h2><button data-close aria-label="Close settings">×</button></div><p>Changes stay on this device. Nothing needs a spoken answer.</p><form id="lp-settings">'+(block?'<label>Blocks move<select name="pace"><option value="0">Only when tapped</option><option value="1800">Automatically · very slowly</option><option value="850">Automatically · steady pace</option></select></label>':'<p class="lp-small">Count, Add, Number words and Patterns each have levels. Choose a level from the activity’s own picker; levels never change on their own.</p><label>Count, letters and pattern choices<select name="choices"><option value="2">Two choices · more support</option><option value="3">Three choices · more exploring</option></select><small>Missing-word sentences always show three words.</small></label><label>Count answer<select name="countAnswer"><option value="choose">Choose from numbers</option><option value="type">Type it on a number keypad</option></select></label><label>Addition answer<select name="addition"><option value="choose">Choose from three numbers</option><option value="type">Type it on a number keypad</option><option value="demo">Just show me the answer</option></select></label><label>Number words<select name="numberWords"><option value="show">Show the objects, number and word</option><option value="choose">Let me choose the word</option><option value="type">Let me type the word</option></select></label><label>Letters<select name="case"><option value="upper">UPPERCASE</option><option value="lower">lowercase</option></select></label><label>Typing keyboard<select name="keyboard"><option value="az">Big A–Z keys</option><option value="device">Device keyboard</option></select></label><label>Familiar words (one per line)<textarea name="customWords" rows="4" maxlength="750" placeholder="DINOSAUR&#10;RAINBOW"></textarea><small>Up to 24 words or short phrases. They join the missing-letter spelling puzzles.</small></label><label>Familiar sentences (one per line, missing word in CAPITALS)<textarea name="customSentences" rows="3" maxlength="800" placeholder="Arthur likes TRAINS.&#10;We go to the PARK."></textarea><small>Up to 12 sentences of two to eight words (60 characters). The word in capitals is the gap: make it clearly different from the other familiar words, because the words in capitals in your other sentences are used as the wrong answers. The gap word cannot have an apostrophe (the A to Z keys have none). They join Missing word and Word order. Words without a Mulberry symbol show no picture, and these private sentences use the device voice rather than the bundled one.</small></label><p id="sentence-problems" class="lp-small lp-error" role="status" hidden></p>')+'<label class="lp-check"><input type="checkbox" name="soft"> Softer colours</label><p class="lp-small">Sound starts off. Sound: on / off shows the state and switches it; sentences, words and letters are spoken only while it is on. No timers, lost lives, badges or automatic puzzle changes.</p>'+(block?'<p class="lp-small">Keyboard: arrows move and turn, Space places, P pauses. Hold Down to move faster. Opening settings pauses your board.</p>':'<p class="lp-small">New puzzle settings start fresh examples. Built-in words and sentences use the same bundled Jenny (Dioco) voice on every device. Familiar words you add use an installed offline English voice and stay on this device. Word pictures are Mulberry Symbols by Steve Lee (CC BY-SA 4.0), mulberrysymbols.org.</p>')+'<div class="lp-dialog-actions"><button type="button" data-close>Cancel</button><button class="lp-primary" type="submit">Save settings</button></div></form>';
+  function settings(){const block=document.body.dataset.game==='blocks';const html='<div class="lp-dialog-heading"><h2 id="dialog-title">Make it feel right</h2><button data-close aria-label="Close settings">×</button></div><p>Changes stay on this device. Nothing needs a spoken answer.</p><form id="lp-settings">'+(block?'<label>Blocks move<select name="pace"><option value="0">Only when tapped</option><option value="1800">Automatically · very slowly</option><option value="850">Automatically · steady pace</option></select></label>':'<p class="lp-small">Count, Add, Number words and Patterns each have levels. Choose a level from the activity’s own picker; levels never change on their own.</p><label>Count, letters and pattern choices<select name="choices"><option value="2">Two choices · more support</option><option value="3">Three choices · more exploring</option></select><small>Missing-word sentences always show three words.</small></label><label>Count answer<select name="countAnswer"><option value="choose">Choose from numbers</option><option value="type">Type it on a number keypad</option></select></label><label>Addition answer<select name="addition"><option value="choose">Choose from three numbers</option><option value="type">Type it on a number keypad</option><option value="demo">Just show me the answer</option></select></label><label>Number words<select name="numberWords"><option value="show">Show the objects, number and word</option><option value="choose">Let me choose the word</option><option value="type">Let me type the word</option></select></label><label>Letters<select name="case"><option value="upper">UPPERCASE</option><option value="lower">lowercase</option></select></label><label>Typing keyboard<select name="keyboard"><option value="az">Big A–Z keys</option><option value="device">Device keyboard</option></select></label><label>Familiar words (one per line)<textarea name="customWords" rows="4" maxlength="750" placeholder="DINOSAUR&#10;RAINBOW"></textarea><small>Up to 24 words or short phrases. They join the missing-letter spelling puzzles.</small></label><label>Familiar sentences (one per line, missing word in CAPITALS)<textarea name="customSentences" rows="3" maxlength="800" placeholder="Arthur likes TRAINS.&#10;We go to the PARK."></textarea><small>Up to 12 sentences of two to eight words (60 characters). The word in capitals is the gap: make it clearly different from the other familiar words, because the words in capitals in your other sentences are used as the wrong answers. The gap word cannot have an apostrophe (the A to Z keys have none). They join Missing word and Word order. Words without a Mulberry symbol show no picture, and these private sentences use the device voice rather than the bundled one.</small></label><p id="sentence-problems" class="lp-small lp-error" role="status" hidden></p>')+'<label class="lp-check"><input type="checkbox" name="soft"> Softer colours</label><p class="lp-small">Sound starts on. Tap Sound to turn it off. Sound: on / off shows the state and switches it; sentences, words and letters are spoken only while it is on. No timers, lost lives, badges or automatic puzzle changes.</p>'+(block?'<p class="lp-small">Keyboard: arrows move and turn, Space places, P pauses. Hold Down to move faster. Opening settings pauses your board.</p>':'<p class="lp-small">New puzzle settings start fresh examples. Built-in words and sentences use the same bundled Jenny (Dioco) voice on every device. Familiar words you add use an installed offline English voice and stay on this device. Word pictures are Mulberry Symbols by Steve Lee (CC BY-SA 4.0), mulberrysymbols.org.</p>')+'<div class="lp-dialog-actions"><button type="button" data-close>Cancel</button><button class="lp-primary" type="submit">Save settings</button></div></form>';
     const el=openModal(html),form=el.querySelector('form');Object.keys(prefs).forEach(key=>{const input=form.elements.namedItem(key);if(!input)return;if(key==='soft')input.checked=prefs[key];else if(key==='customWords'||key==='customSentences')input.value=prefs[key].join('\n');else input.value=prefs[key];});
     // Familiar sentences are validated visibly: each rejected line is listed with its reason instead of being dropped silently. Sentences saved under an older rule that fail now are listed once too, and kept in the box so they can be mended.
     const problems=el.querySelector('#sentence-problems');
@@ -148,7 +185,7 @@
   }
   document.querySelectorAll('[data-settings]').forEach(b=>b.onclick=settings);
   function updatePlayer(){document.querySelectorAll('[data-player]').forEach(b=>{b.textContent=player.avatar+' '+player.name;b.setAttribute('aria-label','Change player. Playing as '+player.name);});}
-  function switchPlayer(id){const next=profiles.find(p=>p.id===id);if(!next)return;document.dispatchEvent(new Event('lp:beforeplayerchange'));audio.mute();player=next;rawStorage.set('lp-active-player',id);prefs=L.normalisePrefs(storage.get(KEY,{}));document.body.classList.toggle('softer',prefs.soft);updatePlayer();closeModal();document.dispatchEvent(new Event('lp:playerchanged'));}
+  function switchPlayer(id){const next=profiles.find(p=>p.id===id);if(!next)return;document.dispatchEvent(new Event('lp:beforeplayerchange'));audio.stopSpeech();player=next;rawStorage.set('lp-active-player',id);prefs=L.normalisePrefs(storage.get(KEY,{}));document.body.classList.toggle('softer',prefs.soft);updatePlayer();closeModal();document.dispatchEvent(new Event('lp:playerchanged'));}
   function choosePlayer(){const el=openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Who is playing?</h2><button data-close aria-label="Close player chooser">×</button></div><p>Every game and puzzle is open to everyone.</p><div id="player-list" class="player-list"></div><form id="player-form"><label>New player name or nickname (optional)<input name="name" maxlength="24" autocomplete="off" placeholder="Player '+(profiles.length+1)+'"></label><label>Choose a picture<select name="avatar"></select></label><button class="lp-primary" type="submit">Add player</button></form><p class="lp-small">Names, preferences and writing stay in this browser on this device. They are not sent to the server. Other people using this browser can see them. Clearing browser data removes them.</p>');
     const list=el.querySelector('#player-list');profiles.forEach(p=>{const row=document.createElement('div');row.className='saved-entry';const select=document.createElement('button');select.className='saved-text';select.textContent=p.avatar+' '+p.name+(p.id===player.id?' ✓':'');select.onclick=()=>switchPlayer(p.id);row.appendChild(select);const remove=document.createElement('button');remove.textContent='×';remove.setAttribute('aria-label','Delete '+p.name+' from this device');remove.onclick=async()=>{const id=p.id,name=p.name;if(await confirmAction('Remove this player?',name+' and their writing and preferences will be removed from this browser.','Remove player')){const prefix='lp-player-'+id+'-';rawStorage.removePrefix(prefix);profiles=profiles.filter(x=>x.id!==id);if(!profiles.length)profiles=[{id:'player-'+Date.now(),name:'Player 1',avatar:AVATARS[0]}];rawStorage.set('lp-players',profiles);if(id===player.id){player=profiles[0];rawStorage.set('lp-active-player',player.id);prefs=L.normalisePrefs(storage.get(KEY,{}));document.body.classList.toggle('softer',prefs.soft);updatePlayer();document.dispatchEvent(new Event('lp:playerchanged'));}choosePlayer();}};row.appendChild(remove);list.appendChild(row);});
     const form=el.querySelector('form');AVATARS.forEach(value=>{const option=document.createElement('option');option.value=value;option.textContent=value;form.elements.avatar.appendChild(option);});if(profiles.length>=12)form.hidden=true;form.onsubmit=e=>{e.preventDefault();const name=String(form.elements.name.value).trim().replace(/[\u0000-\u001f\u007f<>]/g,'').slice(0,24)||'Player '+(profiles.length+1);const id=window.crypto&&crypto.randomUUID?crypto.randomUUID():'player-'+Date.now()+'-'+Math.random().toString(36).slice(2,9);profiles.push({id,name,avatar:form.elements.avatar.value});const saved=rawStorage.set('lp-players',profiles);switchPlayer(id);if(!saved)status('This player can play now, but the browser could not remember them.');};
