@@ -17,17 +17,26 @@ The user authorised finishing tactile sound, applying the earlier comparative re
 
 ## Review and verification
 
-Fable 5.1's first review completed successfully. Its high/medium findings were acted on; the review was based on code, not subjective listening. A follow-up review is in progress. Files are in `.wrangler/studio-sound-review/fable-review.json` and `fable-final.json`.
+Two Fable 5.1 reviews completed successfully. Substantiated blockers and cheap reliability fixes were addressed, including provisional gesture history (pinch retains Redo and all Undo slots), awaited Back saves (including in-flight writes), repeated-New protection, audio fade continuity, unambiguous sound retry, local storage reconnection and releasing removed marble canvases. Both reviews were based on code, not subjective listening. Files are in `.wrangler/studio-sound-review/fable-review.json` and `fable-final.json`.
 
 136 automated tests pass. The existing touch and mouse harnesses now assert results; touch checks pass at 768×954. Native audio probes confirm nonzero output, bounded peaks and quiet idle/mute. `tools/test-studio-reliability.cjs` checks complete history, endpoints, sponge spacing, cancellation, local recovery, blank recovery, denied storage, export and phone/iPad control sizes. Desktop performance is about 60fps; this is not proof of physical iPad performance or pleasing sound.
 
-## Release work still pending at this checkpoint
+## Deployment completed; public verification blocked
 
-1. Read Fable's follow-up and fix substantiated blockers; rerun affected tests.
-2. Recheck the final landscape layout and native audio after any changes.
-3. Finish a release stage preserving public versions of every other game. `.wrangler/studio-release/prepare-release.cjs` downloads public runtime files from the existing host and overlays only eight Messy Studio files. The baseline is retained for rollback; docs, source artwork and local drafts are excluded.
-4. Publish the checked stage to the existing Cloudflare Pages `kpopboom` main branch, then verify served hashes and run a clean live-browser smoke check. User has already authorised publishing; do not ask again.
-5. Update this record with the deployment result and give the user the live studio and sound-table links. Do not claim actual-iPad listening or testing.
+Cloudflare confirmed production deployment at `https://f3ecfdbd.kpopboom.pages.dev` on 18 September 2026, shortly after06:27UTC. It uploaded eight changed files and reused433 existing files. The expected public game is `https://kpopboom.party/little-patterns/studio-lab.html`; the sound table is `https://kpopboom.party/little-patterns/studio-sound-review.html`.
+
+Final local checks passed:136 unit tests in total,21 focused browser reliability checks, the full touch/pinch/rotation harness, mouse checks and native audio output checks. The sound package is1,882,701bytes. All staged files outside the eight-file studio overlay match the downloaded public baseline exactly. Baseline and staged digests are recorded in `.wrangler/studio-release/release-manifest.json`.
+
+The next read-only public verification command was rejected by automatic approval review because the Codex approval service hit its usage limit, with a stated reset of11:51AM. It was not executed. Do not report public hashes or live-browser checks as passed. No credit-limit warning was available before that rejection. The existing user authorisation for deployment and testing persists, but this rejection must not be bypassed through another execution route or delegated proxy.
+
+Outstanding after the approval-service limit resets:
+
+1. Run `.wrangler/studio-release/verify-live.cjs` to verify all eight changed files and neighbouring-game hashes on the custom domain.
+2. Run a clean browser smoke check on the live studio, including successful bank load, sound controls, drawing, local draft and export. Use an isolated profile; never read saved artwork or player data from the user's profile.
+3. If verification reveals a release blocker, fix locally, run focused checks and redeploy within the user's authorised scope. The rollback reference is `https://cb6568f4.kpopboom.pages.dev`; its public bytes are preserved in `.wrangler/studio-release/public-baseline/`.
+4. Update this record and report the live links. Do not claim actual-iPad listening or testing.
+
+This is a written continuation handoff. Fable performed both review passes, but an autonomous post-limit implementation/verification handoff has NOT been started.
 
 ## Continuation routes
 

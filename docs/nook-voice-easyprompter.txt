@@ -1,0 +1,2147 @@
+﻿[NOOK VOICE RECORDING - 255 ENTRIES]
+
+[Read this setup before starting the prompter.]
+
+[Everything in square brackets is a silent instruction. Do not read it aloud.]
+
+[Speak each Line cue exactly as written. Then pause for one second before the actual words or sound.]
+
+[After each entry, leave two seconds of quiet. No need to clap or say end after every line.]
+
+[For a mistake: pause, say Retake, repeat the same Line cue, pause one second, then repeat the whole entry. Leave two seconds afterwards.]
+
+[Example retake cue to say: Retake. Line zero two seven.]
+
+[Continue from the next entry. You can leave the recorder running through breaks.]
+
+[Use your natural friendly voice. Capitals do not mean shout. Say the word blank where it appears.]
+
+[Pause instructions are visual cues, not automatic EasyPrompter timers. Set a comfortable scrolling speed.]
+
+[GET COMFORTABLE AT THE MICROPHONE. Leave ten seconds of room tone without speaking or moving.]
+
+Nook recording start.
+
+[PAUSE - TWO SECONDS]
+
+[ALPHABET SOUNDS - 001 TO 026]
+
+[For each letter, say its Line cue, pause, then make only the sound described. Do not say the example word or read the instruction.]
+
+[001 - LETTER A]
+
+Line zero zero one.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: Short a, as in apple. Ah. Keep it short, not the letter name.]
+
+[PAUSE - TWO SECONDS]
+
+[002 - LETTER B]
+
+Line zero zero two.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: The b sound at the start of bus. Make the sound only.]
+
+[PAUSE - TWO SECONDS]
+
+[003 - LETTER C]
+
+Line zero zero three.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: The hard c sound at the start of cat. Make the sound only.]
+
+[PAUSE - TWO SECONDS]
+
+[004 - LETTER D]
+
+Line zero zero four.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: The d sound at the start of dog. Make the sound only.]
+
+[PAUSE - TWO SECONDS]
+
+[005 - LETTER E]
+
+Line zero zero five.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: Short e, as in egg. Eh, not ay.]
+
+[PAUSE - TWO SECONDS]
+
+[006 - LETTER F]
+
+Line zero zero six.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: The f sound at the start of fish. Make the sound only.]
+
+[PAUSE - TWO SECONDS]
+
+[007 - LETTER G]
+
+Line zero zero seven.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: The hard g sound at the start of goat. Make the sound only.]
+
+[PAUSE - TWO SECONDS]
+
+[008 - LETTER H]
+
+Line zero zero eight.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: The h sound at the start of hat. Make the sound only.]
+
+[PAUSE - TWO SECONDS]
+
+[009 - LETTER I]
+
+Line zero zero nine.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: Short i, as in in. Not eye.]
+
+[PAUSE - TWO SECONDS]
+
+[010 - LETTER J]
+
+Line zero one zero.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: The j sound at the start of jam. Make the sound only.]
+
+[PAUSE - TWO SECONDS]
+
+[011 - LETTER K]
+
+Line zero one one.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: The k sound at the start of kite. Make the sound only.]
+
+[PAUSE - TWO SECONDS]
+
+[012 - LETTER L]
+
+Line zero one two.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: Ul, ending in l. Not the letter name and not luh.]
+
+[PAUSE - TWO SECONDS]
+
+[013 - LETTER M]
+
+Line zero one three.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: The m sound at the start of moon. Make the sound only.]
+
+[PAUSE - TWO SECONDS]
+
+[014 - LETTER N]
+
+Line zero one four.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: The n sound at the start of nest. Make the sound only.]
+
+[PAUSE - TWO SECONDS]
+
+[015 - LETTER O]
+
+Line zero one five.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: Short o, as in off or on. Not oh.]
+
+[PAUSE - TWO SECONDS]
+
+[016 - LETTER P]
+
+Line zero one six.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: The p sound at the start of pot. Make the sound only.]
+
+[PAUSE - TWO SECONDS]
+
+[017 - LETTER Q]
+
+Line zero one seven.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: The qu sound at the start of queen. Make the sound only.]
+
+[PAUSE - TWO SECONDS]
+
+[018 - LETTER R]
+
+Line zero one eight.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: Sustained r, as in rurrrr. Not the letter name.]
+
+[PAUSE - TWO SECONDS]
+
+[019 - LETTER S]
+
+Line zero one nine.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: The s sound at the start of sun. Make the sound only.]
+
+[PAUSE - TWO SECONDS]
+
+[020 - LETTER T]
+
+Line zero two zero.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: The t sound at the start of top. Make the sound only.]
+
+[PAUSE - TWO SECONDS]
+
+[021 - LETTER U]
+
+Line zero two one.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: Short u, as in up. Uh, not you.]
+
+[PAUSE - TWO SECONDS]
+
+[022 - LETTER V]
+
+Line zero two two.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: The v sound at the start of van. Make the sound only.]
+
+[PAUSE - TWO SECONDS]
+
+[023 - LETTER W]
+
+Line zero two three.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: The w sound at the start of wet. Make the sound only.]
+
+[PAUSE - TWO SECONDS]
+
+[024 - LETTER X]
+
+Line zero two four.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: Kus: one sound sequence, not the names of letters.]
+
+[PAUSE - TWO SECONDS]
+
+[025 - LETTER Y]
+
+Line zero two five.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: The y sound at the start of yes. Make the sound only.]
+
+[PAUSE - TWO SECONDS]
+
+[026 - LETTER Z]
+
+Line zero two six.
+
+[PAUSE - ONE SECOND]
+
+[MAKE THIS SOUND ONLY: Voiced zzzuh. Not suh and not the letter name.]
+
+[PAUSE - TWO SECONDS]
+
+[WORDS AND SENTENCES - 027 TO 255]
+
+[Read the words between the pause cues. Keep each sentence together, even when it contains a natural pause.]
+
+Line zero two seven.
+
+[PAUSE - ONE SECOND]
+
+A blank can grow.
+
+[PAUSE - TWO SECONDS]
+
+Line zero two eight.
+
+[PAUSE - ONE SECOND]
+
+A butterfly lands near Robin. Robin says, I feel surprised.
+
+[PAUSE - TWO SECONDS]
+
+Line zero two nine.
+
+[PAUSE - ONE SECOND]
+
+A different picture. Look again.
+
+[PAUSE - TWO SECONDS]
+
+Line zero three zero.
+
+[PAUSE - ONE SECOND]
+
+A fish can blank.
+
+[PAUSE - TWO SECONDS]
+
+Line zero three one.
+
+[PAUSE - ONE SECOND]
+
+A fish can SWIM.
+
+[PAUSE - TWO SECONDS]
+
+Line zero three two.
+
+[PAUSE - ONE SECOND]
+
+A FLOWER can grow.
+
+[PAUSE - TWO SECONDS]
+
+Line zero three three.
+
+[PAUSE - ONE SECOND]
+
+A wet blank can swim.
+
+[PAUSE - TWO SECONDS]
+
+Line zero three four.
+
+[PAUSE - ONE SECOND]
+
+A wet FISH can swim.
+
+[PAUSE - TWO SECONDS]
+
+Line zero three five.
+
+[PAUSE - ONE SECOND]
+
+A word for my feeling.
+
+[PAUSE - TWO SECONDS]
+
+Line zero three six.
+
+[PAUSE - ONE SECOND]
+
+Ali has planted a seed. Ali says, I feel proud.
+
+[PAUSE - TWO SECONDS]
+
+Line zero three seven.
+
+[PAUSE - ONE SECOND]
+
+Ali is angry.
+
+[PAUSE - TWO SECONDS]
+
+Line zero three eight.
+
+[PAUSE - ONE SECOND]
+
+Ali is building. The tower keeps falling. Ali says, I feel angry.
+
+[PAUSE - TWO SECONDS]
+
+Line zero three nine.
+
+[PAUSE - ONE SECOND]
+
+Ali is calm.
+
+[PAUSE - TWO SECONDS]
+
+Line zero four zero.
+
+[PAUSE - ONE SECOND]
+
+Ali is disappointed.
+
+[PAUSE - TWO SECONDS]
+
+Line zero four one.
+
+[PAUSE - ONE SECOND]
+
+Ali is excited.
+
+[PAUSE - TWO SECONDS]
+
+Line zero four two.
+
+[PAUSE - ONE SECOND]
+
+Ali is frustrated.
+
+[PAUSE - TWO SECONDS]
+
+Line zero four three.
+
+[PAUSE - ONE SECOND]
+
+Ali is happy.
+
+[PAUSE - TWO SECONDS]
+
+Line zero four four.
+
+[PAUSE - ONE SECOND]
+
+Ali is proud.
+
+[PAUSE - TWO SECONDS]
+
+Line zero four five.
+
+[PAUSE - ONE SECOND]
+
+Ali is sad.
+
+[PAUSE - TWO SECONDS]
+
+Line zero four six.
+
+[PAUSE - ONE SECOND]
+
+Ali is surprised.
+
+[PAUSE - TWO SECONDS]
+
+Line zero four seven.
+
+[PAUSE - ONE SECOND]
+
+Ali is trying a new slide. Ali says, I feel worried.
+
+[PAUSE - TWO SECONDS]
+
+Line zero four eight.
+
+[PAUSE - ONE SECOND]
+
+Ali is trying to untie a knot. Ali says, I feel frustrated.
+
+[PAUSE - TWO SECONDS]
+
+Line zero four nine.
+
+[PAUSE - ONE SECOND]
+
+Ali is worried.
+
+[PAUSE - TWO SECONDS]
+
+Line zero five zero.
+
+[PAUSE - ONE SECOND]
+
+Ali says, I feel angry.
+
+[PAUSE - TWO SECONDS]
+
+[NEXT: 051. Take a quiet break here if needed. Keep the recorder running.]
+
+Line zero five one.
+
+[PAUSE - ONE SECOND]
+
+Ali says, I feel frustrated.
+
+[PAUSE - TWO SECONDS]
+
+Line zero five two.
+
+[PAUSE - ONE SECOND]
+
+Ali says, I feel happy.
+
+[PAUSE - TWO SECONDS]
+
+Line zero five three.
+
+[PAUSE - ONE SECOND]
+
+Ali says, I feel proud.
+
+[PAUSE - TWO SECONDS]
+
+Line zero five four.
+
+[PAUSE - ONE SECOND]
+
+Ali says, I feel worried.
+
+[PAUSE - TWO SECONDS]
+
+Line zero five five.
+
+[PAUSE - ONE SECOND]
+
+Ali sees a flower in the garden. Ali says, I feel happy.
+
+[PAUSE - TWO SECONDS]
+
+Line zero five six.
+
+[PAUSE - ONE SECOND]
+
+Angry
+
+[PAUSE - TWO SECONDS]
+
+Line zero five seven.
+
+[PAUSE - ONE SECOND]
+
+APPLE
+
+[PAUSE - TWO SECONDS]
+
+Line zero five eight.
+
+[PAUSE - ONE SECOND]
+
+apples
+
+[PAUSE - TWO SECONDS]
+
+Line zero five nine.
+
+[PAUSE - ONE SECOND]
+
+ASLEEP
+
+[PAUSE - TWO SECONDS]
+
+Line zero six zero.
+
+[PAUSE - ONE SECOND]
+
+BALL
+
+[PAUSE - TWO SECONDS]
+
+Line zero six one.
+
+[PAUSE - ONE SECOND]
+
+BASKET
+
+[PAUSE - TWO SECONDS]
+
+Line zero six two.
+
+[PAUSE - ONE SECOND]
+
+BIG
+
+[PAUSE - TWO SECONDS]
+
+Line zero six three.
+
+[PAUSE - ONE SECOND]
+
+BUS
+
+[PAUSE - TWO SECONDS]
+
+Line zero six four.
+
+[PAUSE - ONE SECOND]
+
+Calm
+
+[PAUSE - TWO SECONDS]
+
+Line zero six five.
+
+[PAUSE - ONE SECOND]
+
+CAT
+
+[PAUSE - TWO SECONDS]
+
+Line zero six six.
+
+[PAUSE - ONE SECOND]
+
+circle
+
+[PAUSE - TWO SECONDS]
+
+Line zero six seven.
+
+[PAUSE - ONE SECOND]
+
+Copy if you like. Or just look.
+
+[PAUSE - TWO SECONDS]
+
+Line zero six eight.
+
+[PAUSE - ONE SECOND]
+
+Correct!
+
+[PAUSE - TWO SECONDS]
+
+Line zero six nine.
+
+[PAUSE - ONE SECOND]
+
+diamond
+
+[PAUSE - TWO SECONDS]
+
+Line zero seven zero.
+
+[PAUSE - ONE SECOND]
+
+Disappointed
+
+[PAUSE - TWO SECONDS]
+
+Line zero seven one.
+
+[PAUSE - ONE SECOND]
+
+DOG
+
+[PAUSE - TWO SECONDS]
+
+Line zero seven two.
+
+[PAUSE - ONE SECOND]
+
+DRY
+
+[PAUSE - TWO SECONDS]
+
+Line zero seven three.
+
+[PAUSE - ONE SECOND]
+
+EIGHT
+
+[PAUSE - TWO SECONDS]
+
+Line zero seven four.
+
+[PAUSE - ONE SECOND]
+
+EIGHTEEN
+
+[PAUSE - TWO SECONDS]
+
+Line zero seven five.
+
+[PAUSE - ONE SECOND]
+
+EIGHTY
+
+[PAUSE - TWO SECONDS]
+
+[NEXT: 076. Take a quiet break here if needed. Keep the recorder running.]
+
+Line zero seven six.
+
+[PAUSE - ONE SECOND]
+
+ELEVEN
+
+[PAUSE - TWO SECONDS]
+
+Line zero seven seven.
+
+[PAUSE - ONE SECOND]
+
+equals
+
+[PAUSE - TWO SECONDS]
+
+Line zero seven eight.
+
+[PAUSE - ONE SECOND]
+
+Excited
+
+[PAUSE - TWO SECONDS]
+
+Line zero seven nine.
+
+[PAUSE - ONE SECOND]
+
+FAST
+
+[PAUSE - TWO SECONDS]
+
+Line zero eight zero.
+
+[PAUSE - ONE SECOND]
+
+FIFTEEN
+
+[PAUSE - TWO SECONDS]
+
+Line zero eight one.
+
+[PAUSE - ONE SECOND]
+
+FIFTY
+
+[PAUSE - TWO SECONDS]
+
+Line zero eight two.
+
+[PAUSE - ONE SECOND]
+
+Find the same picture.
+
+[PAUSE - TWO SECONDS]
+
+Line zero eight three.
+
+[PAUSE - ONE SECOND]
+
+FISH
+
+[PAUSE - TWO SECONDS]
+
+Line zero eight four.
+
+[PAUSE - ONE SECOND]
+
+FIVE
+
+[PAUSE - TWO SECONDS]
+
+Line zero eight five.
+
+[PAUSE - ONE SECOND]
+
+FLOWER
+
+[PAUSE - TWO SECONDS]
+
+Line zero eight six.
+
+[PAUSE - ONE SECOND]
+
+FORTY
+
+[PAUSE - TWO SECONDS]
+
+Line zero eight seven.
+
+[PAUSE - ONE SECOND]
+
+FOUR
+
+[PAUSE - TWO SECONDS]
+
+Line zero eight eight.
+
+[PAUSE - ONE SECOND]
+
+FOURTEEN
+
+[PAUSE - TWO SECONDS]
+
+Line zero eight nine.
+
+[PAUSE - ONE SECOND]
+
+Frustrated
+
+[PAUSE - TWO SECONDS]
+
+Line zero nine zero.
+
+[PAUSE - ONE SECOND]
+
+Good matching!
+
+[PAUSE - TWO SECONDS]
+
+Line zero nine one.
+
+[PAUSE - ONE SECOND]
+
+Happy
+
+[PAUSE - TWO SECONDS]
+
+Line zero nine two.
+
+[PAUSE - ONE SECOND]
+
+Hello! I'm Nook. Let's play.
+
+[PAUSE - TWO SECONDS]
+
+Line zero nine three.
+
+[PAUSE - ONE SECOND]
+
+HOT
+
+[PAUSE - TWO SECONDS]
+
+Line zero nine four.
+
+[PAUSE - ONE SECOND]
+
+Jo is angry.
+
+[PAUSE - TWO SECONDS]
+
+Line zero nine five.
+
+[PAUSE - ONE SECOND]
+
+Jo is calm.
+
+[PAUSE - TWO SECONDS]
+
+Line zero nine six.
+
+[PAUSE - ONE SECOND]
+
+Jo is disappointed.
+
+[PAUSE - TWO SECONDS]
+
+Line zero nine seven.
+
+[PAUSE - ONE SECOND]
+
+Jo is excited.
+
+[PAUSE - TWO SECONDS]
+
+Line zero nine eight.
+
+[PAUSE - ONE SECOND]
+
+Jo is frustrated.
+
+[PAUSE - TWO SECONDS]
+
+Line zero nine nine.
+
+[PAUSE - ONE SECOND]
+
+Jo is getting ready for a picnic. Jo says, I feel excited.
+
+[PAUSE - TWO SECONDS]
+
+Line one zero zero.
+
+[PAUSE - ONE SECOND]
+
+Jo is happy.
+
+[PAUSE - TWO SECONDS]
+
+[NEXT: 101. Take a quiet break here if needed. Keep the recorder running.]
+
+Line one zero one.
+
+[PAUSE - ONE SECOND]
+
+Jo is proud.
+
+[PAUSE - TWO SECONDS]
+
+Line one zero two.
+
+[PAUSE - ONE SECOND]
+
+Jo is reading in a cosy chair. Jo says, I feel calm.
+
+[PAUSE - TWO SECONDS]
+
+Line one zero three.
+
+[PAUSE - ONE SECOND]
+
+Jo is sad.
+
+[PAUSE - TWO SECONDS]
+
+Line one zero four.
+
+[PAUSE - ONE SECOND]
+
+Jo is surprised.
+
+[PAUSE - TWO SECONDS]
+
+Line one zero five.
+
+[PAUSE - ONE SECOND]
+
+Jo is worried.
+
+[PAUSE - TWO SECONDS]
+
+Line one zero six.
+
+[PAUSE - ONE SECOND]
+
+Jo says, I feel calm.
+
+[PAUSE - TWO SECONDS]
+
+Line one zero seven.
+
+[PAUSE - ONE SECOND]
+
+Jo says, I feel disappointed.
+
+[PAUSE - TWO SECONDS]
+
+Line one zero eight.
+
+[PAUSE - ONE SECOND]
+
+Jo says, I feel excited.
+
+[PAUSE - TWO SECONDS]
+
+Line one zero nine.
+
+[PAUSE - ONE SECOND]
+
+Jo says, I feel sad.
+
+[PAUSE - TWO SECONDS]
+
+Line one one zero.
+
+[PAUSE - ONE SECOND]
+
+Jo says, I feel surprised.
+
+[PAUSE - TWO SECONDS]
+
+Line one one one.
+
+[PAUSE - ONE SECOND]
+
+Jo sees a new shoot in the pot. Jo says, I feel surprised.
+
+[PAUSE - TWO SECONDS]
+
+Line one one two.
+
+[PAUSE - ONE SECOND]
+
+Jo wanted blue paint. The pot is empty. Jo says, I feel disappointed.
+
+[PAUSE - TWO SECONDS]
+
+Line one one three.
+
+[PAUSE - ONE SECOND]
+
+Jo's favourite song has ended. Jo says, I feel sad.
+
+[PAUSE - TWO SECONDS]
+
+Line one one four.
+
+[PAUSE - ONE SECOND]
+
+JUMP
+
+[PAUSE - TWO SECONDS]
+
+Line one one five.
+
+[PAUSE - ONE SECOND]
+
+LOUD
+
+[PAUSE - TWO SECONDS]
+
+Line one one six.
+
+[PAUSE - ONE SECOND]
+
+Lovely counting.
+
+[PAUSE - TWO SECONDS]
+
+Line one one seven.
+
+[PAUSE - ONE SECOND]
+
+MOON
+
+[PAUSE - TWO SECONDS]
+
+Line one one eight.
+
+[PAUSE - ONE SECOND]
+
+NINE
+
+[PAUSE - TWO SECONDS]
+
+Line one one nine.
+
+[PAUSE - ONE SECOND]
+
+NINETEEN
+
+[PAUSE - TWO SECONDS]
+
+Line one two zero.
+
+[PAUSE - ONE SECOND]
+
+NINETY
+
+[PAUSE - TWO SECONDS]
+
+Line one two one.
+
+[PAUSE - ONE SECOND]
+
+Nook eats an APPLE.
+
+[PAUSE - TWO SECONDS]
+
+Line one two two.
+
+[PAUSE - ONE SECOND]
+
+Nook eats an blank.
+
+[PAUSE - TWO SECONDS]
+
+Line one two three.
+
+[PAUSE - ONE SECOND]
+
+Nook has a BALL.
+
+[PAUSE - TWO SECONDS]
+
+Line one two four.
+
+[PAUSE - ONE SECOND]
+
+Nook has a blank.
+
+[PAUSE - TWO SECONDS]
+
+Line one two five.
+
+[PAUSE - ONE SECOND]
+
+Nook has a soft BALL.
+
+[PAUSE - TWO SECONDS]
+
+[NEXT: 126. Take a quiet break here if needed. Keep the recorder running.]
+
+Line one two six.
+
+[PAUSE - ONE SECOND]
+
+Nook has a soft blank.
+
+[PAUSE - TWO SECONDS]
+
+Line one two seven.
+
+[PAUSE - ONE SECOND]
+
+Not sure
+
+[PAUSE - TWO SECONDS]
+
+Line one two eight.
+
+[PAUSE - ONE SECOND]
+
+ONE
+
+[PAUSE - TWO SECONDS]
+
+Line one two nine.
+
+[PAUSE - ONE SECOND]
+
+ONE HUNDRED
+
+[PAUSE - TWO SECONDS]
+
+Line one three zero.
+
+[PAUSE - ONE SECOND]
+
+oval
+
+[PAUSE - TWO SECONDS]
+
+Line one three one.
+
+[PAUSE - ONE SECOND]
+
+plus
+
+[PAUSE - TWO SECONDS]
+
+Line one three two.
+
+[PAUSE - ONE SECOND]
+
+Proud
+
+[PAUSE - TWO SECONDS]
+
+Line one three three.
+
+[PAUSE - ONE SECOND]
+
+[Present-tense verb: pronounce reed.]
+
+READ
+
+[PAUSE - TWO SECONDS]
+
+Line one three four.
+
+[PAUSE - ONE SECOND]
+
+Robin hears a favourite song. Robin says, I feel excited.
+
+[PAUSE - TWO SECONDS]
+
+Line one three five.
+
+[PAUSE - ONE SECOND]
+
+Robin is angry.
+
+[PAUSE - TWO SECONDS]
+
+Line one three six.
+
+[PAUSE - ONE SECOND]
+
+Robin is calm.
+
+[PAUSE - TWO SECONDS]
+
+Line one three seven.
+
+[PAUSE - ONE SECOND]
+
+Robin is disappointed.
+
+[PAUSE - TWO SECONDS]
+
+Line one three eight.
+
+[PAUSE - ONE SECOND]
+
+Robin is excited.
+
+[PAUSE - TWO SECONDS]
+
+Line one three nine.
+
+[PAUSE - ONE SECOND]
+
+Robin is frustrated.
+
+[PAUSE - TWO SECONDS]
+
+Line one four zero.
+
+[PAUSE - ONE SECOND]
+
+Robin is happy.
+
+[PAUSE - TWO SECONDS]
+
+Line one four one.
+
+[PAUSE - ONE SECOND]
+
+Robin is proud.
+
+[PAUSE - TWO SECONDS]
+
+Line one four two.
+
+[PAUSE - ONE SECOND]
+
+Robin is sad.
+
+[PAUSE - TWO SECONDS]
+
+Line one four three.
+
+[PAUSE - ONE SECOND]
+
+Robin is surprised.
+
+[PAUSE - TWO SECONDS]
+
+Line one four four.
+
+[PAUSE - ONE SECOND]
+
+Robin is worried.
+
+[PAUSE - TWO SECONDS]
+
+Line one four five.
+
+[PAUSE - ONE SECOND]
+
+Robin says, I feel angry.
+
+[PAUSE - TWO SECONDS]
+
+Line one four six.
+
+[PAUSE - ONE SECOND]
+
+Robin says, I feel disappointed.
+
+[PAUSE - TWO SECONDS]
+
+Line one four seven.
+
+[PAUSE - ONE SECOND]
+
+Robin says, I feel excited.
+
+[PAUSE - TWO SECONDS]
+
+Line one four eight.
+
+[PAUSE - ONE SECOND]
+
+Robin says, I feel sad.
+
+[PAUSE - TWO SECONDS]
+
+Line one four nine.
+
+[PAUSE - ONE SECOND]
+
+Robin says, I feel surprised.
+
+[PAUSE - TWO SECONDS]
+
+Line one five zero.
+
+[PAUSE - ONE SECOND]
+
+Robin wanted the swings. They are closed today. Robin says, I feel disappointed.
+
+[PAUSE - TWO SECONDS]
+
+[NEXT: 151. Take a quiet break here if needed. Keep the recorder running.]
+
+Line one five one.
+
+[PAUSE - ONE SECOND]
+
+Robin wanted to play outside. It is raining. Robin says, I feel sad.
+
+[PAUSE - TWO SECONDS]
+
+Line one five two.
+
+[PAUSE - ONE SECOND]
+
+Robin's zip is stuck. Robin says, I feel angry.
+
+[PAUSE - TWO SECONDS]
+
+Line one five three.
+
+[PAUSE - ONE SECOND]
+
+RUN
+
+[PAUSE - TWO SECONDS]
+
+Line one five four.
+
+[PAUSE - ONE SECOND]
+
+Sad
+
+[PAUSE - TWO SECONDS]
+
+Line one five five.
+
+[PAUSE - ONE SECOND]
+
+Sam has finished a drawing. Sam says, I feel proud.
+
+[PAUSE - TWO SECONDS]
+
+Line one five six.
+
+[PAUSE - ONE SECOND]
+
+Sam is angry.
+
+[PAUSE - TWO SECONDS]
+
+Line one five seven.
+
+[PAUSE - ONE SECOND]
+
+Sam is calm.
+
+[PAUSE - TWO SECONDS]
+
+Line one five eight.
+
+[PAUSE - ONE SECOND]
+
+Sam is disappointed.
+
+[PAUSE - TWO SECONDS]
+
+Line one five nine.
+
+[PAUSE - ONE SECOND]
+
+Sam is excited.
+
+[PAUSE - TWO SECONDS]
+
+Line one six zero.
+
+[PAUSE - ONE SECOND]
+
+Sam is frustrated.
+
+[PAUSE - TWO SECONDS]
+
+Line one six one.
+
+[PAUSE - ONE SECOND]
+
+Sam is happy.
+
+[PAUSE - TWO SECONDS]
+
+Line one six two.
+
+[PAUSE - ONE SECOND]
+
+Sam is playing with bubbles. Sam says, I feel happy.
+
+[PAUSE - TWO SECONDS]
+
+Line one six three.
+
+[PAUSE - ONE SECOND]
+
+Sam is proud.
+
+[PAUSE - TWO SECONDS]
+
+Line one six four.
+
+[PAUSE - ONE SECOND]
+
+Sam is resting under a tree. Sam says, I feel calm.
+
+[PAUSE - TWO SECONDS]
+
+Line one six five.
+
+[PAUSE - ONE SECOND]
+
+Sam is sad.
+
+[PAUSE - TWO SECONDS]
+
+Line one six six.
+
+[PAUSE - ONE SECOND]
+
+Sam is surprised.
+
+[PAUSE - TWO SECONDS]
+
+Line one six seven.
+
+[PAUSE - ONE SECOND]
+
+Sam is trying a new swimming class. Sam says, I feel worried.
+
+[PAUSE - TWO SECONDS]
+
+Line one six eight.
+
+[PAUSE - ONE SECOND]
+
+Sam is trying to thread a bead. Sam says, I feel frustrated.
+
+[PAUSE - TWO SECONDS]
+
+Line one six nine.
+
+[PAUSE - ONE SECOND]
+
+Sam is worried.
+
+[PAUSE - TWO SECONDS]
+
+Line one seven zero.
+
+[PAUSE - ONE SECOND]
+
+Sam says, I feel calm.
+
+[PAUSE - TWO SECONDS]
+
+Line one seven one.
+
+[PAUSE - ONE SECOND]
+
+Sam says, I feel frustrated.
+
+[PAUSE - TWO SECONDS]
+
+Line one seven two.
+
+[PAUSE - ONE SECOND]
+
+Sam says, I feel happy.
+
+[PAUSE - TWO SECONDS]
+
+Line one seven three.
+
+[PAUSE - ONE SECOND]
+
+Sam says, I feel proud.
+
+[PAUSE - TWO SECONDS]
+
+Line one seven four.
+
+[PAUSE - ONE SECOND]
+
+Sam says, I feel worried.
+
+[PAUSE - TWO SECONDS]
+
+Line one seven five.
+
+[PAUSE - ONE SECOND]
+
+SEVEN
+
+[PAUSE - TWO SECONDS]
+
+[NEXT: 176. Take a quiet break here if needed. Keep the recorder running.]
+
+Line one seven six.
+
+[PAUSE - ONE SECOND]
+
+SEVENTEEN
+
+[PAUSE - TWO SECONDS]
+
+Line one seven seven.
+
+[PAUSE - ONE SECOND]
+
+SEVENTY
+
+[PAUSE - TWO SECONDS]
+
+Line one seven eight.
+
+[PAUSE - ONE SECOND]
+
+SING
+
+[PAUSE - TWO SECONDS]
+
+Line one seven nine.
+
+[PAUSE - ONE SECOND]
+
+SIX
+
+[PAUSE - TWO SECONDS]
+
+Line one eight zero.
+
+[PAUSE - ONE SECOND]
+
+SIXTEEN
+
+[PAUSE - TWO SECONDS]
+
+Line one eight one.
+
+[PAUSE - ONE SECOND]
+
+SIXTY
+
+[PAUSE - TWO SECONDS]
+
+Line one eight two.
+
+[PAUSE - ONE SECOND]
+
+SOFT
+
+[PAUSE - TWO SECONDS]
+
+Line one eight three.
+
+[PAUSE - ONE SECOND]
+
+Something else
+
+[PAUSE - TWO SECONDS]
+
+Line one eight four.
+
+[PAUSE - ONE SECOND]
+
+Spot on!
+
+[PAUSE - TWO SECONDS]
+
+Line one eight five.
+
+[PAUSE - ONE SECOND]
+
+square
+
+[PAUSE - TWO SECONDS]
+
+Line one eight six.
+
+[PAUSE - ONE SECOND]
+
+SUN
+
+[PAUSE - TWO SECONDS]
+
+Line one eight seven.
+
+[PAUSE - ONE SECOND]
+
+Surprised
+
+[PAUSE - TWO SECONDS]
+
+Line one eight eight.
+
+[PAUSE - ONE SECOND]
+
+SWIM
+
+[PAUSE - TWO SECONDS]
+
+Line one eight nine.
+
+[PAUSE - ONE SECOND]
+
+take away
+
+[PAUSE - TWO SECONDS]
+
+Line one nine zero.
+
+[PAUSE - ONE SECOND]
+
+TALL
+
+[PAUSE - TWO SECONDS]
+
+Line one nine one.
+
+[PAUSE - ONE SECOND]
+
+TEN
+
+[PAUSE - TWO SECONDS]
+
+Line one nine two.
+
+[PAUSE - ONE SECOND]
+
+That's right!
+
+[PAUSE - TWO SECONDS]
+
+Line one nine three.
+
+[PAUSE - ONE SECOND]
+
+That’s the one.
+
+[PAUSE - TWO SECONDS]
+
+Line one nine four.
+
+[PAUSE - ONE SECOND]
+
+The BALL is wet.
+
+[PAUSE - TWO SECONDS]
+
+Line one nine five.
+
+[PAUSE - ONE SECOND]
+
+The big blank can run.
+
+[PAUSE - TWO SECONDS]
+
+Line one nine six.
+
+[PAUSE - ONE SECOND]
+
+The big DOG can run.
+
+[PAUSE - TWO SECONDS]
+
+Line one nine seven.
+
+[PAUSE - ONE SECOND]
+
+The blank can run.
+
+[PAUSE - TWO SECONDS]
+
+Line one nine eight.
+
+[PAUSE - ONE SECOND]
+
+The blank can swim.
+
+[PAUSE - TWO SECONDS]
+
+Line one nine nine.
+
+[PAUSE - ONE SECOND]
+
+The blank is asleep.
+
+[PAUSE - TWO SECONDS]
+
+Line two zero zero.
+
+[PAUSE - ONE SECOND]
+
+The blank is big.
+
+[PAUSE - TWO SECONDS]
+
+[NEXT: 201. Take a quiet break here if needed. Keep the recorder running.]
+
+Line two zero one.
+
+[PAUSE - ONE SECOND]
+
+The blank is dry.
+
+[PAUSE - TWO SECONDS]
+
+Line two zero two.
+
+[PAUSE - ONE SECOND]
+
+The blank is hot.
+
+[PAUSE - TWO SECONDS]
+
+Line two zero three.
+
+[PAUSE - ONE SECOND]
+
+The blank is out.
+
+[PAUSE - TWO SECONDS]
+
+Line two zero four.
+
+[PAUSE - ONE SECOND]
+
+The blank is wet.
+
+[PAUSE - TWO SECONDS]
+
+Line two zero five.
+
+[PAUSE - ONE SECOND]
+
+The bus is BIG.
+
+[PAUSE - TWO SECONDS]
+
+Line two zero six.
+
+[PAUSE - ONE SECOND]
+
+The bus is blank.
+
+[PAUSE - TWO SECONDS]
+
+Line two zero seven.
+
+[PAUSE - ONE SECOND]
+
+The CAT is asleep.
+
+[PAUSE - TWO SECONDS]
+
+Line two zero eight.
+
+[PAUSE - ONE SECOND]
+
+The cat is ASLEEP now.
+
+[PAUSE - TWO SECONDS]
+
+Line two zero nine.
+
+[PAUSE - ONE SECOND]
+
+The cat is blank now.
+
+[PAUSE - TWO SECONDS]
+
+Line two one zero.
+
+[PAUSE - ONE SECOND]
+
+The CAT is dry.
+
+[PAUSE - TWO SECONDS]
+
+Line two one one.
+
+[PAUSE - ONE SECOND]
+
+The dog can blank.
+
+[PAUSE - TWO SECONDS]
+
+Line two one two.
+
+[PAUSE - ONE SECOND]
+
+The dog can JUMP.
+
+[PAUSE - TWO SECONDS]
+
+Line two one three.
+
+[PAUSE - ONE SECOND]
+
+The DOG can run.
+
+[PAUSE - TWO SECONDS]
+
+Line two one four.
+
+[PAUSE - ONE SECOND]
+
+The DOG is wet.
+
+[PAUSE - TWO SECONDS]
+
+Line two one five.
+
+[PAUSE - ONE SECOND]
+
+The FISH can swim.
+
+[PAUSE - TWO SECONDS]
+
+Line two one six.
+
+[PAUSE - ONE SECOND]
+
+The fish is blank.
+
+[PAUSE - TWO SECONDS]
+
+Line two one seven.
+
+[PAUSE - ONE SECOND]
+
+The fish is WET.
+
+[PAUSE - TWO SECONDS]
+
+Line two one eight.
+
+[PAUSE - ONE SECOND]
+
+The little blank is fast.
+
+[PAUSE - TWO SECONDS]
+
+Line two one nine.
+
+[PAUSE - ONE SECOND]
+
+The little BUS is fast.
+
+[PAUSE - TWO SECONDS]
+
+Line two two zero.
+
+[PAUSE - ONE SECOND]
+
+The MOON is big.
+
+[PAUSE - TWO SECONDS]
+
+Line two two one.
+
+[PAUSE - ONE SECOND]
+
+The MOON is out.
+
+[PAUSE - TWO SECONDS]
+
+Line two two two.
+
+[PAUSE - ONE SECOND]
+
+The pattern fits.
+
+[PAUSE - TWO SECONDS]
+
+Line two two three.
+
+[PAUSE - ONE SECOND]
+
+The sun is blank.
+
+[PAUSE - TWO SECONDS]
+
+Line two two four.
+
+[PAUSE - ONE SECOND]
+
+The sun is HOT.
+
+[PAUSE - TWO SECONDS]
+
+Line two two five.
+
+[PAUSE - ONE SECOND]
+
+The tall blank is dry.
+
+[PAUSE - TWO SECONDS]
+
+[NEXT: 226. Take a quiet break here if needed. Keep the recorder running.]
+
+Line two two six.
+
+[PAUSE - ONE SECOND]
+
+The tall TREE is dry.
+
+[PAUSE - TWO SECONDS]
+
+Line two two seven.
+
+[PAUSE - ONE SECOND]
+
+The tree is blank.
+
+[PAUSE - TWO SECONDS]
+
+Line two two eight.
+
+[PAUSE - ONE SECOND]
+
+The tree is TALL.
+
+[PAUSE - TWO SECONDS]
+
+Line two two nine.
+
+[PAUSE - ONE SECOND]
+
+THIRTEEN
+
+[PAUSE - TWO SECONDS]
+
+Line two three zero.
+
+[PAUSE - ONE SECOND]
+
+THIRTY
+
+[PAUSE - TWO SECONDS]
+
+Line two three one.
+
+[PAUSE - ONE SECOND]
+
+THREE
+
+[PAUSE - TWO SECONDS]
+
+Line two three two.
+
+[PAUSE - ONE SECOND]
+
+TREE
+
+[PAUSE - TWO SECONDS]
+
+Line two three three.
+
+[PAUSE - ONE SECOND]
+
+triangle
+
+[PAUSE - TWO SECONDS]
+
+Line two three four.
+
+[PAUSE - ONE SECOND]
+
+TWELVE
+
+[PAUSE - TWO SECONDS]
+
+Line two three five.
+
+[PAUSE - ONE SECOND]
+
+TWENTY
+
+[PAUSE - TWO SECONDS]
+
+Line two three six.
+
+[PAUSE - ONE SECOND]
+
+TWO
+
+[PAUSE - TWO SECONDS]
+
+Line two three seven.
+
+[PAUSE - ONE SECOND]
+
+Well done!
+
+[PAUSE - TWO SECONDS]
+
+Line two three eight.
+
+[PAUSE - ONE SECOND]
+
+WET
+
+[PAUSE - TWO SECONDS]
+
+Line two three nine.
+
+[PAUSE - ONE SECOND]
+
+Whoops! Try again.
+
+[PAUSE - TWO SECONDS]
+
+Line two four zero.
+
+[PAUSE - ONE SECOND]
+
+Worried
+
+[PAUSE - TWO SECONDS]
+
+Line two four one.
+
+[PAUSE - ONE SECOND]
+
+Yes!
+
+[PAUSE - TWO SECONDS]
+
+Line two four two.
+
+[PAUSE - ONE SECOND]
+
+You chose angry.
+
+[PAUSE - TWO SECONDS]
+
+Line two four three.
+
+[PAUSE - ONE SECOND]
+
+You chose calm.
+
+[PAUSE - TWO SECONDS]
+
+Line two four four.
+
+[PAUSE - ONE SECOND]
+
+You chose disappointed.
+
+[PAUSE - TWO SECONDS]
+
+Line two four five.
+
+[PAUSE - ONE SECOND]
+
+You chose excited.
+
+[PAUSE - TWO SECONDS]
+
+Line two four six.
+
+[PAUSE - ONE SECOND]
+
+You chose frustrated.
+
+[PAUSE - TWO SECONDS]
+
+Line two four seven.
+
+[PAUSE - ONE SECOND]
+
+You chose happy.
+
+[PAUSE - TWO SECONDS]
+
+Line two four eight.
+
+[PAUSE - ONE SECOND]
+
+You chose not sure.
+
+[PAUSE - TWO SECONDS]
+
+Line two four nine.
+
+[PAUSE - ONE SECOND]
+
+You chose proud.
+
+[PAUSE - TWO SECONDS]
+
+Line two five zero.
+
+[PAUSE - ONE SECOND]
+
+You chose sad.
+
+[PAUSE - TWO SECONDS]
+
+Line two five one.
+
+[PAUSE - ONE SECOND]
+
+You chose something else.
+
+[PAUSE - TWO SECONDS]
+
+Line two five two.
+
+[PAUSE - ONE SECOND]
+
+You chose surprised.
+
+[PAUSE - TWO SECONDS]
+
+Line two five three.
+
+[PAUSE - ONE SECOND]
+
+You chose worried.
+
+[PAUSE - TWO SECONDS]
+
+Line two five four.
+
+[PAUSE - ONE SECOND]
+
+You found it.
+
+[PAUSE - TWO SECONDS]
+
+Line two five five.
+
+[PAUSE - ONE SECOND]
+
+ZERO
+
+[PAUSE - TWO SECONDS]
+
+Nook recording complete.
+
+[Leave ten seconds of room tone. Then stop the recorder when convenient.]
