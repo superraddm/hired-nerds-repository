@@ -54,7 +54,18 @@
   #app.narrow #bar,#app.narrow #ctx,#app.narrow #palette{gap:5px;padding:5px 7px} #app.narrow input[type=range]{width:82px} #app.narrow .sw{width:48px;height:48px;border-radius:50%}
   #app.narrow #ctx{min-height:54px}
   #app.narrow #size-ui>span[data-icon]{display:none}
-  #stamp-ui button svg{width:38px;height:38px} #app.narrow #stamp-ui button svg{width:34px;height:34px}
+  #stamp-ui button svg,#mine-ui button svg{width:38px;height:38px} #app.narrow #stamp-ui button svg,#app.narrow #mine-ui button svg{width:34px;height:34px}
+  #stamp-ui,#mine-ui{flex-wrap:wrap}                 /* on an upright phone the library is wider than the screen: it takes a second row instead of running off the edge */
+  #mine-open,#mine-new{border-style:dashed;border-color:#b9a36a;background:#fffaf0}
+  /* the stamp maker covers the whole game; its sheet is a square as large as the screen allows */
+  #maker{position:absolute;top:0;right:0;bottom:0;left:0;z-index:8;display:flex;flex-direction:column;background:var(--bar)}
+  #maker-bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 8px;padding:6px 10px;border-bottom:2px solid var(--line)}
+  #mine-ui button canvas{width:38px;height:38px;display:block;pointer-events:none} #app.narrow #mine-ui button canvas{width:34px;height:34px}
+  #app.narrow #maker-bar button{width:48px;height:48px;border-radius:14px} #app.narrow #maker-bar button svg{width:32px;height:32px}
+  #maker-bar button{width:60px;height:60px;border-radius:18px} #maker-bar button svg{width:40px;height:40px} #maker-save{border-color:#6f9a3a;background:#f1f8e4}
+  #maker-stage{flex:1;min-height:0;display:grid;place-items:center;background:#efe6c6;touch-action:none}
+  #maker-canvas{display:block;touch-action:none;border-radius:18px;background:var(--paper);background-image:radial-gradient(rgba(120,100,60,.05) 1px,transparent 1.2px);background-size:7px 7px;box-shadow:0 1px 8px rgba(80,60,20,.25);outline:3px dashed #d9c78e;outline-offset:-10px;cursor:crosshair}
+  @media (orientation:landscape) and (max-height:560px){#maker{flex-direction:row}#maker-bar{flex-direction:column;border-bottom:0;border-right:2px solid var(--line)}#maker-bar .group{flex-direction:column}}
   /* A phone on its side has almost no height: the controls go down the sides and the sheet gets all of it. */
   @media (orientation:landscape) and (max-height:560px){
     #app{flex-direction:row}
@@ -62,7 +73,7 @@
     #bar .group,#ctx .group{display:contents}
     #ctx,#app.narrow #ctx{min-height:0;border-bottom:0;border-right:2px solid var(--line)} #palette{border-top:0;border-left:2px solid var(--line)}
     #ctx,#app.narrow #ctx{width:64px;flex:none;align-items:center}
-    #ctx:has(#stamp-ui:not([hidden])),#app.narrow #ctx:has(#stamp-ui:not([hidden])){width:auto;max-width:132px}   /* the stamp library needs two columns on a phone held sideways */
+    #ctx:has(#stamp-ui:not([hidden])),#app.narrow #ctx:has(#stamp-ui:not([hidden])),#ctx:has(#mine-ui:not([hidden])),#app.narrow #ctx:has(#mine-ui:not([hidden])){width:auto;max-width:132px}   /* the stamp library needs two columns on a phone held sideways */
     #size-ui{flex-direction:column;width:48px;gap:0} #size-ui>span[data-icon]{display:none}
     #app.narrow #size-ui input,#size-ui input{width:82px;height:40px;transform:rotate(-90deg);margin:23px -17px}
     #perf.docked{position:absolute;right:104px;bottom:6px;min-height:0!important;max-width:45%;border-radius:10px;border:0}
@@ -109,6 +120,7 @@
       <button data-brush="sponge" data-icon="bSponge" aria-label="Sponge"></button>
     </div>
     <div class="group" id="stamp-ui" aria-label="Stamp shape" hidden></div>
+    <div class="group" id="mine-ui" aria-label="My own stamps" hidden></div>
     <div class="group" id="marble-ui" hidden>
       <button id="away" data-icon="away" aria-label="Clear all the marbles"></button>
     </div>
@@ -116,6 +128,10 @@
   </div>
   <div id="stage"><div id="paper"><canvas id="paint"></canvas></div><pre id="perf" class="lab-only"></pre><p id="draft-status" role="status" hidden></p></div>
   <div id="palette" aria-label="Colours"></div>
+  <div id="maker" role="dialog" aria-modal="true" aria-label="Make your own stamp. Draw a shape; every line joins up and fills in." hidden>
+    <div id="maker-bar"><button id="maker-close" aria-label="Go back without saving"></button><div class="group" id="maker-pens" role="group" aria-label="Pens"><button data-pen="draw" aria-label="Draw. A line that comes back to its start fills in." aria-pressed="true"></button><button data-pen="cut" aria-label="Remove. A loop cuts a hole, a line rubs a line out." aria-pressed="false"></button></div><div class="group"><button id="maker-undo" aria-label="Take back the last line" disabled></button><button id="maker-clear" aria-label="Start again" disabled></button><button id="maker-fit" data-icon="fit" aria-label="Show the whole stamp" hidden></button></div><button id="maker-save" aria-label="Save my stamp" disabled></button></div>
+    <div id="maker-stage"><canvas id="maker-canvas" aria-label="Draw your stamp here"></canvas></div>
+  </div>
 </div>
 <div id="export-panel" role="dialog" aria-modal="true" aria-labelledby="export-title" hidden>
   <div id="export-card"><h2 id="export-title">Your picture</h2><img id="export-image" alt="Your painting, ready to save" hidden>
@@ -267,10 +283,10 @@ function redo(){moveHistory(redoStack,undoStack);}
 function popUndo(){const c=undoStack.pop();if(!c)return;restoreState(c);releaseSnapshot(c);historyButtons();changed();}
 
 /* ---------- state + toolbar ---------- */
-let sheetBlank=true;
+let sheetBlank=true,mineOpen=false;                  // mineOpen: the stamp row is showing the drawer of home-made stamps instead of the library
 const S = {tool:'brush', brush:'round', stamp:'star', colour:COLOURS[7], bucket:[COLOURS[0], COLOURS[2], COLOURS[7]], size:{brush:.5, eraser:.5, flick:.4, stamp:.25}, cycle:0};
 function setTool(t){ sound?.stop(); S.tool = t; document.querySelectorAll('[data-tool]').forEach(b => b.setAttribute('aria-pressed', b.dataset.tool === t));
-  $('#marble-ui').hidden = t !== 'marbles'; $('#brush-ui').hidden = t !== 'brush'; $('#stamp-ui').hidden = t !== 'stamp'; $('#size-ui').hidden = t === 'marbles'; $('#size').value = S.size[t] ?? .4; drawPalette();
+  $('#marble-ui').hidden = t !== 'marbles'; $('#brush-ui').hidden = t !== 'brush'; $('#stamp-ui').hidden = t !== 'stamp' || mineOpen; $('#mine-ui').hidden = t !== 'stamp' || !mineOpen; $('#size-ui').hidden = t === 'marbles'; $('#size').value = S.size[t] ?? .4; drawPalette();
   if (t === 'marbles') thaw(); else freeze();                                    // marbles only ever move while Marbles is the chosen tool
   const colours=t==='brush'||t==='flick'||t==='stamp';pal.style.visibility=colours?'visible':'hidden';pal.setAttribute('aria-hidden',String(!colours));pal.querySelectorAll('button').forEach(b=>b.tabIndex=colours?0:-1);
   showSize();place();scheduleDraft(); }
@@ -484,13 +500,145 @@ const STAMPS = {
 const stampPath = key => STAMPS[key].polys.map(p => 'M' + p.map(q => q.join(' ')).join('L') + 'Z').join('');
 for (const key in STAMPS){ const b = document.createElement('button'); b.dataset.stamp = key; b.setAttribute('aria-label', STAMPS[key].label + ' stamp'); b.setAttribute('aria-pressed', key === S.stamp);
   b.innerHTML = `<svg viewBox="-2 -2 104 104" aria-hidden="true"><path d="${stampPath(key)}" fill="#3b2f4a"/></svg>`; $('#stamp-ui').appendChild(b); }
+/* ---------- my stamps: draw your own ----------
+   A full-size sheet and TWO pens (round 3). Round 1 closed and filled every line and left a harsh straight edge wherever it
+   guessed the join; round 2 fixed that with four pens, which Jof judged too many before trying them: "two. 1. draw solid
+   object(s) 2. remove from solid object(s). Simple alphas."
+     draw    adds. A line that comes back to where it started becomes a solid, filled piece; any other line prints as the
+             line it is; a tap is a dot. The join only ever happens when the two ends already meet, so it is never a surprise.
+     remove  takes away, by exactly the same rule: a loop cuts a hole (eyes), a line rubs a line out (a smile), a tap a dot.
+   While a line is being drawn a ring marks its start, and the piece shows its fill as soon as the finger is close enough to
+   close it, so "this will fill" is seen before the finger lifts. A ring that is not filled is a solid with a smaller solid removed.
+   A stamp is the list of those marks in the order they were made, so cutting and then drawing over the cut behaves as it looks.
+   Any number of separate pieces can make one stamp (a scatter of stars or dots). Everything prints in ONE colour, as a potato does.
+
+   Marks are stored as points in a 100 x 100 box and are drawn again, crisp, at whatever size the stamp is printed. There are at
+   most four stamps and a fifth replaces the oldest. They are kept in localStorage on this device and nowhere else: nothing a
+   child draws here is ever sent anywhere. If storage is refused they last for the visit. */
+const MINE = {key:'nook-studio-my-stamps', max:4, list:[], ops:[], live:null, pen:'draw', side:0, pointer:null, LINE:3.2, RUB:1.8, SNAP:9, LOOP:14};
+const mineIcon = {
+  open:  I('<path d="M5 18c-1-7 5-12 11-11 6 0 10 5 9 11-1 6-5 9-10 9-6 0-10-3-10-9z" fill="#d9b27a" stroke="#8a5a3b"/><path d="M10 19c2-5 4 3 6-2s3 2 5-3" stroke="#3b2f4a"/><path d="M25 1l5 5-9 9-6 1 1-6z" fill="#ffd166"/>'),
+  back:  I('<path d="M13 9l-7 7 7 7M6 16h14"/><path d="M24.5 8l1.3 2.8 3 .3-2.3 2 .7 3-2.7-1.6-2.7 1.6.7-3-2.3-2 3-.3z" fill="#3b2f4a" stroke-width="1.4"/>'),
+  make:  I('<path d="M20 4l8 8-15 15-9 1 1-9z" fill="#ffd166"/><path d="M17 7l8 8"/><circle cx="7" cy="8" r="5.5" fill="#a7c957" stroke="#3b2f4a"/><path d="M7 5.2v5.6M4.2 8h5.6" stroke-width="2.2"/>'),
+  close: I('<path d="M13 9l-7 7 7 7M6 16h20"/>'),
+  undo:  I('<path d="M11 8l-6 6 6 6"/><path d="M5 14h13a8 8 0 0 1 0 16h-5"/>'),
+  clear: I('<path d="M7 9h18l-1.6 18H8.6z" fill="#fff"/><path d="M4 9h24M12 9V5h8v4M13 14v9M19 14v9"/>'),
+  save:  I('<circle cx="16" cy="16" r="13" fill="#a7c957"/><path d="M9 16.5l5 5 9-10" stroke-width="3.4"/>'),
+  draw: I('<path d="M3 20c-1-6 4-10 9-9 5 0 8 4 7 9-1 5-4 7-8 7-5 0-8-2-8-7z" fill="#3b2f4a"/><path d="M22 3l7 7-10 10-8 1 1-8z" fill="#ffd166"/><path d="M19 6l7 7"/>'),
+  cut:  I('<path d="M3 19C2 12 8 7 14 8c6 0 10 5 9 11-1 6-5 9-10 9-6 0-10-3-10-9z" fill="#3b2f4a"/><ellipse cx="12" cy="18" rx="4.5" ry="4" fill="#fffdf6" stroke="none"/><path d="M17 12l8-8 5 5-8 8z" fill="#ff8fab" stroke-width="2"/><path d="M20 9l5 5" stroke-width="1.8"/>') };
+const validPoints = p => Array.isArray(p) && p.length >= 1 && p.length <= 200 && p.every(q => Array.isArray(q) && q.length === 2 && q.every(v => Number.isFinite(v) && v >= -20 && v <= 120));
+function mineLoad(){ let raw = []; try { raw = JSON.parse(localStorage.getItem(MINE.key) || '[]'); } catch (_) {}
+  MINE.list = (Array.isArray(raw) ? raw : []).map(s => { if (!s || typeof s.id !== 'string' || !/^my-[a-z0-9]+$/.test(s.id)) return null;
+    // the first version stored closed polygons only: each becomes a filled shape
+    const ops = Array.isArray(s.ops) ? s.ops : Array.isArray(s.polys) ? s.polys.map(pts => ({t:'shape', cut:false, pts})) : [];
+    const clean = ops.filter(o => o && (o.t === 'line' || o.t === 'shape') && validPoints(o.pts)).slice(0, 40).map(o => ({t:o.t, cut:!!o.cut, pts:o.pts, ...(Number.isFinite(o.w) ? {w:clamp(o.w, .03, 6)} : {})}));
+    return clean.some(o => !o.cut) ? {id:s.id, ops:clean} : null; }).filter(Boolean).slice(0, MINE.max);
+  MINE.list.forEach(mineRegister); }
+// A home-made stamp joins the library table. polys is what the shared code uses for the box and for blots along the edges: a line goes there and back so it has no closing side.
+function mineRegister(s, i){ STAMPS[s.id] = {label:'My stamp ' + ((i ?? 0) + 1), custom:true, ops:s.ops, polys:s.ops.filter(o => !o.cut).map(o => { if (o.pts.length === 1){ const [x, y] = o.pts[0], r = MINE.LINE * (o.w || 1) / 2; return [[x - r, y - r], [x + r, y - r], [x + r, y + r], [x - r, y + r]]; } return o.t === 'line' ? o.pts.concat(o.pts.slice(1, -1).reverse()) : o.pts; })}; }
+function mineStore(){ try { localStorage.setItem(MINE.key, JSON.stringify(MINE.list.map(s => ({id:s.id, v:2, ops:s.ops})))); return true; } catch (_) { return false; } }
+/* One renderer for every place a home-made stamp appears: the maker, the drawer buttons and the print itself. Marks are laid in
+   order; a cut removes whatever is under it. map turns a stored point into canvas pixels, lw is the line width in those pixels. */
+function opPath(op, map){ const p = new Path2D(), a = map(op.pts[0]); p.moveTo(a[0], a[1]); for (let i = 1; i < op.pts.length; i++){ const q = map(op.pts[i]); p.lineTo(q[0], q[1]); }
+  if (op.t === 'shape') p.closePath(); else if (op.pts.length === 1) p.lineTo(a[0] + .01, a[1]); return p; }
+function drawOps(c, ops, map, lw, colour){ c.save(); c.lineJoin = c.lineCap = 'round'; c.fillStyle = c.strokeStyle = colour;
+  for (const op of ops){ const path = op.path || opPath(op, map); c.globalCompositeOperation = op.cut ? 'destination-out' : 'source-over';
+    if (op.t === 'shape'){ c.fill(path); } else { c.lineWidth = lw * (op.w || 1); c.stroke(path); } }
+  c.restore(); }
+function mineDrawer(){ const box = $('#mine-ui'); box.textContent = '';
+  const add = (attrs, html) => { const b = document.createElement('button'); for (const k in attrs) b.setAttribute(k, attrs[k]); b.innerHTML = html; box.appendChild(b); return b; };
+  add({id:'mine-back', 'aria-label':'Back to the stamp shapes'}, mineIcon.back);
+  MINE.list.forEach((s, i) => { const b = add({'data-stamp':s.id, 'aria-label':'My stamp ' + (i + 1), 'aria-pressed':String(S.stamp === s.id)}, ''), k = document.createElement('canvas'); k.width = k.height = 96; k.setAttribute('aria-hidden', 'true');
+    drawOps(k.getContext('2d'), s.ops, ([x, y]) => [x * .96, y * .96], MINE.LINE * .96, '#3b2f4a'); b.appendChild(k); });
+  add({id:'mine-new', 'aria-label':'Make a new stamp' + (MINE.list.length >= MINE.max ? '. It will replace the oldest one.' : '')}, mineIcon.make); }
+function mineShow(open){ mineOpen = open; $('#stamp-ui').hidden = S.tool !== 'stamp' || open; $('#mine-ui').hidden = S.tool !== 'stamp' || !open; place(); }
+onPress($('#mine-ui'), (e, b) => { if (b.id === 'mine-back'){ mineShow(false); return; } if (b.id === 'mine-new'){ makerOpen(); return; }
+  if (!b.dataset.stamp || !STAMPS[b.dataset.stamp]) return; sound?.stop(); S.stamp = b.dataset.stamp; document.querySelectorAll('[data-stamp]').forEach(x => x.setAttribute('aria-pressed', x === b)); });
+
+/* The maker: a square sheet as big as the screen allows. Points are kept in the 0..100 box of that square, so turning the device mid-drawing loses nothing. */
+const maker = $('#maker'), mcan = $('#maker-canvas'), mctx = mcan.getContext('2d');
+function makerFit(){ const box = $('#maker-stage').getBoundingClientRect(), side = Math.max(120, Math.floor(Math.min(box.width, box.height) - 16)), dpr = Math.min(2, window.devicePixelRatio || 1);
+  MINE.side = side; mcan.style.width = mcan.style.height = side + 'px'; mcan.width = mcan.height = Math.round(side * dpr); mctx.setTransform(dpr, 0, 0, dpr, 0, 0); makerDraw(); }
+function makerDraw(){ const s = MINE.side, k = s / 100 * MV.z, map = ([x, y]) => [(x - MV.x) * k, (y - MV.y) * k]; mctx.clearRect(0, 0, s, s);
+  drawOps(mctx, MINE.ops, map, MINE.LINE * k, '#3b2f4a');
+  const l = MINE.live; if (l){ const cut = MINE.pen === 'cut', loop = closes(l), long = pathLength(l) >= MINE.LOOP, ink = cut ? '#e5738a' : '#3b2f4a'; mctx.save(); mctx.lineJoin = mctx.lineCap = 'round'; mctx.strokeStyle = mctx.fillStyle = ink;
+    if (loop){ mctx.globalAlpha = .45; mctx.fill(opPath({t:'shape', pts:l}, map)); mctx.globalAlpha = 1; }                // close enough to join: the fill shows before the finger lifts
+    mctx.lineWidth = MINE.LINE * k / MV.z * (cut ? MINE.RUB : 1); mctx.stroke(opPath({t:'line', pts:l}, map));                                           // removing is shown in rubber pink until the finger lifts
+    if (long){ const a = map(l[0]); mctx.lineWidth = Math.max(2, k / MV.z * .6); mctx.globalAlpha = loop ? 1 : .55; mctx.beginPath(); mctx.arc(a[0], a[1], reach(l) * k * (loop ? .55 : .8), 0, TAU); mctx.stroke(); } mctx.restore(); }
+  const some = MINE.ops.length > 0; $('#maker-save').disabled = !MINE.ops.some(o => !o.cut); $('#maker-undo').disabled = !some; $('#maker-clear').disabled = !some; }
+const polyArea = poly => { let a = 0; for (let i = 0; i < poly.length; i++){ const q = poly[(i + 1) % poly.length]; a += poly[i][0] * q[1] - q[0] * poly[i][1]; } return a / 2; };
+function thin(points, eps){                                   // Ramer-Douglas-Peucker, iterative: keep the corners, drop what lies on a line (a loop that ends where it began has no line, so distance from its start is used)
+  const keep = new Uint8Array(points.length), stack = [[0, points.length - 1]]; keep[0] = keep[points.length - 1] = 1;
+  while (stack.length){ const [a, b] = stack.pop(); let far = 0, at = -1; const ax = points[a][0], ay = points[a][1], dx = points[b][0] - ax, dy = points[b][1] - ay, len = Math.hypot(dx, dy);
+    for (let i = a + 1; i < b; i++){ const d = len < .01 ? Math.hypot(points[i][0] - ax, points[i][1] - ay) : Math.abs((points[i][0] - ax) * dy - (points[i][1] - ay) * dx) / len; if (d > far){ far = d; at = i; } }
+    if (far > eps && at > 0){ keep[at] = 1; stack.push([a, at], [at, b]); } }
+  return points.filter((_, i) => keep[i]); }
+const pathLength = pts => { let d = 0; for (let i = 1; i < pts.length; i++) d += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); return d; };
+const reach = pts => Math.min(MINE.SNAP / MV.z, pathLength(pts) * .25);   // how near the ends must be: a small loop (an eye) has to close more exactly than a big one
+const closes = pts => pts.length > 3 && pathLength(pts) >= MINE.LOOP / MV.z && Math.hypot(pts[0][0] - pts[pts.length - 1][0], pts[0][1] - pts[pts.length - 1][1]) <= reach(pts);   // long enough to be a loop, and back where it began
+function makerMark(points, pen = MINE.pen){                     // a finished mark, in the 0..100 box. A tap (or a scribble too small to see) becomes a dot
+  if (!points || !points.length || MINE.ops.length >= 40) return false; const cut = pen === 'cut', shape = closes(points);
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9; for (const [x, y] of points){ x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
+  if (Math.max(x1 - x0, y1 - y0) < 2.5 / MV.z){ const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    MINE.ops.push({t:'line', cut, pts:[[cx, cy]], w:1.6 / MV.z}); return true; }
+  let eps = .2 / MV.z, pts = thin(points, eps); while (pts.length > 160){ eps *= 1.5; pts = thin(points, eps); }
+  if (shape){ if (pts.length < 3) return false; if (polyArea(pts) < 0) pts.reverse(); }
+  MINE.ops.push({t:shape ? 'shape' : 'line', cut, pts, ...(shape ? {} : {w:(cut ? MINE.RUB : 1) / MV.z})}); return true; }   // a rubbed-out line is wider than a drawn one, so it stays open when paint spreads under a long press
+/* Looking closer: two fingers pinch and carry the maker's sheet (the wheel zooms on a desktop), exactly as on the picture. The pen
+   never changes size UNDER THE FINGER, so a mark made at 2x is half as thick once the sheet is back at 1x: zooming in is how
+   detail gets drawn. Every distance the finger is judged by (what counts as a tap, how near the ends must be to join) is
+   divided by the zoom for the same reason. view: x, y = the stamp-box point at the sheet's top left corner. */
+const MV = {z:1, x:0, y:0, max:6, touches:new Map(), nav:null};
+function makerView(z, x, y){ MV.z = clamp(z, 1, MV.max); const room = 100 - 100 / MV.z; MV.x = clamp(x, 0, room); MV.y = clamp(y, 0, room); $('#maker-fit').hidden = MV.z < 1.02; makerDraw(); }
+const makerSpot = e => { const r = mcan.getBoundingClientRect(); return [clamp((e.clientX - r.left) / r.width, 0, 1) * 100, clamp((e.clientY - r.top) / r.height, 0, 1) * 100]; };   // where on the sheet as it is shown, 0..100
+const makerPoint = e => { const [sx, sy] = makerSpot(e); return [MV.x + sx / MV.z, MV.y + sy / MV.z]; };                                                                  // the stamp-box point under the finger
+mcan.addEventListener('pointerdown', e => { if (e.button > 0) return; e.preventDefault(); try { mcan.setPointerCapture(e.pointerId); } catch (_) {} MV.touches.set(e.pointerId, makerSpot(e));
+  if (MV.touches.size === 1 && !MV.nav){ MINE.pointer = e.pointerId; MINE.live = [makerPoint(e)]; makerDraw(); return; }
+  if (MV.touches.size === 2){ MINE.live = null; MINE.pointer = null; sound?.stop();                       // a second finger means "look", and the mark the first finger had begun is dropped
+    const [a, b] = [...MV.touches.values()], mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; MV.nav = {d:Math.max(4, Math.hypot(a[0] - b[0], a[1] - b[1])), z:MV.z, at:[MV.x + mid[0] / MV.z, MV.y + mid[1] / MV.z]}; makerDraw(); } });
+mcan.addEventListener('pointermove', e => { if (!MV.touches.has(e.pointerId)) return; e.preventDefault(); MV.touches.set(e.pointerId, makerSpot(e));
+  if (MV.nav){ if (MV.touches.size < 2) return; const [a, b] = [...MV.touches.values()], mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], z = clamp(MV.nav.z * Math.hypot(a[0] - b[0], a[1] - b[1]) / MV.nav.d, 1, MV.max);
+    makerView(z, MV.nav.at[0] - mid[0] / z, MV.nav.at[1] - mid[1] / z); return; }                         // the point that was between the fingers stays between them
+  if (e.pointerId !== MINE.pointer || !MINE.live) return; const p = makerPoint(e), q = MINE.live[MINE.live.length - 1];
+  if (Math.hypot(p[0] - q[0], p[1] - q[1]) < .4 / MV.z) return; MINE.live.push(p); sound?.stroke(MINE.pen === 'cut' ? 'eraser' : 'crayon', 400, .2); makerDraw(); });
+const makerLift = keep => e => { if (!MV.touches.delete(e.pointerId)) return; if (MV.nav){ if (!MV.touches.size) MV.nav = null; return; }     // drawing starts again only when every finger has lifted
+  if (e.pointerId !== MINE.pointer) return; MINE.pointer = null; const line = MINE.live; MINE.live = null; if (keep) makerMark(line); makerDraw(); };
+mcan.addEventListener('pointerup', makerLift(true)); mcan.addEventListener('pointercancel', makerLift(false));
+mcan.addEventListener('wheel', e => { e.preventDefault(); const [sx, sy] = makerSpot(e), at = [MV.x + sx / MV.z, MV.y + sy / MV.z], z = clamp(MV.z * Math.exp(-e.deltaY * .0022), 1, MV.max); makerView(z, at[0] - sx / z, at[1] - sy / z); }, {passive:false});
+function makerPen(pen){ MINE.pen = pen; document.querySelectorAll('[data-pen]').forEach(b => b.setAttribute('aria-pressed', b.dataset.pen === pen)); }
+function makerOpen(){ if (!studioReady) return; clearGestures(); sound?.stop(); MINE.ops = []; MINE.live = null; MINE.pointer = null; MV.touches.clear(); MV.nav = null; MV.z = 1; MV.x = MV.y = 0; makerPen('draw'); maker.hidden = false; makerFit(); $('#maker-fit').hidden = true; $('#maker-close').focus({preventScroll:true}); }
+function makerClose(focus){ maker.hidden = true; MINE.ops = []; MINE.live = null; MINE.pointer = null; sound?.stop(); const el = focus && document.querySelector(focus); if (el) el.focus({preventScroll:true}); }
+function makerSave(){ const inked = MINE.ops.filter(o => !o.cut); if (!inked.length) return null;
+  // The box is measured round what prints (a line reaches half its width past its points); holes do not count. It is scaled to fill the 100 x 100 stamp box, proportions kept, and lines keep their printed width.
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9; for (const o of inked){ const pad = o.t === 'line' ? MINE.LINE * (o.w || 1) / 2 : 0; for (const [x, y] of o.pts){ x0 = Math.min(x0, x - pad); y0 = Math.min(y0, y - pad); x1 = Math.max(x1, x + pad); y1 = Math.max(y1, y + pad); } }
+  const span = Math.max(x1 - x0, y1 - y0, 1), k = Math.min(3, 92 / span), cx = (x0 + x1) / 2, cy = (y0 + y1) / 2, fix = v => Math.round(v * 10) / 10;   // a lone dot is not blown up to fill the sheet
+  const stamp = {id:'my-' + Date.now().toString(36) + (rnd() * 1296 | 0).toString(36), ops:MINE.ops.map(o => ({t:o.t, cut:o.cut, pts:o.pts.map(([x, y]) => [fix(50 + (x - cx) * k), fix(50 + (y - cy) * k)]), ...(o.t === 'line' ? {w:fix((o.w || 1) * k)} : {})}))};
+  MINE.list.unshift(stamp); while (MINE.list.length > MINE.max) delete STAMPS[MINE.list.pop().id];                                   // the newest replaces the oldest
+  MINE.list.forEach(mineRegister);
+  const stored = mineStore(); S.stamp = stamp.id; document.querySelectorAll('#stamp-ui [data-stamp]').forEach(x => x.setAttribute('aria-pressed', 'false'));
+  mineOpen = true; setTool('stamp'); mineDrawer(); mineShow(true); makerClose('[data-stamp="' + stamp.id + '"]');
+  if (!stored) draftNotice('This stamp will last until the page is closed. This browser would not keep it.'); return stamp.id; }
+onPress($('#maker-bar'), (e, b) => { if (b.dataset.pen) makerPen(b.dataset.pen); else if (b.id === 'maker-close') makerClose('#mine-new'); else if (b.id === 'maker-save') makerSave();
+  else if (b.id === 'maker-fit') makerView(1, 0, 0);
+  else if (b.id === 'maker-undo'){ MINE.ops.pop(); makerDraw(); } else if (b.id === 'maker-clear'){ MINE.ops = []; makerDraw(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !maker.hidden){ e.preventDefault(); makerClose('#mine-new'); } });
+addEventListener('resize', () => { if (!maker.hidden) makerFit(); });
+for (const [id, icon] of [['maker-close', 'close'], ['maker-undo', 'undo'], ['maker-clear', 'clear'], ['maker-save', 'save']]) $('#' + id).innerHTML = mineIcon[icon];
+document.querySelectorAll('[data-pen]').forEach(b => { b.innerHTML = mineIcon[b.dataset.pen]; });
+{ const b = document.createElement('button'); b.id = 'mine-open'; b.setAttribute('aria-label', 'My own stamps'); b.innerHTML = mineIcon.open; $('#stamp-ui').appendChild(b); }
+onPress($('#mine-open'), () => mineShow(true));
+mineLoad(); mineDrawer();
 let stampBuf = null;
 function stampGeometry(x, y, key, sz, turn){                    // the template placed on the sheet: points in sheet pixels, plus its box
   const k = (.08 + .92 * sz) * Math.min(W, H) / 100, c = Math.cos(turn), n = Math.sin(turn), polys = [];
   let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
   for (const poly of STAMPS[key].polys){ const out = []; for (const [px, py] of poly){ const ux = (px - 50) * k, uy = (py - 50) * k, sx = x + ux * c - uy * n, sy = y + ux * n + uy * c;
     out.push(sx, sy); x0 = Math.min(x0, sx); y0 = Math.min(y0, sy); x1 = Math.max(x1, sx); y1 = Math.max(y1, sy); } polys.push(out); }
-  return {polys, k: k * 100, x0, y0, x1, y1};
+  const g = {polys, k: k * 100, x0, y0, x1, y1};
+  if (STAMPS[key].ops){                                           // a home-made stamp: its marks, placed the same way, are laid in order (cuts included) when it prints
+    const tf = ([px, py]) => { const ux = (px - 50) * k, uy = (py - 50) * k; return [x + ux * c - uy * n, y + ux * n + uy * c]; };
+    g.ops = STAMPS[key].ops.map(op => ({t:op.t, cut:op.cut, w:op.w, path:opPath(op, tf)})); g.lw = MINE.LINE * k; }
+  return g;
 }
 const stampPath2D = g => { const p = new Path2D(); for (const poly of g.polys){ p.moveTo(poly[0], poly[1]); for (let i = 2; i < poly.length; i += 2) p.lineTo(poly[i], poly[i + 1]); p.closePath(); } return p; };
 function edgePoint(g){ const poly = g.polys[rnd() * g.polys.length | 0], n = poly.length / 2, i = rnd() * n | 0, j = (i + 1) % n, t = rnd();
@@ -500,18 +648,29 @@ function inkLayer(g, path, colour, level, first){              // one coat of pa
   if (!stampBuf){ stampBuf = document.createElement('canvas'); } if (stampBuf.width < bw || stampBuf.height < bh){ stampBuf.width = Math.max(stampBuf.width, bw); stampBuf.height = Math.max(stampBuf.height, bh); }
   const b = stampBuf.getContext('2d'); b.setTransform(1, 0, 0, 1, -bx, -by); b.globalCompositeOperation = 'source-over'; b.clearRect(bx, by, bw, bh);
   b.fillStyle = b.strokeStyle = colour; b.lineJoin = b.lineCap = 'round';
-  b.globalAlpha = first ? .82 : .14 + .1 * level; b.fill(path);                                      // the body of the print
+  // A home-made stamp can have lines and holes, so it cannot be one filled path: its marks are laid in order on a mask, the mask is tinted, and the tinted mask is what prints.
+  const tint = g.ops ? stampTint(g, colour, bx, by, bw, bh) : null, body = (dx = 0, dy = 0) => { if (tint) b.drawImage(tint, 0, 0, bw, bh, bx + dx, by + dy, bw, bh); else b.fill(path); };
+  b.globalAlpha = first ? .82 : .14 + .1 * level; body();                                            // the body of the print
   if (first){ b.globalCompositeOperation = 'destination-out'; const holes = Math.round(bw * bh / (g.k * g.k) * 260);   // a starved, mottled first coat
     for (let i = 0; i < holes; i++){ b.globalAlpha = .3 + rnd() * .7; b.beginPath(); b.arc(g.x0 + rnd() * (g.x1 - g.x0), g.y0 + rnd() * (g.y1 - g.y0), g.k * (.006 + rnd() * .022), 0, TAU); b.fill(); }
     b.globalCompositeOperation = 'source-over'; }
   if (level > 0){                                                                                  // paint squeezed out past the edge: thicker and more ragged the longer the press
     const w = g.k * (.01 + .075 * level), jit = g.k * .012 * level; b.lineWidth = w; b.globalAlpha = .22 + .3 * level;
-    for (let i = 0; i < 3; i++){ b.setTransform(1, 0, 0, 1, -bx + gauss() * jit, -by + gauss() * jit); b.stroke(path); } b.setTransform(1, 0, 0, 1, -bx, -by);
+    if (tint){ b.globalAlpha *= .3; for (let i = 0; i < 6; i++){ const a = (i + rnd()) / 6 * TAU; body(Math.cos(a) * w * .16 + gauss() * jit * .5, Math.sin(a) * w * .16 + gauss() * jit * .5); } }   // squeezed-out paint: the whole mask nudged outwards all round, a third as far as a library stamp's edge spreads, so that eyes and smiles cut into a face stay open
+    else for (let i = 0; i < 3; i++){ b.setTransform(1, 0, 0, 1, -bx + gauss() * jit, -by + gauss() * jit); b.stroke(path); } b.setTransform(1, 0, 0, 1, -bx, -by);
     const blots = Math.round(level * 5 * (first ? 3 : 1)); b.globalAlpha = .85;
     for (let i = 0; i < blots; i++){ const [ex, ey] = edgePoint(g), a = rnd() * TAU, d = g.k * (.01 + rnd() * .05 * level), r = g.k * (.006 + rnd() * .022 * (1 + level));
       b.beginPath(); b.ellipse(ex + Math.cos(a) * d, ey + Math.sin(a) * d, r * (1 + rnd()), r, a, 0, TAU); b.fill(); } }
   b.setTransform(1, 0, 0, 1, 0, 0); dev(); ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1; ctx.drawImage(stampBuf, 0, 0, bw, bh, bx, by, bw, bh);
 }
+let stampMask = null;
+function stampTint(g, colour, bx, by, bw, bh){                    // built once for a press, reused for every coat of it
+  if (g.tint === colour && stampMask && stampMask.owner === g) return stampMask;
+  if (!stampMask) stampMask = document.createElement('canvas'); if (stampMask.width < bw || stampMask.height < bh){ stampMask.width = Math.max(stampMask.width, bw); stampMask.height = Math.max(stampMask.height, bh); }
+  const t = stampMask.getContext('2d'); t.setTransform(1, 0, 0, 1, 0, 0); t.globalCompositeOperation = 'source-over'; t.globalAlpha = 1; t.clearRect(0, 0, stampMask.width, stampMask.height);
+  t.setTransform(1, 0, 0, 1, -bx, -by); drawOps(t, g.ops, null, g.lw, '#000');
+  t.setTransform(1, 0, 0, 1, 0, 0); t.globalCompositeOperation = 'source-in'; t.fillStyle = colour; t.fillRect(0, 0, bw, bh); t.globalCompositeOperation = 'source-over';
+  stampMask.owner = g; g.tint = colour; return stampMask; }
 function startStamp(o, p){
   sheetBlank = false; o.stampKey = S.stamp; o.g = stampGeometry(p.x, p.y, S.stamp, o.size ?? S.size.stamp, (rnd() - .5) * .3); o.path = stampPath2D(o.g); o.level = 0; o.lastCoat = p.t;
   inkLayer(o.g, o.path, o.colour, 0, true); sound?.dab('sponge', o.size ?? S.size.stamp);
@@ -731,7 +890,7 @@ function testPicture(){
   splat(W * .25, H * .3, 1, 0, 0, 900, S.bucket); splat(W * .2, H * .75, .8, -.6, 2300, 0, S.bucket); splat(W * .7, H * .6, -.7, -.7, 1200, 0, S.bucket); splat(W * .8, H * .25, 1, 0, 0, 80, S.bucket);
   S.bucket = b;
 }
-window.__lab = {splat, testPicture, addMarble, putAway, setTool, stampAt, STAMPS, toScreen, toSheet, KINDS, TUNE, M, S, GEO, VIEW, sound, lastRun:null,
+window.__lab = {MV, makerView, MINE, makerOpen, makerMark, makerPen, makerSave, makerDraw, splat, testPicture, addMarble, putAway, setTool, stampAt, STAMPS, toScreen, toSheet, KINDS, TUNE, M, S, GEO, VIEW, sound, lastRun:null,
   undo,redo,pushUndo,changed,flushDraft,openExport,closeExport,get history(){return {undo:undoStack.length,redo:redoStack.length};},get draftState(){return {ready:studioReady,failed:!!draft?.failed,revision:draftRevision,saved:savedRevision,writing:draftWriting};},
   inked(){ const d = ctx.getImageData(0, 0, W, H).data; let n = 0; for (let i = 3; i < d.length; i += 4 * 97) if (d[i]) n++; return n; },   /* test hook only: never call getImageData in play */
   get paper(){ return {W, H, bw: paint.width, bh: paint.height}; }};

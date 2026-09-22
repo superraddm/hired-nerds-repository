@@ -59,6 +59,61 @@ Four ways of making marks work on the same picture: **Paint**, **Flick**, **Stam
   Undo step. Every coat is composed off the sheet and laid on, so the texture never punches
   holes in paint already there and nothing is read back from the sheet.
 
+### My stamps: draw your own (added 18 September 2026)
+
+Jof's rules: the player draws a shape freehand with a thinnish line; the lines must join up so the stamp prints as one solid
+colour; up to four home-made stamps, the newest replacing the oldest; they live on the device only ("humorous shapes are not
+uploaded to my server"); they sit in their own drawer; Create opens a new full-size canvas; Save closes it, returns to the
+picture, and the new stamp is in the drawer and is the chosen tool.
+
+Jof's second pass (same day): "pretty good, improve". He wants several separate shapes in one stamp (a scatter of stars or
+dots); he is unsure about the automatic join ("takes practice to avoid a harsh line where the auto-complete thinks it should
+go"); and he wants holes. His two smiley examples: a ring that is NOT filled with line eyes and a line smile; and a filled
+face with the eyes and smile cut out. A four-pen version (line, shape, rubber line, hole) answered that, and he rejected it
+untried: "4 pens is too many. I'm thinking two. 1. draw solid object(s) 2. remove from solid object(s). Simple alphas."
+
+How it is built:
+
+- The last button in the stamp row (a potato with a pencil, dashed border) opens the **drawer**, which takes the library's place:
+  back to the shapes, the home-made stamps newest first, and Make a new stamp (pencil with a green plus).
+- **The maker** covers the whole game: a square sheet as large as the screen allows, with back (leave without saving), the
+  two pens, take back the last mark, start again, and a green tick to save (disabled until something that prints is drawn).
+- **Two pens, one rule.** *Draw* adds and *Remove* takes away, and both read the finger the same way:
+  - a line that comes back to where it started becomes a **solid** (Draw) or a **hole** (Remove);
+  - any other line stays the line it is: a printed line (Draw) or a rubbed-out line, a little wider (Remove);
+  - a tap is a dot.
+  The join only happens when the two ends already meet (within 9% of the sheet, less for a small loop such as an eye), so it
+  is never a long straight surprise. While drawing, a ring marks the start once the line is long enough to be a loop, and
+  the piece shows its fill as soon as the finger is near enough to close it. Removing is drawn in rubber pink until the
+  finger lifts.
+- **Looking closer (added the same night at Jof's request).** Two fingers pinch and carry the maker's sheet, up to 6x, exactly
+  as on the picture; the wheel zooms on a desktop; a show-everything button appears while zoomed. A second finger drops the
+  mark the first had begun, and drawing starts again only when every finger has lifted. **The pen never changes size under
+  the finger**, so a mark made at 2x is half as thick once the sheet is back at 1x: zooming in is how detail is drawn. Each
+  line stores the width it was drawn at (`w` = 1 / zoom), and everything the finger is judged by (what counts as a tap, how
+  near the ends must be to join, how finely the line is thinned) is divided by the zoom too.
+- How his examples are made: the unfilled ring is a solid with a smaller solid removed, then line eyes and a line smile with
+  Draw; the cut-out face is one solid, then eye loops and a smile line with Remove. Both are drawn by touch in the harness
+  run and print as sketched.
+- A stamp is the list of marks **in the order they were made**, so cutting and then drawing over the cut behaves as it looks.
+  Any number of separate pieces make one stamp. Everything prints in one colour. At most 40 marks, each thinned to at most
+  160 points.
+- Marks are stored as points in the 100 x 100 stamp box (scaled to fill it, lines keeping their look) and are drawn again,
+  crisp, at whatever size the stamp prints. Because a stamp can now have lines and holes it is no longer one filled path:
+  when it prints, its marks are laid in order on a mask, the mask is tinted with the paint colour, and that goes through the
+  same potato-print steps as a library stamp (mottled first coat, more paint while held, blots at the edges). Squeezed-out
+  paint spreads a third as far as on a library stamp so that cut-out eyes stay open under a long press.
+- **Storage is localStorage on the device** (key `nook-studio-my-stamps`, format v2 `{id, ops}`; a v1 stamp of closed
+  polygons is read as filled shapes). Nothing is sent anywhere; the harness asserts that the page makes no request off its
+  own origin. If the browser refuses storage, the stamp lasts for the visit and a notice says so.
+- Known limits: no way to edit or delete one stamp other than making new ones; an unfilled ring takes two steps (solid, then
+  remove the middle); nobody has yet drawn one with a real finger.
+- Also fixed while testing: on an upright phone the stamp library ran off the right edge (the last stamps could not be
+  reached). The row now wraps.
+- Harness: `node tools/test-studio-my-stamps.cjs [WxH]` (touch drawing with both pens, an open line that is never joined, a
+  loop that fills, holes, rubbed lines, undo, save, print, reload, v1 stamps, the limit of four, no off-origin requests). Passes at 768x954,
+  740x360 and 360x740.
+
 ### Marbles (current rules, 17 September 2026)
 - Tapping the Marbles button drops **one** marble at a random place on the sheet.
 - Up to **three** marbles. A fourth replaces the first, a fifth the second, and so on.
