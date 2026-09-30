@@ -42,6 +42,29 @@ function app(t, page = 'garden.html', seed = {}, blocked = false, soundOn = fals
 // The Words sub-activities live in the picker: open it from the pill, choose one, close it.
 const wordTab = (a, id) => { a.click('#support'); a.click(`.lp-modal [data-word-tab="${id}"]`); a.click('[data-close]'); };
 const tick = () => new Promise(resolve => setTimeout(resolve, 0));
+const assertRetry = a => assert.ok(L.FEEDBACK.retries.includes(a.query('#speech').textContent), 'a kind retry line: ' + a.query('#speech').textContent);
+
+test('wrong answers rotate through the kind retry lines, never the same twice running, and the bubble matches the clip', t => {
+  assert.ok(L.FEEDBACK.retries.length >= 4);
+  let previous = '';
+  for (let i = 0; i < 200; i++) { const line = L.retryLine(previous); assert.notEqual(line, previous); previous = line; }
+  assert.equal(L.retryLine('', () => 0), L.FEEDBACK.retries[0]);
+  assert.equal(L.retryLine('', () => .9999), L.FEEDBACK.retries.at(-1));
+  const bank = new Set(L.spokenBank());
+  for (const line of L.FEEDBACK.retries) assert.ok(bank.has(line.toLowerCase().replace(/[.!?]+$/, '')), line);
+  const a = app(t, 'garden.html', {}, false, true);
+  const seen = [];
+  for (let i = 0; i < 12; i++) {
+    Array.from(a.w.document.querySelectorAll('[data-choice]')).find(b => b.dataset.choice !== String(a.store('garden-rounds').count.target)).click();
+    const shown = a.query('#speech').textContent;
+    assertRetry(a);
+    assert.notEqual(shown, seen.at(-1), 'no line twice running');
+    assert.equal(a.store('garden-rounds').count.retryLine, shown, 'saved, so a re-render shows the same line');
+    assert.equal(a.plays.at(-1), a.w.LPVoiceLibrary.clips[shown.toLowerCase().replace(/[.!?]+$/, '')].file);
+    seen.push(shown);
+  }
+  assert.ok(new Set(seen).size > 1, 'the lines vary');
+});
 
 test('sound starts on in every Garden activity and level, and manual mute survives navigation', async t => {
   const a=app(t,'garden.html',{},false,true);
@@ -211,14 +234,14 @@ test('a wrong word keeps the draft editable: one neutral line in the bubble, the
   for (const key of ['C', 'A', 'T']) a.click(`[data-key="${key}"]`);
   a.click('#check-word');
   assert.equal(a.query('#answer-feedback'), null, 'no second feedback element');
-  assert.equal(a.query('#speech').textContent, 'Whoops! Try again.');
+  assertRetry(a);
   assert.equal(a.query('#status').textContent, 'Look at the picture. Which word fits?');
   assert.equal(a.query('#word-input').value, 'CAT');
   assert.equal(a.query('#word-input').getAttribute('aria-invalid'), 'true');
   assert.equal(a.query('#next').hidden, true);
   assert.equal(a.plays.length, 0, 'Sound off must remain silent');
   a.click('[data-sound]'); a.click('#check-word');
-  assert.equal(a.plays.at(-1), a.w.LPVoiceLibrary.clips['whoops! try again'].file);
+  assert.equal(a.plays.at(-1), a.w.LPVoiceLibrary.clips[a.query('#speech').textContent.toLowerCase().replace(/[.!?]+$/, '')].file, 'Nook says the line the bubble shows');
   a.click('[data-key="Backspace"]');
   assert.equal(a.query('#word-input').hasAttribute('aria-invalid'), false);
   assert.equal(a.query('#speech').textContent, 'Type the missing word.', 'the bubble returns to the one prompt');
@@ -233,14 +256,14 @@ test('wrong counts, sums, patterns, letters and word order all offer another try
   function wrongChoice(round, answer) {
     const wrong = Array.from(a.w.document.querySelectorAll('[data-choice]')).find(b => b.dataset.choice !== String(answer));
     assert.ok(wrong); wrong.click();
-    assert.equal(a.query('#speech').textContent, 'Whoops! Try again.');
+    assertRetry(a);
     assert.equal(a.store('garden-rounds')[round].done, false);
   }
   wrongChoice('count', 1);
   a.click('[data-mode="add"]'); wrongChoice('add', 2);
   a.w.LP.savePrefs({ ...a.w.LP.prefs, addition: 'type' });
   a.click('[data-pad="1"]'); a.click('#check-sum');
-  assert.equal(a.query('#speech').textContent, 'Whoops! Try again.');
+  assertRetry(a);
   assert.equal(a.store('garden-rounds').add.draft, '1');
   a.click('[data-mode="patterns"]'); wrongChoice('patterns', a.store('garden-rounds').patterns.answer);
   a.click('[data-mode="words"]'); wordTab(a, 'letter');
@@ -248,7 +271,7 @@ test('wrong counts, sums, patterns, letters and word order all offer another try
   wordTab(a, 'order');
   const wrongTile = Array.from(a.w.document.querySelectorAll('[data-tile]')).find(b => b.textContent !== 'NOOK');
   wrongTile.click();
-  assert.equal(a.query('#speech').textContent, 'Whoops! Try again.');
+  assertRetry(a);
   assert.equal(a.store('garden-rounds').order.used.length, 0);
   assert.equal(a.plays.length, 0);
 });
@@ -537,7 +560,7 @@ test('every correct answer goes through one path: bubble and announcement come f
   a.click('[data-mode="add"]');
   const wrong = Array.from(a.w.document.querySelectorAll('[data-choice]')).find(b => b.dataset.choice !== '2');
   wrong.click();
-  assert.equal(a.query('#speech').textContent, 'Whoops! Try again.');
+  assertRetry(a);
   assert.equal(a.store('garden-rounds').add.feedback, 'retry');
   a.click('[data-choice="2"]');
   assert.equal(a.query('#speech').textContent, line('add', a.store('garden-rounds').add));
@@ -605,13 +628,13 @@ test('a wrong answer gives one neutral line in the bubble and one hint in the st
   const a = app(t);
   const wrong = () => Array.from(a.w.document.querySelectorAll('[data-choice]')).find(b => b.dataset.choice !== String(a.store('garden-rounds')[a.store('garden-position').mode === 'words' ? a.store('garden-position').wordTab : a.store('garden-position').mode].target)).click();
   wrong();
-  assert.equal(a.query('#speech').textContent, 'Whoops! Try again.');
+  assertRetry(a);
   assert.equal(a.query('#status').textContent, 'Look at the apples and count them.');
   a.click('[data-mode="words"]');
   for (const key of ['C', 'A', 'T']) a.click(`[data-key="${key}"]`);
   a.click('#check-word');
   assert.equal(a.query('#answer-feedback'), null);
-  assert.equal(a.query('#speech').textContent, 'Whoops! Try again.');
+  assertRetry(a);
   assert.equal(a.query('#status').textContent, 'Look at the picture. Which word fits?');
   assert.ok(!/try/i.test(a.query('#status').textContent));
 });
@@ -995,7 +1018,7 @@ test('two-gap patterns: gaps are buttons, the chosen gap takes the piece, partia
   assert.equal(a.query('button[data-gap].active').dataset.gap, String(round.gaps[1]));
   assert.equal(a.store('garden-rounds').patterns.selected, round.gaps[1]);
   const wrong = Array.from(a.w.document.querySelectorAll('[data-choice]')).find(b => b.dataset.choice !== round.sequence[round.gaps[1]]);
-  if (wrong) { wrong.click(); assert.equal(a.query('#speech').textContent, 'Whoops! Try again.'); }
+  if (wrong) { wrong.click(); assertRetry(a); }
   a.click(`[data-choice="${round.sequence[round.gaps[1]]}"]`);
   assert.equal(a.query('#next').hidden, true, 'one gap left');
   assert.match(a.query('#status').textContent, /1 of 2 beads placed/);
@@ -1325,7 +1348,7 @@ test('a familiar sentence without pictures: the first clue reads the sentence wi
   for (const key of ['P', 'A', 'R', 'K']) a.click(`[data-key="${key}"]`);
   a.click('#check-word');
   assert.equal(a.query('#status').textContent, 'Read the sentence once more.');
-  assert.equal(a.query('#speech').textContent, 'Whoops! Try again.');
+  assertRetry(a);
 });
 
 test('Missing letter, Word order and Number words follow the same discipline: small heading, one prompt in the bubble, the word or sentence is the Hear control, sound-gated', async t => {

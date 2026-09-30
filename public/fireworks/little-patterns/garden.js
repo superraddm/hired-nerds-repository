@@ -63,7 +63,7 @@
   function choiceButtons(values,word=false){return '<div class="choices '+(word?'word-options':'')+'">'+values.map(v=>'<button class="choice '+(word?'word-choice':String(v).length>=3?'digits-3':String(v).length===2?'digits-2':'')+'" data-choice="'+esc(v)+'" aria-label="Choose '+esc(v)+'">'+esc(word?letters(v):v)+'</button>').join('')+'</div>';}
   function picture(name,label){return '<div class="word-picture" '+(name?'role="img" aria-label="'+esc(label)+'"':'aria-hidden="true"')+'>'+(name?symbol(name,96):'')+'</div>';}
   // Nook's bubble renders from round state: the success line once a round is done, the neutral retry line after a wrong answer, otherwise the activity prompt.
-  function bubbleText(prompt){const r=current();if(!r||currentKey()==='make')return prompt;if(r.done)return L.successLine(currentKey(),r).text;if(r.feedback==='retry')return L.FEEDBACK.retry;return prompt;}
+  function bubbleText(prompt){const r=current();if(!r||currentKey()==='make')return prompt;if(r.done)return L.successLine(currentKey(),r).text;if(r.feedback==='retry')return r.retryLine||L.FEEDBACK.retries[0];return prompt;}
   function header(label,speech,title,instruction,support){$('scene-label').textContent=label;$('speech').textContent=bubbleText(speech);$('speech').dataset.encouragement=speech;$('speech').classList.toggle('success',!!current()?.done);$('activity-title').textContent=title;$('instruction').textContent=instruction;$('support').textContent=support;}
   // Next is always "another like this" at the same level. Changing level is a separate, explicit choice: a tap on the level strip above the activity.
   // After a correct answer the Next button itself moves out of the side column into this row under the result, full width, so moving on is the obvious next tap. Again and Next level stay in the column.
@@ -169,9 +169,11 @@
   function keepFocus(){if(LP.prefs.keyboard==='az')$('word-input')?.focus({preventScroll:true});}
   function setMode(value){if(!modes.includes(value))return;mode=value;render();}
   document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
-  function clearFeedback(){const r=current();if(r)r.feedback='';$('word-input')?.removeAttribute('aria-invalid');if($('speech').textContent===L.FEEDBACK.retry)$('speech').textContent=$('speech').dataset.encouragement;}
-  // One neutral line in the bubble; the status carries only the hint. A typed answer is kept, marked invalid, and stays editable.
-  function retryAnswer(detail){const r=current();if(r)r.feedback='retry';$('speech').textContent=L.FEEDBACK.retry;$('word-input')?.setAttribute('aria-invalid','true');LP.status(detail);save();LP.audio.speak(L.FEEDBACK.retry,{auto:true});}
+  function clearFeedback(){const r=current();if(r)r.feedback='';$('word-input')?.removeAttribute('aria-invalid');if(L.FEEDBACK.retries.includes($('speech').textContent))$('speech').textContent=$('speech').dataset.encouragement;}
+  // One kind line in the bubble, the same line Nook says, picked at random but never twice running; the status carries only the hint.
+  // A typed answer is kept, marked invalid, and stays editable.
+  let lastRetry='';
+  function retryAnswer(detail){const r=current(),line=L.retryLine(lastRetry);lastRetry=line;if(r){r.feedback='retry';r.retryLine=line;}$('speech').textContent=line;$('word-input')?.setAttribute('aria-invalid','true');LP.status(detail);save();LP.audio.speak(line,{auto:true});}
   // The one "answered correctly" path: mark the round, render from state, announce once, and play encouragement only if sound is already on.
   function succeed(){const key=currentKey(),r=current();r.done=true;r.feedback='';render();const line=L.successLine(key,r);LP.status(line.text);$('next').focus({preventScroll:true});if(line.speech.length)LP.audio.speak(line.speech,{auto:true});}
   function setDraft(value){clearFeedback();current().draft=value;current().done=false;const gapInput=$('word-input');if(gapInput&&gapInput.dataset.minCh)gapInput.style.setProperty('--gap-ch',String(gapWidth(Number(gapInput.dataset.minCh),value)));const model=$('task').querySelector('.number-model');if(model&&wordTab==='numbers'){const number=document.createElement('div');number.className='number-total';number.textContent=current().target;model.replaceWith(number);}save();}

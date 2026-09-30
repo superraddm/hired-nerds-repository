@@ -10,7 +10,7 @@ const key = text => text.trim().toLowerCase().replace(/\s+/g, ' ').replace(/[.!?
 
 test('the bundled voice covers all built-in spoken content and its browser index matches', () => {
   assert.deepEqual(Object.keys(manifest.clips).sort(), L.spokenBank());
-  for (const text of ["Hello! I'm Nook. Let's play.", 'Whoops! Try again.', 'nook eats an blank', 'the pattern fits', 'plus', 'equals', 'apples', 'ten']) assert.ok(manifest.clips[key(text)], text);
+  for (const text of ["Hello! I'm Nook. Let's play.", 'Whoops! Have another go.', 'nook eats an blank', 'the pattern fits', 'plus', 'equals', 'apples', 'ten']) assert.ok(manifest.clips[key(text)], text);
   // Every success line the game can produce is speakable from the bundled clips alone.
   const p = L.defaults;
   const rounds = [];
@@ -46,7 +46,7 @@ test('every bundled clip is a bounded, non-silent mono WAV without clipped sampl
     assert.equal(wav.readUInt16LE(34), 16);
     assert.equal(wav.readUInt32LE(40), wav.length - 44);
     const seconds = (wav.length - 44) / 2 / 24000;
-    assert.ok(seconds > .15 && seconds < 10, text);
+    assert.ok(seconds > .15 && seconds < 14, text);   // Nook's Gemini voice tells the Feelings stories slowly: up to about 11 s
     assert.ok(Math.abs(seconds - clip.seconds) < .001);
     let peak = 0;
     for (let i = 44; i < wav.length; i += 2) peak = Math.max(peak, Math.abs(wav.readInt16LE(i)));

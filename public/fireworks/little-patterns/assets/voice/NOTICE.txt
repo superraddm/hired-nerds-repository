@@ -1,24 +1,19 @@
 Little Patterns bundled voice
 
-Voice: Jenny (Dioco), English. These are locally synthesised speech clips,
-not recordings of a child. Delivery has a gentle pace, a small fixed pitch
-increase, trimmed silence and balanced volume. No endorsement is implied.
+Voice: Gemini 3.8 Flash TTS (Google), designed voice voice_l1goo4gqobvj,
+"Nook": a kind grandfather from Northampton, England. The voice was designed
+from a written description; it is not a clone or recording of any real
+person, child or television character. No endorsement is implied.
 
-Voice dataset and usage terms:
-https://github.com/dioco-group/jenny-tts-dataset
-The dataset author permits commercial use and redistribution of generated
-clips. We credit Jenny (Dioco) here and in the grown-up settings.
+Every clip in this folder uses that voice, including the 26 alphabet
+(phonics) sounds. The previous Piper "Jenny (Dioco)" voice is no longer used.
 
-Voice model:
-https://huggingface.co/rhasspy/piper-voices/tree/main/en/en_GB/jenny_dioco/medium
-Model SHA-256:
-469c630d209e139dd392a66bf4abde4ab86390a0269c1e47b4e5d7ce81526b01
+The clips were generated once, on a build computer, with
+tools/nook-voice-gemini.py, then trimmed and volume-balanced. The game never
+calls a speech service: only these WAV clips and a text-to-clip index are
+distributed. The audio carries Google's inaudible SynthID watermark, which
+identifies it as AI-generated.
 
-Build-time engine: Piper 2023.11.14-2
-https://github.com/rhasspy/piper/releases/tag/2023.11.14-2
-The engine, voice model and their dependencies are not shipped to players.
-Only these generated WAV clips and a text-to-clip index are distributed.
-
-The project supplied the original sentences and word bank. No television
-character recording, child recording, cloned user voice or third-party
-soundtrack was used. Rebuild instructions: docs/little-patterns-voice.md.
+The project supplied the original sentences and word bank. Words outside the
+built-in script are spoken by the device's own voice.
+Rebuild instructions: docs/nook-voice-gemini.md.

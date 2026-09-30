@@ -717,15 +717,24 @@ const LOOK = {
   smoky: 'radial-gradient(circle at 32% 28%,#fff 0 8%,rgba(120,120,135,.8) 40%,rgba(30,30,45,.9) 100%)',
   steel: 'radial-gradient(circle at 32% 28%,#fff 0 7%,#c9ccd3 30%,#6d717c 70%,#3c3f48 100%)',
   pearl: 'radial-gradient(circle at 32% 28%,#fff 0 16%,#efe6d8 45%,#b9a88f 88%,#8f7f68 100%)',
-  wood:  'radial-gradient(circle at 32% 28%,#f3dcb4 0 12%,#c79a5e 55%,#7a5530 100%)' };
-/* f = size, d = density (weight = f*f*d), bounce = how much speed survives an edge. A heavy marble takes less of the finger's
-   speed, tops out lower, rolls further once going and shoves lighter ones aside. Looks stay neutral so no marble seems to "be" a paint colour. */
+  wood:  'radial-gradient(circle at 32% 28%,#f3dcb4 0 12%,#c79a5e 55%,#7a5530 100%)',
+  rubber:   'radial-gradient(circle at 32% 28%,#ffd9b0 0 10%,#ff7a1a 45%,#b8420a 100%)',              // the superball: bright, so a child learns which ball is the wild one
+  pingpong: 'radial-gradient(circle at 32% 28%,#fff 0 22%,#f2f0ea 60%,#c9c4b8 100%)' };
+/* f = size, d = density (weight = f*f*d), bounce = how much speed survives an edge, speed = how much of a flick it keeps and how
+   fast it may go (relative to what its weight alone would allow), grip = how hard the paper slows it. Widened on 25 Sept 2026 after
+   Jof found the first set played alike: sizes now span 5x, weights 50x, and the superball and ping-pong are the fast, bouncy ones.
+   Their looks are the only two with strong colour, so a child learns which balls are the wild ones. */
 const KINDS = [
-  {name:'tiny glass',   f:.62, d:1,   bounce:.74, look:'glass'}, {name:'small glass', f:.8,  d:1,   bounce:.72, look:'glass'},
-  {name:'glass',        f:1,   d:1,   bounce:.7,  look:'glass'}, {name:'big glass',   f:1.25, d:1,  bounce:.66, look:'glass'},
-  {name:'giant smoky',  f:1.5, d:1,   bounce:.62, look:'smoky'}, {name:'small steel', f:.7,  d:2.6, bounce:.45, look:'steel'},
-  {name:'steel',        f:1,   d:2.6, bounce:.42, look:'steel'}, {name:'cannonball',  f:1.32, d:2.6, bounce:.36, look:'steel'},
-  {name:'pearl',        f:.9,  d:.55, bounce:.86, look:'pearl'}, {name:'wooden',      f:1.38, d:.45, bounce:.5,  look:'wood'} ];
+  {name:'tiny glass',   f:.45, d:1,   bounce:.74, speed:1,   grip:1,  look:'glass'},
+  {name:'glass',        f:.9,  d:1,   bounce:.7,  speed:1,   grip:1,  look:'glass'},
+  {name:'big glass',    f:1.4, d:1,   bounce:.62, speed:1,   grip:1,  look:'glass'},
+  {name:'giant smoky',  f:2.2, d:.9,  bounce:.5,  speed:1,   grip:1,  look:'smoky'},
+  {name:'ball bearing', f:.55, d:3,   bounce:.4,  speed:1,   grip:.6, look:'steel'},
+  {name:'cannonball',   f:1.6, d:3,   bounce:.3,  speed:1,   grip:.7, look:'steel'},
+  {name:'superball',    f:.8,  d:.7,  bounce:1,   speed:1.6, grip:.5, look:'rubber'},
+  {name:'ping-pong',    f:1.1, d:.12, bounce:.95, speed:1.8, grip:.3, look:'pingpong'},
+  {name:'pearl',        f:.7,  d:.55, bounce:.86, speed:1.2, grip:1,  look:'pearl'},
+  {name:'wooden',       f:1.7, d:.4,  bounce:.45, speed:1,   grip:1.8, look:'wood'} ];
 function marbleKit(r){                                  // each marble has its own size, so its own load and its own scratch copy of the sheet under its track
   const P = Math.ceil(r * 2) + 2, mk = n => { const c = document.createElement('canvas'); c.width = c.height = Math.max(n, 256); return c; };   // never below 256 px: very small canvases may not be GPU-backed in WebKit
   M.P = Math.max(M.P, P); return {P, load: mk(P), scratch: mk(P + 180)};
@@ -739,7 +748,7 @@ function addMarble(){
   const m=makeMarble(kind,x,y);sound?.contact(acoustic(m),{material:'paper',weight:Infinity,bounce:0},130,'place');return m;
 }
 function makeMarble(kind,x,y){
-  const r=18*unit*kind.f,w=kind.f*kind.f*kind.d,kit = marbleKit(r), m = {id:++nextMarbleId,kind, x, y, vx:0, vy:0, r, w, gain: clamp(.95 / Math.sqrt(1 + 1.2 * w), .22, .9), bounce: kind.bounce, held:null,
+  const r=18*unit*kind.f,w=kind.f*kind.f*kind.d,kit = marbleKit(r), m = {id:++nextMarbleId,kind, x, y, vx:0, vy:0, r, w, gain: clamp((kind.speed || 1) * .95 / Math.sqrt(1 + 1.2 * w), .2, 1.25), grip: kind.grip || 1, bounce: kind.bounce, held:null,
     P: kit.P, load: kit.load, lctx: kit.load.getContext('2d'), scratch: kit.scratch, sctx: kit.scratch.getContext('2d'), path: [], bx:0, by:0, el: document.createElement('div'), sx:x, sy:y};
   m.el.className = 'marble'; m.el.style.cssText = `width:${2*r}px;height:${2*r}px;background:${LOOK[kind.look]}`; show(m); paper.appendChild(m.el); M.list.push(m); showPerf();return m;
 }
@@ -783,8 +792,8 @@ function tick(now){
   for (const m of M.list){                                                                                                   // step 1: physics, and where marks are due
     m.audioX=m.x;m.audioY=m.y;
     if (m.held){const dx=m.held.x-m.x,dy=m.held.y-m.y;if(Math.hypot(dx,dy)<=.25){m.vx=m.vy=0;}else{const k=.55/dt,lim=3200*unit;m.vx=clamp(dx*k,-lim,lim);m.vy=clamp(dy*k,-lim,lim);}}
-    else if (m.vx || m.vy){ const f = Math.exp(-TUNE.fric * dt / Math.sqrt(m.w)); m.vx *= f; m.vy *= f;                                                  // a heavy marble keeps rolling for longer
-      const v = Math.hypot(m.vx, m.vy), drag = TUNE.roll * unit * dt, cap = TUNE.topV * unit * m.gain;
+    else if (m.vx || m.vy){ const f = Math.exp(-TUNE.fric * m.grip * dt / Math.sqrt(m.w)); m.vx *= f; m.vy *= f;                                         // a heavy or low-grip marble keeps rolling for longer
+      const v = Math.hypot(m.vx, m.vy), drag = TUNE.roll * m.grip * unit * dt, cap = TUNE.topV * unit * m.gain;
       if (v <= drag + 4 * unit){ m.vx = m.vy = 0; } else { const k = Math.min(1, cap / v) * (1 - drag / v); m.vx *= k; m.vy *= k; } }
     const sp = Math.hypot(m.vx, m.vy); m.path.length = 0; if (!sp) continue;
     const gap = Math.max(2, m.r * Q.gap[Q.level]), n = Math.max(1, Math.ceil(sp * dt / gap));

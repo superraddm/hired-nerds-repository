@@ -150,6 +150,9 @@ button:focus{outline:none}
 #play:active{transform:translateY(6px);box-shadow:0 0 0 5px rgba(255,255,255,.35) inset,0 3px 0 #5b0d9a,0 0 40px #ff3fa4}
 #splash small{display:block;margin-top:28px;color:#b9a3d6;font-size:clamp(12px,2vmin,16px);font-weight:600;line-height:1.5}
 #splash .bottles{display:flex;gap:6px;justify-content:center;margin-bottom:10px}
+/* the door to the other game on this site (kpopboom.party); the only way out of the page, and only from the title screen */
+#nookLink{display:inline-block;margin-top:22px;padding:12px 22px;min-height:48px;border-radius:999px;background:#e3dbf0;color:#3b2f4a;font-weight:900;font-size:clamp(15px,2.6vmin,20px);text-decoration:none;border:3px solid #b9a3d6}
+#nookLink:active{transform:translateY(2px)}
 #splash .bottles .bottle{--bs:clamp(40px,7vmin,64px);pointer-events:none;animation:bob 1.6s ease-in-out infinite}
 #splash .bottles .bottle:nth-child(2){animation-delay:.2s}#splash .bottles .bottle:nth-child(3){animation-delay:.4s}
 #splash .bottles .bottle:nth-child(4){animation-delay:.6s}#splash .bottles .bottle:nth-child(5){animation-delay:.8s}
@@ -393,6 +396,7 @@ html.q-legacy #go,html.q-legacy #play,html.q-legacy #finale,html.q-legacy #toSta
     <p>✨ Firework Stage ✨</p>
     <button id="play">TAP TO PLAY</button>
     <small id="splashTip">Help the Glow Girls guard the Giant Lightstick!<br>Mix potions in the cauldron · tap the sky to fire the cannon · pop the giggly Boo-Bops into bubbles<br>No ads · no tracking · works offline once loaded</small>
+    <a id="nookLink" href="little-patterns/">🌱 Nook's Garden</a>
   </div>
 </div>
 
@@ -2489,6 +2493,8 @@ function bottleHTML(p){
 }
 $('#left').innerHTML = '<span class="lbl"><i>🎨</i><b>COLOURS</b></span>' + COLOURS.map(bottleHTML).join('');
 $('#right').innerHTML = '<span class="lbl"><i>✨</i><b>MAGIC</b></span>' + MAGIC_ALL.map(bottleHTML).join('');
+// The same file serves jofdavies.com/fireworks/ (Nook next to it) and kpopboom.party/boom/ (Nook at the site root).
+if (location.pathname.startsWith('/boom')) $('#nookLink').href = '/little-patterns/';
 $('#splashBottles').innerHTML = [COLOURS[0],COLOURS[2],MAGICS[0],COLOURS[3],MAGICS[1]].map(bottleHTML).join('');
 
 function renderMix(){

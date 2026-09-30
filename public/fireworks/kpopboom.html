@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#12002b">
+<meta name="description" content="Two games: K-Pop BOOM! fireworks and Nook's Garden. Pick a picture.">
+<title>K-Pop BOOM! and Nook's Garden</title>
+<link rel="icon" href="boom/icon-192.png">
+<link rel="apple-touch-icon" href="boom/icon-180.png">
+<!--
+  The front door of kpopboom.party: two pictures, one for each game. Deployed by tools/deploy-kpopboom.sh as the
+  root index.html; the fireworks game lives under /boom/ and Little Patterns under /little-patterns/.
+  No words are needed to use it: each tile is one picture and one name, and the whole tile is the button.
+-->
+<style>
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%;background:#1a0f2e;font-family:"Trebuchet MS",ui-rounded,system-ui,sans-serif;color:#fff}
+  body{display:grid;grid-template-columns:1fr 1fr;min-height:100dvh}
+  @media (orientation:portrait){body{grid-template-columns:1fr;grid-template-rows:1fr 1fr}}
+  .tile{position:relative;display:grid;grid-template-rows:1fr auto;justify-items:center;align-items:end;padding:clamp(16px,4vmin,48px);text-decoration:none;color:inherit;overflow:hidden;
+    transition:transform .18s ease-out;outline-offset:-8px}
+  .tile:active{transform:scale(.97)} .tile:focus-visible{outline:6px solid #fff}
+  @media (hover:hover){.tile:hover .pic{transform:translateY(-6px) scale(1.04)}}
+  .pic{display:block;max-width:min(64%,52vmin);max-height:56vh;width:auto;height:auto;object-fit:contain;align-self:center;transition:transform .25s ease-out;
+    filter:drop-shadow(0 18px 30px rgba(0,0,0,.35))}
+  .name{font-size:clamp(30px,7vmin,76px);font-weight:900;letter-spacing:-1px;line-height:1;margin:clamp(10px,2vmin,22px) 0 0;text-align:center}
+  .boom{background:radial-gradient(ellipse at 50% 35%,#4a0d7a 0%,#12002b 62%,#050014 100%)}
+  .boom .pic{border-radius:22%}
+  .boom .name{background:linear-gradient(90deg,#ff3fa4,#ffd23f,#33e6ff,#a855ff);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 14px rgba(255,63,164,.55))}
+  .boom .spark{position:absolute;border-radius:50%;pointer-events:none;opacity:.7}
+  .nook{background:linear-gradient(180deg,#dcf3ed 0%,#eef8e6 55%,#fff6c9 100%);color:#2a423e}
+  .nook .name{color:#4b705e}
+  .nook::after{content:"";position:absolute;left:-10%;right:-10%;bottom:-18vmin;height:32vmin;border-radius:50%;background:#b9dea3;z-index:0}
+  .nook .pic,.nook .name{position:relative;z-index:1}
+  @media (prefers-reduced-motion:reduce){.tile,.pic{transition:none}}
+</style>
+</head>
+<body>
+  <a class="tile boom" href="boom/" aria-label="K-Pop BOOM! fireworks game">
+    <i class="spark" style="left:12%;top:14%;width:6px;height:6px;background:#ffd23f"></i><i class="spark" style="left:80%;top:22%;width:5px;height:5px;background:#33e6ff"></i>
+    <i class="spark" style="left:22%;top:70%;width:4px;height:4px;background:#ff3fa4"></i><i class="spark" style="left:70%;top:78%;width:7px;height:7px;background:#a855ff"></i>
+    <img class="pic" src="boom/icon-512.png" alt="" width="512" height="512">
+    <span class="name">K-POP BOOM!</span>
+  </a>
+  <a class="tile nook" href="little-patterns/" aria-label="Nook's Garden and Colour Blocks">
+    <img class="pic" src="little-patterns/assets/nook.png" alt="" width="620" height="740">
+    <span class="name">Nook's Garden</span>
+  </a>
+</body>
+</html>

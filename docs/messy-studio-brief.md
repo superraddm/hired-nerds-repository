@@ -117,10 +117,15 @@ How it is built:
 ### Marbles (current rules, 17 September 2026)
 - Tapping the Marbles button drops **one** marble at a random place on the sheet.
 - Up to **three** marbles. A fourth replaces the first, a fifth the second, and so on.
-- Each marble is one of **ten kinds**, chosen at random as it lands, differing in size,
-  weight, speed and bounce (tiny glass to cannonball, plus a light bouncy pearl and a big
-  light wooden one). Heavy ones take less of the finger's speed, roll further and shove
-  light ones aside. Their looks are neutral so no marble seems to "be" a paint colour.
+- Each marble is one of **ten kinds**, chosen at random as it lands (never a kind already
+  out). Widened on 25 September 2026 because the first set played alike: tiny glass, glass,
+  big glass and giant smoky (sizes x0.45 to x2.2); ball bearing and cannonball (dense, dead
+  bounce, long roll); **superball** (orange; bounce 1.0, leaves faster than the finger) and
+  **ping-pong** (matt white; feather-light, the fastest, pinballs about); pearl (lively) and
+  wooden (big, light, drags to a stop). Each kind has size, density, bounce, **speed** (how
+  much of a flick it keeps and its top speed) and **grip** (how hard the paper slows it).
+  Heavy ones shove light ones aside. Only the two wild ones are strongly coloured, so a child
+  learns which balls do what without any ball seeming to "be" a paint colour.
 - Marbles **start with no colour**. They only move paint already on the sheet, so on a
   blank sheet they leave nothing: the player has to add colour first.
 - Marbles **stay on the sheet**. They never move by themselves. They move only when a

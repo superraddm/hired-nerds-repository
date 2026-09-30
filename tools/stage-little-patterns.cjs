@@ -6,7 +6,7 @@ const files = [
   'index.html', 'home.css', 'shared.css', 'shared.js', 'learning.js',
   'blocks.html', 'blocks.css', 'blocks-live.css', 'blocks.js', 'core.js',
   'garden.html', 'garden-preview.css', 'garden-live.css', 'garden.js',
-  'assets/nook.png', 'LICENSE.txt', 'content.html', 'voice-library.js',
+  'assets/nook.png', 'assets/kpop-boom.png', 'LICENSE.txt', 'content.html', 'voice-library.js',
   'assets/voice/manifest.json', 'assets/voice/NOTICE.txt',
   'feelings.html', 'feelings.css', 'feelings.js', 'feelings-data.js', 'feelings-art.js',
   'feelings-content.html', 'assets/feelings/NOTICE.txt', 'phonics-review.html',
@@ -33,6 +33,7 @@ function validate() {
       const ref = match[1].split(/[?#]/)[0];
       if (!ref) continue;
       if (ref === 'data:,') continue; // Empty local favicon; no browser icon request on interaction.
+      if (ref === '../boom/') continue; // The hub's door to the fireworks game, which the deploy stages beside this folder.
       if (/^(?:[a-z]+:|\/)/i.test(ref)) throw Error(`Unexpected external reference in ${file}: ${ref}`);
       const resolved = path.posix.normalize(ref.endsWith('/') ? `${ref}index.html` : ref);
       if (!files.includes(resolved)) throw Error(`Runtime file is not included: ${file} -> ${ref}`);
