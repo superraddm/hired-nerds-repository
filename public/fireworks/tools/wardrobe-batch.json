@@ -1,0 +1,68 @@
+[
+  {
+    "lookId": "E",
+    "lookName": "Prism Relay",
+    "source": "outfit-prismrelay-dressed.png",
+    "top": { "id": "prismbolero", "name": "Prism Relay bolero" },
+    "bottom": { "id": "relaypleats", "name": "Prism Relay pleated skort" },
+    "shoes": { "id": "prismhightops", "name": "Prism Relay high-tops" },
+    "prompt": "Pearl-white cropped futuristic bolero-and-bustier top with cyan/violet prismatic panels and hot-pink piping; coordinated high-waisted violet/cyan pleated performance skort with safety shorts; pearl-white ankle platform high-top sneakers with translucent cyan soles."
+  },
+  {
+    "lookId": "F",
+    "lookName": "Cherry Voltage",
+    "source": "outfit-cherryvoltage-dressed.png",
+    "top": { "id": "cherrycircuit", "name": "Cherry Voltage circuit corset" },
+    "bottom": { "id": "voltagewrap", "name": "Cherry Voltage wrap skort" },
+    "shoes": { "id": "cherryboots", "name": "Cherry Voltage combat boots" },
+    "prompt": "Ruby-red sleeveless cropped stage corset with black lacquer diagonal panels and neon-fuchsia circuit piping; separate black-vinyl asymmetric wrap skort over ruby safety shorts; ankle-height black and ruby platform combat boots with restrained luminous pink trim."
+  },
+  {
+    "lookId": "G",
+    "lookName": "Blue Orbit",
+    "source": "outfit-blueorbit-dressed.png",
+    "bottomSource": "outfit-blueorbit-bottom-dressed.png",
+    "top": { "id": "orbitcape", "name": "Blue Orbit asymmetric cape top" },
+    "bottom": { "id": "orbitflares", "name": "Blue Orbit crescent flare trousers" },
+    "shoes": { "id": "orbitpoints", "name": "Blue Orbit pointed stage boots" },
+    "prompt": "Asymmetric cobalt sculptural crop top with one fitted long sleeve and an opaque pearl-silver orbital cape arc; separate full-length midnight-blue trousers with dramatic cobalt/holographic crescent flare panels from knee to ankle; silver-and-cobalt pointed platform ankle boots."
+  },
+  {
+    "lookId": "H",
+    "lookName": "Pixel Bloom",
+    "source": "outfit-pixelbloom-dressed.png",
+    "top": { "id": "bloomruffle", "name": "Pixel Bloom ruffle halter" },
+    "bottom": { "id": "pixelpetals", "name": "Pixel Bloom architectural petal skirt" },
+    "shoes": { "id": "bloomjanes", "name": "Pixel Bloom platform Mary Janes" },
+    "prompt": "Pastel-pink and orchid cropped halter top with compact petal-shaped ruffles; separate knee-length architectural bell skirt built from opaque pearlescent mint, lilac and cyan origami pixel-petal panels; pink/lilac platform Mary Janes with ankle straps and flower buckles."
+  },
+  {
+    "lookId": "I",
+    "lookName": "Solar Flare",
+    "source": "outfit-solarflare-dressed.png",
+    "top": { "id": "solarvest", "name": "Solar Flare cropped vest" },
+    "bottom": { "id": "flareskort", "name": "Solar Flare flame skort" },
+    "shoes": { "id": "sunburstboots", "name": "Solar Flare stage boots" },
+    "prompt": "Metallic-gold and pearl-white sleeveless cropped stage vest with crisp sun-ray paneling and fine black edging; separate amber/black high-waisted asymmetric flame-pleat skort with safety shorts; pearl-white and gold ankle stage boots with small wing-like heel panels."
+  },
+  {
+    "lookId": "J",
+    "lookName": "Midnight Ribbon",
+    "source": "outfit-midnightribbon-dressed.png",
+    "top": { "id": "midnightbow", "name": "Midnight Ribbon bow top" },
+    "bottom": { "id": "ribbonfringe", "name": "Midnight Ribbon fringe skirt" },
+    "shoes": null,
+    "presetShoes": "cherryboots",
+    "prompt": "Black and deep-plum satin cropped sweetheart stage top with a compact sculpted front bow and silver-crystal edging; separate high-waisted plum layered mini skirt with short ribbon fringe at the sides and black safety shorts; leave the original bare feet completely unchanged."
+  },
+  {
+    "lookId": "K",
+    "lookName": "Mint Comet",
+    "source": "outfit-mintcomet-dressed.png",
+    "top": { "id": "mintmesh", "name": "Mint Comet mesh crop top" },
+    "bottom": { "id": "cometbubble", "name": "Mint Comet bubble shorts" },
+    "shoes": null,
+    "presetShoes": "prismhightops",
+    "prompt": "Mint and pale-cyan sleeveless high-neck crop top with a translucent mesh yoke and tiny silver comet hardware; separate pearl-white and mint structured high-waisted bubble shorts with a long opaque mint satin comet-tail side panel; leave the original bare feet completely unchanged."
+  }
+]

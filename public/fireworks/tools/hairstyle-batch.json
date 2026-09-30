@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "status": "complete",
+  "executionAuthorized": true,
+  "canvas": {
+    "width": 1024,
+    "height": 1536,
+    "anchorX": 512,
+    "drawX": 0,
+    "drawY": 0,
+    "layerOrder": [
+      "hair-rear",
+      "character-base",
+      "hair-front"
+    ]
+  },
+  "characters": {
+    "hana": {
+      "approvedHeadBounds": [450, 63, 581, 260],
+      "conceptSheet": "../../mockups/hana-concepts-v2.png"
+    },
+    "jia": {
+      "approvedHeadBounds": [453, 63, 578, 260],
+      "conceptSheet": "../../mockups/jia-concepts-v2.png"
+    }
+  },
+  "rateLimitStrategy": {
+    "parallelImageGenCalls": 1,
+    "saveAfterEveryCall": true,
+    "resumeFromFirstNonApprovedJob": true,
+    "onRateLimit": [
+      "record the exact reset time returned by ImageGen",
+      "preserve every completed source and layer in the workspace",
+      "leave the durable goal active",
+      "resume no earlier than reset time plus two minutes"
+    ]
+  },
+  "jobs": [
+    {
+      "order": 1,
+      "id": "hana-rosewaves",
+      "character": "hana",
+      "kind": "concept-adaptation",
+      "reference": "Hana concept A: long coral-pink waves",
+      "status": "approved",
+      "attempts": 2
+    },
+    {
+      "order": 2,
+      "id": "jia-braidmatrix",
+      "character": "jia",
+      "kind": "concept-adaptation",
+      "reference": "Jia concept B: blue braided buns with long braids",
+      "status": "approved",
+      "attempts": 1
+    },
+    {
+      "order": 3,
+      "id": "hana-petalbob",
+      "character": "hana",
+      "kind": "concept-adaptation",
+      "reference": "Hana concept B: short pink bob",
+      "status": "approved",
+      "attempts": 0
+    },
+    {
+      "order": 4,
+      "id": "hana-starlittwins",
+      "character": "hana",
+      "kind": "concept-adaptation",
+      "reference": "Hana concept C: long lavender twin ponytails",
+      "status": "approved",
+      "attempts": 0
+    },
+    {
+      "order": 5,
+      "id": "jia-neontails",
+      "character": "jia",
+      "kind": "concept-adaptation",
+      "reference": "Jia concept A: black and cyan twin tails with buns",
+      "status": "approved",
+      "attempts": 0
+    },
+    {
+      "order": 6,
+      "id": "jia-embershag",
+      "character": "jia",
+      "kind": "concept-adaptation",
+      "reference": "Jia concept C: black layered shag with orange streaks",
+      "status": "approved",
+      "attempts": 0
+    },
+    {
+      "order": 7,
+      "id": "hana-floralhalo",
+      "character": "hana",
+      "kind": "new-design",
+      "reference": "floral crown-braid updo with loose curled tendrils",
+      "status": "approved",
+      "attempts": 1
+    },
+    {
+      "order": 8,
+      "id": "jia-electricbob",
+      "character": "jia",
+      "kind": "new-design",
+      "reference": "jaw-length electric bob with cyan underlayer and two fine side tendrils",
+      "status": "approved",
+      "attempts": 1
+    },
+    {
+      "order": 9,
+      "id": "hana-petalpixie",
+      "character": "hana",
+      "kind": "new-design",
+      "reference": "asymmetric sculpted petal pixie with a distinct short silhouette",
+      "status": "approved",
+      "attempts": 1
+    },
+    {
+      "order": 10,
+      "id": "jia-circuitfauxhawk",
+      "character": "jia",
+      "kind": "new-design",
+      "reference": "braided fauxhawk flowing into a compact segmented ponytail",
+      "status": "approved",
+      "attempts": 2
+    }
+  ],
+  "definitionOfDone": [
+    "Sol retains five unchanged hairstyles",
+    "Hana has five unique character-specific hairstyles",
+    "Jia has five unique character-specific hairstyles",
+    "each new hairstyle has a 1024x1536 RGBA front and rear layer",
+    "approved heads, body, pose, proportions, and camera remain pixel-registered",
+    "all hairstyles render correctly with representative clothing silhouettes",
+    "wardrobe filtering, randomisation, saves, and unlock progression still work",
+    "the game parses and the hairstyle verifier passes"
+  ]
+}
