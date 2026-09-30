@@ -1,0 +1,19 @@
+# jofdavies.com serves this repository's public/ folder as it is (no build step), so the only way to keep working
+# files out of the live site while keeping them in git is to rewrite their addresses here. Cloudflare Pages reads this
+# file at the site root. kpopboom.party is deployed by tools/deploy-kpopboom.sh from an allow-list and never sees them.
+
+# Glow Girls working files: source PSDs, dressed-layer sources, patch sources, generated outputs. In git, not on site.
+/fireworks/assets/glowgirls/sol/*.psd              /fireworks/assets/glowgirls/withheld.txt  200
+/fireworks/assets/glowgirls/sol/psd-import/*       /fireworks/assets/glowgirls/withheld.txt  200
+/fireworks/assets/glowgirls/sol/patch-sources/*    /fireworks/assets/glowgirls/withheld.txt  200
+/fireworks/assets/glowgirls/sol/ChatGPT-Output/*   /fireworks/assets/glowgirls/withheld.txt  200
+/fireworks/assets/glowgirls/sol/dressed-*          /fireworks/assets/glowgirls/withheld.txt  200
+/fireworks/assets/glowgirls/sol/master-candidate-* /fireworks/assets/glowgirls/withheld.txt  200
+/fireworks/assets/glowgirls/sol/master-nofeet.png  /fireworks/assets/glowgirls/withheld.txt  200
+/fireworks/assets/glowgirls/sol/Model-Source.png   /fireworks/assets/glowgirls/withheld.txt  200
+/fireworks/assets/glowgirls/sol/hair-moonpony-*    /fireworks/assets/glowgirls/withheld.txt  200
+/fireworks/mockups/*                               /fireworks/assets/glowgirls/withheld.txt  200
+/fireworks/tools/*                                 /fireworks/assets/glowgirls/withheld.txt  200
+
+# Mike the Mic lives at kpopboom.party for now (owner, 26 Sept). One live home, not two.
+/fireworks/mike-game/*  https://kpopboom.party/mike-game/:splat  302
