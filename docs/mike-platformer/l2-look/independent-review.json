@@ -1,0 +1,36 @@
+{
+  "recording": {
+    "won": true,
+    "seconds": 269.38,
+    "salvage": 36,
+    "hits": 0,
+    "livesLost": 0,
+    "cameraSeconds": 0,
+    "bossSeconds": 77.22
+  },
+  "completedBossSave": {
+    "afterSeconds": 10,
+    "bossOn": false,
+    "bossDone": true,
+    "won": false,
+    "x": 470,
+    "moved": false,
+    "stalled": true
+  },
+  "nozzleFirstActiveFrame": {
+    "id": "n2b",
+    "active": true,
+    "visibleReachTiles": 0.033,
+    "fullDamageReachTiles": 6,
+    "playerDistanceTiles": 5,
+    "health": 2,
+    "hit": true
+  },
+  "ending": {
+    "won": true,
+    "playerX": 480.88073333333455,
+    "exitX": 500,
+    "sumpLevel": 20.467,
+    "drainTarget": 23.6
+  }
+}

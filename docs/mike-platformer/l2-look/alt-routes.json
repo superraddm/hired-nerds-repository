@@ -1,0 +1,32 @@
+{
+  "gallery: the rim from end to end": {
+    "seconds": 14.4,
+    "salvage": 4,
+    "marginAtEnd": 20
+  },
+  "gallery: under water from end to end": {
+    "seconds": 33.4,
+    "salvage": 6,
+    "marginAtEnd": 15.4
+  },
+  "tower: down from the landing and through the low tank": {
+    "seconds": 25.9,
+    "salvage": 3,
+    "marginAtEnd": 20
+  },
+  "reservoir: under water over the fixture tables and the weir": {
+    "seconds": 17.3,
+    "salvage": 3,
+    "marginAtEnd": 20
+  },
+  "reservoir: through the duct past the intake, and up the far ladder": {
+    "seconds": 26.6,
+    "salvage": 1,
+    "marginAtEnd": 20
+  },
+  "maze: the high route over the workpieces": {
+    "seconds": 20.1,
+    "salvage": 0,
+    "marginAtEnd": 20
+  }
+}

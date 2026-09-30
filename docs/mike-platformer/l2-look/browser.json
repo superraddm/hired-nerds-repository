@@ -1,0 +1,85 @@
+{
+  "scenes": [
+    "title",
+    "r1-dock",
+    "r1-basin",
+    "r2-rim",
+    "r2-under",
+    "r3-shaft",
+    "r3-catwalk",
+    "r4-valve",
+    "r4-low",
+    "r4-duct",
+    "r5-maze",
+    "r5-top",
+    "r6-film",
+    "boss-idle",
+    "boss-flush",
+    "boss-align",
+    "results",
+    "poses",
+    "machines"
+  ],
+  "keyboard": {
+    "x": 9.066666666666658
+  },
+  "downKey": {
+    "divesInFluid": true,
+    "looksOnLand": true
+  },
+  "save": true,
+  "completedSave": true,
+  "touch": [
+    {
+      "ctl": "left",
+      "w": 64,
+      "h": 64,
+      "visible": true
+    },
+    {
+      "ctl": "right",
+      "w": 64,
+      "h": 64,
+      "visible": true
+    },
+    {
+      "ctl": "lookDown",
+      "w": 64,
+      "h": 64,
+      "visible": true
+    },
+    {
+      "ctl": "jump",
+      "w": 76,
+      "h": 76,
+      "visible": true
+    },
+    {
+      "ctl": "camera",
+      "w": 64,
+      "h": 64,
+      "visible": true
+    },
+    {
+      "ctl": "fix",
+      "w": 0,
+      "h": 0,
+      "visible": false
+    }
+  ],
+  "perf": {
+    "workP50": 1.5,
+    "workP95": 2.600000023841858,
+    "frameP95": 16.800000000000182,
+    "lowQ": false
+  },
+  "requestsAfterLoad": 0,
+  "demo": {
+    "steps": 19840,
+    "seconds": 330.7,
+    "won": true,
+    "score": 8000,
+    "salvage": 36
+  },
+  "errors": []
+}

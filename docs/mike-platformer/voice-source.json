@@ -1,0 +1,9 @@
+{
+  "model": "gemini-3.8-flash-tts",
+  "voice": "voice_h0dygekvdjzv",
+  "direction": "The same northern English time-served engineer voice, now in an action platform game inside a hazardous rogue workshop. Alert, urgent, animated, projecting clearly over machinery. Brisk, punchy delivery with natural northern character; fully voiced, no whispering, no breathy ASMR, no slow narration. Say only the supplied words",
+  "reference": "Y:/MTD-Client-Files/mike-explainer/out/assets/voice-final/manifest.json",
+  "reference_builder": "Y:/MTD-Client-Files/mike-explainer/tools/voice_lines.py",
+  "design_prompt_reference_only": "A time-served engineer from the north of England in his late fifties, a shop-floor voice: dry, plain, unhurried and quietly confident, with a clear northern English accent (short flat a in bath and grass, rounded u in bush and cut, dropped g on -ing), explaining machining to an apprentice. No brightness or salesmanship; matter-of-fact and warm underneath.",
+  "requirement": "Reuse this saved voice ID. Never create a replacement voice from the description."
+}

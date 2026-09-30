@@ -1,0 +1,460 @@
+{
+ "physics": {
+  "heldJump": {
+   "height": 3,
+   "apexSeconds": 0.5,
+   "flightSeconds": 1
+  },
+  "tapJump": {
+   "height": 0.947,
+   "flightSeconds": 0.55
+  },
+  "run": {
+   "topSpeed": 7,
+   "secondsToTop": 0.25
+  },
+  "fullSpeedRange": 7,
+  "rangeAfter3TRunUp": 7,
+  "brake": {
+   "seconds": 0.167,
+   "distance": 0.525
+  },
+  "coyote": {
+   "at0_10s": true,
+   "at0_117s": true,
+   "at0_15s": false
+  },
+  "buffer": {
+   "pressed0_10sEarly": true,
+   "pressed0_13sEarly": true,
+   "pressed0_20sEarly": false
+  },
+  "belt": {
+   "groundSpeed": 10,
+   "takeOffVx": 10
+  },
+  "camera": {
+   "cardSeconds": 3,
+   "leftAfter1s": 2,
+   "emptiesAtSeconds": 3.017,
+   "refusedDuringPause": true,
+   "leftAfterPause": 0,
+   "leftOneSecondLater": 0.5,
+   "acceptsAtHalfSecond": true
+  },
+  "sdCard": {
+   "got": true,
+   "cap": 4.5
+  },
+  "view": {
+   "mikeScreenX": 320.3,
+   "tilesAheadOnScreen": 16,
+   "zoom": 1.25
+  },
+  "pickups": {
+   "got": [
+    "bearing-1",
+    "lube-1",
+    "sd-1",
+    "seal-1"
+   ],
+   "score": 350
+  }
+ },
+ "errors": [],
+ "when": "2026-09-30T10:20:59.003Z",
+ "realtime": {
+  "movedTiles": 11.62,
+  "jumpedWithSpace": true,
+  "requestsAfterLoad": [],
+  "perf": {
+   "workP50": 1.6000000089406967,
+   "workP95": 2.5999999940395355,
+   "frameP95": 16.899999999999636,
+   "lowQ": false
+  }
+ },
+ "captures": [
+  {
+   "file": "run-start.png",
+   "name": "the level card at the start",
+   "w": 960,
+   "h": 540,
+   "note": "the ?demo=1 run, the real loop at 60 Hz",
+   "group": "Played through"
+  },
+  {
+   "file": "run-gate-gallery.png",
+   "name": "section 3: crossing the turning-centre gallery on camera",
+   "w": 960,
+   "h": 540,
+   "note": "the ?demo=1 run, the real loop at 60 Hz",
+   "group": "Played through"
+  },
+  {
+   "file": "run-gate-arm.png",
+   "name": "section 5: under the spindle head on camera",
+   "w": 960,
+   "h": 540,
+   "note": "the ?demo=1 run, the real loop at 60 Hz",
+   "group": "Played through"
+  },
+  {
+   "file": "run-gate-press.png",
+   "name": "section 8: through the press on camera",
+   "w": 960,
+   "h": 540,
+   "note": "the ?demo=1 run, the real loop at 60 Hz",
+   "group": "Played through"
+  },
+  {
+   "file": "run-boss-1-bearings.png",
+   "name": "boss phase 1: fitting a bearing",
+   "w": 960,
+   "h": 540,
+   "note": "the ?demo=1 run, the real loop at 60 Hz",
+   "group": "Played through"
+  },
+  {
+   "file": "run-boss-2-seals.png",
+   "name": "boss phase 2: fitting a seal",
+   "w": 960,
+   "h": 540,
+   "note": "the ?demo=1 run, the real loop at 60 Hz",
+   "group": "Played through"
+  },
+  {
+   "file": "run-boss-3-couplings.png",
+   "name": "boss phase 3: fitting a coupling",
+   "w": 960,
+   "h": 540,
+   "note": "the ?demo=1 run, the real loop at 60 Hz",
+   "group": "Played through"
+  },
+  {
+   "file": "run-boss-restored.png",
+   "name": "the Turner restored",
+   "w": 960,
+   "h": 540,
+   "note": "the ?demo=1 run, the real loop at 60 Hz",
+   "group": "Played through"
+  },
+  {
+   "file": "run-results.png",
+   "name": "results, from the real run",
+   "w": 960,
+   "h": 540,
+   "note": "the ?demo=1 run, the real loop at 60 Hz",
+   "group": "Played through"
+  },
+  {
+   "file": "scene-title.png",
+   "name": "title",
+   "w": 960,
+   "h": 540,
+   "note": "960×540 still",
+   "group": "Scenes"
+  },
+  {
+   "file": "scene-s1-start.png",
+   "name": "s1-start",
+   "w": 960,
+   "h": 540,
+   "note": "960×540 still",
+   "group": "Scenes"
+  },
+  {
+   "file": "scene-s2-belts.png",
+   "name": "s2-belts",
+   "w": 960,
+   "h": 540,
+   "note": "960×540 still",
+   "group": "Scenes"
+  },
+  {
+   "file": "scene-s3-camera-alley.png",
+   "name": "s3-camera-alley",
+   "w": 960,
+   "h": 540,
+   "note": "960×540 still",
+   "group": "Scenes"
+  },
+  {
+   "file": "scene-s4-stores.png",
+   "name": "s4-stores",
+   "w": 960,
+   "h": 540,
+   "note": "960×540 still",
+   "group": "Scenes"
+  },
+  {
+   "file": "scene-s5-arm-gate.png",
+   "name": "s5-arm-gate",
+   "w": 960,
+   "h": 540,
+   "note": "960×540 still",
+   "group": "Scenes"
+  },
+  {
+   "file": "scene-s6-coolant-loft.png",
+   "name": "s6-coolant-loft",
+   "w": 960,
+   "h": 540,
+   "note": "960×540 still",
+   "group": "Scenes"
+  },
+  {
+   "file": "scene-s7-belt-run.png",
+   "name": "s7-belt-run",
+   "w": 960,
+   "h": 540,
+   "note": "960×540 still",
+   "group": "Scenes"
+  },
+  {
+   "file": "scene-s8-clappers.png",
+   "name": "s8-clappers",
+   "w": 960,
+   "h": 540,
+   "note": "960×540 still",
+   "group": "Scenes"
+  },
+  {
+   "file": "scene-s9-bench.png",
+   "name": "s9-bench",
+   "w": 960,
+   "h": 540,
+   "note": "960×540 still",
+   "group": "Scenes"
+  },
+  {
+   "file": "scene-s10-boss-idle.png",
+   "name": "s10-boss-idle",
+   "w": 960,
+   "h": 540,
+   "note": "960×540 still",
+   "group": "Scenes"
+  },
+  {
+   "file": "scene-s10-boss-repair.png",
+   "name": "s10-boss-repair",
+   "w": 960,
+   "h": 540,
+   "note": "960×540 still",
+   "group": "Scenes"
+  },
+  {
+   "file": "scene-results.png",
+   "name": "results",
+   "w": 960,
+   "h": 540,
+   "note": "960×540 still",
+   "group": "Scenes"
+  },
+  {
+   "file": "scene-poses.png",
+   "name": "poses",
+   "w": 960,
+   "h": 540,
+   "note": "960×540 still",
+   "group": "Scenes"
+  },
+  {
+   "file": "scene-hazards.png",
+   "name": "hazards",
+   "w": 960,
+   "h": 540,
+   "note": "960×540 still",
+   "group": "Scenes"
+  },
+  {
+   "file": "device-ipad-s1-start.png",
+   "name": "s1-start (iPad landscape)",
+   "w": 1024,
+   "h": 768,
+   "note": "1024×768, touch controls shown",
+   "group": "Device sizes"
+  },
+  {
+   "file": "device-ipad-s3-camera-alley.png",
+   "name": "s3-camera-alley (iPad landscape)",
+   "w": 1024,
+   "h": 768,
+   "note": "1024×768, touch controls shown",
+   "group": "Device sizes"
+  },
+  {
+   "file": "device-ipad-s10-boss-idle.png",
+   "name": "s10-boss-idle (iPad landscape)",
+   "w": 1024,
+   "h": 768,
+   "note": "1024×768, touch controls shown",
+   "group": "Device sizes"
+  },
+  {
+   "file": "device-ipad-results.png",
+   "name": "results (iPad landscape)",
+   "w": 1024,
+   "h": 768,
+   "note": "1024×768, touch controls shown",
+   "group": "Device sizes"
+  },
+  {
+   "file": "device-phone-s1-start.png",
+   "name": "s1-start (phone landscape)",
+   "w": 844,
+   "h": 390,
+   "note": "844×390, touch controls shown",
+   "group": "Device sizes"
+  },
+  {
+   "file": "device-phone-s3-camera-alley.png",
+   "name": "s3-camera-alley (phone landscape)",
+   "w": 844,
+   "h": 390,
+   "note": "844×390, touch controls shown",
+   "group": "Device sizes"
+  },
+  {
+   "file": "device-phone-s10-boss-idle.png",
+   "name": "s10-boss-idle (phone landscape)",
+   "w": 844,
+   "h": 390,
+   "note": "844×390, touch controls shown",
+   "group": "Device sizes"
+  },
+  {
+   "file": "device-phone-results.png",
+   "name": "results (phone landscape)",
+   "w": 844,
+   "h": 390,
+   "note": "844×390, touch controls shown",
+   "group": "Device sizes"
+  },
+  {
+   "file": "strip-section1-run-jump.png",
+   "name": "section 1: eight frames of running, jumping and filming",
+   "w": 1920,
+   "h": 600,
+   "note": "1:1 crops around Mike from the real loop",
+   "group": "Played through"
+  },
+  {
+   "file": "play-lab-readout.png",
+   "name": "?demo=1&lab=1 in real time, with the lab read-out",
+   "w": 960,
+   "h": 540,
+   "note": "frame and work percentiles on this PC",
+   "group": "Played through"
+  }
+ ],
+ "machines": {
+  "gallery": {
+   "noCamera": {
+    "x": 79.62,
+    "health": 2
+   },
+   "camera": {
+    "x": 92.5,
+    "health": 3
+   }
+  },
+  "armGate": {
+   "noCamera": {
+    "x": 147.62,
+    "health": 2
+   },
+   "camera": {
+    "x": 160.6,
+    "health": 3
+   }
+  },
+  "jaws": {
+   "noCamera": {
+    "x": 251.62,
+    "health": 2
+   },
+   "camera": {
+    "x": 263.62,
+    "health": 3
+   }
+  },
+  "latheFloor": 2,
+  "latheShelf": 3,
+  "grinderFloor": 2,
+  "coolantJet": 2,
+  "belt": {
+   "at1s": 3,
+   "at3_6s": 1.5,
+   "at5s": -3,
+   "underFootWhileSlow": 0.6
+  },
+  "pit": {
+   "x": 2,
+   "lives": 2,
+   "protectedFor": 0.43
+  }
+ },
+ "level": {
+  "recovery": {
+   "rec": {
+    "bearing": 2,
+    "seal": 2,
+    "coupling": 2,
+    "lubricant": 0,
+    "controlUnit": 2,
+    "sdCard": 0,
+    "miniMike": 0
+   },
+   "score": 0
+  },
+  "noDuplicate": {
+   "first": 100,
+   "after": 100
+  },
+  "continue": {
+   "lives": 3,
+   "continues": 1,
+   "x": 2
+  },
+  "miniMike": {
+   "lives": 4,
+   "got": true
+  },
+  "cancel": {
+   "progressMid": 0.5,
+   "after": 0,
+   "used": 0,
+   "fitted": 0
+  },
+  "fit": {
+   "fitted": 1,
+   "used": 1
+  },
+  "sweepHit": true,
+  "saveReload": {
+   "ok": true,
+   "x": 102,
+   "got": [
+    "bearing-1"
+   ],
+   "score": 100
+  }
+ },
+ "demo": {
+  "seconds": 133,
+  "won": true,
+  "done": "1",
+  "livesLost": 0,
+  "results": {
+   "score": 3850,
+   "parts": 12,
+   "units": 2,
+   "sd": 5,
+   "mini": 1,
+   "time": 129.61666666666196,
+   "lost": 0,
+   "cont": 0
+  }
+ }
+}

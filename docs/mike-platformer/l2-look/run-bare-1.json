@@ -1,0 +1,68 @@
+{
+  "seconds": 314,
+  "salvage": 36,
+  "score": 7800,
+  "livesLost": 0,
+  "health": 3,
+  "won": true,
+  "variant": 1,
+  "noCards": true,
+  "clips": 6,
+  "hits": 0,
+  "rooms": [
+    {
+      "room": "suit-dock",
+      "seconds": 14.5,
+      "health": 3,
+      "lives": 3,
+      "salvage": 8,
+      "score": 950,
+      "margin": 24
+    },
+    {
+      "room": "flushing-gallery",
+      "seconds": 41.3,
+      "health": 3,
+      "lives": 3,
+      "salvage": 13,
+      "score": 1850,
+      "margin": 23.4
+    },
+    {
+      "room": "guide-tower",
+      "seconds": 67,
+      "health": 3,
+      "lives": 3,
+      "salvage": 18,
+      "score": 2550,
+      "margin": 24
+    },
+    {
+      "room": "split-reservoir",
+      "seconds": 122.9,
+      "health": 3,
+      "lives": 3,
+      "salvage": 24,
+      "score": 3950,
+      "margin": 24
+    },
+    {
+      "room": "cut-path-maze",
+      "seconds": 180.7,
+      "health": 3,
+      "lives": 4,
+      "salvage": 31,
+      "score": 6100,
+      "margin": 24
+    },
+    {
+      "room": "threading-fault",
+      "seconds": 314,
+      "health": 3,
+      "lives": 4,
+      "salvage": 36,
+      "score": 7800,
+      "margin": 24
+    }
+  ]
+}

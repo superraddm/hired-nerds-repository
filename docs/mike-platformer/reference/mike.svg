@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 620 1000" width="620" height="1000">
+  <!--
+    Mike the Mic as a 2D cartoon puppet, drawn to the MTDCNC posters: red speckled foam mic head carrying the stacked
+    2022 lock-up and mtdcnc.com, black tapered stem with ring and button, black tube limbs, red four-finger gloves,
+    red trainers with pale soles. No face, no mouth: nothing on the head animates when he talks; the whole head can
+    tilt (rotate) or turn (see below).
+
+    Every moving part is a <g> with an id and a transform-origin at its joint (viewBox coordinates), so an animation
+    sets  style="transform: rotate(..deg)"  on the group and its children follow. Rotation is clockwise-positive.
+      stem (root)
+        head            pivot 315 385   (neck)  nod = -6..6
+        armL_upper      pivot 262 428   (left shoulder)  > armL_lower pivot 172 385 (elbow, open waving glove)
+                        drawn raised in a wave; rest by his side = armL_upper -75, armL_lower -15
+        armR_upper      pivot 372 436   (right shoulder) > armR_lower pivot 428 540 (elbow, open glove on the hip)
+                        point out to the right = armR_upper -105, armR_lower -12
+        legL            pivot 287 648   (left hip)  > footL pivot 270 900 (ankle)     walk: legs -26..+22, feet +16/-8
+        legR            pivot 343 648   (right hip) > footR pivot 360 900 (ankle)
+
+    HEAD TURN. Do not scale the lock-up in place; that reads as a pinch. Turn by an angle t (degrees, -45..45):
+      #lockup   style="transform: translateX(Xpx) scaleX(S)"   with X = 150 * sin(t), S = cos(t)   (origin is its centre)
+      the lock-up is clipped to the front face (#faceClip, 92% of the width), so past about 30 degrees its far edge wraps out of sight behind the shade
+      #shadeL   opacity = t < 0 ? 0 : min(1, t/45) * .5          (turning right darkens the left side)
+      #shadeR   opacity = t > 0 ? 0 : min(1, -t/45) * .5
+    poses.html has turn(root, t) doing exactly this.
+
+    Colours: foam #C0201B (brand red under studio light), highlight #E23A31, stem #1C1C1E, outline #141416.
+    The lock-up is the real artwork (brand/mtdcnc-lockup-stacked-white.png): white boxes, letters knocked out to the foam.
+  -->
+  <defs>
+    <radialGradient id="foam" cx="38%" cy="28%" r="82%">
+      <stop offset="0" stop-color="#E23A31"/>
+      <stop offset=".55" stop-color="#C0201B"/>
+      <stop offset="1" stop-color="#8E1511"/>
+    </radialGradient>
+    <linearGradient id="shadeLg" x1="0" x2="1"><stop offset="0" stop-color="#3A0604"/><stop offset=".35" stop-color="#3A0604" stop-opacity=".55"/><stop offset="1" stop-color="#3A0604" stop-opacity="0"/></linearGradient>
+    <linearGradient id="shadeRg" x1="1" x2="0"><stop offset="0" stop-color="#3A0604"/><stop offset=".35" stop-color="#3A0604" stop-opacity=".55"/><stop offset="1" stop-color="#3A0604" stop-opacity="0"/></linearGradient>
+    <linearGradient id="stem" x1="0" x2="1">
+      <stop offset="0" stop-color="#101012"/><stop offset=".35" stop-color="#3A3A3E"/><stop offset=".5" stop-color="#1C1C1E"/><stop offset="1" stop-color="#0B0B0C"/>
+    </linearGradient>
+    <linearGradient id="tube" x1="0" x2="1"><stop offset="0" stop-color="#3C3C40"/><stop offset=".5" stop-color="#151517"/><stop offset="1" stop-color="#050506"/></linearGradient>
+    <radialGradient id="glove" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#EA4238"/><stop offset="1" stop-color="#A5170F"/></radialGradient>
+    <filter id="speckle" x="0" y="0" width="1" height="1">
+      <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="7" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 -.12" result="dots"/>
+      <feComposite in="dots" in2="SourceGraphic" operator="in"/>
+    </filter>
+    <!-- the head: a soft barrel, big round corners, sides bulging a little, slightly narrower at the chin -->
+    <path id="headShape" d="M317 38 C400 38 452 52 470 96 C486 134 490 220 486 300 C482 356 448 390 388 392 L246 392 C186 390 152 356 148 300 C144 220 148 134 164 96 C182 52 234 38 317 38 Z"/>
+    <clipPath id="headClip"><use href="#headShape"/></clipPath>
+    <!-- the front face: the silhouette pulled in at the sides, so artwork wraps out of sight round the barrel as the head turns -->
+    <clipPath id="faceClip"><use href="#headShape" transform="translate(317 0) scale(.92 1) translate(-317 0)"/></clipPath>
+    <!-- one open four-finger glove, thumb up, fingers spread; reused mirrored for the other hand -->
+    <g id="openGlove" stroke="#141416" stroke-width="6" stroke-linejoin="round" stroke-linecap="round" fill="url(#glove)">
+      <rect x="-36" y="-64" width="26" height="60" rx="13" transform="rotate(-8 -23 -34)"/>
+      <rect x="-16" y="-76" width="26" height="66" rx="13" transform="rotate(4 -3 -43)"/>
+      <rect x="6" y="-70" width="26" height="60" rx="13" transform="rotate(16 19 -40)"/>
+      <rect x="26" y="-52" width="24" height="50" rx="12" transform="rotate(30 38 -27)"/>
+      <rect x="-58" y="-28" width="24" height="46" rx="12" transform="rotate(-50 -46 -5)"/>
+      <ellipse cx="0" cy="-6" rx="38" ry="30" transform="rotate(20)"/>
+    </g>
+    <style>
+      .ink{stroke:#141416;stroke-width:6;stroke-linejoin:round;stroke-linecap:round}
+      .tube{stroke:#141416;stroke-width:34;stroke-linecap:round;fill:none}
+      .tubeCore{stroke:url(#tube);stroke-width:24;stroke-linecap:round;fill:none}
+      .tubeShine{stroke:#6A6A70;stroke-width:4;stroke-linecap:round;fill:none;opacity:.7}
+      g[id]{transform-box:view-box}
+      #head{transform-origin:315px 385px}
+      #armL_upper{transform-origin:262px 428px} #armL_lower{transform-origin:172px 385px}
+      #armR_upper{transform-origin:372px 436px} #armR_lower{transform-origin:428px 540px}
+      #legL{transform-origin:287px 648px} #footL{transform-origin:270px 900px}
+      #legR{transform-origin:343px 648px} #footR{transform-origin:360px 900px}
+      #lockup{transform-origin:317px 214px}
+      #shadeL,#shadeR{opacity:0}
+    </style>
+  </defs>
+
+  <g id="stem">
+    <g id="legL">
+      <path class="tube" d="M287 648 L272 900"/><path class="tubeCore" d="M287 648 L272 900"/><path class="tubeShine" d="M280 660 L268 880"/>
+      <g id="footL"><g transform="translate(0 62)">
+        <path class="ink" fill="url(#glove)" d="M232 846 C222 826 250 812 274 818 C300 806 322 818 330 836 C334 848 326 858 312 860 L246 866 C236 866 230 856 232 846 Z"/>
+        <path fill="#F2EFE8" stroke="#141416" stroke-width="5" stroke-linejoin="round" d="M240 860 L318 852 C326 862 322 874 308 876 L250 880 C240 880 236 870 240 860 Z"/>
+        <path d="M262 822 C270 830 286 832 300 826" fill="none" stroke="#7E120E" stroke-width="5" stroke-linecap="round"/>
+      </g></g>
+    </g>
+    <g id="legR">
+      <path class="tube" d="M343 648 L358 900"/><path class="tubeCore" d="M343 648 L358 900"/><path class="tubeShine" d="M336 660 L350 880"/>
+      <g id="footR"><g transform="translate(0 62)">
+        <path class="ink" fill="url(#glove)" d="M330 846 C322 826 350 812 374 818 C400 806 424 818 430 836 C434 848 426 858 412 860 L346 866 C336 866 328 856 330 846 Z"/>
+        <path fill="#F2EFE8" stroke="#141416" stroke-width="5" stroke-linejoin="round" d="M340 860 L418 852 C426 862 422 874 408 876 L350 880 C340 880 336 870 340 860 Z"/>
+        <path d="M362 822 C370 830 386 832 400 826" fill="none" stroke="#7E120E" stroke-width="5" stroke-linecap="round"/>
+      </g></g>
+    </g>
+
+    <!-- right arm: elbow out, open glove resting near the hip, fingers down -->
+    <g id="armR_upper">
+      <path class="tube" d="M372 436 L428 540"/><path class="tubeCore" d="M372 436 L428 540"/>
+      <g id="armR_lower">
+        <path class="tube" d="M428 540 L404 612"/><path class="tubeCore" d="M428 540 L404 612"/>
+        <use href="#openGlove" transform="translate(404 632) rotate(150) scale(-1 1)"/>
+      </g>
+    </g>
+
+    <!-- the stem -->
+    <path class="ink" fill="url(#stem)" d="M246 380 L386 380 L364 640 L268 640 Z"/>
+    <path d="M262 400 L256 620" stroke="#5A5A60" stroke-width="10" stroke-linecap="round" opacity=".55"/>
+    <rect x="252" y="388" width="130" height="24" rx="8" fill="#6C6C72" stroke="#141416" stroke-width="5"/>
+    <circle cx="318" cy="452" r="9" fill="#2A2A2E" stroke="#141416" stroke-width="4"/>
+    <path d="M270 640 L362 640 L358 656 L274 656 Z" fill="#2A2A2E" stroke="#141416" stroke-width="5" stroke-linejoin="round"/>
+
+    <!-- head, behind the waving arm so the glove can cross the foam -->
+    <g id="head">
+      <use href="#headShape" fill="url(#foam)" stroke="#141416" stroke-width="7"/>
+      <g clip-path="url(#headClip)">
+        <rect x="140" y="30" width="354" height="370" fill="#fff" filter="url(#speckle)" opacity=".8"/>
+        <ellipse cx="238" cy="96" rx="70" ry="28" fill="#fff" opacity=".10"/>
+        <rect id="shadeL" x="140" y="30" width="200" height="370" fill="url(#shadeLg)"/>
+        <rect id="shadeR" x="294" y="30" width="200" height="370" fill="url(#shadeRg)"/>
+      </g>
+      <g clip-path="url(#faceClip)">
+        <g id="lockup">
+          <image href="../../../brand/mtdcnc-lockup-stacked-white.png" x="222" y="118" width="190" height="172"/>
+          <text x="317" y="330" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="700" font-size="19" fill="#fff" letter-spacing=".5">mtdcnc.com</text>
+        </g>
+      </g>
+      <path d="M262 390 L372 390 L366 406 L268 406 Z" fill="#26262A" stroke="#141416" stroke-width="5" stroke-linejoin="round"/>
+    </g>
+
+    <!-- left arm, raised in a wave, in front of the head -->
+    <g id="armL_upper">
+      <path class="tube" d="M262 428 L172 385"/><path class="tubeCore" d="M262 428 L172 385"/><path class="tubeShine" d="M250 418 L186 386"/>
+      <g id="armL_lower">
+        <path class="tube" d="M172 385 L112 328"/><path class="tubeCore" d="M172 385 L112 328"/>
+        <use href="#openGlove" transform="translate(88 314)"/>
+      </g>
+    </g>
+  </g>
+</svg>

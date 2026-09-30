@@ -1,0 +1,56 @@
+[
+  {
+    "pass": 0,
+    "point": "flush",
+    "successes": 132,
+    "samples": 300,
+    "startWindowSeconds": 1.1,
+    "maxClipUsed": 3.77,
+    "reactionAndSettle": 0.6
+  },
+  {
+    "pass": 0,
+    "point": "tension",
+    "successes": 126,
+    "samples": 300,
+    "startWindowSeconds": 1.2,
+    "maxClipUsed": 4.27,
+    "reactionAndSettle": 0.6
+  },
+  {
+    "pass": 0,
+    "point": "align",
+    "successes": 125,
+    "samples": 300,
+    "startWindowSeconds": 1.2,
+    "maxClipUsed": 4.23,
+    "reactionAndSettle": 0.6
+  },
+  {
+    "pass": 1,
+    "point": "flush",
+    "successes": 130,
+    "samples": 300,
+    "startWindowSeconds": 1.1,
+    "maxClipUsed": 3.77,
+    "reactionAndSettle": 0.6
+  },
+  {
+    "pass": 1,
+    "point": "tension",
+    "successes": 107,
+    "samples": 300,
+    "startWindowSeconds": 1.2,
+    "maxClipUsed": 4.27,
+    "reactionAndSettle": 0.6
+  },
+  {
+    "pass": 1,
+    "point": "align",
+    "successes": 125,
+    "samples": 300,
+    "startWindowSeconds": 1.2,
+    "maxClipUsed": 4.23,
+    "reactionAndSettle": 0.6
+  }
+]

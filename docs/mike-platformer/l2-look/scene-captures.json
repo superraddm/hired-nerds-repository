@@ -1,0 +1,24 @@
+{
+  "scenes": [
+    "title",
+    "r1-dock",
+    "r1-basin",
+    "r2-rim",
+    "r2-under",
+    "r3-shaft",
+    "r3-catwalk",
+    "r4-valve",
+    "r4-low",
+    "r4-duct",
+    "r5-maze",
+    "r5-top",
+    "r6-film",
+    "boss-idle",
+    "boss-flush",
+    "boss-align",
+    "results",
+    "poses",
+    "machines"
+  ],
+  "errors": []
+}

@@ -1,0 +1,57 @@
+{
+  "model": "gemini-3.8-flash-tts",
+  "voice": "voice_h0dygekvdjzv",
+  "direction": "The same northern English time-served engineer voice, now in an action platform game inside a hazardous rogue workshop. Alert, urgent, animated, projecting clearly over machinery. Brisk, punchy delivery with natural northern character; fully voiced, no whispering, no breathy ASMR, no slow narration. Say only the supplied words",
+  "source": "Y:/MTD-Client-Files/mike-explainer/out/assets/voice-final/manifest.json",
+  "clips": {
+    "power-1": {
+      "file": "assets/voice/power-1-43d5c592798e.wav",
+      "text": "Nice one!",
+      "style": "The same northern English time-served engineer voice, now in an action platform game inside a hazardous rogue workshop. Alert, urgent, animated, projecting clearly over machinery. Brisk, punchy delivery with natural northern character; fully voiced, no whispering, no breathy ASMR, no slow narration. Say only the supplied words, a quick, punchy burst of delighted approval while running",
+      "seconds": 1.0590833333333334,
+      "sha256": "90bf80f8e8ec1b175dc1bba99bec925a15acebe59ee221ef5003b5199476f958"
+    },
+    "power-2": {
+      "file": "assets/voice/power-2-25dd006de28f.wav",
+      "text": "Get in!",
+      "style": "The same northern English time-served engineer voice, now in an action platform game inside a hazardous rogue workshop. Alert, urgent, animated, projecting clearly over machinery. Brisk, punchy delivery with natural northern character; fully voiced, no whispering, no breathy ASMR, no slow narration. Say only the supplied words, an excited, triumphant shout, short and energetic",
+      "seconds": 0.808,
+      "sha256": "8329749d7a2dbe30c921c9697eb49bf065f6ec5f92460608a935879c941b2b49"
+    },
+    "power-3": {
+      "file": "assets/voice/power-3-564c76b7706b.wav",
+      "text": "Ey Up!",
+      "style": "The same northern English time-served engineer voice, now in an action platform game inside a hazardous rogue workshop. Alert, urgent, animated, projecting clearly over machinery. Brisk, punchy delivery with natural northern character; fully voiced, no whispering, no breathy ASMR, no slow narration. Say only the supplied words, a lively, cheeky northern exclamation",
+      "seconds": 0.6676666666666666,
+      "sha256": "d404c1685dfee4e94c3e844c377901baaf8996bd5bd5fd989899696dd4af054c"
+    },
+    "pain-1": {
+      "file": "assets/voice/pain-1-f85d0a38fd08.wav",
+      "text": "Ow! Pack it in!",
+      "style": "The same northern English time-served engineer voice, now in an action platform game inside a hazardous rogue workshop. Alert, urgent, animated, projecting clearly over machinery. Brisk, punchy delivery with natural northern character; fully voiced, no whispering, no breathy ASMR, no slow narration. Say only the supplied words, sharp startled pain followed by forceful comic irritation",
+      "seconds": 2.11025,
+      "sha256": "e92808223c69284d5e20b774227472950bec7af1629ecf9f4d554637f3f38f7c"
+    },
+    "pain-2": {
+      "file": "assets/voice/pain-2-06619c6784db.wav",
+      "text": "Ooof!",
+      "style": "The same northern English time-served engineer voice, now in an action platform game inside a hazardous rogue workshop. Alert, urgent, animated, projecting clearly over machinery. Brisk, punchy delivery with natural northern character; fully voiced, no whispering, no breathy ASMR, no slow narration. Say only the supplied words, one short, involuntary impact grunt, not a spoken explanation",
+      "seconds": 0.5570833333333334,
+      "sha256": "cc99ac25028114dae31a6ed6ace039776769cab9c5803742fbb60d9704380a86"
+    },
+    "pain-3": {
+      "file": "assets/voice/pain-3-32637fdf0170.wav",
+      "text": "Flipping Heck",
+      "style": "The same northern English time-served engineer voice, now in an action platform game inside a hazardous rogue workshop. Alert, urgent, animated, projecting clearly over machinery. Brisk, punchy delivery with natural northern character; fully voiced, no whispering, no breathy ASMR, no slow narration. Say only the supplied words, a brisk startled exclamation over workshop noise",
+      "seconds": 1.0720833333333333,
+      "sha256": "94dd2f0420fe4e3c1fa0fdd7870d7951adc2764e8cd00ada6ca9b76f26f00d1e"
+    },
+    "boss": {
+      "file": "assets/voice/boss-14d4905d3cb2.wav",
+      "text": "Right then. Let's get this lot sorted.",
+      "style": "The same northern English time-served engineer voice, now in an action platform game inside a hazardous rogue workshop. Alert, urgent, animated, projecting clearly over machinery. Brisk, punchy delivery with natural northern character; fully voiced, no whispering, no breathy ASMR, no slow narration. Say only the supplied words, determined and animated; a brisk rallying call before tackling danger",
+      "seconds": 2.2055833333333332,
+      "sha256": "6d6f7a60de7f58d1eb6878928482ec81f9700335a81a86299dc9f60bce49f9e3"
+    }
+  }
+}

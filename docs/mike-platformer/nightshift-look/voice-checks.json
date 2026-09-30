@@ -1,0 +1,10 @@
+{
+  "voice": "voice_h0dygekvdjzv",
+  "model": "gemini-3.8-flash-tts",
+  "clips": 7,
+  "powerAndPainPlayback": true,
+  "mute": true,
+  "noSubtitles": true,
+  "noRuntimeDownloads": true,
+  "errors": []
+}

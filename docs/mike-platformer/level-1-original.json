@@ -1,0 +1,945 @@
+{
+  "version": 1,
+  "id": "tangled-workshop",
+  "title": "The Tangled Workshop",
+  "size": [
+    320,
+    17
+  ],
+  "spawn": [
+    2,
+    12
+  ],
+  "next": null,
+  "theme": "neutral-workshop",
+  "sections": [
+    {
+      "id": "clocking-in",
+      "title": "Clocking in",
+      "x": 0,
+      "width": 32,
+      "solids": [
+        [
+          0,
+          12,
+          32,
+          5
+        ]
+      ],
+      "platforms": [
+        [
+          14,
+          10,
+          4,
+          0.5
+        ]
+      ],
+      "pickups": [
+        {
+          "id": "bearing-1",
+          "type": "bearing",
+          "at": [
+            8,
+            11
+          ]
+        },
+        {
+          "id": "seal-1",
+          "type": "seal",
+          "at": [
+            16,
+            9
+          ]
+        },
+        {
+          "id": "lube-1",
+          "type": "lubricant",
+          "at": [
+            25,
+            11
+          ]
+        },
+        {
+          "id": "sd-1",
+          "type": "sdCard",
+          "at": [
+            29.5,
+            11
+          ]
+        }
+      ],
+      "signs": [
+        {
+          "at": [
+            5.5,
+            6.2
+          ],
+          "kind": "controls",
+          "text": "run"
+        },
+        {
+          "at": [
+            21,
+            6.2
+          ],
+          "kind": "camera",
+          "text": "camera"
+        }
+      ],
+      "decor": [
+        {
+          "type": "demoDrill",
+          "at": [
+            27.8,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "id": "belt-basics",
+      "title": "Belt basics",
+      "x": 32,
+      "width": 36,
+      "solids": [
+        [
+          0,
+          12,
+          13,
+          5
+        ],
+        [
+          15,
+          12,
+          21,
+          5
+        ]
+      ],
+      "platforms": [
+        [
+          22,
+          10,
+          4,
+          0.5
+        ]
+      ],
+      "pits": [
+        [
+          13,
+          15
+        ]
+      ],
+      "belts": [
+        {
+          "id": "belt-2a",
+          "at": [
+            7,
+            13
+          ],
+          "dir": 1,
+          "speed": 3,
+          "reverse": 4
+        },
+        {
+          "id": "belt-2b",
+          "at": [
+            15,
+            21
+          ],
+          "dir": -1,
+          "speed": 3,
+          "reverse": 4
+        }
+      ],
+      "hazards": [
+        {
+          "id": "spitter-2",
+          "type": "spitter",
+          "rect": [
+            28,
+            10,
+            2,
+            2
+          ],
+          "face": -1,
+          "mouth": 11.25,
+          "catch": 22,
+          "cycle": 3,
+          "phase": 0
+        }
+      ],
+      "pickups": [
+        {
+          "id": "coupling-1",
+          "type": "coupling",
+          "at": [
+            10,
+            11
+          ]
+        },
+        {
+          "id": "bearing-2",
+          "type": "bearing",
+          "at": [
+            24,
+            9
+          ]
+        }
+      ],
+      "decor": [
+        {
+          "type": "landingArc",
+          "from": [
+            11.5,
+            12
+          ],
+          "to": [
+            16.5,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "id": "camera-alley",
+      "title": "Camera alley",
+      "x": 68,
+      "width": 32,
+      "solids": [
+        [
+          0,
+          12,
+          32,
+          5
+        ],
+        [
+          12,
+          0,
+          3,
+          9.6
+        ]
+      ],
+      "hazards": [
+        {
+          "id": "gallery",
+          "type": "spitterGallery",
+          "rect": [
+            12,
+            9.6,
+            3,
+            2.4
+          ],
+          "cycle": 3,
+          "clear": 0.3,
+          "lanes": [
+            10.5,
+            11.5
+          ],
+          "open": [
+            2.5,
+            3.0
+          ],
+          "phase": 0,
+          "ready": 0.35
+        }
+      ],
+      "pads": [
+        [
+          10,
+          12
+        ],
+        [
+          15,
+          17
+        ]
+      ],
+      "pickups": [
+        {
+          "id": "seal-2",
+          "type": "seal",
+          "at": [
+            7,
+            11
+          ]
+        },
+        {
+          "id": "unit-1",
+          "type": "controlUnit",
+          "at": [
+            22,
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "id": "upper-stores",
+      "title": "Upper stores",
+      "x": 100,
+      "width": 36,
+      "solids": [
+        [
+          0,
+          12,
+          18,
+          5
+        ],
+        [
+          21,
+          12,
+          15,
+          5
+        ]
+      ],
+      "platforms": [
+        [
+          10,
+          10,
+          4,
+          0.5
+        ],
+        [
+          23,
+          10,
+          4,
+          0.5
+        ]
+      ],
+      "pits": [
+        [
+          18,
+          21
+        ]
+      ],
+      "pickups": [
+        {
+          "id": "coupling-2",
+          "type": "coupling",
+          "at": [
+            12,
+            9
+          ]
+        },
+        {
+          "id": "bearing-3",
+          "type": "bearing",
+          "at": [
+            29,
+            11
+          ]
+        },
+        {
+          "id": "lube-2",
+          "type": "lubricant",
+          "at": [
+            5,
+            11
+          ]
+        },
+        {
+          "id": "sd-2",
+          "type": "sdCard",
+          "at": [
+            25,
+            9
+          ]
+        }
+      ],
+      "backdrop": [
+        {
+          "type": "bossSilhouette",
+          "at": [
+            22.5,
+            5.1
+          ],
+          "depth": 0.15,
+          "window": [
+            17.5,
+            2.7,
+            10,
+            5.1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reach-and-retreat",
+      "title": "Reach and retreat",
+      "x": 136,
+      "width": 32,
+      "solids": [
+        [
+          0,
+          12,
+          32,
+          5
+        ],
+        [
+          12,
+          0,
+          4,
+          9.6
+        ]
+      ],
+      "hazards": [
+        {
+          "id": "arm-gate",
+          "type": "armGate",
+          "rect": [
+            12,
+            9.6,
+            4,
+            2.4
+          ],
+          "pivot": [
+            14,
+            8
+          ],
+          "reach": 5,
+          "cycle": 4,
+          "open": [
+            3.4,
+            4.0
+          ],
+          "phase": 0,
+          "ready": 0.35
+        }
+      ],
+      "pads": [
+        [
+          10,
+          12
+        ],
+        [
+          16,
+          18
+        ]
+      ],
+      "pickups": [
+        {
+          "id": "seal-3",
+          "type": "seal",
+          "at": [
+            20,
+            11
+          ]
+        },
+        {
+          "id": "coupling-3",
+          "type": "coupling",
+          "at": [
+            27,
+            11
+          ]
+        },
+        {
+          "id": "sd-3",
+          "type": "sdCard",
+          "at": [
+            23,
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "id": "coolant-loft",
+      "title": "Coolant loft",
+      "x": 168,
+      "width": 36,
+      "solids": [
+        [
+          0,
+          12,
+          36,
+          5
+        ]
+      ],
+      "platforms": [
+        [
+          5,
+          10,
+          4,
+          0.5
+        ],
+        [
+          12,
+          8,
+          4,
+          0.5
+        ],
+        [
+          19,
+          10,
+          4,
+          0.5
+        ]
+      ],
+      "hazards": [
+        {
+          "id": "coolant-6a",
+          "type": "coolant",
+          "base": [
+            10,
+            10,
+            1,
+            2
+          ],
+          "jet": [
+            11,
+            9,
+            2,
+            3
+          ],
+          "cycle": 3.5,
+          "phase": 0
+        },
+        {
+          "id": "coolant-6b",
+          "type": "coolant",
+          "base": [
+            24,
+            10,
+            1,
+            2
+          ],
+          "jet": [
+            25,
+            9,
+            2,
+            3
+          ],
+          "cycle": 3.5,
+          "phase": 1.75
+        }
+      ],
+      "pickups": [
+        {
+          "id": "bearing-4",
+          "type": "bearing",
+          "at": [
+            21,
+            9
+          ]
+        },
+        {
+          "id": "mini-mike",
+          "type": "miniMike",
+          "at": [
+            14,
+            7
+          ]
+        },
+        {
+          "id": "lube-3",
+          "type": "lubricant",
+          "at": [
+            30,
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "id": "belt-run",
+      "title": "Belt run",
+      "x": 204,
+      "width": 36,
+      "solids": [
+        [
+          0,
+          12,
+          12,
+          5
+        ],
+        [
+          14,
+          12,
+          6,
+          5
+        ],
+        [
+          22,
+          12,
+          14,
+          5
+        ]
+      ],
+      "pits": [
+        [
+          12,
+          14
+        ],
+        [
+          20,
+          22
+        ]
+      ],
+      "belts": [
+        {
+          "id": "belt-7a",
+          "at": [
+            6,
+            12
+          ],
+          "dir": 1,
+          "speed": 3,
+          "reverse": 4
+        },
+        {
+          "id": "belt-7b",
+          "at": [
+            14,
+            20
+          ],
+          "dir": -1,
+          "speed": 3,
+          "reverse": 4
+        },
+        {
+          "id": "belt-7c",
+          "at": [
+            22,
+            28
+          ],
+          "dir": 1,
+          "speed": 3,
+          "reverse": 4
+        }
+      ],
+      "hazards": [
+        {
+          "id": "spitter-7",
+          "type": "spitter",
+          "look": "grinder",
+          "rect": [
+            34,
+            10,
+            2,
+            2
+          ],
+          "face": -1,
+          "mouth": 11.25,
+          "catch": 29,
+          "cycle": 3,
+          "phase": 0
+        }
+      ],
+      "pickups": [
+        {
+          "id": "seal-4",
+          "type": "seal",
+          "at": [
+            26,
+            11
+          ]
+        },
+        {
+          "id": "coupling-4",
+          "type": "coupling",
+          "at": [
+            32,
+            11
+          ]
+        },
+        {
+          "id": "sd-4",
+          "type": "sdCard",
+          "at": [
+            17,
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "id": "the-clappers",
+      "title": "The clappers",
+      "x": 240,
+      "width": 36,
+      "solids": [
+        [
+          0,
+          12,
+          36,
+          5
+        ],
+        [
+          12,
+          0,
+          3,
+          9.6
+        ]
+      ],
+      "hazards": [
+        {
+          "id": "jaws",
+          "type": "jaws",
+          "rect": [
+            12,
+            9.6,
+            3,
+            2.4
+          ],
+          "cycle": 3,
+          "phase": 0,
+          "open": [
+            2.5,
+            3.0
+          ],
+          "ready": 0.35
+        },
+        {
+          "id": "coolant-8",
+          "type": "coolant",
+          "base": [
+            24,
+            10,
+            1,
+            2
+          ],
+          "jet": [
+            25,
+            9,
+            2,
+            3
+          ],
+          "cycle": 3.5,
+          "phase": 0
+        }
+      ],
+      "pads": [
+        [
+          10,
+          12
+        ],
+        [
+          15,
+          17
+        ]
+      ],
+      "pickups": [
+        {
+          "id": "unit-2",
+          "type": "controlUnit",
+          "at": [
+            29,
+            11
+          ]
+        },
+        {
+          "id": "sd-5",
+          "type": "sdCard",
+          "at": [
+            20,
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "id": "service-bench",
+      "title": "Service bench",
+      "x": 276,
+      "width": 20,
+      "solids": [
+        [
+          0,
+          12,
+          20,
+          5
+        ]
+      ],
+      "pickups": [
+        {
+          "id": "lube-4",
+          "type": "lubricant",
+          "at": [
+            4,
+            11
+          ]
+        }
+      ],
+      "decor": [
+        {
+          "type": "bench",
+          "at": [
+            5.2,
+            12
+          ]
+        },
+        {
+          "type": "recipeBoard",
+          "at": [
+            9,
+            12
+          ]
+        },
+        {
+          "type": "dispenser",
+          "at": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tangled-turner",
+      "title": "The Tangled Turner",
+      "x": 296,
+      "width": 24,
+      "solids": [
+        [
+          0,
+          12,
+          24,
+          5
+        ]
+      ],
+      "decor": [
+        {
+          "type": "exitDoor",
+          "at": [
+            23,
+            12
+          ]
+        }
+      ],
+      "triggers": [
+        {
+          "at": 4,
+          "once": true,
+          "event": "arena"
+        }
+      ],
+      "signs": [
+        {
+          "at": [
+            3.9,
+            6.2
+          ],
+          "kind": "fix",
+          "text": "fix"
+        }
+      ]
+    }
+  ],
+  "checkpoints": [
+    [
+      2,
+      12
+    ],
+    [
+      102,
+      12
+    ],
+    [
+      206,
+      12
+    ],
+    [
+      297,
+      12
+    ]
+  ],
+  "recovery": {
+    "at": [
+      289,
+      12
+    ],
+    "recipeOnly": true,
+    "score": 0
+  },
+  "boss": {
+    "bounds": [
+      296,
+      0,
+      24,
+      17
+    ],
+    "type": "socketRepair",
+    "name": "The Tangled Turner",
+    "recipe": {
+      "bearing": 2,
+      "seal": 2,
+      "coupling": 2,
+      "controlUnit": 2
+    },
+    "hold": 1.2,
+    "drum": [
+      308,
+      5.2,
+      2.6
+    ],
+    "sockets": [
+      [
+        301,
+        12,
+        "bearing"
+      ],
+      [
+        308,
+        12,
+        "seal"
+      ],
+      [
+        315,
+        12,
+        "coupling"
+      ]
+    ],
+    "console": [
+      308,
+      12
+    ],
+    "safeLanes": [
+      [
+        297,
+        299
+      ],
+      [
+        317,
+        319
+      ]
+    ],
+    "phases": [
+      {
+        "pattern": "leftSweep",
+        "targets": [
+          5,
+          12
+        ],
+        "fit": "bearing",
+        "count": 2
+      },
+      {
+        "pattern": "rightSweep",
+        "targets": [
+          19,
+          10
+        ],
+        "fit": "seal",
+        "count": 2,
+        "unit": true
+      },
+      {
+        "pattern": "rightSweep",
+        "targets": [
+          19,
+          14
+        ],
+        "fit": "coupling",
+        "count": 2,
+        "unit": true
+      }
+    ],
+    "timeline": {
+      "tell": 0.8,
+      "extend": 0.6,
+      "sweep": 1.6,
+      "retract": 1,
+      "park": 2
+    }
+  }
+}

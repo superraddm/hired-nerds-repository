@@ -1,0 +1,34 @@
+{
+  "recording": {
+    "won": true,
+    "seconds": 326.68,
+    "salvage": 36,
+    "hits": 0,
+    "livesLost": 0,
+    "cameraSeconds": 27.12,
+    "bossSeconds": 115.12
+  },
+  "completedBossSave": {
+    "afterSeconds": 10,
+    "bossOn": true,
+    "bossDone": true,
+    "won": true,
+    "x": 481,
+    "moved": false,
+    "stalled": false
+  },
+  "nozzleGrowth": {
+    "id": "n2b",
+    "firstActiveReachTiles": 0.033,
+    "earlyHit": false,
+    "reachedHit": true,
+    "filmGrowthPassed": true
+  },
+  "ending": {
+    "won": true,
+    "playerX": 480.934066666669,
+    "exitX": 500,
+    "sumpLevel": 23.6,
+    "drainTarget": 23.6
+  }
+}

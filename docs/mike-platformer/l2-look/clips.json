@@ -1,0 +1,28 @@
+{
+  "spareClipDisplay": true,
+  "outsideABossUnchanged": true,
+  "clipSeconds": 5,
+  "loadSeconds": 0.6,
+  "Boss 1": {
+    "sdCards": 9,
+    "footage": 20,
+    "clips": 4,
+    "repairs": 9
+  },
+  "Boss 2": {
+    "sdCards": 4,
+    "footage": 15,
+    "clips": 3,
+    "repairs": 6
+  },
+  "rechargeSecondsPerClip": 15,
+  "timesSlowerThanLoading": 25,
+  "bareCard": {
+    "clips": 1
+  },
+  "stopEarlyKeepsFootage": true,
+  "wholeClipsOnly": true,
+  "repairSeconds": 2.2,
+  "spareInAClip": 2.8,
+  "bothLevelsUseIt": true
+}

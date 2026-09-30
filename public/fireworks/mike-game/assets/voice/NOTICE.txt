@@ -1,0 +1,1 @@
+Original synthetic character voice generated with Google Gemini TTS. Reuses the Mike explainer voice voice_h0dygekvdjzv on gemini-3.8-flash-tts. Audio carries Google SynthID. No real person is impersonated.

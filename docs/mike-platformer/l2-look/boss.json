@@ -1,0 +1,18 @@
+{
+  "orders": [
+    "flush tension align tension align flush",
+    "tension align flush align flush tension",
+    "align flush tension flush tension align"
+  ],
+  "quietStart": true,
+  "secondWireSecondPassOnly": true,
+  "repair": {
+    "holdSeconds": 2.2
+  },
+  "filmingNeverSlowsMike": true,
+  "fixBracesActiveUnderwaterPoint": true,
+  "lostLifeRestartsThePass": true,
+  "finalSaveResumes": true,
+  "restorationBeforeResults": true,
+  "allThreeOrdersWin": true
+}

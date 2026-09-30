@@ -1,0 +1,110 @@
+[
+  {
+    "sector": "clocking-in",
+    "shelves": 1,
+    "reached": 1,
+    "unreachable": []
+  },
+  {
+    "sector": "belt-basics",
+    "shelves": 1,
+    "reached": 1,
+    "unreachable": []
+  },
+  {
+    "sector": "camera-alley",
+    "shelves": 8,
+    "reached": 8,
+    "unreachable": []
+  },
+  {
+    "sector": "upper-stores",
+    "shelves": 2,
+    "reached": 2,
+    "unreachable": []
+  },
+  {
+    "sector": "reach-and-retreat",
+    "shelves": 8,
+    "reached": 8,
+    "unreachable": []
+  },
+  {
+    "sector": "coolant-loft",
+    "shelves": 3,
+    "reached": 3,
+    "unreachable": []
+  },
+  {
+    "sector": "the-clappers",
+    "shelves": 8,
+    "reached": 8,
+    "unreachable": []
+  },
+  {
+    "sector": "night-1",
+    "shelves": 10,
+    "reached": 10,
+    "unreachable": []
+  },
+  {
+    "sector": "night-2",
+    "shelves": 10,
+    "reached": 10,
+    "unreachable": []
+  },
+  {
+    "sector": "night-3",
+    "shelves": 8,
+    "reached": 8,
+    "unreachable": []
+  },
+  {
+    "sector": "night-4",
+    "shelves": 13,
+    "reached": 13,
+    "unreachable": []
+  },
+  {
+    "sector": "night-5",
+    "shelves": 18,
+    "reached": 18,
+    "unreachable": []
+  },
+  {
+    "sector": "night-6",
+    "shelves": 9,
+    "reached": 9,
+    "unreachable": []
+  },
+  {
+    "sector": "night-7",
+    "shelves": 5,
+    "reached": 5,
+    "unreachable": []
+  },
+  {
+    "sector": "night-8",
+    "shelves": 9,
+    "reached": 9,
+    "unreachable": []
+  },
+  {
+    "sector": "night-9",
+    "shelves": 15,
+    "reached": 15,
+    "unreachable": []
+  },
+  {
+    "sector": "night-10",
+    "shelves": 8,
+    "reached": 8,
+    "unreachable": []
+  },
+  {
+    "sector": "tangled-turner",
+    "shelves": 4,
+    "reached": 4,
+    "unreachable": []
+  }
+]

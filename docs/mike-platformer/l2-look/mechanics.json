@@ -1,0 +1,24 @@
+{
+  "dryPhysicsUnchanged": true,
+  "suitDoor": true,
+  "transferValve": true,
+  "float": {
+    "sinkAfterSixTileFall": 2
+  },
+  "diveThroughGrating": true,
+  "diveAndRise": true,
+  "surfaceLeap": true,
+  "earthingBell": true,
+  "dischargeRecovery": true,
+  "nozzle": true,
+  "intake": true,
+  "wire": true,
+  "rideTheSurface": true,
+  "escapeInEveryState": true,
+  "slice": {
+    "marginAtDeepest": 20,
+    "health": 3,
+    "salvage": 2,
+    "seconds": 27.8
+  }
+}

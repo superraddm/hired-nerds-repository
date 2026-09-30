@@ -1,0 +1,24 @@
+{
+  "dryPhysicsUnchanged": true,
+  "suitGate": true,
+  "waterInterpolation": true,
+  "valveEdge": true,
+  "buoyancy": true,
+  "fixtureCollision": true,
+  "airRefill": true,
+  "airIndependentOfCamera": true,
+  "lookSeparateFromDive": true,
+  "recovery": true,
+  "wireTiming": true,
+  "serviceHold": true,
+  "dryRoute": {
+    "seconds": 14.000000000000275,
+    "salvage": 4,
+    "health": 3
+  },
+  "wetRoute": {
+    "seconds": 28.483333333332997,
+    "salvage": 2,
+    "health": 3
+  }
+}

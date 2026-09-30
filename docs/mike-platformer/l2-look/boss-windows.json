@@ -1,0 +1,1244 @@
+{
+  "repairSeconds": 2.2,
+  "filmedMachineSeconds": 0.44,
+  "clipSeconds": 5,
+  "level1": {
+    "samples": 135,
+    "min": 1.675,
+    "max": 2.008
+  },
+  "level2": {
+    "samples": 40,
+    "min": 2.017,
+    "max": 2.125
+  },
+  "rows1": [
+    {
+      "order": 0,
+      "repair": 1,
+      "point": "bearing",
+      "dx": -0.8,
+      "seconds": 1.983
+    },
+    {
+      "order": 0,
+      "repair": 1,
+      "point": "bearing",
+      "dx": -0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 1,
+      "point": "bearing",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 1,
+      "point": "bearing",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 1,
+      "point": "bearing",
+      "dx": 0.8,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 2,
+      "point": "coupling",
+      "dx": -0.8,
+      "seconds": 1.95
+    },
+    {
+      "order": 0,
+      "repair": 2,
+      "point": "coupling",
+      "dx": -0.4,
+      "seconds": 1.95
+    },
+    {
+      "order": 0,
+      "repair": 2,
+      "point": "coupling",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 2,
+      "point": "coupling",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 2,
+      "point": "coupling",
+      "dx": 0.8,
+      "seconds": 1.883
+    },
+    {
+      "order": 0,
+      "repair": 3,
+      "point": "seal",
+      "dx": -0.8,
+      "seconds": 2
+    },
+    {
+      "order": 0,
+      "repair": 3,
+      "point": "seal",
+      "dx": -0.4,
+      "seconds": 2
+    },
+    {
+      "order": 0,
+      "repair": 3,
+      "point": "seal",
+      "dx": 0,
+      "seconds": 2.008
+    },
+    {
+      "order": 0,
+      "repair": 3,
+      "point": "seal",
+      "dx": 0.4,
+      "seconds": 2
+    },
+    {
+      "order": 0,
+      "repair": 3,
+      "point": "seal",
+      "dx": 0.8,
+      "seconds": 2
+    },
+    {
+      "order": 0,
+      "repair": 4,
+      "point": "coupling",
+      "dx": -0.8,
+      "seconds": 1.95
+    },
+    {
+      "order": 0,
+      "repair": 4,
+      "point": "coupling",
+      "dx": -0.4,
+      "seconds": 1.95
+    },
+    {
+      "order": 0,
+      "repair": 4,
+      "point": "coupling",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 4,
+      "point": "coupling",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 4,
+      "point": "coupling",
+      "dx": 0.8,
+      "seconds": 1.883
+    },
+    {
+      "order": 0,
+      "repair": 5,
+      "point": "seal",
+      "dx": -0.8,
+      "seconds": 2
+    },
+    {
+      "order": 0,
+      "repair": 5,
+      "point": "seal",
+      "dx": -0.4,
+      "seconds": 1.758
+    },
+    {
+      "order": 0,
+      "repair": 5,
+      "point": "seal",
+      "dx": 0,
+      "seconds": 1.733
+    },
+    {
+      "order": 0,
+      "repair": 5,
+      "point": "seal",
+      "dx": 0.4,
+      "seconds": 1.7
+    },
+    {
+      "order": 0,
+      "repair": 5,
+      "point": "seal",
+      "dx": 0.8,
+      "seconds": 1.675
+    },
+    {
+      "order": 0,
+      "repair": 6,
+      "point": "bearing",
+      "dx": -0.8,
+      "seconds": 1.983
+    },
+    {
+      "order": 0,
+      "repair": 6,
+      "point": "bearing",
+      "dx": -0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 6,
+      "point": "bearing",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 6,
+      "point": "bearing",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 6,
+      "point": "bearing",
+      "dx": 0.8,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 7,
+      "point": "seal",
+      "dx": -0.8,
+      "seconds": 2
+    },
+    {
+      "order": 0,
+      "repair": 7,
+      "point": "seal",
+      "dx": -0.4,
+      "seconds": 1.758
+    },
+    {
+      "order": 0,
+      "repair": 7,
+      "point": "seal",
+      "dx": 0,
+      "seconds": 1.733
+    },
+    {
+      "order": 0,
+      "repair": 7,
+      "point": "seal",
+      "dx": 0.4,
+      "seconds": 1.7
+    },
+    {
+      "order": 0,
+      "repair": 7,
+      "point": "seal",
+      "dx": 0.8,
+      "seconds": 1.675
+    },
+    {
+      "order": 0,
+      "repair": 8,
+      "point": "bearing",
+      "dx": -0.8,
+      "seconds": 1.983
+    },
+    {
+      "order": 0,
+      "repair": 8,
+      "point": "bearing",
+      "dx": -0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 8,
+      "point": "bearing",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 8,
+      "point": "bearing",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 8,
+      "point": "bearing",
+      "dx": 0.8,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 9,
+      "point": "coupling",
+      "dx": -0.8,
+      "seconds": 1.95
+    },
+    {
+      "order": 0,
+      "repair": 9,
+      "point": "coupling",
+      "dx": -0.4,
+      "seconds": 1.95
+    },
+    {
+      "order": 0,
+      "repair": 9,
+      "point": "coupling",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 9,
+      "point": "coupling",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 0,
+      "repair": 9,
+      "point": "coupling",
+      "dx": 0.8,
+      "seconds": 1.883
+    },
+    {
+      "order": 1,
+      "repair": 1,
+      "point": "seal",
+      "dx": -0.8,
+      "seconds": 2
+    },
+    {
+      "order": 1,
+      "repair": 1,
+      "point": "seal",
+      "dx": -0.4,
+      "seconds": 1.758
+    },
+    {
+      "order": 1,
+      "repair": 1,
+      "point": "seal",
+      "dx": 0,
+      "seconds": 1.733
+    },
+    {
+      "order": 1,
+      "repair": 1,
+      "point": "seal",
+      "dx": 0.4,
+      "seconds": 1.7
+    },
+    {
+      "order": 1,
+      "repair": 1,
+      "point": "seal",
+      "dx": 0.8,
+      "seconds": 1.675
+    },
+    {
+      "order": 1,
+      "repair": 2,
+      "point": "bearing",
+      "dx": -0.8,
+      "seconds": 1.983
+    },
+    {
+      "order": 1,
+      "repair": 2,
+      "point": "bearing",
+      "dx": -0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 1,
+      "repair": 2,
+      "point": "bearing",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 1,
+      "repair": 2,
+      "point": "bearing",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 1,
+      "repair": 2,
+      "point": "bearing",
+      "dx": 0.8,
+      "seconds": 1.942
+    },
+    {
+      "order": 1,
+      "repair": 3,
+      "point": "coupling",
+      "dx": -0.8,
+      "seconds": 1.95
+    },
+    {
+      "order": 1,
+      "repair": 3,
+      "point": "coupling",
+      "dx": -0.4,
+      "seconds": 1.95
+    },
+    {
+      "order": 1,
+      "repair": 3,
+      "point": "coupling",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 1,
+      "repair": 3,
+      "point": "coupling",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 1,
+      "repair": 3,
+      "point": "coupling",
+      "dx": 0.8,
+      "seconds": 1.883
+    },
+    {
+      "order": 1,
+      "repair": 4,
+      "point": "bearing",
+      "dx": -0.8,
+      "seconds": 1.983
+    },
+    {
+      "order": 1,
+      "repair": 4,
+      "point": "bearing",
+      "dx": -0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 1,
+      "repair": 4,
+      "point": "bearing",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 1,
+      "repair": 4,
+      "point": "bearing",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 1,
+      "repair": 4,
+      "point": "bearing",
+      "dx": 0.8,
+      "seconds": 1.942
+    },
+    {
+      "order": 1,
+      "repair": 5,
+      "point": "coupling",
+      "dx": -0.8,
+      "seconds": 1.95
+    },
+    {
+      "order": 1,
+      "repair": 5,
+      "point": "coupling",
+      "dx": -0.4,
+      "seconds": 1.95
+    },
+    {
+      "order": 1,
+      "repair": 5,
+      "point": "coupling",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 1,
+      "repair": 5,
+      "point": "coupling",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 1,
+      "repair": 5,
+      "point": "coupling",
+      "dx": 0.8,
+      "seconds": 1.883
+    },
+    {
+      "order": 1,
+      "repair": 6,
+      "point": "seal",
+      "dx": -0.8,
+      "seconds": 2
+    },
+    {
+      "order": 1,
+      "repair": 6,
+      "point": "seal",
+      "dx": -0.4,
+      "seconds": 2
+    },
+    {
+      "order": 1,
+      "repair": 6,
+      "point": "seal",
+      "dx": 0,
+      "seconds": 2.008
+    },
+    {
+      "order": 1,
+      "repair": 6,
+      "point": "seal",
+      "dx": 0.4,
+      "seconds": 2
+    },
+    {
+      "order": 1,
+      "repair": 6,
+      "point": "seal",
+      "dx": 0.8,
+      "seconds": 2
+    },
+    {
+      "order": 1,
+      "repair": 7,
+      "point": "coupling",
+      "dx": -0.8,
+      "seconds": 1.95
+    },
+    {
+      "order": 1,
+      "repair": 7,
+      "point": "coupling",
+      "dx": -0.4,
+      "seconds": 1.95
+    },
+    {
+      "order": 1,
+      "repair": 7,
+      "point": "coupling",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 1,
+      "repair": 7,
+      "point": "coupling",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 1,
+      "repair": 7,
+      "point": "coupling",
+      "dx": 0.8,
+      "seconds": 1.883
+    },
+    {
+      "order": 1,
+      "repair": 8,
+      "point": "seal",
+      "dx": -0.8,
+      "seconds": 2
+    },
+    {
+      "order": 1,
+      "repair": 8,
+      "point": "seal",
+      "dx": -0.4,
+      "seconds": 1.758
+    },
+    {
+      "order": 1,
+      "repair": 8,
+      "point": "seal",
+      "dx": 0,
+      "seconds": 1.733
+    },
+    {
+      "order": 1,
+      "repair": 8,
+      "point": "seal",
+      "dx": 0.4,
+      "seconds": 1.7
+    },
+    {
+      "order": 1,
+      "repair": 8,
+      "point": "seal",
+      "dx": 0.8,
+      "seconds": 1.675
+    },
+    {
+      "order": 1,
+      "repair": 9,
+      "point": "bearing",
+      "dx": -0.8,
+      "seconds": 1.983
+    },
+    {
+      "order": 1,
+      "repair": 9,
+      "point": "bearing",
+      "dx": -0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 1,
+      "repair": 9,
+      "point": "bearing",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 1,
+      "repair": 9,
+      "point": "bearing",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 1,
+      "repair": 9,
+      "point": "bearing",
+      "dx": 0.8,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 1,
+      "point": "coupling",
+      "dx": -0.8,
+      "seconds": 1.95
+    },
+    {
+      "order": 2,
+      "repair": 1,
+      "point": "coupling",
+      "dx": -0.4,
+      "seconds": 1.95
+    },
+    {
+      "order": 2,
+      "repair": 1,
+      "point": "coupling",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 1,
+      "point": "coupling",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 1,
+      "point": "coupling",
+      "dx": 0.8,
+      "seconds": 1.883
+    },
+    {
+      "order": 2,
+      "repair": 2,
+      "point": "seal",
+      "dx": -0.8,
+      "seconds": 2
+    },
+    {
+      "order": 2,
+      "repair": 2,
+      "point": "seal",
+      "dx": -0.4,
+      "seconds": 1.758
+    },
+    {
+      "order": 2,
+      "repair": 2,
+      "point": "seal",
+      "dx": 0,
+      "seconds": 1.733
+    },
+    {
+      "order": 2,
+      "repair": 2,
+      "point": "seal",
+      "dx": 0.4,
+      "seconds": 1.7
+    },
+    {
+      "order": 2,
+      "repair": 2,
+      "point": "seal",
+      "dx": 0.8,
+      "seconds": 1.675
+    },
+    {
+      "order": 2,
+      "repair": 3,
+      "point": "bearing",
+      "dx": -0.8,
+      "seconds": 1.983
+    },
+    {
+      "order": 2,
+      "repair": 3,
+      "point": "bearing",
+      "dx": -0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 3,
+      "point": "bearing",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 3,
+      "point": "bearing",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 3,
+      "point": "bearing",
+      "dx": 0.8,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 4,
+      "point": "seal",
+      "dx": -0.8,
+      "seconds": 2
+    },
+    {
+      "order": 2,
+      "repair": 4,
+      "point": "seal",
+      "dx": -0.4,
+      "seconds": 1.758
+    },
+    {
+      "order": 2,
+      "repair": 4,
+      "point": "seal",
+      "dx": 0,
+      "seconds": 1.733
+    },
+    {
+      "order": 2,
+      "repair": 4,
+      "point": "seal",
+      "dx": 0.4,
+      "seconds": 1.7
+    },
+    {
+      "order": 2,
+      "repair": 4,
+      "point": "seal",
+      "dx": 0.8,
+      "seconds": 1.675
+    },
+    {
+      "order": 2,
+      "repair": 5,
+      "point": "bearing",
+      "dx": -0.8,
+      "seconds": 1.983
+    },
+    {
+      "order": 2,
+      "repair": 5,
+      "point": "bearing",
+      "dx": -0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 5,
+      "point": "bearing",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 5,
+      "point": "bearing",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 5,
+      "point": "bearing",
+      "dx": 0.8,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 6,
+      "point": "coupling",
+      "dx": -0.8,
+      "seconds": 1.95
+    },
+    {
+      "order": 2,
+      "repair": 6,
+      "point": "coupling",
+      "dx": -0.4,
+      "seconds": 1.95
+    },
+    {
+      "order": 2,
+      "repair": 6,
+      "point": "coupling",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 6,
+      "point": "coupling",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 6,
+      "point": "coupling",
+      "dx": 0.8,
+      "seconds": 1.883
+    },
+    {
+      "order": 2,
+      "repair": 7,
+      "point": "bearing",
+      "dx": -0.8,
+      "seconds": 1.983
+    },
+    {
+      "order": 2,
+      "repair": 7,
+      "point": "bearing",
+      "dx": -0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 7,
+      "point": "bearing",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 7,
+      "point": "bearing",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 7,
+      "point": "bearing",
+      "dx": 0.8,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 8,
+      "point": "coupling",
+      "dx": -0.8,
+      "seconds": 1.95
+    },
+    {
+      "order": 2,
+      "repair": 8,
+      "point": "coupling",
+      "dx": -0.4,
+      "seconds": 1.95
+    },
+    {
+      "order": 2,
+      "repair": 8,
+      "point": "coupling",
+      "dx": 0,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 8,
+      "point": "coupling",
+      "dx": 0.4,
+      "seconds": 1.942
+    },
+    {
+      "order": 2,
+      "repair": 8,
+      "point": "coupling",
+      "dx": 0.8,
+      "seconds": 1.883
+    },
+    {
+      "order": 2,
+      "repair": 9,
+      "point": "seal",
+      "dx": -0.8,
+      "seconds": 2
+    },
+    {
+      "order": 2,
+      "repair": 9,
+      "point": "seal",
+      "dx": -0.4,
+      "seconds": 2
+    },
+    {
+      "order": 2,
+      "repair": 9,
+      "point": "seal",
+      "dx": 0,
+      "seconds": 2.008
+    },
+    {
+      "order": 2,
+      "repair": 9,
+      "point": "seal",
+      "dx": 0.4,
+      "seconds": 2
+    },
+    {
+      "order": 2,
+      "repair": 9,
+      "point": "seal",
+      "dx": 0.8,
+      "seconds": 2
+    }
+  ],
+  "rows2": [
+    {
+      "pass": 0,
+      "point": "flush",
+      "dx": -0.8,
+      "dy": 0,
+      "seconds": 2.017
+    },
+    {
+      "pass": 0,
+      "point": "flush",
+      "dx": -0.8,
+      "dy": -0.69,
+      "seconds": 2.017
+    },
+    {
+      "pass": 0,
+      "point": "flush",
+      "dx": -0.4,
+      "dy": 0,
+      "seconds": 2.025
+    },
+    {
+      "pass": 0,
+      "point": "flush",
+      "dx": -0.4,
+      "dy": -0.69,
+      "seconds": 2.025
+    },
+    {
+      "pass": 0,
+      "point": "flush",
+      "dx": 0,
+      "dy": 0,
+      "seconds": 2.033
+    },
+    {
+      "pass": 0,
+      "point": "flush",
+      "dx": 0,
+      "dy": -0.69,
+      "seconds": 2.033
+    },
+    {
+      "pass": 0,
+      "point": "flush",
+      "dx": 0.4,
+      "dy": 0,
+      "seconds": 2.042
+    },
+    {
+      "pass": 0,
+      "point": "flush",
+      "dx": 0.4,
+      "dy": -0.69,
+      "seconds": 2.042
+    },
+    {
+      "pass": 0,
+      "point": "flush",
+      "dx": 0.8,
+      "dy": 0,
+      "seconds": 2.05
+    },
+    {
+      "pass": 0,
+      "point": "flush",
+      "dx": 0.8,
+      "dy": -0.69,
+      "seconds": 2.05
+    },
+    {
+      "pass": 0,
+      "point": "tension",
+      "dx": -0.8,
+      "dy": 0,
+      "seconds": 2.125
+    },
+    {
+      "pass": 0,
+      "point": "tension",
+      "dx": -0.4,
+      "dy": 0,
+      "seconds": 2.117
+    },
+    {
+      "pass": 0,
+      "point": "tension",
+      "dx": 0,
+      "dy": 0,
+      "seconds": 2.117
+    },
+    {
+      "pass": 0,
+      "point": "tension",
+      "dx": 0.4,
+      "dy": 0,
+      "seconds": 2.108
+    },
+    {
+      "pass": 0,
+      "point": "tension",
+      "dx": 0.8,
+      "dy": 0,
+      "seconds": 2.1
+    },
+    {
+      "pass": 0,
+      "point": "align",
+      "dx": -0.8,
+      "dy": 0,
+      "seconds": 2.058
+    },
+    {
+      "pass": 0,
+      "point": "align",
+      "dx": -0.4,
+      "dy": 0,
+      "seconds": 2.05
+    },
+    {
+      "pass": 0,
+      "point": "align",
+      "dx": 0,
+      "dy": 0,
+      "seconds": 2.042
+    },
+    {
+      "pass": 0,
+      "point": "align",
+      "dx": 0.4,
+      "dy": 0,
+      "seconds": 2.033
+    },
+    {
+      "pass": 0,
+      "point": "align",
+      "dx": 0.8,
+      "dy": 0,
+      "seconds": 2.025
+    },
+    {
+      "pass": 1,
+      "point": "flush",
+      "dx": -0.8,
+      "dy": 0,
+      "seconds": 2.017
+    },
+    {
+      "pass": 1,
+      "point": "flush",
+      "dx": -0.8,
+      "dy": -0.69,
+      "seconds": 2.017
+    },
+    {
+      "pass": 1,
+      "point": "flush",
+      "dx": -0.4,
+      "dy": 0,
+      "seconds": 2.025
+    },
+    {
+      "pass": 1,
+      "point": "flush",
+      "dx": -0.4,
+      "dy": -0.69,
+      "seconds": 2.025
+    },
+    {
+      "pass": 1,
+      "point": "flush",
+      "dx": 0,
+      "dy": 0,
+      "seconds": 2.033
+    },
+    {
+      "pass": 1,
+      "point": "flush",
+      "dx": 0,
+      "dy": -0.69,
+      "seconds": 2.033
+    },
+    {
+      "pass": 1,
+      "point": "flush",
+      "dx": 0.4,
+      "dy": 0,
+      "seconds": 2.042
+    },
+    {
+      "pass": 1,
+      "point": "flush",
+      "dx": 0.4,
+      "dy": -0.69,
+      "seconds": 2.042
+    },
+    {
+      "pass": 1,
+      "point": "flush",
+      "dx": 0.8,
+      "dy": 0,
+      "seconds": 2.05
+    },
+    {
+      "pass": 1,
+      "point": "flush",
+      "dx": 0.8,
+      "dy": -0.69,
+      "seconds": 2.05
+    },
+    {
+      "pass": 1,
+      "point": "tension",
+      "dx": -0.8,
+      "dy": 0,
+      "seconds": 2.125
+    },
+    {
+      "pass": 1,
+      "point": "tension",
+      "dx": -0.4,
+      "dy": 0,
+      "seconds": 2.117
+    },
+    {
+      "pass": 1,
+      "point": "tension",
+      "dx": 0,
+      "dy": 0,
+      "seconds": 2.117
+    },
+    {
+      "pass": 1,
+      "point": "tension",
+      "dx": 0.4,
+      "dy": 0,
+      "seconds": 2.108
+    },
+    {
+      "pass": 1,
+      "point": "tension",
+      "dx": 0.8,
+      "dy": 0,
+      "seconds": 2.1
+    },
+    {
+      "pass": 1,
+      "point": "align",
+      "dx": -0.8,
+      "dy": 0,
+      "seconds": 2.058
+    },
+    {
+      "pass": 1,
+      "point": "align",
+      "dx": -0.4,
+      "dy": 0,
+      "seconds": 2.05
+    },
+    {
+      "pass": 1,
+      "point": "align",
+      "dx": 0,
+      "dy": 0,
+      "seconds": 2.042
+    },
+    {
+      "pass": 1,
+      "point": "align",
+      "dx": 0.4,
+      "dy": 0,
+      "seconds": 2.033
+    },
+    {
+      "pass": 1,
+      "point": "align",
+      "dx": 0.8,
+      "dy": 0,
+      "seconds": 2.025
+    }
+  ]
+}

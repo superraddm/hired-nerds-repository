@@ -1,0 +1,219 @@
+{
+  "report": [
+    {
+      "room": "suit-dock",
+      "states": 1,
+      "places": 6,
+      "reachable": 6,
+      "onFoot": 6,
+      "waters": [
+        1
+      ]
+    },
+    {
+      "room": "flushing-gallery",
+      "states": 1,
+      "places": 14,
+      "reachable": 14,
+      "onFoot": 14,
+      "waters": [
+        1
+      ]
+    },
+    {
+      "room": "guide-tower",
+      "states": 2,
+      "places": 23,
+      "reachable": 23,
+      "onFoot": 23,
+      "waters": [
+        2,
+        2
+      ]
+    },
+    {
+      "room": "split-reservoir",
+      "states": 2,
+      "places": 38,
+      "reachable": 38,
+      "onFoot": 24,
+      "waters": [
+        5,
+        5
+      ]
+    },
+    {
+      "room": "cut-path-maze",
+      "states": 1,
+      "places": 11,
+      "reachable": 11,
+      "onFoot": 11,
+      "waters": [
+        1
+      ]
+    },
+    {
+      "room": "threading-fault",
+      "states": 2,
+      "places": 21,
+      "reachable": 21,
+      "onFoot": 21,
+      "waters": [
+        1,
+        2
+      ]
+    }
+  ],
+  "gates": [
+    {
+      "room": "split-reservoir",
+      "what": "A full: across to the divider",
+      "shouldBeOpen": true,
+      "isOpen": true,
+      "ok": true
+    },
+    {
+      "room": "split-reservoir",
+      "what": "A drained: its weir is a wall",
+      "shouldBeOpen": false,
+      "isOpen": false,
+      "ok": true
+    },
+    {
+      "room": "split-reservoir",
+      "what": "B drained: its weir is a wall",
+      "shouldBeOpen": false,
+      "isOpen": false,
+      "ok": true
+    },
+    {
+      "room": "split-reservoir",
+      "what": "B full: across to the exit",
+      "shouldBeOpen": true,
+      "isOpen": true,
+      "ok": true
+    },
+    {
+      "room": "split-reservoir",
+      "what": "B drained: its vault is open",
+      "shouldBeOpen": true,
+      "isOpen": true,
+      "ok": true
+    },
+    {
+      "room": "split-reservoir",
+      "what": "B full: its vault is shut",
+      "shouldBeOpen": false,
+      "isOpen": false,
+      "ok": true
+    },
+    {
+      "room": "split-reservoir",
+      "what": "A drained: its vault is open",
+      "shouldBeOpen": true,
+      "isOpen": true,
+      "ok": true
+    },
+    {
+      "room": "split-reservoir",
+      "what": "A full: its vault is shut",
+      "shouldBeOpen": false,
+      "isOpen": false,
+      "ok": true
+    },
+    {
+      "room": "split-reservoir",
+      "what": "A full: its high cache is in reach",
+      "shouldBeOpen": true,
+      "isOpen": true,
+      "ok": true
+    },
+    {
+      "room": "split-reservoir",
+      "what": "A drained: its high cache is out of reach",
+      "shouldBeOpen": false,
+      "isOpen": false,
+      "ok": true
+    },
+    {
+      "room": "split-reservoir",
+      "what": "B full: its high cache is in reach",
+      "shouldBeOpen": true,
+      "isOpen": true,
+      "ok": true
+    },
+    {
+      "room": "split-reservoir",
+      "what": "B drained: its high cache is out of reach",
+      "shouldBeOpen": false,
+      "isOpen": false,
+      "ok": true
+    }
+  ],
+  "unreachable": [],
+  "lostPickups": [],
+  "deadEnds": [],
+  "earth": [
+    {
+      "room": "suit-dock",
+      "furthestFromEarth": 1.5,
+      "at": [
+        26.5,
+        16
+      ],
+      "seconds": 0.5,
+      "thereAndBack": 1
+    },
+    {
+      "room": "flushing-gallery",
+      "furthestFromEarth": 10.5,
+      "at": [
+        100.75,
+        24
+      ],
+      "seconds": 3.5,
+      "thereAndBack": 7
+    },
+    {
+      "room": "guide-tower",
+      "furthestFromEarth": 14.5,
+      "at": [
+        141.5,
+        16
+      ],
+      "seconds": 4.8,
+      "thereAndBack": 9.7
+    },
+    {
+      "room": "split-reservoir",
+      "furthestFromEarth": 12.5,
+      "at": [
+        246.5,
+        24
+      ],
+      "seconds": 4.2,
+      "thereAndBack": 8.3
+    },
+    {
+      "room": "cut-path-maze",
+      "furthestFromEarth": 17,
+      "at": [
+        359,
+        24
+      ],
+      "seconds": 5.7,
+      "thereAndBack": 11.3
+    },
+    {
+      "room": "threading-fault",
+      "furthestFromEarth": 9.5,
+      "at": [
+        446.5,
+        24
+      ],
+      "seconds": 3.2,
+      "thereAndBack": 6.3
+    }
+  ],
+  "sealed": 0
+}
