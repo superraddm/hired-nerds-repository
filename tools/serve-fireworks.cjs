@@ -4,11 +4,16 @@
 // No caching headers, so a plain reload always shows the working tree.
 const http = require('http'), fs = require('fs'), path = require('path'), os = require('os');
 const root = path.join(__dirname, '..', 'public', 'fireworks'), port = +(process.argv[2] || 8787);
+// Read-only: Nook's character sheet and texture bench (round 4) for the iPad, at /_nook-character/sheet.html and
+// /_nook-character/texture-bench.html. Their links climb to /public/fireworks/..., which maps back to the served root.
+const character = path.join(__dirname, '..', 'docs', 'little-patterns-round-4', 'build', 'character');
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.json': 'application/json', '.png': 'image/png', '.webmanifest': 'application/manifest+json', '.css': 'text/css', '.wav': 'audio/wav', '.svg': 'image/svg+xml' };
 http.createServer((req, res) => {
   let p = decodeURIComponent(req.url.split('?')[0]); if (p.endsWith('/')) p += 'index.html';
-  const f = path.normalize(path.join(root, p));
-  if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); return res.end('not found'); }
+  if (p.startsWith('/public/fireworks/')) p = p.slice('/public/fireworks'.length);
+  const base = p.startsWith('/_nook-character/') ? character : root;
+  const f = path.normalize(path.join(base, base === root ? p : p.slice('/_nook-character'.length)));
+  if (!f.startsWith(base) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); return res.end('not found'); }
   // Safari may request byte ranges when playing a bundled voice clip.
   if (path.extname(f) === '.wav') {
     const size = fs.statSync(f).size;

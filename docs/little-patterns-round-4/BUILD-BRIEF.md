@@ -1,9 +1,11 @@
 # Little Patterns round 4: consolidated build brief
 
+**Status: Built locally, phases 1 to 6, awaiting Jof's device test; not deployed.** See `build/BUILD-REPORT.md`.
+
 Frozen 11 October 2026 after Opus 5.5 passes 1 and 2, Fable 5.1 passes 1 to 3, Codex pass 1 and Jof's answers.
 This is the one file a builder works from, together with `../little-patterns-review-round-4.md` section 4 (the
 design), `nook-design-profile.md` (the character) and the scope rules in `../arthur-games-scope.md`. Where this file
-and an earlier pass differ, this file wins. Nothing is built yet.
+and an earlier pass differ, this file wins.
 
 ## 1. Jof's decisions (11 October)
 

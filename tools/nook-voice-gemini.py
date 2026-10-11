@@ -146,8 +146,9 @@ LINE_STYLE['nook feels… tap one'] = STYLE + "; a gentle invitation: a short th
 LINE_STYLE.update({k: STYLE + ONLY + NOOK for k in ('nook eats none. how many are left', 'nook eats them all. how many are left')})
 # Phrases the game joins with number clips: "Three, then two more. How many?" and "Nook eats two. How many are left?"
 LINE_STYLE['then'] = (STYLE + "; one word taken from the middle of the sentence 'Three, then two more': say only the single word then, "
-                      "level and continuing as if the sentence goes on" + ONLY)
-LINE_STYLE['more'] = STYLE + "; the last word of the sentence 'then two more.': say only the single word more" + ONLY
+                      "level and continuing as if the sentence goes on; stop cleanly on the word, with no breath out after it" + ONLY)
+LINE_STYLE['more'] = (STYLE + "; the last word of the sentence 'then two more.': say only the single word more; stop cleanly on the "
+                      "word, with no breath out after it" + ONLY)
 LINE_STYLE['nook eats'] = (STYLE + "; the start of a sentence that goes on with a number, as in 'Nook eats two.': say only the two words "
                            "Nook eats, level and continuing, not finished" + ONLY + NOOK)
 # Whole-sentence comparison recordings for the round-4 listening page (J6), rendered by `compare` into the listening folder only;

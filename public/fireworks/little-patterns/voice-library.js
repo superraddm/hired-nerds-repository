@@ -541,8 +541,8 @@ window.LPVoiceLibrary={
       "seconds": 1.365
     },
     "more": {
-      "file": "assets/voice/2c00b711e741ea1a.wav",
-      "seconds": 1.311
+      "file": "assets/voice/5a13f9ff937822df.wav",
+      "seconds": 1.16
     },
     "muh": {
       "file": "assets/voice/5f7494de5f6ea8ab.wav",
@@ -1133,8 +1133,8 @@ window.LPVoiceLibrary={
       "seconds": 2.55
     },
     "then": {
-      "file": "assets/voice/d3ec540fdbe367a8.wav",
-      "seconds": 0.931
+      "file": "assets/voice/0ff63047de88d6f4.wav",
+      "seconds": 0.61
     },
     "thirteen": {
       "file": "assets/voice/e366fee05b3a075f.wav",

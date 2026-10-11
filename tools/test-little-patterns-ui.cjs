@@ -1788,6 +1788,11 @@ test('Grown-ups opens only after a two-second hold: the ring from 300 ms; releas
     assert.equal(a.query('#dialog-title').textContent, 'Who is playing?', 'player switching is in Grown-ups');
     a.click('[data-close]');
     assert.equal(a.w.document.activeElement, gate);
+    key('keydown', 'Enter'); t.mock.timers.tick(2000);
+    a.click('#gu-about');
+    assert.equal(a.query('#dialog-title').textContent, 'Privacy, devices and credits');
+    assert.match(a.query('.lp-dialog').textContent.replace(/\s+/g, ' '), /Me, in Feelings: .* never saved or sent, and it clears when they leave Me\./, 'the privacy sheet says what happens to a Me report');
+    a.click('[data-close]');
   } finally { t.mock.timers.reset(); }
 });
 
@@ -2016,4 +2021,20 @@ test('the Shapes tile lands on the Shapes game in the frame (tools/test-little-p
   assert.deepEqual(manifest.icons.map(i => [i.src, i.sizes]), [['assets/icon-192.png', '192x192'], ['assets/icon-512.png', '512x512']]);
   for (const [file, size] of [['assets/icon-192.png', 192], ['assets/icon-512.png', 512]]) { const png = fs.readFileSync(path.join(root, file)); assert.equal(png.readUInt32BE(16), size); assert.equal(png.readUInt32BE(20), size); }
   assert.ok(!fs.readdirSync(root).some(f => /service-?worker|^sw\.js$/i.test(f)), 'no service worker');
+});
+
+test('the Grown-ups content pages describe round 4 (Shapes, the Add picture, the four Feelings activities) and stay on the deploy list', () => {
+  const { files } = require('./stage-little-patterns.cjs');
+  for (const f of ['content.html', 'feelings-content.html']) assert.ok(files.includes(f), f + ' ships');
+  const content = fs.readFileSync(path.join(root, 'content.html'), 'utf8');
+  assert.match(content, /Every Shapes example/);
+  assert.match(content, /We did it!/);
+  assert.match(content, /second group inside a dashed outline/);
+  assert.doesNotMatch(content, /separate basket area/, 'the take-away note matches the one-group crossing-out');
+  const feelings = fs.readFileSync(path.join(root, 'feelings-content.html'), 'utf8');
+  for (const id of ['words', 'board', 'which', 'friends', 'me', 'art']) assert.match(feelings, new RegExp('<h2 id="' + id + '"'));
+  for (const name of ['Nook feels…', 'Which feeling?', 'Friends', 'Me']) assert.ok(feelings.includes(name), name);
+  assert.doesNotMatch(feelings, /How Match works|Match responses|People stories/, 'the round-3 activities are gone from the page');
+  assert.equal((feelings.match(/class="nook-face"/g) || []).length, 20, 'Nook’s ten faces, and the ten again with the neutral ring for Me');
+  assert.match(feelings, /never saved, logged, put in a link or sent anywhere/);
 });

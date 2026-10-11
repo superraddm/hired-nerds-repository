@@ -148,7 +148,8 @@
   .feel .tick{width:15px;height:15px;right:4px;top:4px}
   .me-more{min-height:44px;font-size:14px}
   .perform{grid-template-rows:minmax(0,1fr);grid-template-columns:auto minmax(0,1fr);align-items:center;gap:16px}
-  .perform-nook{max-height:none}
+  /* headroom inside the card for the hops, the rise and the in-breath (up to about 14 px) */
+  .perform-nook{max-height:none;padding-top:16px}
   .perform-word{font-size:28px}
   .perform-line,.perform-caption{font-size:16px}
   .which-objects{grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) auto;align-items:center}
@@ -169,7 +170,7 @@
   .me-chosen{flex-direction:row;gap:24px}
   .me-face{width:96px;height:96px}
   .me-word{font-size:26px}
-  .me-card{padding:6px 12px;gap:6px}
+  .me-card{padding:6px 12px;gap:6px;flex-shrink:0}
   .me-line{max-width:16em;font-size:16px}
   .other-feeling{gap:8px}
   .other-label{font-size:20px}
@@ -184,7 +185,7 @@
   .feel-face{max-height:72px}
   .me-more{min-height:60px;font-size:18px;max-width:none}
   .perform{grid-template-rows:minmax(0,1fr);grid-template-columns:auto minmax(0,1fr);align-items:center;gap:32px;max-width:860px;margin:0 auto}
-  .perform-nook{max-height:none}
+  .perform-nook{max-height:none;padding-top:16px}
   .perform-word{font-size:40px}
   .which-objects{grid-template-rows:auto minmax(0,1fr);max-width:640px;margin:0 auto}
   .which-words{flex-direction:row;gap:14px;max-width:640px;margin:0 auto}

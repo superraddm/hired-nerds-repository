@@ -54,7 +54,7 @@ node tools/stage-little-patterns.cjs --check
 ```
 jsdom is in `.wrangler/test-runtime/node_modules/jsdom`. The UI harness `app(t,page,seed,blocked,soundOn)` evals the
 page's scripts in jsdom with mocked `Audio` (records `plays`), `speechSynthesis`, and `fetch` that throws ("a game
-must not send player data over the network"), so the Me Blob bundle test overrides fetch itself. 128 tests pass today.
+must not send player data over the network"), so the Me Blob bundle test overrides fetch itself. 198 tests pass after phase 6 (128 before round 4).
 Rewrite tests that target removed chrome; keep their intent.
 
 ## Browser screenshots and layout checks
@@ -65,7 +65,10 @@ for the S24 and iPad). Headless Chrome: `C:/Program Files/Google/Chrome/Applicat
 phone 412x860 / small 360x740 / land 915x356 / land2 740x360 / ipad 1024x698 / desk 1280x800, and the checks: page
 overflow, content clipped inside the task card, truncated labels, answers overlapping Nook; add a 44x44 touch-target
 check). Headless Chrome on this PC reports prefers-reduced-motion: reduce; emulate `no-preference` to see motion.
-Seed test state from the hub page, not the game page (pagehide saves overwrite localStorage). Kill only the headless
+Seed test state from the hub page, not the game page (pagehide saves overwrite localStorage). Since phase 6 the
+layout harness also fails on any uncaught exception or unhandled rejection, and a scenario can wait for a state with
+`until: '<selector>'` (used for the sad performance's breath). `serve-fireworks.cjs` serves the phase-1 character
+sheet and texture bench read-only at `/_nook-character/` for the iPad. Kill only the headless
 chrome you started (Jof's own Chrome is running). Put profile dirs in a scratch folder, never under docs/.
 
 ## Reporting

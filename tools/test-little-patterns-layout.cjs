@@ -7,7 +7,7 @@
 //                                                               scenarios (LP_SHOTS_ALL=1: every scenario)
 //   LP_ONLY=add,words  LP_VIEWPORTS=small,land                  limit a run
 //
-// Fails on: page overflow; content clipped inside the task card (the card scrolling, or anything outside it);
+// Fails on: an uncaught exception or unhandled rejection in the page; page overflow; content clipped inside the task card (the card scrolling, or anything outside it);
 // truncated chip, pill, answer, tile, key, card, feeling-card and action labels; an answer or key over Nook; and any visible
 // tappable control under 44 by 44 CSS pixels. Test state is seeded from the hub page, never the game page (a game
 // saves on pagehide). Skips with a message when Chrome is not installed.
@@ -40,7 +40,7 @@ const answer = (level, mode, example) => { const i = L.shapeSequence(level, mode
 const FD = require('../public/fireworks/little-patterns/feelings-data.js');
 const feelings = extra => ({ [P + 'feelings-v1']: { version: 2, mode: 'board', index: 0, level: 1, story: 0, seed: 1, ...extra } });
 const whichAnswer = (index, level) => click(`[data-which="${FD.whichRound(index, 1, level).feeling}"]`);
-// shot: part of the evidence set. act: script run in the page after load. wait: ms before checking.
+// shot: part of the evidence set. act: script run in the page after load. until: a selector to wait for. wait: ms before checking.
 const SCENARIOS = [
   { name: 'shelf', page: 'index.html', shot: true },
   { name: 'gate-hold', page: 'index.html', shot: true, act: `(()=>{const b=document.querySelector('[data-grownups]');const r=b.getBoundingClientRect();b.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true,pointerId:7,isPrimary:true,clientX:r.left+20,clientY:r.top+20}));})()`, wait: 1250 },
@@ -89,7 +89,11 @@ const SCENARIOS = [
   { name: 'shapes-chooser', page: 'shapes.html', act: click('#support'), wait: 400 },
   { name: 'feelings-board', page: 'feelings.html', shot: true, act: click('[data-feel="happy"]'), steps: [[900, click('#done')], [700, click('[data-feel="proud"]')], [900, click('#done')]], wait: 900 },
   { name: 'feelings-perform', page: 'feelings.html', shot: true, act: click('[data-feel="excited"]'), wait: 1250 },
-  { name: 'feelings-perform-sad', page: 'feelings.html', shot: true, act: click('[data-feel="sad"]'), wait: 2500 },
+  // Mid-breath: since phase 5 the word is followed by "Nook feels sad.", so wait for the breath itself, then to the top of
+  // the in-breath (1.2 s), where Nook is tallest. The surprised rise and the excited hops are checked at their highest too.
+  { name: 'feelings-perform-sad', page: 'feelings.html', shot: true, act: click('[data-feel="sad"]'), until: '.perform.breathing', wait: 1100 },
+  { name: 'feelings-perform-rise', page: 'feelings.html', act: click('[data-feel="surprised"]'), until: '.perform-move.g-surprised', wait: 150 },
+  { name: 'feelings-perform-hop', page: 'feelings.html', act: click('[data-feel="excited"]'), until: '.perform-move.g-excited', wait: 190 },
   { name: 'feelings-perform-wait', page: 'feelings.html', seed: { 'lp-sound': 'off' }, act: click('[data-feel="disappointed"]'), wait: 2600 },
   { name: 'feelings-which', page: 'feelings.html', shot: true, seed: feelings({ mode: 'which' }) },
   { name: 'feelings-which-help', page: 'feelings.html', shot: true, seed: feelings({ mode: 'which', index: 3 }), act: click('#help'), wait: 400 },
@@ -115,7 +119,7 @@ const CHECK = `(()=>{const out=[];
   const task=document.querySelector('.nf-task>.task');
   if(task&&vis(task)){if(task.scrollHeight>task.clientHeight+1)out.push('card scrolls '+task.scrollHeight+' > '+task.clientHeight);if(task.scrollWidth>task.clientWidth+1)out.push('card overflows sideways '+task.scrollWidth+' > '+task.clientWidth);
     const c=task.closest('.nf-task').getBoundingClientRect();for(const el of task.querySelectorAll('*')){if(!vis(el))continue;const q=el.getBoundingClientRect();if(q.left<c.left-1||q.right>c.right+1||q.top<c.top-1||q.bottom>c.bottom+1){out.push('clipped in card: '+desc(el)+' '+[q.left,q.top,q.right,q.bottom].map(Math.round)+' card '+[c.left,c.top,c.right,c.bottom].map(Math.round));break;}}}
-  for(const el of document.querySelectorAll('.chip,.pill,.answer,.choice,.tile,.key,.word-card,.nf-actions>button,.bubble-inline,.sentence-words,.make-tools button,.feel,.me-more,.say-other')){if(!vis(el))continue;if(el.scrollWidth>el.clientWidth+1||el.scrollHeight>el.clientHeight+1)out.push('label clipped: '+desc(el)+' '+el.scrollWidth+'x'+el.scrollHeight+' in '+el.clientWidth+'x'+el.clientHeight);}
+  for(const el of document.querySelectorAll('.chip,.pill,.answer,.choice,.tile,.key,.word-card,.nf-actions>button,.bubble-inline,.sentence-words,.make-tools button,.feel,.me-card,.me-more,.say-other')){if(!vis(el))continue;if(el.scrollWidth>el.clientWidth+1||el.scrollHeight>el.clientHeight+1)out.push('label clipped: '+desc(el)+' '+el.scrollWidth+'x'+el.scrollHeight+' in '+el.clientWidth+'x'+el.clientHeight);}
   for(const b of document.querySelectorAll('.nf-bubble')){if(!vis(b))continue;const q=b.getBoundingClientRect();if(q.bottom>innerHeight+1||q.right>innerWidth+1)out.push('bubble off screen: '+desc(b));}
   const nook=document.querySelector('#nook .nook-pos svg');if(nook&&vis(nook)){const n=nook.getBoundingClientRect();for(const a of document.querySelectorAll('.answers button,.word-card,.nf-bubble,.nf-actions>button')){if(!vis(a))continue;const q=a.getBoundingClientRect();if(q.left<n.right-2&&q.right>n.left+2&&q.top<n.bottom-2&&q.bottom>n.top+2)out.push('over Nook: '+desc(a));}}
   for(const el of document.querySelectorAll('button,a[href],input,select,textarea,[role=button]')){if(!vis(el))continue;const r=el.getBoundingClientRect();if(r.width<43.5||r.height<43.5)out.push('target '+Math.round(r.width)+'x'+Math.round(r.height)+': '+desc(el));}
@@ -145,10 +149,16 @@ async function start() {
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }] });
   const base = `http://127.0.0.1:${webPort}/little-patterns/`;
   const stop = () => { try { ws.close(); } catch (_) { /* closed */ } chrome.kill(); server.kill(); setTimeout(() => { try { fs.rmSync(profile, { recursive: true, force: true }); } catch (_) { /* Chrome still holds a lock */ } }, 500); };
-  return { send, evaluate, go, base, stop };
+  return { send, evaluate, go, base, stop, listeners };
 }
 
 async function run(b, viewport, scenario, shots) {
+  // Any uncaught exception or unhandled rejection in the page while the scenario runs is a problem too (phase 6).
+  const thrown = [], onThrow = m => { if (m.method === 'Runtime.exceptionThrown') { const d = m.params.exceptionDetails; thrown.push('uncaught: ' + String((d.exception && d.exception.description) || d.text).split(String.fromCharCode(10))[0]); } };
+  b.listeners.push(onThrow);
+  try { return (await scenarioRun(b, viewport, scenario, shots)).concat(thrown); } finally { b.listeners.splice(b.listeners.indexOf(onThrow), 1); }
+}
+async function scenarioRun(b, viewport, scenario, shots) {
   const [w, h, dpr, mobile] = VIEWPORTS[viewport];
   await b.send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: dpr, mobile });
   await b.send('Emulation.setTouchEmulationEnabled', { enabled: mobile });
@@ -158,6 +168,8 @@ async function run(b, viewport, scenario, shots) {
   await wait(350);
   if (scenario.act) { await b.evaluate(scenario.act + ';true'); }
   for (const [ms, script] of scenario.steps || []) { await wait(ms); await b.evaluate(script + ';true'); }
+  // until: a selector to wait for (up to 12 s) before the wait; a scenario whose state never arrives is a problem.
+  if (scenario.until && !(await b.evaluate(`new Promise(r=>{const t0=Date.now(),t=setInterval(()=>{const ok=!!document.querySelector(${JSON.stringify(scenario.until)});if(ok||Date.now()-t0>12000){clearInterval(t);r(ok);}},40);})`))) return ['never reached ' + scenario.until];
   await wait(scenario.wait || 250);
   const problems = JSON.parse(await b.evaluate(CHECK));
   if (shots && (scenario.shot || process.env.LP_SHOTS_ALL)) {

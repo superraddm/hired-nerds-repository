@@ -101,6 +101,7 @@
     const el = LP.openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Privacy, devices and credits</h2><button data-close aria-label="Close">×</button></div>' +
       '<p>Every game and puzzle is open to every player. Names and player IDs stay in this browser’s storage and are never sent anywhere. People sharing this browser can see these local profiles; they are not password-protected accounts. Another browser or device has its own profiles, and clearing browser data deletes them. A home-screen app on iPad keeps its own storage, separate from Safari.</p>' +
       '<p>The games work without saved profiles if browser storage is unavailable. Built-in speech uses bundled voice clips, made once with Google Gemini text-to-speech and played only from this device. Familiar words you add use an installed offline device voice. No microphone, analytics, advertising, accounts or online leaderboards.</p>' +
+      '<p>Me, in Feelings: what a child chooses or types there is a report for the grown-up beside them. It is never saved or sent, and it clears when they leave Me.</p>' +
       '<p>Word pictures are Mulberry Symbols by Steve Lee, licensed CC BY-SA 4.0 (mulberrysymbols.org). The background tune in Colour Blocks is a new arrangement of the traditional folk melody Korobeiniki. Nook is an original character.</p>' +
       '<p>Use Safari on iPad or Chrome on Android. The A to Z keys work without opening the device keyboard.</p>');
     el.classList.add('lp-rise');

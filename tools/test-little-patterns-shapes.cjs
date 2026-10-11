@@ -221,7 +221,7 @@ test('number tags sit off the middle of each side, outside the shape and inside 
   }
 });
 
-test('success lines: "A pentagon has five sides." and "It’s an oval!" as text, and since phase 5 spoken from their own clips with the opener', () => {
+test('success lines: "We did it! A pentagon has five sides." and "We did it! It’s an oval!", spoken from their own clips, the opener always first', () => {
   const bank = new Set(L.spokenBank());
   for (const line of L.SHAPES_SPEECH) assert.ok(bank.has(key(line)), 'in the spoken bank: ' + line);
   assert.deepEqual(L.SHAPES_SPEECH.slice(-3), ['Which shape is this?', 'How many sides?', 'Tap each side.']);
@@ -230,14 +230,17 @@ test('success lines: "A pentagon has five sides." and "It’s an oval!" as text,
     r.done = true;
     const line = L.successLine('shapes', r);
     const fact = r.mode === 'sides' ? 'A ' + r.shape + ' has ' + L.numberWord(r.sides).toLowerCase() + ' sides.' : 'It’s ' + (r.shape === 'oval' ? 'an' : 'a') + ' ' + r.shape + '!';
-    assert.ok(line.text.includes(fact), line.text);
+    assert.equal(line.text, 'We did it! ' + fact, 'the brief’s line: We did it! then the fact');
     assert.ok(L.SHAPES_SPEECH.includes(fact.replace('’', "'")), 'every fact is on the phase-5 list: ' + fact);
     assert.equal(line.speech.length, 2);
-    assert.ok(L.OPENERS.includes(line.speech[0]) || L.OPENERS.includes(line.speech[1]), 'the opener, before or after');
+    assert.equal(line.speech[0], 'We did it!', 'the opener first, from its own clip');
     assert.ok(line.speech.includes(fact.replace('’', "'")), 'and the fact, said as one clip');
     assert.ok(line.speech.every(part => bank.has(key(part))), 'whatever is spoken has a clip');
     assert.deepEqual(L.successLine('shapes', r), line, 'the same puzzle always gets the same words');
   }
+  assert.equal(L.SHAPES_OPENER, 'We did it!'); assert.equal(L.voiced('We did it!'), true);
+  assert.equal(L.successLine('shapes', { ...L.shapeRound(0, L.defaults, 2, 'sides'), done: true }).text, 'We did it! A pentagon has five sides.');
+  assert.equal(L.successLine('shapes', { id: 'x', mode: 'name', shape: 'hexagon', done: true }).text, 'We did it! It’s a hexagon!');
   assert.equal(L.voiced('Spot on!'), true); assert.equal(L.voiced('How many sides?'), true); assert.equal(L.voiced('How many corners?'), false);
 });
 

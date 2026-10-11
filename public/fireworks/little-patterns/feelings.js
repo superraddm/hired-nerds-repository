@@ -17,7 +17,8 @@
                      card, the shelf, a player change, pagehide or a bfcache restore cancel the whole sequence. Ticks
                      last for one visit to the board; when all ten are ticked Nook says "We said all the feelings."
      Which feeling?  Nook large as the task object, showing one feeling, with three word answers. Help shows Nook's
-                     face beside each word, then outlines the answer. Level 1 never offers a look-alike pair.
+                     face beside each word, then outlines the answer. Level 1 never offers a look-alike pair. A right
+                     answer greens the word and the bubble says the opener and the word; Nook keeps the feeling shown.
      Friends         the twenty stories, as in round 3: the scene, the words, Hear and Next.
      Me              the child's own board. A choice shows its face with a neutral ring and the word; Nook says "You
                      feel {x}. Thank you for telling me." and stays as it is (never mirrors, never fixes). Something
@@ -272,7 +273,6 @@
 
   // ---- Which feeling? ----
   function newWhich() { which = { round: F.whichRound(saved.index, saved.seed, saved.level), hint: 0, done: false, feedback: '', retry: '' }; }
-  const success = f => f === 'happy' ? 'proud' : f === 'proud' ? 'happy' : (which.round.index % 2 ? 'proud' : 'happy');
   function whichAnswers() {
     const r = which.round;
     return '<div class="choices which-words' + (which.hint >= 1 && !which.done ? ' pictured' : '') + '">' + r.choices.map(f => {
@@ -289,7 +289,8 @@
   function whichView() {
     layout('which');
     if (!which) newWhich();
-    const r = which.round, shown = which.done ? success(r.feeling) : r.feeling;
+    // Nook keeps the feeling the child named, before and after the answer: a right answer never "fixes" sad.
+    const r = which.round, shown = r.feeling;
     $('activity-title').textContent = 'How does Nook feel?';
     $('instruction').textContent = 'Look at Nook, then choose the word for the feeling.';
     task.innerHTML = '<div class="objects which-objects"><button type="button" class="nf-bubble card-bubble" id="which-bubble"><span class="line"></span><span class="hear" aria-hidden="true"></span><span class="sr-only"> Hear it again</span></button>' +
@@ -312,9 +313,7 @@
     task.querySelector('.answers').innerHTML = whichAnswers();
     whichLine();
     actions('again');
-    const svg = task.querySelector('.which-nook svg.nook'), pos = task.querySelector('.which-pos');
-    N.change(svg, success(which.round.feeling));
-    if (!FR.quiet() && pos) window.setTimeout(() => { pos.classList.remove('nook-hop'); void pos.offsetWidth; pos.classList.add('nook-hop'); }, 320);
+    // No expression change and no hop: only the chosen word greens and the bubble says the opener and the word.
     const s = F.whichSuccess(which.round);
     LP.status(s.text);
     $('next').focus({ preventScroll: true });

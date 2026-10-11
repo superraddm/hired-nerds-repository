@@ -1,4 +1,4 @@
-# Little Patterns round 4: the Nook frame (proposal, not built)
+# Little Patterns round 4: the Nook frame (built locally, not deployed)
 
 Read in this order. **The builder starts from `BUILD-BRIEF.md`** (the frozen, consolidated brief with Jof's eight decisions) and `build-brief.html` (the same, with images).
 
@@ -27,3 +27,13 @@ Related context: `../arthur-games-scope.md`, `../arthur-learning-design.md`, `..
 After the four existing passes, read `review-codex-pass-1.md` (findings 54–68) and `nook-design-profile.md`. Open `codex-review/index.html` for the original/proposed comparison, revised expression sheet and face close-ups. The short Opus handoff is `codex-review/opus-handoff.md`.
 
 Jof explicitly chose the original Nook identity over the proposed vector proportions. He accepted the new redraw's fidelity to the original style and requested clearer differences between Hello, Calm, Happy and Proud. The final expression sheet addresses that feedback. The original PNG remains the geometry master; the new sheet supplies expression/posture guidance. Codex's other findings are recommendations to reconcile with the approved brief, not an implementation or deployment record.
+
+## Build (11 October)
+
+Built locally in six phases by Opus 5.5 from `BUILD-BRIEF.md`; nothing is deployed or pushed. Everything is in `build/`:
+
+- `build/BUILD-REPORT.md` - start here: what each phase built, commit hashes, test and harness results, voice clips and cost, the decisions Jof still owns, and the deploy allow-list changes.
+- `build/DEVICE-TEST.md` - how to serve the build to the S24 and the iPad 5 and exactly what to try on each.
+- `build/final/` - the final screenshots of the real build, `<viewport>-<screen>.png` at the six viewports.
+- `build/phase-1-character.md` to `build/phase-5-voice.md` - the phase reports, with their evidence folders (`character/`, `phase-2/` to `phase-5/`; the listening page is `phase-5/listen/`).
+- `build/BUILDER-NOTES.md` - engineering facts for anyone continuing the build.

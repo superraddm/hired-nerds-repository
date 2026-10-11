@@ -420,7 +420,7 @@ test('Which feeling?: Nook large as the task object (the frame Nook hidden), thr
   assert.deepEqual(a.all('.answer.hint').map(b => b.dataset.which), [r.feeling], 'Help 2: the answer outlined');
 });
 
-test('Which feeling?: a wrong word changes only the bubble; the right one greens, locks, and Nook changes to proud or happy with the composed success line', async t => {
+test('Which feeling?: a wrong word changes only the bubble; the right one greens and locks, the bubble says the opener and the word, and Nook keeps the named feeling (no change, no hop)', async t => {
   const a = app(t, { seed: feelings({ mode: 'which', index: 0, seed: 1 }) }), tick = timers(t);
   const r = F.whichRound(0, 1, 1);
   a.click(`[data-which="${r.choices.find(c => c !== r.feeling)}"]`);
@@ -443,8 +443,10 @@ test('Which feeling?: a wrong word changes only the bubble; the right one greens
   assert.equal(a.plays.at(-1), a.clip(s.speech[0]), 'the opener, then the word');
   a.ended();
   assert.equal(a.plays.at(-1), a.clip(s.speech[1]));
-  tick(100);
-  assert.ok(['proud', 'happy'].includes(a.query('.which-nook svg.nook').getAttribute('data-feeling')));
+  tick(1000);
+  assert.equal(a.query('.which-nook svg.nook').getAttribute('data-feeling'), r.feeling, 'Nook keeps the feeling the child named: a right answer never turns sad into happy');
+  assert.ok(!a.query('.which-pos').classList.contains('nook-hop'), 'no hop on the big Nook');
+  assert.equal(a.all('.answer.chosen').length, 1, 'only the chosen word greens');
   assert.equal(a.query('#next').hidden, false); assert.equal(a.query('#repeat').hidden, false); assert.equal(a.query('#help').hidden, true);
   a.click('#next');
   assert.equal(a.store('feelings-v1').index, 1);
