@@ -298,6 +298,15 @@
     }, 90);
     return f;
   }
+  // Swap only the mouth of a rendered svg.nook, for a moment (Take away's munch): mouth(el, 'surprised') shows that
+  // feeling's mouth; mouth(el) puts back the mouth of the feeling shown. No other part changes and nothing animates.
+  function mouth(el, feeling) {
+    const g = el && el.querySelector('.nook-mouth');
+    if (!g) return '';
+    const f = state(feeling || el.getAttribute('data-feeling'));
+    g.innerHTML = MOUTHS[f]();
+    return f;
+  }
   // Idle: a blink at a random 3.5 to 7 s (close 70 ms, hold 50 ms, open 90 ms); breathing is CSS. Idle stops
   // after 45 s without input and while the page is hidden (.nook-still pauses the breath too). No rAF loop.
   function idle(el, options) {
@@ -332,6 +341,6 @@
     };
   }
 
-  const api = { svg: svg, face: face, change: change, idle: idle, FEELINGS: FEELINGS.slice(), STATES: STATES.slice(), POSES: POSES, COLOURS: C, SHOULDER: SHOULDER, STEM: STEM, BASE: BASE };
+  const api = { svg: svg, face: face, change: change, idle: idle, mouth: mouth, FEELINGS: FEELINGS.slice(), STATES: STATES.slice(), POSES: POSES, COLOURS: C, SHOULDER: SHOULDER, STEM: STEM, BASE: BASE };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.NookArt = api;
 })(typeof window !== 'undefined' ? window : globalThis);

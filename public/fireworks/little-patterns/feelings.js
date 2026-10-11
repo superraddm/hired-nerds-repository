@@ -1,139 +1,548 @@
-(function(){
+/* Feelings with Nook (round 4, phase 4), in the Nook frame. The level pill chooses one of four activities:
+
+     Nook feels...   ten neutral cards (Nook's face crop and the word). A tap starts Nook's performance, a cancellable
+                     sequence with a generation token (BUILD-BRIEF item 56):
+                       enter    the board fades (160 ms) and Nook grows from the frame Nook's place to the centre
+                                (300 ms), drawn at full size and scaled down so it is never a blurred raster
+                       perform  the expression changes behind a blink and Nook makes one gesture (under 1.2 s, at most
+                                12 px, no shake or flash); the speech started at the tap itself: the word, then
+                                "Nook feels {x}." once that line has a clip (phase 5)
+                       hold     until the last clip has actually ended, plus 600 ms
+                       settle   sad, angry, worried, frustrated, disappointed: one visible breath back to calm (1.2 s
+                                in, 1.6 s out), captioned "Nook takes a breath." only while it happens
+                       return   Nook shrinks back, the board fades in, a tick draws on that card, taps wait 300 ms
+                     Done (right slot) is always there, with a 6 px line that follows actual playback only. With sound
+                     off, a blocked play() or a missing clip, Nook keeps the feeling and waits for Done: there is no
+                     invented countdown. A tap on the big Nook replays the word and the return waits for it. A new
+                     card, the shelf, a player change, pagehide or a bfcache restore cancel the whole sequence. Ticks
+                     last for one visit to the board; when all ten are ticked Nook says "We said all the feelings."
+     Which feeling?  Nook large as the task object, showing one feeling, with three word answers. Help shows Nook's
+                     face beside each word, then outlines the answer. Level 1 never offers a look-alike pair.
+     Friends         the twenty stories, as in round 3: the scene, the words, Hear and Next.
+     Me              the child's own board. A choice shows its face with a neutral ring and the word; Nook says "You
+                     feel {x}. Thank you for telling me." and stays as it is (never mirrors, never fixes). Something
+                     else (typed, an offline device voice) and Not sure stay. Private (item 57): one fixed Blob bundle
+                     of every name and acknowledgement is fetched when Feelings opens, before any choice; nothing is
+                     saved, logged or sent; the report clears on leaving Me, a player change, pagehide and bfcache.
+
+   Saved per player (feelings-v1, an allow-list): the activity, Which feeling?'s place and level, the Friends story
+   and the deck's seed. window.LPFeelings exposes a read-only view of the performance for tests. */
+(function () {
   'use strict';
-  const F=window.NookFeelings,A=window.NookFeelingsArt,LP=window.LP;
-  const $=id=>document.getElementById(id),task=$('task'),menu=$('feelings-menu');
-  const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  let saved,view='home',returnView='home',round,matched=false,pose=false,tapped=null;
-  let meChoice=null,otherText='',localVoice=null;
-  const word=id=>LP.prefs.case==='lower'?F.WORDS[id].toLowerCase():F.WORDS[id].toUpperCase();
-  const button=(action,label,value='',className='')=>`<button type="button" data-action="${action}" data-value="${value}" data-focus="${action}-${value}" class="${className}">${label}</button>`;
-  const next=()=>button('next','Next ›','','next');
-  function restore(){saved=F.normalise(LP.storage.get('feelings-v1',null));if(!LP.storage.get('feelings-v1',null))saved.seed=Math.floor(Math.random()*0xffffffff)||1;resetMatch();clearMe();}
-  // Only this explicit allow-list is persisted. No answers, guesses or self-reports.
-  function save(){LP.storage.set('feelings-v1',F.normalise(saved));}
-  function resetMatch(){round=F.matchRound(saved.index,saved.seed,saved.filter);matched=false;pose=false;tapped=null;}
-  function clearMe(){meChoice=null;otherText='';}
-  function prepareMe(){if(!localVoice)localVoice=LP.audio.prepareLocalClips(F.ME_KEYS.map(id=>F.WORDS[id]));}
-  const otherInstruction='Type your words. Then tap the speaker.';
-  const keyboardCue='<svg viewBox="0 0 80 52" class="typing-cue" aria-hidden="true"><rect x="2" y="2" width="76" height="48" rx="9" fill="#e4d8ef" stroke="currentColor" stroke-width="3"/><g fill="#fffef3" stroke="currentColor" stroke-width="1.5"><rect x="10" y="9" width="17" height="21" rx="3"/><rect x="31" y="9" width="17" height="21" rx="3"/><rect x="52" y="9" width="17" height="21" rx="3"/><rect x="20" y="36" width="40" height="6" rx="2"/></g><g fill="currentColor" font-family="Arial,sans-serif" font-size="13" font-weight="bold" text-anchor="middle"><text x="18.5" y="24">A</text><text x="39.5" y="24">B</text><text x="60.5" y="24">C</text></g></svg>';
-  const sayCue='<svg viewBox="0 0 84 60" class="say-cue" aria-hidden="true"><path d="M5 21H20L37 7V53L20 39H5Z" fill="currentColor"/><path d="M48 19Q61 30 48 41M60 8Q84 30 60 52" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></svg>';
-  function guideOther(){if(!LP.audio.muted)LP.audio.speakPrivate(otherInstruction);}
-  function updateOtherCue(){const say=task.querySelector('[data-action="say-other"]');if(say)say.classList.toggle('ready',!!otherText.trim());}
-  function speak(text){if(!LP.audio.muted)LP.audio.speak(text,{auto:true});}
-  function speakMe(){
-    if(!meChoice||!localVoice||LP.audio.muted)return;
-    if(meChoice==='other'){if(otherText.trim())LP.audio.speakPrivate(otherText.trim());return;}
-    if(localVoice.speak(F.WORDS[meChoice]))$('status').textContent='';
-    else $('status').textContent='Sound is not ready. Tap the picture again.';
+  const $ = id => document.getElementById(id);
+  const F = window.NookFeelings, A = window.NookFeelingsArt, N = window.NookArt, LP = window.LP, FR = window.LPFrame, S = window.LPShelf, L = window.GardenLearning, I = window.LPIcons || {};
+  const T = { fade: 160, grow: 300, gesture: 1200, hold: 600, breathIn: 1200, breathOut: 1600, calm: 600, shrink: 300, quiet: 150, lock: 300 };
+  const SPEAKER = '<svg viewBox="0 0 24 24" aria-hidden="true" class="speaker-icon"><path d="M3 9H7L12 5V19L7 15H3Z" fill="currentColor"/><path d="M16 8Q21 12 16 16M19 5Q26 12 19 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const letters = s => LP.prefs.case === 'lower' ? String(s).toLowerCase() : String(s).toUpperCase();
+  const word = id => letters(F.WORDS[id]);
+  // Shown with typographic apostrophes; the clip key stays the plain text.
+  const pretty = t => String(t).replace(/'/g, '’');
+  const clipKey = t => String(t).trim().toLowerCase().replace(/\s+/g, ' ').replace(/[.!?]+$/, '');
+  const task = $('task'), page = $('page');
+
+  let saved, activity = 'board', view = 'board';
+  let ticks = new Set(), fresh = null, locked = false, lockTimer = 0;
+  let perf = null, generation = 0;
+  let which = null, lastRetry = '', cardTalk = null;
+  let meChoice = null, otherText = '', said = false, localVoice = null;
+
+  // ---- saving: an allow-list only (never an answer, a tick or a Me report) ----
+  function restore() {
+    const stored = LP.storage.get('feelings-v1', null);
+    saved = F.normalise(stored);
+    if (!stored) saved.seed = Math.floor(Math.random() * 0xffffffff) || 1;
+    activity = saved.mode;
   }
-  function prompt(){
-    if(view==='match')return pose?F.PROMPTS.pose:matched?F.matchSuccess(round).text:tapped?F.PROMPTS.different:F.PROMPTS.match;
-    if(view==='people')return '';
-    if(view==='me')return '';
-    return view==='home'?'A little space for feelings.':view==='picker'?(saved.mode==='people'?'Choose any story.':'Choose any feeling.') :'';
-  }
-  function render(focus){
-    const previous=document.activeElement?.dataset?.focus;
-    document.body.dataset.view=view;
-    $('screen-title').textContent=({home:'Feelings',match:pose?'Try the pose':'Match',people:'People',me:'Me',menu:'Menu',picker:'Choose',settings:'Make it yours',about:'For grown-ups'})[view];
-    $('menu-open').hidden=!['home','match','people','me'].includes(view);
-    $('back').setAttribute('aria-label',view==='home'?"Back to Nook's Garden":pose&&view==='match'?'Back to the matching picture':view==='menu'?'Back to the activity':view==='me'&&meChoice?'Back to all feelings':'Back');
-    $('status').textContent=prompt();
-    menu.hidden=view!=='menu';task.hidden=view==='menu';
-    if(view==='home'){
-      task.innerHTML=`<div class="welcome"><img src="assets/nook.png" width="90" height="108" alt="Nook, your friendly sprout"><p>We can feel lots of ways.<br>What shall we explore?</p></div><div class="mode-choices">${button('mode','<strong>Match</strong><span>Find the same picture.</span>','match','mode-card')}${button('mode','<strong>People</strong><span>Find out how someone feels.</span>','people','mode-card')}${button('mode','<strong>Me</strong><span>A word for my feeling.</span>','me','mode-card')}</div><p class="quiet-note">Choose anything. Take your time.</p>`;
-    }else if(view==='match'){
-      task.className=pose?'pose':'';
-      if(pose){task.innerHTML=`<div class="pose-figure">${A.svg(round.person,round.feeling,{pose:true})}</div><p class="word">${word(round.feeling)}</p><div class="task-actions">${next()}</div>`;}
-      else{
-        const target=button('hear-match',A.svg(round.person,round.feeling,{decorative:true})+`<span class="word">${word(round.feeling)}</span><span class="hear-label">Hear the word</span>`,'','target');
-        task.innerHTML=target+(matched?`<div class="matched-space">${button('pose','Try the pose')}</div>`:`<div class="match-options">${round.choices.map(f=>button('match',A.svg(round.person,f,{decorative:true})+`<span class="choice-word">${tapped===f?word(f):''}</span>`,f,'expression-choice')).join('')}</div>`)+`<div class="task-actions">${next()}</div>`;
-        task.querySelector('[data-action="hear-match"]').setAttribute('aria-label','Hear '+F.WORDS[round.feeling]+'. '+F.person(round.person).name+' with '+F.DESCRIPTIONS[round.feeling]);
-        task.querySelectorAll('[data-action="match"]').forEach(b=>b.setAttribute('aria-label',F.WORDS[b.dataset.value]+'. '+F.person(round.person).name+' with '+F.DESCRIPTIONS[b.dataset.value]));
-      }
-    }else if(view==='people'){
-      const story=F.STORIES[saved.story];
-      const speaker='<svg viewBox="0 0 24 24" aria-hidden="true" class="speaker-icon"><path d="M3 9H7L12 5V19L7 15H3Z" fill="currentColor"/><path d="M16 8Q21 12 16 16M19 5Q26 12 19 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
-      task.innerHTML=`<div class="people-stage">${A.scene(story)}<p class="people-context">${escape(story.context)}</p><p class="story-feeling"><span>I feel</span> <strong>${word(story.reportedFeeling)}</strong></p></div><div class="people-actions">${button('hear-story',speaker+'<span>Hear</span>','','hear-story')}${next()}</div><p class="sound-note"${LP.audio.muted?'':' hidden'}>Sound is off</p>`;
-      task.querySelector('[data-action="hear-story"]').setAttribute('aria-label','Hear '+F.person(story.person).name+' tell the story');
-    }else if(view==='me'){
-      if(meChoice==='other'){
-        task.innerHTML=`<div class="other-feeling"><div class="other-guide" id="other-guide" tabindex="-1"><img src="assets/nook.png" width="68" height="82" alt="Nook"><label for="other-feeling">${keyboardCue}<span>Type</span></label></div><h2 id="other-question" class="other-question">How do you feel?</h2><textarea id="other-feeling" data-focus="other-feeling" aria-labelledby="other-question" maxlength="160" rows="2" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">${escape(otherText)}</textarea><div class="type-to-say" aria-hidden="true"><svg viewBox="0 0 32 36"><path d="M16 3V28M5 18L16 30L27 18" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>${button('say-other',sayCue+'<span>Say it</span>','','say-other'+(otherText.trim()?' ready':''))}</div>`;
-        const input=$('other-feeling');
-        input.addEventListener('input',()=>{LP.audio.stopSpeech();otherText=input.value.slice(0,160);updateOtherCue();});
-        input.addEventListener('click',speakMe);
-      }else if(meChoice){task.innerHTML=`<div class="me-message">${button('hear-me',(F.FEELINGS.includes(meChoice)?A.svg('sam',meChoice,{decorative:true}):'')+`<span class="word">${word(meChoice)}</span>`,'','target'+(F.FEELINGS.includes(meChoice)?'':' text-only'))}</div>`;task.querySelector('[data-action="hear-me"]').setAttribute('aria-label','Hear '+F.WORDS[meChoice]);}
-      else task.innerHTML=`<div class="me-options">${F.FEELINGS.map(f=>button('feeling',A.svg('sam',f,{decorative:true})+`<span>${word(f)}</span>`,f,'me-choice')).join('')}</div><div class="me-actions">${button('feeling',word('other'),'other')}${button('feeling',word('unsure'),'unsure')}</div>`;
-    }else if(view==='menu'){
-      task.innerHTML='';$('choose-puzzle').hidden=!['match','people'].includes(returnView);
-      $('choose-puzzle').textContent=returnView==='people'?'Choose a story':'Choose a feeling';
-      $('hear-again').hidden=!['match','people','me'].includes(returnView);
-      const playerButton=menu.querySelector('[data-player]');playerButton.textContent=LP.player.name; // Keep the existing player chooser; no emoji in this activity's menu.
-    }else if(view==='picker'){
-      task.innerHTML=`<div class="picker-buttons">${saved.mode==='people'?F.STORIES.map((s,i)=>button('story',escape(s.context),String(i),'full-width')).join(''):button('filter','All feelings','all','full-width')+F.FEELINGS.map(f=>button('filter',word(f),f)).join('')}</div>`;
-    }else if(view==='settings'){
-      task.innerHTML=`<form class="settings-form" id="feelings-settings"><label>Letters<select name="case"><option value="upper">UPPERCASE</option><option value="lower">lowercase</option></select></label><label class="check-label"><input type="checkbox" name="soft"> Softer colours</label><div class="task-actions"><button class="primary" type="submit">Save settings</button></div></form>`;
-      const form=$('feelings-settings');form.elements.case.value=LP.prefs.case;form.elements.soft.checked=LP.prefs.soft;
-      form.onsubmit=e=>{e.preventDefault();const ok=LP.savePrefs({...LP.prefs,case:form.elements.case.value,soft:form.elements.soft.checked});view='menu';render('open-settings');if(!ok)LP.status('These settings work for this visit. This browser could not save them.');};
-    }else if(view==='about'){
-      task.innerHTML=`<article class="grown-ups"><h2>Listen, look and explore</h2><p>People tells a short illustrated story and names the character’s feeling immediately. There is no hidden answer to guess. Hear replays both the story and the feeling; reading is not required when sound is on. These are individual stories, not rules about how someone must feel in that situation.</p><p>These are examples of expressions. People can look different while feeling the same way, or look alike while feeling differently. Matching a drawing does not tell us what a real person feels.</p><p>Every feeling is welcome, including sad and angry. None has to turn into happy before continuing. These feeling words are only a beginning; someone can feel more than one thing.</p><h2>Join in gently</h2><p>If your child wants, model your own feeling using words, signs or their usual AAC. Say what is true for you. Copying a pose is optional; watching or leaving is equally welcome. No eye contact, speech or movement is required.</p><p>Use Next to skip a picture, or Menu to practise one chosen word. Never deliberately upset someone to practise an emotion. This game supports exploration; it is not a clinical assessment or a replacement for an AAC device.</p><h2>Me is private to this screen</h2><p>Me choices and typed feelings are not graded, saved or sent to a server. Something else reads typed text only through an explicitly offline English device voice, so it can sound different from Nook. If none is available, the text remains visible without sending it elsewhere. The same small set of feeling-name clips loads before any choice, even with sound off, so hearing a particular word does not reveal the selection in a server request. Leaving Me clears it. A shared device can still show the current screen to someone nearby.</p><p>Player names and practice positions stay in this browser. Local profiles are not password-protected accounts. Clearing browser data removes them.</p><h2>Sound and pictures</h2><p>Sound starts on. Tap Sound to turn it off. The Sound button stays at the top of the page. Built-in speech uses the same bundled Nook voice clips on every device, made once with Google Gemini text-to-speech before publication. No microphone, camera, online speech service, advertising or analytics. Original human illustrations were created for Nook's Garden.</p><a href="feelings-content.html">All feelings, pictures and story words</a></article>`;
+  function save() { saved.mode = activity; LP.storage.set('feelings-v1', F.normalise(saved)); }
+
+  // ---- the Done line: a 6 px line inside Done that follows actual playback, and only that ----
+  // A clip can start before Done is on screen (the performance speaks from the tap), so the line keeps the clip's start
+  // time and is painted from it whenever Done shows.
+  const now = () => (window.performance && typeof window.performance.now === 'function' ? window.performance.now() : Date.now());
+  const bar = {
+    el: null, run: null,
+    off() { this.run = null; const el = this.el; if (!el) return; el.classList.remove('on'); el.style.transition = 'none'; el.style.transform = 'scaleX(0)'; },
+    // parts: the texts being played (their clip lengths split the line), i: the clip that has just started playing.
+    start(parts, i, seconds) {
+      if (LP.audio.muted) return;
+      const lib = (window.LPVoiceLibrary && window.LPVoiceLibrary.clips) || {};
+      const secs = parts.map((p, k) => (k === i && seconds) || (lib[clipKey(p)] && lib[clipKey(p)].seconds) || 1);
+      const total = secs.reduce((a, b) => a + b, 0), from = secs.slice(0, i).reduce((a, b) => a + b, 0) / total;
+      this.run = { from, to: from + secs[i] / total, seconds: secs[i], t0: now() };
+      this.paint();
+    },
+    paint() {
+      const el = this.el, r = this.run;
+      if (!el || !r || LP.audio.muted || el.closest('[hidden]')) return;
+      const k = Math.max(0, Math.min(1, (now() - r.t0) / (r.seconds * 1000))), at = r.from + (r.to - r.from) * k;
+      el.style.transition = 'none'; el.style.transform = 'scaleX(' + at.toFixed(4) + ')';
+      void el.getBoundingClientRect();
+      el.classList.add('on');
+      el.style.transition = 'transform ' + Math.max(0, r.seconds * (1 - k)).toFixed(3) + 's linear';
+      el.style.transform = 'scaleX(' + r.to.toFixed(4) + ')';
     }
-    task.querySelectorAll('.word').forEach(label=>label.classList.toggle('long-word',label.textContent.length>11));
-    if(view!=='match')task.className='';
-    const key=focus||previous;const node=key&&(document.querySelector(`[data-focus="${key}"]`)||$(key));
-    if(node&&!node.hidden&&!node.closest('[hidden]'))node.focus({preventScroll:true});
+  };
+
+  // ---- the frame: pill, bubble, actions ----
+  function pill() {
+    const b = $('support');
+    b.textContent = F.ACTIVITY_NAMES[activity] + (activity === 'which' && saved.level === 2 ? ' 2' : '');
+    b.setAttribute('aria-label', 'Choose a Feelings activity. Now: ' + F.ACTIVITY_NAMES[activity]);
+    b.hidden = view === 'perform';
   }
-  function enter(mode){LP.audio.stopSpeech();clearMe();view=mode;saved.mode=mode;save();if(mode==='me')prepareMe();render();$('activity').focus({preventScroll:true});if(mode==='people')speak(F.storyPrompt(F.STORIES[saved.story]));}
-  function home(){LP.audio.stopSpeech();clearMe();view='home';render();$('activity').focus({preventScroll:true});}
-  function nextRound(){LP.audio.stopSpeech();if(view==='match'){saved.index=(saved.index+1)%1000001;resetMatch();}else if(view==='people'){saved.story=(saved.story+1)%F.STORIES.length;}save();render('next-');if(view==='people')speak(F.storyPrompt(F.STORIES[saved.story]));}
-  task.addEventListener('click',event=>{
-    const b=event.target.closest('button[data-action]');if(!b)return;const action=b.dataset.action,value=b.dataset.value;
-    if(action==='mode')enter(value);
-    else if(action==='next')nextRound();
-    else if(action==='hear-match')speak(F.WORDS[round.feeling]);
-    else if(action==='match'){
-      tapped=value;matched=value===round.feeling;render(matched?'pose-':b.dataset.focus);
-      speak(matched?F.matchSuccess(round).speech:[F.WORDS[value],F.PROMPTS.different]);
-    }else if(action==='pose'){LP.audio.stopSpeech();pose=true;render('next-');speak(F.PROMPTS.pose);}
-    else if(action==='hear-story')speak(F.storyPrompt(F.STORIES[saved.story]));
-    else if(action==='feeling'){meChoice=value;render(value==='other'?'other-guide':'hear-me-');if(value==='other')guideOther();else speakMe();}
-    else if(action==='hear-me')speakMe();
-    else if(action==='say-other'){
-      if(!otherText.trim()){$('other-feeling').focus();guideOther();}
-      else if(LP.audio.muted){$('page-sound').focus();$('status').textContent='Sound is off.';}
-      else speakMe();
-    }
-    else if(action==='filter'){saved.filter=value;saved.index=0;resetMatch();enter('match');}
-    else if(action==='story'){saved.story=Number(value);enter('people');}
-  });
-  $('back').onclick=()=>{
+  // Two fixed slots: Help (or Hear, or small Again) on the left, Next or Done on the right.
+  function actions(kind) {
+    const show = { help: kind === 'help', hear: kind === 'story', repeat: kind === 'again', next: kind === 'story' || kind === 'again', done: kind === 'done' };
+    for (const id of Object.keys(show)) $(id).hidden = !show[id];
+    page.classList.toggle('no-actions', kind === 'none');
+    if (kind === 'done') bar.paint(); else bar.off();
+  }
+  function layout(v) {
+    view = v;
+    page.dataset.view = v;
+    page.classList.toggle('solo', v === 'perform' || v === 'which' || v === 'friends');
+    task.dataset.view = v;
+    pill();
+  }
+
+  // ---- Nook feels...: the board ----
+  function card(f, me) {
+    const done = !me && ticks.has(f);
+    return '<button type="button" class="feel' + (me ? ' me-feel' : '') + (done ? ' done' : '') + (done && fresh === f ? ' fresh' : '') + '" data-feel="' + f + '" aria-label="' + esc(F.WORDS[f] + (done ? ', seen' : '')) + '">' +
+      N.face(f, { decorative: true, className: 'feel-face', ring: me ? true : undefined }) + '<span class="feel-word">' + esc(word(f)) + '</span>' + (done ? '<span class="tick" aria-hidden="true">' + (I.tick || '') + '</span>' : '') + '</button>';
+  }
+  function boardView(arriving) {
+    layout('board');
+    const all = ticks.size === F.FEELINGS.length;
+    talk.say(all ? F.LINES.all : F.LINES.board, [all ? F.LINES.all : F.LINES.board]);
+    $('activity-title').textContent = 'Nook feels…';
+    $('instruction').textContent = 'Tap a feeling. Nook shows it, says it, and comes back to the board.';
+    task.innerHTML = '<div class="board' + (arriving ? ' arriving' : '') + '" role="group" aria-label="Nook’s feelings">' + F.BOARD.map(f => card(f, false)).join('') + '</div>';
+    actions('none');
+    nook.rest();
+  }
+  function lock() { locked = true; window.clearTimeout(lockTimer); lockTimer = window.setTimeout(() => { locked = false; }, T.lock); }
+
+  // ---- the performance (item 56) ----
+  const live = g => !!perf && perf.g === g;
+  function later(fn, ms) {
+    const g = perf.g;
+    const id = window.setTimeout(() => { if (perf) perf.timers.delete(id); if (live(g)) fn(); }, ms);
+    perf.timers.add(id);
+    return id;
+  }
+  function clearTimers() { if (!perf) return; for (const id of perf.timers) window.clearTimeout(id); perf.timers.clear(); perf.hold = 0; }
+  const bigSvg = () => task.querySelector('.perform svg.nook');
+  const parts = f => [F.WORDS[f]].concat(LP.audio.has([F.nookFeels(f)]) ? [F.nookFeels(f)] : []);
+  function frameRect() {
+    const pos = $('nook-pos');
+    if (!pos || FR.quiet() || !pos.getBoundingClientRect) return null;
+    const r = pos.getBoundingClientRect();
+    return r.width > 0 && r.height > 0 ? { left: r.left, bottom: r.bottom, width: r.width, height: r.height } : null;
+  }
+  // From the small frame Nook to the big one (or back): the offset of the bottom centres and the size ratio.
+  function travel(pos, from) {
+    const r = pos.getBoundingClientRect();
+    if (!from || !r.width || !r.height) return null;
+    return 'translate(' + Math.round(from.left + from.width / 2 - (r.left + r.width / 2)) + 'px,' + Math.round(from.bottom - r.bottom) + 'px) scale(' + (from.height / r.height).toFixed(3) + ')';
+  }
+  function animate(el, frames, ms, easing) {
+    if (!el || typeof el.animate !== 'function') return null;
+    try { return el.animate(frames, { duration: ms, easing, fill: 'both' }); } catch (_) { return null; }
+  }
+  // Speech for the performance: the word (and the line), or a replay of the word. The hold starts when the last clip
+  // has actually ended; a failure leaves Nook as it is, waiting for Done.
+  function voice(list) {
+    const g = perf.g;
+    window.clearTimeout(perf.hold); perf.timers.delete(perf.hold); perf.hold = 0;
+    perf.held = false; perf.speaking = true; perf.parts = list;
+    bar.off();
+    LP.audio.speak(list, { auto: true, on: {
+      start: (i, n, clip) => { if (live(g)) bar.start(list, i, clip && clip.seconds); },
+      end: () => { if (!live(g)) return; perf.speaking = false; perf.needDone = false; bar.off(); perf.hold = later(() => { perf.held = true; step(); }, T.hold); },
+      fail: () => { if (!live(g)) return; perf.speaking = false; perf.needDone = true; bar.off(); LP.status('Nook feels ' + perf.feeling + '. Tap Done to go back.'); }
+    } });
+  }
+  function start(f) {
+    if (locked || !F.FEELINGS.includes(f)) return false;
+    cancel();
+    const g = ++generation;
+    perf = { g, feeling: f, phase: 'enter', shown: false, speaking: false, held: false, needDone: false, breathed: false, timers: new Set(), hold: 0, from: frameRect(), parts: [] };
+    // The speech starts from the tap itself (iPad audio permission): the word, then the line.
+    voice(parts(f));
+    LP.status('Nook feels ' + f + '.');
+    const board = task.querySelector('.board');
+    if (board) board.classList.add('fading');
+    later(enter, FR.quiet() ? 0 : T.fade);
+    return true;
+  }
+  function performView(f) {
+    layout('perform');
+    $('activity-title').textContent = 'Nook feels ' + f;
+    $('instruction').textContent = 'Nook shows ' + f + '. Tap Nook to hear it again. Done goes back to the board.';
+    task.innerHTML = '<div class="perform" data-feeling="' + f + '"><button type="button" class="perform-nook" aria-label="' + esc('Nook feels ' + f + '. Hear it again') + '"><span class="perform-pos"><span class="perform-move">' +
+      N.svg('rest', { decorative: true }) + '</span></span></button><div class="perform-words"><p class="perform-word">' + esc(word(f)) + '</p><p class="perform-line">' + esc(F.nookFeels(f)) +
+      '</p><p class="perform-caption" aria-hidden="true">' + esc(F.LINES.breath) + '</p></div></div>';
+    actions('done');
+  }
+  function enter() {
+    perf.phase = 'enter';
+    performView(perf.feeling);
+    const pos = task.querySelector('.perform-pos'), q = FR.quiet(), from = q ? null : travel(pos, perf.from);
+    if (from) animate(pos, [{ transform: from }, { transform: 'none' }], T.grow, 'cubic-bezier(.2,.7,.3,1)');
+    else pos.classList.add('nook-fade-in');
+    later(perform, from ? T.grow : 0);
+  }
+  function perform() {
+    perf.phase = 'perform';
+    N.change(bigSvg(), perf.feeling);
+    if (!FR.quiet()) later(() => { const m = task.querySelector('.perform-move'); if (m) m.className = 'perform-move g-' + perf.feeling; }, 120);
+    later(() => { perf.shown = true; step(); }, FR.quiet() ? T.quiet : T.gesture);
+  }
+  function step() {
+    if (!perf || perf.phase === 'enter' || perf.phase === 'return' || perf.phase === 'calming') return;
+    if (!perf.shown || perf.speaking || perf.needDone || !perf.held) return;
+    if (F.DIFFICULT.includes(perf.feeling) && !perf.breathed) { if (perf.phase !== 'settle') settle(); return; }
+    if (perf.phase === 'settle') return;
+    back();
+  }
+  // One visible breath back to calm, Nook's own, captioned while it happens. Softer and reduced motion: the caption and
+  // the change to calm, without the movement.
+  function settle() {
+    perf.phase = 'settle';
+    const view = task.querySelector('.perform'), move = task.querySelector('.perform-move');
+    view.classList.add('breathing');
+    LP.status(F.LINES.breath);
+    if (!perf.speaking && !LP.audio.muted && LP.audio.has([F.LINES.breath])) LP.audio.speak([F.LINES.breath], { auto: true });
+    if (move && !FR.quiet()) move.className = 'perform-move breath from-' + perf.feeling;
+    later(() => N.change(bigSvg(), 'calm'), T.breathIn);
+    later(() => { view.classList.remove('breathing'); perf.breathed = true; perf.phase = 'settled'; step(); }, T.breathIn + T.breathOut);
+  }
+  // Done: speech and every pending step stop; a difficult feeling takes a short return to calm first (600 ms).
+  function done() {
+    if (!perf || perf.phase === 'return' || perf.phase === 'calming') return;
+    clearTimers();
     LP.audio.stopSpeech();
-    if(view==='home'){save();location.href='garden.html';}
-    else if(view==='menu'){view=returnView;render('menu-open');}
-    else if(['picker','settings','about'].includes(view)){view='menu';render();}
-    else if(view==='me'&&meChoice){const old=meChoice;clearMe();render('feeling-'+old);}
-    else if(view==='match'&&pose){pose=false;render('pose-');}
-    else home();
+    bar.off();
+    perf.speaking = false; perf.needDone = false;
+    const view = task.querySelector('.perform');
+    if (view) view.classList.remove('breathing');
+    if (F.DIFFICULT.includes(perf.feeling) && !perf.breathed && bigSvg()) {
+      perf.phase = 'calming';
+      const move = task.querySelector('.perform-move');
+      if (move) move.className = 'perform-move';
+      N.change(bigSvg(), 'calm');
+      later(back, T.calm);
+    } else back();
+  }
+  function back() {
+    perf.phase = 'return';
+    bar.off();
+    const pos = task.querySelector('.perform-pos'), q = FR.quiet(), to = pos && !q ? travel(pos, perf.from) : null;
+    const move = task.querySelector('.perform-move');
+    if (move) move.className = 'perform-move';
+    if (to) animate(pos, [{ transform: 'none' }, { transform: to }], T.shrink, 'cubic-bezier(.45,0,.55,1)');
+    else if (pos) pos.classList.add('perform-out');
+    later(() => {
+      const f = perf.feeling;
+      perf = null;
+      ticks.add(f); fresh = f;
+      boardView(true); fresh = null;
+      lock();
+      const button = task.querySelector('[data-feel="' + f + '"]');
+      if (button) button.focus({ preventScroll: true });
+      if (ticks.size === F.FEELINGS.length) { LP.status(F.LINES.all); if (!LP.audio.muted && LP.audio.has([F.LINES.all])) LP.audio.speak([F.LINES.all], { auto: true }); }
+    }, to ? T.shrink : T.quiet);
+  }
+  function replay() {
+    if (!perf || perf.phase === 'enter' || perf.phase === 'return' || perf.phase === 'calming') return;
+    voice([F.WORDS[perf.feeling]]);
+  }
+  // Cancel the whole sequence (a new card, the shelf, a player change, pagehide, bfcache): no late step can finish it.
+  function cancel() {
+    if (!perf) return false;
+    clearTimers();
+    perf = null;
+    generation++;
+    LP.audio.stopSpeech();
+    bar.off();
+    return true;
+  }
+
+  // ---- Which feeling? ----
+  function newWhich() { which = { round: F.whichRound(saved.index, saved.seed, saved.level), hint: 0, done: false, feedback: '', retry: '' }; }
+  const success = f => f === 'happy' ? 'proud' : f === 'proud' ? 'happy' : (which.round.index % 2 ? 'proud' : 'happy');
+  function whichAnswers() {
+    const r = which.round;
+    return '<div class="choices which-words' + (which.hint >= 1 && !which.done ? ' pictured' : '') + '">' + r.choices.map(f => {
+      const right = f === r.feeling, state = which.done ? (right ? ' chosen' : ' faded') : (which.hint >= 2 && right ? ' hint' : '');
+      return '<button type="button" class="answer word' + state + '" data-which="' + f + '" aria-label="' + esc(F.WORDS[f]) + '"' + (which.done ? ' disabled' : '') + '>' +
+        (which.hint >= 1 && !which.done ? '<span class="pic" aria-hidden="true">' + N.face(f, { decorative: true }) + '</span>' : '') + '<span class="word">' + esc(word(f)) + '</span></button>';
+    }).join('') + '</div>';
+  }
+  function whichLine() {
+    if (which.done) { const s = F.whichSuccess(which.round); cardTalk.say(s.text, s.speech, true); return; }
+    if (which.feedback === 'retry') { cardTalk.say(which.retry, [which.retry]); return; }
+    cardTalk.say(F.LINES.which, [F.LINES.which]);
+  }
+  function whichView() {
+    layout('which');
+    if (!which) newWhich();
+    const r = which.round, shown = which.done ? success(r.feeling) : r.feeling;
+    $('activity-title').textContent = 'How does Nook feel?';
+    $('instruction').textContent = 'Look at Nook, then choose the word for the feeling.';
+    task.innerHTML = '<div class="objects which-objects"><button type="button" class="nf-bubble card-bubble" id="which-bubble"><span class="line"></span><span class="hear" aria-hidden="true"></span><span class="sr-only"> Hear it again</span></button>' +
+      '<button type="button" class="which-nook" aria-label="Nook. Hear the question again"><span class="which-pos">' + N.svg(shown, { decorative: true }) + '</span></button></div><div class="answers">' + whichAnswers() + '</div>';
+    cardTalk = FR.bubble($('which-bubble'), $('which-bubble').querySelector('.line'));
+    whichLine();
+    actions(which.done ? 'again' : 'help');
+  }
+  function chooseWhich(f) {
+    if (!which || which.done) return;
+    if (f !== which.round.feeling) {
+      const line = L.retryLine(lastRetry);
+      lastRetry = line; which.feedback = 'retry'; which.retry = line;
+      whichLine();
+      LP.status('Look at Nook again. Which word fits?');
+      LP.audio.speak(line, { auto: true });
+      return;
+    }
+    which.done = true; which.feedback = '';
+    task.querySelector('.answers').innerHTML = whichAnswers();
+    whichLine();
+    actions('again');
+    const svg = task.querySelector('.which-nook svg.nook'), pos = task.querySelector('.which-pos');
+    N.change(svg, success(which.round.feeling));
+    if (!FR.quiet() && pos) window.setTimeout(() => { pos.classList.remove('nook-hop'); void pos.offsetWidth; pos.classList.add('nook-hop'); }, 320);
+    const s = F.whichSuccess(which.round);
+    LP.status(s.text);
+    $('next').focus({ preventScroll: true });
+    LP.audio.speak(s.speech, { auto: true });
+  }
+  function whichHelp() {
+    if (!which || which.done) return;
+    which.hint = Math.min(2, which.hint + 1);
+    task.querySelector('.answers').innerHTML = whichAnswers();
+    LP.status(which.hint === 1 ? 'Each word has Nook’s face beside it now.' : 'The word that fits is outlined.');
+  }
+
+  // ---- Friends: the twenty stories, as in round 3 ----
+  function friendsView() {
+    layout('friends');
+    const story = F.STORIES[saved.story];
+    $('activity-title').textContent = 'Friends';
+    $('instruction').textContent = story.context;
+    task.innerHTML = '<div class="objects friends-stage">' + A.scene(story) + '<p class="people-context">' + esc(story.context) + '</p><p class="story-feeling"><span>I feel</span> <strong>' + esc(word(story.reportedFeeling)) + '</strong></p>' +
+      '<p class="sound-note"' + (LP.audio.muted ? '' : ' hidden') + '>Sound is off</p></div>';
+    actions('story');
+    $('hear').setAttribute('aria-label', 'Hear ' + F.person(story.person).name + ' tell the story');
+  }
+  function tellStory() { LP.audio.speak(F.storyPrompt(F.STORIES[saved.story]), { auto: true }); }
+
+  // ---- Me: private to this screen (item 57) ----
+  function prepareMe() { if (!localVoice) localVoice = LP.audio.prepareLocalClips(F.ME_BUNDLE); }
+  function clearMe() { meChoice = null; otherText = ''; said = false; }
+  // The bubble's line for a choice is heard from the private bundle only: the acknowledgement once it is rendered,
+  // the bare name until then. Something else is read by an offline device voice. Never a request chosen by the answer.
+  function speakMe() {
+    if (!meChoice || LP.audio.muted) return false;
+    if (meChoice === 'other') { if (otherText.trim()) { LP.audio.speakPrivate(otherText.trim()); return true; } guideOther(); return true; }
+    if (!localVoice) return false;
+    const on = { start: (i, n, clip) => bar.start([F.meLine(meChoice)], 0, clip && clip.seconds), end: () => bar.off(), fail: () => bar.off() };
+    if (localVoice.speak(F.meLine(meChoice), on) || localVoice.speak(F.WORDS[meChoice], on)) { LP.status(''); return true; }
+    LP.status('Sound is not ready. Tap the picture again.');
+    return false;
+  }
+  function guideOther() { if (!LP.audio.muted) LP.audio.speakPrivate(F.LINES.type); }
+  function meView(focus) {
+    const choice = meChoice;
+    layout(choice === 'other' ? 'me-other' : choice ? 'me-chosen' : 'me');
+    nook.rest();
+    $('activity-title').textContent = 'Me';
+    LP.status('');
+    if (!choice) {
+      talk.say(F.LINES.me, [F.LINES.me]);
+      $('instruction').textContent = 'Choose a feeling, Something else or Not sure. Nothing is saved.';
+      task.innerHTML = '<div class="board me-board" role="group" aria-label="How do you feel?">' + F.BOARD.map(f => card(f, true)).join('') + '</div>' +
+        '<div class="me-extra"><button type="button" class="me-more" data-me="other">' + esc(word('other')) + '</button><button type="button" class="me-more" data-me="unsure">' + esc(word('unsure')) + '</button></div>';
+      actions('none');
+    } else if (choice === 'other') {
+      talk.say(said ? F.ME_REPLIES.other : F.LINES.type, [], false, speakMe);
+      $('instruction').textContent = 'Type your words, then tap the speaker. Nothing is saved.';
+      task.innerHTML = '<div class="objects other-feeling"><h3 class="other-label" id="other-guide" tabindex="-1">' + esc(F.LINES.me) + '</h3><textarea id="other-feeling" aria-labelledby="other-guide" maxlength="160" rows="2" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off">' + esc(otherText) + '</textarea>' +
+        '<button type="button" class="say-other' + (otherText.trim() ? ' ready' : '') + '" id="say-other">' + SPEAKER + '<span>Say it</span></button></div>';
+      const input = $('other-feeling');
+      input.addEventListener('input', () => { LP.audio.stopSpeech(); otherText = input.value.slice(0, 160); $('say-other').classList.toggle('ready', !!otherText.trim()); });
+      actions('done');
+    } else {
+      talk.say(pretty(F.meLine(choice)), [], false, speakMe);
+      $('instruction').textContent = 'Tap the card to hear it again. Done goes back. Nothing is saved.';
+      const face = F.FEELINGS.includes(choice) ? N.face(choice, { decorative: true, ring: true, className: 'me-face' }) : '';
+      task.innerHTML = '<div class="objects me-chosen"><button type="button" class="me-card' + (face ? '' : ' text-only') + '" id="hear-me" aria-label="' + esc('Hear ' + F.WORDS[choice]) + '">' + face + '<span class="me-word">' + esc(word(choice)) + '</span></button><p class="me-line">Show this to a grown-up if you like.</p></div>';
+      actions('done');
+    }
+    if (focus) { const el = $(focus) || task.querySelector('[data-feel="' + focus + '"],[data-me="' + focus + '"]'); if (el) el.focus({ preventScroll: true }); }
+  }
+  function chooseMe(value) {
+    meChoice = value; said = false;
+    // Something else: focus the question, not the box, so the device keyboard opens only when the child taps it.
+    meView(value === 'other' ? 'other-guide' : 'hear-me');
+    if (value === 'other') guideOther(); else speakMe();
+  }
+  function sayOther() {
+    if (!otherText.trim()) { $('other-feeling').focus(); guideOther(); return; }
+    if (LP.audio.muted) { LP.status(LP.soundOff ? 'Sound is off. A grown-up can turn it on in Grown-ups.' : 'Sound is off.'); return; }
+    said = true;
+    talk.say(F.ME_REPLIES.other, [], false, speakMe);
+    speakMe();
+  }
+  function leaveMe() { const old = meChoice; LP.audio.stopSpeech(); clearMe(); meView(old); }
+
+  // ---- activities and the chooser ----
+  function render(focus) {
+    if (activity === 'board') boardView();
+    else if (activity === 'which') whichView();
+    else if (activity === 'friends') friendsView();
+    else meView(focus);
+  }
+  function enterActivity(next, options) {
+    options = options || {};
+    cancel();
+    LP.audio.stopSpeech();
+    if (activity === 'me' || next === 'me') clearMe();
+    activity = F.ACTIVITIES.includes(next) ? next : 'board';
+    if (activity === 'board') ticks = new Set();
+    if (activity === 'which' && (options.fresh || !which)) newWhich();
+    save();
+    render();
+    if (activity === 'friends' && options.speak !== false) tellStory();
+    focusTask();
+  }
+  function focusTask() {
+    const target = task.querySelector('button:not(:disabled),textarea');
+    if (target) target.focus({ preventScroll: true });
+  }
+  function chooser() {
+    const rows = [
+      ['board', 'Nook feels…', 'Nook shows each feeling. Tap a face.'],
+      ['which', 'Which feeling?', 'How does Nook feel? Three words to choose from.'],
+      ['friends', 'Friends', 'Twenty short stories. Hear and Next.'],
+      ['me', 'Me', 'Say how you feel. Nothing is saved.']
+    ];
+    const el = LP.openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Feelings</h2><button data-close aria-label="Close the Feelings chooser">×</button></div><p>Everything is open. Choose any activity.</p><div class="feel-activities" role="group" aria-label="Activities"></div>', focusTask);
+    const box = el.querySelector('.feel-activities');
+    for (const [id, name, text] of rows) {
+      const row = document.createElement('div');
+      row.className = 'feel-activity';
+      const b = document.createElement('button');
+      b.type = 'button'; b.dataset.activity = id;
+      b.setAttribute('aria-pressed', String(activity === id));
+      b.innerHTML = '<b>' + esc(name) + '</b><span>' + esc(text) + '</span>';
+      b.onclick = () => { LP.closeModal(); enterActivity(id, { fresh: id === 'which' }); };
+      row.appendChild(b);
+      if (id === 'which') for (const level of [1, 2]) {
+        const lv = document.createElement('button');
+        lv.type = 'button'; lv.className = 'feel-level'; lv.dataset.level = String(level);
+        lv.setAttribute('aria-pressed', String(activity === 'which' && saved.level === level));
+        lv.textContent = level === 1 ? 'Level 1: no look-alikes' : 'Level 2: all ten';
+        lv.onclick = () => { saved.level = level; saved.index = 0; LP.closeModal(); enterActivity('which', { fresh: true }); };
+        row.appendChild(lv);
+      }
+      if (id === 'friends') {
+        const pick = document.createElement('button');
+        pick.type = 'button'; pick.className = 'feel-level'; pick.dataset.stories = '1';
+        pick.textContent = 'Choose a story';
+        pick.onclick = stories;
+        row.appendChild(pick);
+      }
+      box.appendChild(row);
+    }
+  }
+  function stories() {
+    const el = LP.openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Choose a story</h2><button data-close aria-label="Close the story chooser">×</button></div><div class="feel-stories" role="group" aria-label="Stories"></div>', focusTask);
+    const box = el.querySelector('.feel-stories');
+    F.STORIES.forEach((story, i) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.dataset.story = String(i);
+      b.setAttribute('aria-pressed', String(activity === 'friends' && saved.story === i));
+      b.textContent = story.context;
+      b.onclick = () => { saved.story = i; LP.closeModal(); enterActivity('friends'); };
+      box.appendChild(b);
+    });
+  }
+
+  // ---- events ----
+  task.addEventListener('click', e => {
+    const feel = e.target.closest('[data-feel]');
+    if (feel) { if (activity === 'board') start(feel.dataset.feel); else if (activity === 'me') chooseMe(feel.dataset.feel); return; }
+    const more = e.target.closest('[data-me]');
+    if (more) { chooseMe(more.dataset.me); return; }
+    if (e.target.closest('.perform-nook')) { replay(); return; }
+    // A tap on the big Nook in Which feeling? hears the bubble's line again: a small calm response, never a hint.
+    if (e.target.closest('.which-nook')) { if (cardTalk) cardTalk.hear(); return; }
+    const w = e.target.closest('[data-which]');
+    if (w) { chooseWhich(w.dataset.which); return; }
+    if (e.target.closest('#hear-me')) { speakMe(); return; }
+    if (e.target.closest('#say-other')) { sayOther(); return; }
+    // A tap in the box reads the typed words again, as in round 3.
+    if (e.target.closest('#other-feeling') && otherText.trim()) speakMe();
+  });
+  $('help').addEventListener('click', whichHelp);
+  $('hear').addEventListener('click', tellStory);
+  $('next').addEventListener('click', () => {
+    LP.audio.stopSpeech();
+    if (activity === 'which') { saved.index = (saved.index + 1) % 1000001; newWhich(); save(); whichView(); focusTask(); }
+    else if (activity === 'friends') { saved.story = (saved.story + 1) % F.STORIES.length; save(); friendsView(); tellStory(); }
+  });
+  $('repeat').addEventListener('click', () => { if (activity !== 'which') return; LP.audio.stopSpeech(); newWhich(); whichView(); focusTask(); });
+  $('done').addEventListener('click', () => { if (perf) done(); else if (activity === 'me') leaveMe(); });
+  $('support').addEventListener('click', chooser);
+  // In Me, a tap on Nook hears Nook's line again (calm; Nook never names a feeling of its own over the child's).
+  page.addEventListener('click', e => {
+    if (activity !== 'me' || !e.target.closest || !e.target.closest('#nook')) return;
+    e.stopPropagation();
+    if (meChoice) speakMe();
+  }, true);
+  // The shelf, a player change, leaving the page and a bfcache restore cancel the performance and clear Me.
+  document.addEventListener('lp:shelfopened', () => { if (cancel()) boardView(); });
+  document.addEventListener('lp:beforeplayerchange', () => { cancel(); save(); clearMe(); LP.audio.stopSpeech(); LP.status(''); task.innerHTML = ''; });
+  document.addEventListener('lp:playerchanged', () => { restore(); ticks = new Set(); which = null; if (activity === 'which') newWhich(); render(); LP.status('Ready to play. Every activity is open.'); });
+  document.addEventListener('lp:preferences', () => { if (!perf) render(); });
+  document.addEventListener('lp:sound', () => { const note = task.querySelector('.sound-note'); if (note) note.hidden = !LP.audio.muted; if (LP.audio.muted) bar.off(); });
+  // Hiding the page stops the voice (shared.js); a performance that was speaking then waits for Done or a tap.
+  document.addEventListener('visibilitychange', () => { if (document.hidden && perf && perf.speaking) { perf.speaking = false; perf.needDone = true; bar.off(); } });
+  window.addEventListener('pagehide', () => {
+    cancel(); save(); clearMe(); LP.audio.stopSpeech();
+    if (localVoice) { localVoice.dispose(); localVoice = null; }
+    if (activity === 'me') meView();
+    else if (view === 'perform') boardView();
+  });
+  window.addEventListener('pageshow', e => { if (!e.persisted) return; cancel(); clearMe(); prepareMe(); if (activity === 'board') ticks = new Set(); render(); });
+  FR.onResize(() => { if (perf) perf.from = null; });
+
+  // ---- start ----
+  $('help').innerHTML = (I.help || '') + '<span>Help!</span>';
+  $('hear').innerHTML = SPEAKER + '<span>Hear</span>';
+  $('next').innerHTML = 'Next <span aria-hidden="true">→</span>';
+  $('repeat').textContent = '↻ Again';
+  $('done').innerHTML = (I.tick || '') + '<span>Done</span><span class="progress" aria-hidden="true"></span>';
+  bar.el = $('done').querySelector('.progress');
+  const talk = FR.bubble($('bubble'), $('speech'));
+  const nook = FR.nook($('nook'), { feeling: 'rest', bubble: talk });
+  restore();
+  // The private bundle is fetched as Feelings opens, before any choice, whatever the activity.
+  prepareMe();
+  if (activity === 'which') newWhich();
+  S.mountOverlay({ current: 'feelings' });
+  render();
+  if (activity === 'friends') tellStory();
+
+  window.LPFeelings = {
+    get performance() { return perf ? { feeling: perf.feeling, phase: perf.phase, speaking: perf.speaking, held: perf.held, needDone: perf.needDone, breathed: perf.breathed, generation: perf.g } : null; },
+    get ticks() { return Array.from(ticks); },
+    get activity() { return activity; },
+    get view() { return view; },
+    get locked() { return locked; }
   };
-  $('menu-open').onclick=()=>{LP.audio.stopSpeech();returnView=view;view='menu';render();$('page-sound').focus();};
-  $('page-sound').addEventListener('click',()=>{const note=task.querySelector('.sound-note');if(note)note.hidden=!LP.audio.muted;if(view==='me'&&meChoice==='other'&&!otherText.trim())guideOther();});
-  $('hear-again').onclick=()=>{
-    if(returnView==='me'&&meChoice){speakMe();return;}
-    if(returnView==='match')speak(pose?F.PROMPTS.pose:matched?F.matchSuccess(round).speech:F.WORDS[round.feeling]);
-    else if(returnView==='people')speak(F.storyPrompt(F.STORIES[saved.story]));
-    else if(returnView==='me')speak(F.PROMPTS.me);
-  };
-  $('choose-puzzle').onclick=()=>{LP.audio.stopSpeech();view='picker';render();$('activity').focus({preventScroll:true});};
-  $('choose-activity').onclick=home;
-  $('open-settings').onclick=()=>{LP.audio.stopSpeech();view='settings';render();$('activity').focus({preventScroll:true});};
-  $('open-about').onclick=()=>{LP.audio.stopSpeech();view='about';render();$('activity').focus({preventScroll:true});};
-  document.addEventListener('lp:beforeplayerchange',()=>{save();clearMe();LP.audio.stopSpeech();$('status').textContent='';task.innerHTML='';});
-  document.addEventListener('lp:playerchanged',()=>{restore();home();});
-  document.addEventListener('lp:dialogclosed',()=>{if(view==='menu')render();});
-  // Preferences can change via shared controls. Me remains transient throughout.
-  document.addEventListener('lp:preferences',()=>{if(view!=='settings')render();});
-  window.addEventListener('storage',e=>{if(e.key==='lp-active-player'||e.key==='lp-players'||e.key===null)home();});
-  window.addEventListener('pagehide',()=>{save();clearMe();LP.audio.stopSpeech();if(localVoice){localVoice.dispose();localVoice=null;}view='home';returnView='home';render();});
-  window.addEventListener('pageshow',e=>{if(e.persisted){clearMe();view='home';returnView='home';render();}});
-  restore();prepareMe();render();
 })();

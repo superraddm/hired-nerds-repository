@@ -98,12 +98,16 @@
   }
   const clipKey=text=>String(text).trim().toLowerCase().replace(/\s+/g,' ').replace(/[.!?]+$/,'');
   // Bundled clips play one after another from a single reusable player, so a line such as "Yes! Two plus one equals three" needs no clip of its own.
-  function playClips(clips,request){
+  // on (optional, round 4): start(index, count, clip) once each clip is actually playing, end() after the last clip
+  // has ended, fail(reason) once when a clip is blocked or fails. A newer request, mute or a hidden page stops the
+  // chain silently; the caller owns what happens then (the Feelings performance keeps Done available).
+  function playClips(clips,request,on){
     if(!clipPlayer){clipPlayer=new Audio();clipPlayer.preload='none';}
-    clipPlayer.volume=.65;
-    const failed=()=>{if(request===speechRequest&&!muted)status('That voice clip could not play. Tap the word to try again.');};
+    clipPlayer.volume=.65;on=on||{};
+    let reported=false;
+    const failed=()=>{if(request!==speechRequest)return;if(!muted)status('That voice clip could not play. Tap the word to try again.');if(!reported){reported=true;if(on.fail)on.fail('blocked');}};
     let next=0;
-    const play=()=>{if(request!==speechRequest||muted||document.hidden||next>=clips.length)return;clipPlayer.src=clips[next++].file;clipPlayer.onended=play;clipPlayer.onerror=failed;try{const playing=clipPlayer.play();if(playing?.catch)playing.catch(failed);}catch(_){failed();}};
+    const play=()=>{if(request!==speechRequest||muted||document.hidden)return;if(next>=clips.length){if(on.end)on.end();return;}const index=next,clip=clips[next++];clipPlayer.src=clip.file;clipPlayer.onended=play;clipPlayer.onerror=failed;try{const playing=clipPlayer.play();if(playing&&typeof playing.then==='function')playing.then(()=>{if(request===speechRequest&&on.start)on.start(index,clips.length,clip);},failed);else if(on.start)on.start(index,clips.length,clip);}catch(_){failed();}};
     play();
   }
   // Automatic feedback uses bundled clips only and respects mute. The explicit
@@ -111,21 +115,21 @@
   // uses only an installed local voice, avoiding selection-dependent requests.
   async function speak(text,options={}){
     stopSpeech();const request=speechRequest;
-    const auto=options.auto===true;
-    if(auto&&muted)return;
-    if(muted&&soundOff){status('Sound is off. A grown-up can turn it on in Grown-ups.');return;}
+    const auto=options.auto===true,on=options.on||null,fail=reason=>{if(on&&on.fail)on.fail(reason);};
+    if(auto&&muted){fail('muted');return;}
+    if(muted&&soundOff){status('Sound is off. A grown-up can turn it on in Grown-ups.');fail('muted');return;}
     const parts=(Array.isArray(text)?text:[text]).map(clipKey).filter(Boolean);
     const library=window.LPVoiceLibrary?.clips;
     const clips=parts.map(key=>!options.private&&library&&Object.prototype.hasOwnProperty.call(library,key)?library[key]:null);
     if(clips.length&&clips.every(Boolean)){
       // Start from the tap itself for iPad audio permissions; no fetch/decoding queue.
       // One reusable player, no preload, no text or player data in requests.
-      if(document.hidden)return;
+      if(document.hidden){fail('hidden');return;}
       setMuted(false);
-      playClips(clips,request);
+      playClips(clips,request,on);
       return;
     }
-    if(auto&&!options.private)return;
+    if(auto&&!options.private){fail('missing');return;}
     text=Array.isArray(text)?text.join(' '):text;
     // Private familiar words outside the fixed library stay on the device.
     if(!('speechSynthesis' in window)){status('Voice is unavailable on this device. You can keep playing.');return;}
@@ -156,11 +160,12 @@
         const response=await fetch(entry.file,{credentials:'omit',referrerPolicy:'no-referrer'});
         if(!response.ok)return;const blob=await response.blob();
         if(disposed)return;
-        clips.set(key,{file:URL.createObjectURL(blob)});
+        clips.set(key,{file:URL.createObjectURL(blob),seconds:entry.seconds});
       }catch(_){/* Text remains usable; never request a selected clip as fallback. */}
     }));
     return {ready,
-      speak(text){stopSpeech();const clip=clips.get(clipKey(text));if(disposed||muted||document.hidden||!clip)return false;playClips([clip],speechRequest);return true;},
+      speak(text,on){stopSpeech();const clip=clips.get(clipKey(text));if(disposed||muted||document.hidden||!clip)return false;playClips([clip],speechRequest,on);return true;},
+      has(text){return !disposed&&clips.has(clipKey(text));},
       dispose(){disposed=true;stopSpeech();for(const clip of clips.values())URL.revokeObjectURL(clip.file);clips.clear();}
     };
   }

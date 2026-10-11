@@ -12,7 +12,9 @@
    Sides taps the next uncounted side for the child, round the shape from the last one counted (quicker presses wait
    their turn, 700 ms apart); once every side is lit, Help outlines the answer. Success: the chosen answer greens
    with a tick and the others fade,
-   Nook changes to excited or proud with one small hop, the bubble says the success line, and the shape warms. A
+   Nook changes to excited (both mittens up) and holds the shape up: a small copy hops once beside the raised mitten
+   (round 4 item 33, under a second; a fade only for Softer and reduced motion), the bubble says the success line,
+   and the shape warms. A
    wrong answer changes only the bubble (a kind retry line). Rounds come from learning.js (shapeRound); the mode,
    the level, each mode's place and each round's counted sides and Help step are saved per player and restored by
    round id. The level pill ("Shapes 1", "Shapes 2") opens the chooser; the level is shared by both modes. */
@@ -27,10 +29,8 @@
     sides: { text: 'How many sides? Tap each side.', speech: ['How many sides?', 'Tap each side.'] },
     name: { text: 'Which shape is this?', speech: ['Which shape is this?'] }
   };
-  const FEELS = ['excited', 'proud'];
   const esc = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const letters = value => LP.prefs.case === 'lower' ? String(value).toLowerCase() : String(value).toUpperCase();
-  const hash = text => { let h = 0; for (const c of String(text)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
 
   let mode = 'sides', level = 1, indices = { sides: 0, name: 0 }, rounds = {}, celebrated = null, motion = null, lastRetry = '';
   let helpTimer = 0, helpQueue = 0;
@@ -138,7 +138,6 @@
   function actions(done) { $('help').hidden = done; $('repeat').hidden = !done; $('next').hidden = !done; }
   // Nook keeps the expression of a round it has just celebrated; otherwise it shows its resting look.
   function mood() { const r = current(); if (!(r && r.done && r.id === celebrated)) nook.rest(); }
-  const feeling = r => FEELS[hash(r.id) % FEELS.length];
 
   function render() {
     const r = current(), task = $('task');
@@ -233,7 +232,7 @@
     motion = { warm: !wasWarm }; render(); motion = null;
     const line = L.successLine('shapes', r);
     LP.status(line.text);
-    nook.celebrate(feeling(r));
+    nook.celebrate('excited', { hold: icon(r.shape) });
     $('next').focus({ preventScroll: true });
     if (line.speech.length) LP.audio.speak(line.speech, { auto: true });
   }

@@ -44,7 +44,8 @@ master `public/fireworks/little-patterns/assets/nook.png` (560x672). Static mock
 
 ## Tests
 ```
-node --test tools/test-little-patterns.cjs tools/test-little-patterns-ui.cjs tools/test-little-patterns-voice.cjs tools/test-little-patterns-feelings.cjs
+node --test tools/test-little-patterns.cjs tools/test-little-patterns-ui.cjs tools/test-little-patterns-voice.cjs tools/test-little-patterns-feelings.cjs tools/test-little-patterns-nook.cjs tools/test-little-patterns-shapes.cjs
+node --test tools/test-little-patterns-layout.cjs   # headless Chrome, six viewports, about ten minutes
 node tools/stage-little-patterns.cjs --check
 ```
 jsdom is in `.wrangler/test-runtime/node_modules/jsdom`. The UI harness `app(t,page,seed,blocked,soundOn)` evals the

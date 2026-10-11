@@ -1,16 +1,24 @@
 /* The Nook frame's behaviour, shared by every game page and the shelf (round 4). Load after shared.js,
    nook-art.js and icons.js. window.LPFrame:
 
-     bubble(button, line)     Nook's one bubble. say(text, speech, success) shows a line; speech is the list of
-                              bundled clip keys that say it. The bubble is a button: a tap hears the line again,
+     bubble(button, line)     Nook's one bubble. say(text, speech, success, player) shows a line; speech is the list
+                              of bundled clip keys that say it. The bubble is a button: a tap hears the line again,
                               from bundled clips only and only while sound is on. The speaker glyph shows only when
-                              the line has clips. flash() shows a short line for 2.6 s, then the line comes back.
+                              the line has clips. player (optional) replaces the bundled clips with the caller's own
+                              playback (Me plays its private Blob bundle, never a clip chosen by the answer).
+                              flash() shows a short line for 2.6 s, then the line comes back. prop(html) shows a small
+                              picture just under the bubble for under a second (Patterns' bead string).
      nook(button, options)    Places the phase-1 rig in the button's .nook-pos wrapper (placement and hops on the
                               wrapper, breathing on the svg), starts idle blinks, and answers a tap with one of
                               three small calm responses in turn: name the feeling, a wiggle, a blink with hello.
                               Nook rests in the rig's rest state (the hello face, arms down) unless the game names
-                              another. celebrate(feeling) changes the expression and makes one 8 px hop; rest()
+                              another. celebrate(feeling, payoff) changes the expression and makes one 8 px hop; rest()
                               returns to the resting look. Nothing here reacts to a mistake, to leaving or to absence.
+                              The per-game pay-offs (round 4, item 33), each under a second, on success only:
+                              { munch: true } a few chews of the mouth instead of the hop (Take away); { hold: html }
+                              the solved shape hops once beside Nook's raised mitten instead of the hop (Shapes);
+                              { beads: html } the hop plus the bead string under the bubble (Patterns). Softer and
+                              reduced motion keep only short fades: no chewing, no hop.
      fit(task)                Adds fit-1, fit-2, fit-3 to the task until its content fits (games style these).
      onResize(fn)             Runs fn after the frame height follows a viewport change.
 
@@ -42,35 +50,48 @@
 
   // ---- Nook's bubble ----
   function bubble(button, line) {
-    let speech = [], timer = 0, saved = null;
+    let speech = [], timer = 0, saved = null, player = null, propTimer = 0;
     const hear = button.querySelector('.hear');
     if (hear && !hear.firstChild && I.sound) hear.innerHTML = I.sound;
-    function apply(text, parts, success) {
+    function apply(text, parts, success, custom) {
       speech = Array.isArray(parts) ? parts.slice() : [];
-      const playable = speech.length > 0 && LP.audio.has(speech);
+      player = typeof custom === 'function' ? custom : null;
+      const playable = !!player || (speech.length > 0 && LP.audio.has(speech));
       line.textContent = text;
       line.classList.toggle('success', !!success);
       button.classList.toggle('success', !!success);
       button.classList.toggle('silent', !playable);
       for (const el of doc.querySelectorAll('.bubble-inline')) { el.textContent = text; el.classList.toggle('success', !!success); }
     }
-    function say(text, parts, success) { window.clearTimeout(timer); timer = 0; saved = null; apply(text, parts, success); }
+    function say(text, parts, success, custom) { window.clearTimeout(timer); timer = 0; saved = null; apply(text, parts, success, custom); }
     function flash(text, parts, options) {
       options = options || {};
-      if (!saved) saved = { text: line.textContent, speech, success: line.classList.contains('success') };
+      if (!saved) saved = { text: line.textContent, speech, success: line.classList.contains('success'), player };
       window.clearTimeout(timer);
       apply(text, parts, false);
       if (options.speak) play();
-      timer = window.setTimeout(() => { timer = 0; const s = saved; saved = null; if (s) apply(s.text, s.speech, s.success); }, options.ms || 2600);
+      timer = window.setTimeout(() => { timer = 0; const s = saved; saved = null; if (s) apply(s.text, s.speech, s.success, s.player); }, options.ms || 2600);
+    }
+    function clearProp() { window.clearTimeout(propTimer); propTimer = 0; for (const el of button.querySelectorAll('.bubble-prop')) el.remove(); }
+    function prop(html) {
+      clearProp();
+      const el = doc.createElement('span');
+      el.className = 'bubble-prop';
+      el.setAttribute('aria-hidden', 'true');
+      el.innerHTML = html;
+      button.appendChild(el);
+      propTimer = window.setTimeout(clearProp, 950);
+      return el;
     }
     function play() {
+      if (player) return player() !== false;
       if (!speech.length || !LP.audio.has(speech)) return false;
       if (LP.audio.muted) { LP.status(LP.soundOff ? 'Sound is off. A grown-up can turn it on in Grown-ups.' : 'Sound is off.'); return false; }
       LP.audio.speak(speech, { auto: true });
       return true;
     }
     button.addEventListener('click', play);
-    return { say, flash, hear: play, get text() { return line.textContent; }, get speech() { return speech.slice(); } };
+    return { say, flash, prop, clearProp, hear: play, get text() { return line.textContent; }, get speech() { return speech.slice(); } };
   }
 
   // ---- Nook ----
@@ -81,18 +102,54 @@
     pos.innerHTML = N.svg(resting, { decorative: true });
     const svg = pos.querySelector('svg');
     const idle = N.idle(svg);
-    let turn = 0, hopTimer = 0, blinkTimer = 0;
+    let turn = 0, hopTimer = 0, blinkTimer = 0, munchTimer = 0, propTimer = 0;
     const feeling = () => svg.getAttribute('data-feeling') || resting;
     const replay = cls => { pos.classList.remove('nook-hop', 'nook-wiggle'); void pos.offsetWidth; pos.classList.add(cls); };
     pos.addEventListener('animationend', e => { if (e.target === pos) pos.classList.remove('nook-hop', 'nook-wiggle'); });
     function change(f) { if (feeling() !== f) N.change(svg, f); }
-    // Success: the expression changes first, then one small hop once it has settled.
-    function celebrate(f) {
-      window.clearTimeout(hopTimer);
-      change(f);
-      if (!quiet()) hopTimer = window.setTimeout(() => replay('nook-hop'), 320);
+    // Take away's munch: the mouth opens and closes three times (140 ms each), with a 2 px chew on the wrapper.
+    function stopMunch() {
+      window.clearTimeout(munchTimer);
+      if (munchTimer || pos.classList.contains('nook-munch')) { munchTimer = 0; pos.classList.remove('nook-munch'); N.mouth(svg); }
     }
-    function rest(f) { window.clearTimeout(hopTimer); change(f || resting); }
+    function munch() {
+      stopMunch();
+      if (quiet()) return false;
+      let n = 0;
+      pos.classList.add('nook-munch');
+      const chew = () => {
+        if (n >= 6) { munchTimer = 0; pos.classList.remove('nook-munch'); N.mouth(svg); return; }
+        N.mouth(svg, n % 2 === 0 ? 'surprised' : null);
+        n++;
+        munchTimer = window.setTimeout(chew, 140);
+      };
+      chew();
+      return true;
+    }
+    // Shapes: the solved shape appears beside the raised mitten and hops once (a fade only for Softer and reduced
+    // motion), then goes, all within 900 ms.
+    function stopProp() { window.clearTimeout(propTimer); propTimer = 0; for (const el of button.querySelectorAll('.nook-prop')) el.remove(); }
+    function hold(html) {
+      stopProp();
+      const el = doc.createElement('span');
+      el.className = 'nook-prop';
+      el.setAttribute('aria-hidden', 'true');
+      el.innerHTML = html;
+      button.appendChild(el);
+      propTimer = window.setTimeout(stopProp, 900);
+      return el;
+    }
+    // Success: the expression changes first, then one small hop (or the game's pay-off) once it has settled.
+    function celebrate(f, payoff) {
+      payoff = payoff || {};
+      window.clearTimeout(hopTimer); stopMunch(); stopProp();
+      change(f);
+      if (payoff.hold) { hopTimer = window.setTimeout(() => hold(payoff.hold), quiet() ? 0 : 320); return; }
+      if (payoff.munch) { if (!quiet()) hopTimer = window.setTimeout(munch, 320); return; }
+      if (!quiet()) hopTimer = window.setTimeout(() => replay('nook-hop'), 320);
+      if (payoff.beads && options.bubble && options.bubble.prop) options.bubble.prop(payoff.beads);
+    }
+    function rest(f) { window.clearTimeout(hopTimer); stopMunch(); stopProp(); if (options.bubble && options.bubble.clearProp) options.bubble.clearProp(); change(f || resting); }
     function blink() {
       window.clearTimeout(blinkTimer);
       if (quiet()) return;
@@ -111,7 +168,7 @@
       return 'feeling';
     }
     button.addEventListener('click', tap);
-    return { get svg() { return svg; }, get wrapper() { return pos; }, get feeling() { return feeling(); }, celebrate, rest, tap, stop: () => idle.stop() };
+    return { get svg() { return svg; }, get wrapper() { return pos; }, get feeling() { return feeling(); }, celebrate, rest, tap, munch, hold, stop: () => idle.stop() };
   }
 
   // ---- fit the task's content to the card ----

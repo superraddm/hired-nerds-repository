@@ -200,3 +200,18 @@ html.lp-frame img,html.lp-frame svg{-webkit-user-drag:none;-webkit-touch-callout
   .tile,.answer,.nf-actions>button{transition:opacity 120ms linear}
   .tile:active,.answer:active,.nf-actions>button:active{transform:none}
 }
+/* ---- Nook's small pay-offs in the games (round 4, item 33): on success only, each under a second ----
+   .nook-munch   Take away: the mouth opens and closes three times (frame.js swaps it), with a 2 px chew
+   .nook-prop    Shapes: the solved shape beside the raised mitten, one 8 px hop, then gone (900 ms)
+   .bubble-prop  Patterns: the finished bead string just under the bubble, fading in and out (950 ms)
+   Softer and reduced motion: no chew and no hop; the shape and the beads only fade. */
+.nook-munch{animation:lp-munch 840ms linear}
+@keyframes lp-munch{0%,33%,67%,100%{transform:none}17%,50%,83%{transform:translateY(2px)}}
+.nook-prop{position:absolute;right:-14%;top:4%;width:42%;height:35%;pointer-events:none;transform-origin:50% 100%;animation:lp-prop-hop 900ms both}
+.nook-prop svg{display:block;width:100%;height:100%;overflow:visible}
+@keyframes lp-prop-hop{0%{opacity:0;transform:none}12%{opacity:1;transform:none;animation-timing-function:cubic-bezier(.2,.7,.3,1)}40%{transform:translateY(-8px);animation-timing-function:cubic-bezier(.4,0,1,1)}64%{transform:none}86%{opacity:1}100%{opacity:0;transform:none}}
+@keyframes lp-prop-fade{0%{opacity:0}15%{opacity:1}85%{opacity:1}100%{opacity:0}}
+.bubble-prop{position:absolute;left:14px;top:calc(100% + 5px);display:flex;align-items:center;gap:4px;pointer-events:none;animation:lp-prop-fade 950ms linear both}
+.softer .nook-munch{animation:none}
+.softer .nook-prop{animation-name:lp-prop-fade}
+@media (prefers-reduced-motion:reduce){.nook-munch{animation:none}.nook-prop{animation-name:lp-prop-fade}}

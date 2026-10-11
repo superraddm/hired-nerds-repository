@@ -204,7 +204,54 @@
     const choices=matchSide===0?[target.feeling,other]:[other,target.feeling];
     return {...target,expressionId:target.person+'-'+target.feeling,choices,index};
   }
-  function normalise(saved){saved=saved&&typeof saved==='object'?saved:{};const integer=(n,max)=>Number.isSafeInteger(n)&&n>=0&&n<=max?n:0;return {version:1,mode:['match','people','me'].includes(saved.mode)?saved.mode:'match',index:integer(saved.index,1000000),story:integer(saved.story,STORIES.length-1),filter:FEELINGS.includes(saved.filter)?saved.filter:'all',seed:(integer(saved.seed,0xffffffff)||1)};}
+  // ---- Round 4 (phase 4): Feelings with Nook ----
+  // The four activities in the level pill: Nook feels... (the board of ten; Nook performs the one tapped), Which
+  // feeling? (how does Nook feel?), Friends (the twenty stories) and Me (the child's own board).
+  const ACTIVITIES=['board','which','friends','me'];
+  const ACTIVITY_NAMES={board:'Nook feels…',which:'Which feeling?',friends:'Friends',me:'Me'};
+  // The feelings Nook settles from with one visible breath back to calm (items 11 and 65). Happy-side ones skip it.
+  // The board's order: the happy side first, then the difficult side with each look-alike beside its pair.
+  const BOARD=['happy','calm','proud','excited','surprised','sad','worried','disappointed','angry','frustrated'];
+  const DIFFICULT=['sad','angry','worried','frustrated','disappointed'];
+  // Look-alike pairs never offered together at level 1 of Which feeling? (item 10).
+  const LOOKALIKE={sad:'disappointed',disappointed:'sad',angry:'frustrated',frustrated:'angry'};
+  const nookFeels=f=>'Nook feels '+f+'.';
+  const youFeel=f=>'You feel '+f+'. Thank you for telling me.';
+  const ME_REPLIES={other:'Thank you for telling me.',unsure:"That's OK. Not sure is fine."};
+  const meLine=id=>FEELINGS.includes(id)?youFeel(id):ME_REPLIES[id==='other'?'other':'unsure'];
+  const LINES={board:'Nook feels… Tap one.',which:'How does Nook feel?',me:'How do you feel?',breath:'Nook takes a breath.',all:'We said all the feelings.',done:'We did it!',type:'Type your words. Then tap the speaker.'};
+  // Every new line Feelings says, for phase 5 to render and merge into spokenBank(). Until then the text shows and only
+  // the parts that already have clips play (the feeling names, the openers, Not sure and Something else).
+  const FEELINGS_SPEECH=[...FEELINGS.map(nookFeels),...FEELINGS.map(youFeel),LINES.breath,ME_REPLIES.other,ME_REPLIES.unsure,LINES.which,LINES.me,LINES.all,LINES.done];
+  // Me's one fixed private bundle: every name and every acknowledgement, fetched before any choice (item 57).
+  const ME_BUNDLE=[...ME_KEYS.map(id=>WORDS[id]),...ME_KEYS.map(meLine)];
+  const WHICH_OPENERS=['Yes!','Correct!',"That's right!",'You found it!','Well done!'];
+  const mix=n=>{n=Math.imul((n>>>0)^(n>>>16),0x45d9f3b);n=Math.imul(n^(n>>>16),0x45d9f3b);return (n^(n>>>16))>>>0;};
+  // Which feeling?: a deterministic deck of Nook's ten feelings, each once per pass of ten (shuffled by the seed and the
+  // pass), with two other words. Level 1: one other word from the same side (happy or difficult) and one from the other
+  // side, never a look-alike pair; level 2: any two other words, look-alikes included. The answer's place moves round.
+  function whichRound(index=0,seed=1,level=1){
+    index=Number.isSafeInteger(index)&&index>=0?index:0;seed=(Number.isSafeInteger(seed)&&seed>0?seed:1)>>>0||1;level=level===2?2:1;
+    const cycle=Math.floor(index/FEELINGS.length),slot=index%FEELINGS.length;
+    const feeling=shuffle(FEELINGS,(seed+cycle)>>>0)[slot];
+    const pick=(list,k)=>list[mix(seed*31+index*7+k)%list.length];
+    let others;
+    if(level===1){
+      const same=PAIR_GROUPS.find(g=>g.includes(feeling)).filter(f=>f!==feeling&&f!==LOOKALIKE[feeling]),other=PAIR_GROUPS.find(g=>!g.includes(feeling));
+      others=[pick(same,1),pick(other,2)];
+      if(mix(seed+index*3)%2)others.reverse();
+    }else{const rest=FEELINGS.filter(f=>f!==feeling),first=pick(rest,3);others=[first,pick(rest.filter(f=>f!==first),4)];}
+    const at=(slot+cycle+seed)%3,choices=others.slice();choices.splice(at,0,feeling);
+    return {feeling,choices,index,level,id:'which:v1:L'+level+':'+feeling+':'+choices.join('-')};
+  }
+  function whichSuccess(round){
+    const index=Number.isSafeInteger(round&&round.index)&&round.index>=0?round.index:0,opener=WHICH_OPENERS[index%WHICH_OPENERS.length],word=WORDS[round&&round.feeling]||'';
+    return {text:opener+' '+word+'.',speech:[opener,word]};
+  }
+  // Saved per player, an allow-list: the activity, the place in Which feeling?'s deck and its level, the Friends story
+  // and the deck's seed. Never an answer, a tick or a Me report. Round-3 saves (match, people) open on Which feeling? and
+  // Friends.
+  function normalise(saved){saved=saved&&typeof saved==='object'?saved:{};const integer=(n,max)=>Number.isSafeInteger(n)&&n>=0&&n<=max?n:0;const legacy={match:'which',people:'friends'};return {version:2,mode:ACTIVITIES.includes(saved.mode)?saved.mode:legacy[saved.mode]||'board',index:integer(saved.index,1000000),level:saved.level===2?2:1,story:integer(saved.story,STORIES.length-1),seed:(integer(saved.seed,0xffffffff)||1)};}
   function spokenBank(){return [...Object.values(WORDS),...Object.values(PROMPTS),...MATCH_OPENERS,...PEOPLE.flatMap(p=>FEELINGS.map(f=>matchStatement(p.id,f))),...ME_KEYS.map(acknowledgement),...STORIES.flatMap(s=>[storyPrompt(s),statement(s)])];}
   function validate(){
     if(new Set(STORIES.map(s=>s.id)).size!==STORIES.length)throw Error('Duplicate story');
@@ -212,6 +259,6 @@
     for(const f of FEELINGS)if(!DISTRACTORS[f].length||DISTRACTORS[f].some(d=>d===f||!FEELINGS.includes(d)))throw Error('Invalid expression pair');
     return true;
   }
-  const api={FEELINGS,PEOPLE,WORDS,DISTRACTORS,DESCRIPTIONS,STORIES,PROMPTS,MATCH_OPENERS,ME_KEYS,person,matchStatement,matchSuccess,acknowledgement,statement,storyPrompt,shuffle,matchRound,normalise,spokenBank,validate};
+  const api={FEELINGS,PEOPLE,WORDS,DISTRACTORS,DESCRIPTIONS,STORIES,PROMPTS,MATCH_OPENERS,ME_KEYS,person,matchStatement,matchSuccess,acknowledgement,statement,storyPrompt,shuffle,matchRound,normalise,spokenBank,validate,ACTIVITIES,ACTIVITY_NAMES,BOARD,DIFFICULT,LOOKALIKE,nookFeels,youFeel,ME_REPLIES,meLine,LINES,FEELINGS_SPEECH,ME_BUNDLE,WHICH_OPENERS,whichRound,whichSuccess};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.NookFeelings=api;
 })(typeof window!=='undefined'?window:globalThis);

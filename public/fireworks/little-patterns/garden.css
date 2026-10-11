@@ -412,3 +412,10 @@ button.word-card{display:flex;flex-direction:column;align-items:center;justify-c
 .softer .arrive,.softer .equation .unknown.arrive,.softer .ten-badge{animation:none}
 .softer .apple{background:#ce9683;border-color:#9e7466}
 @media (prefers-reduced-motion:reduce){.arrive,.equation .unknown.arrive,.ten-badge,.drag-ghost.reject,.word-choice.reject{animation:none}}
+/* Patterns pay-off (round 4, item 33): the finished bead string, small, under Nook's bubble for a moment. */
+.nf-bubble .bubble-prop .bead-mini{display:flex;align-items:center;gap:4px;padding:3px 7px;border-radius:12px;background:#fffdf3;border:1.5px solid #d8d0a8}
+.nf-bubble .bubble-prop .shape{width:16px;height:16px;border-width:1.5px;margin:0;transform:none;box-shadow:none}
+.nf-bubble .bubble-prop .shape.triangle{width:0;height:0;border-width:0 9px 16px 9px;border-style:solid;border-color:transparent transparent #c28a45 transparent}
+.nf-bubble .bubble-prop .shape.oval{width:22px;height:13px}
+.nf-bubble .bubble-prop .shape.diamond{width:12px;height:12px;margin:0 2px;transform:rotate(45deg)}
+.nf-bubble .bubble-prop b{font-size:14px;line-height:1;font-weight:900;color:#5a4a12}

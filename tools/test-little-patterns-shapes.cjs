@@ -394,7 +394,7 @@ test('the shape is a button for a keyboard, a switch or a screen reader: Enter, 
   assert.equal(a.w.document.activeElement, a.query('.shape-stage'), 'focus stays on the shape');
 });
 
-test('a wrong number changes only the bubble; the right one locks the round: green with a tick, the others faded, Nook excited or proud with one hop, the success line, the whole shape counted and warm', async t => {
+test('a wrong number changes only the bubble; the right one locks the round: green with a tick, the others faded, Nook excited, holding the shape up beside its raised mitten (the pay-off), the success line, the whole shape counted and warm', async t => {
   const a = app(t, place(2, 'sides', 'pentagon#upright'));
   const r = roundAt(2, 'sides', 'pentagon#upright');
   a.click('[data-choice="' + r.choices.find(c => c !== 5) + '"]'); await wait(300);
@@ -402,6 +402,7 @@ test('a wrong number changes only the bubble; the right one locks the round: gre
   assert.equal(a.plays.at(-1), a.clip(a.query('#speech').textContent), 'said from its clip');
   assert.equal(a.query('#nook svg.nook').getAttribute('data-feeling'), 'rest', 'no Nook motion for a mistake');
   assert.ok(!a.query('#nook .nook-pos').classList.contains('nook-hop'));
+  assert.equal(a.query('#nook .nook-prop'), null, 'no pay-off for a mistake');
   assert.equal(a.all('[data-choice]:disabled').length, 0);
   a.tap(...offSide(r.points, 0, 0));
   a.click('[data-choice="5"]'); await wait(400);
@@ -417,8 +418,9 @@ test('a wrong number changes only the bubble; the right one locks the round: gre
   assert.equal(a.query('#speech').textContent, line.text);
   assert.match(line.text, /A pentagon has five sides\./);
   assert.equal(a.plays.at(-1), a.clip(line.speech[0]), 'the opener plays (the rest waits for its phase-5 clip)');
-  assert.ok(['excited', 'proud'].includes(a.query('#nook svg.nook').getAttribute('data-feeling')));
-  assert.ok(a.query('#nook .nook-pos').classList.contains('nook-hop'), 'one hop, on the wrapper');
+  assert.equal(a.query('#nook svg.nook').getAttribute('data-feeling'), 'excited', 'both mittens up');
+  assert.ok(a.query('#nook .nook-prop svg.shape-icon'), 'Nook holds the shape up: a small copy hops beside the raised mitten (round 4 item 33)');
+  assert.ok(!a.query('#nook .nook-pos').classList.contains('nook-hop'), 'the shape hops instead of Nook');
   assert.equal(a.query('#help').hidden, true); assert.equal(a.query('#repeat').hidden, false); assert.equal(a.query('#next').hidden, false);
   assert.equal(a.w.document.activeElement, a.query('#next'));
   assert.equal(a.all('.big-shape .hit').length, 0, 'nothing left to tap');
