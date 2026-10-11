@@ -257,4 +257,4 @@ so phase 5 can drop them unless Fable wants Name's Help to read the names aloud.
 7. **Suite command**: BUILDER-NOTES' test line could add `test-little-patterns-nook.cjs` and
    `test-little-patterns-shapes.cjs`.
 
-Commit: COMMIT_HASH
+Commit: a08d24e (a08d24e84b78ce70371a9c43ee2db5a24cc3496e), with this line added in the commit that follows it.
