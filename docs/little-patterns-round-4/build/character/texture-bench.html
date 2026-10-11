@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nook texture bench</title>
+<link rel="stylesheet" href="../../../../public/fireworks/little-patterns/nook.css">
+<style>
+  body { margin: 0; font: 15px/1.4 system-ui, -apple-system, sans-serif; color: #2b2f55; background: #fffdf6; }
+  header { padding: 12px 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  button { min-height: 44px; padding: 0 16px; border-radius: 10px; border: 2px solid #b09bd0; background: #ece4f6; font: inherit; font-weight: 600; }
+  #stage { display: flex; flex-wrap: wrap; gap: 4px; padding: 0 16px; }
+  #stage svg.nook { height: var(--h, 132px); width: auto; aspect-ratio: 560 / 672; }
+  table { border-collapse: collapse; margin: 12px 16px; }
+  td, th { border: 1px solid #e7e1d0; padding: 4px 10px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+</style>
+</head>
+<body>
+<header>
+  <strong>Nook texture bench</strong>
+  <span>Each run renders the Nooks, then changes every Nook's feeling every 400 ms and records frame intervals.</span>
+  <button type="button" id="run">Run: 1 large, then 12 small, untextured and grain</button>
+</header>
+<table id="results"><thead><tr><th>case</th><th>render ms</th><th>frames</th><th>mean ms</th><th>p95 ms</th><th>max ms</th><th>over 20 ms</th></tr></thead><tbody></tbody></table>
+<div id="stage"></div>
+<script src="../../../../public/fireworks/little-patterns/nook-art.js"></script>
+<script>
+  'use strict';
+  const N = window.NookArt, stage = document.getElementById('stage');
+  const frame = () => new Promise(r => requestAnimationFrame(r));
+  const ORDER = ['calm', 'happy', 'excited', 'proud', 'surprised', 'calm', 'sad', 'worried', 'calm', 'angry', 'frustrated', 'disappointed'];
+  async function run(count, height, grain, secs, mode) {
+    mode = mode || 'all';
+    stage.innerHTML = ''; stage.style.setProperty('--h', height + 'px');
+    await frame(); await frame();
+    const t0 = performance.now();
+    let html = '';
+    for (let i = 0; i < count; i++) html += N.svg('greet', { grain, decorative: true });
+    stage.innerHTML = html;
+    stage.getBoundingClientRect();
+    await frame(); await frame();
+    const render = performance.now() - t0;
+    const nooks = Array.from(stage.querySelectorAll('svg.nook'));
+    if (mode === 'change') nooks.forEach(n => n.style.animation = 'none');
+    const idles = mode === 'still' ? [] : nooks.map(n => N.idle(n));
+    if (mode === 'still') nooks.forEach(n => n.style.animation = 'none');
+    const gaps = []; let last = performance.now(), step = 0, nextChange = last;
+    const end = last + secs * 1000;
+    while (performance.now() < end) {
+      const now = await frame();
+      gaps.push(now - last); last = now;
+      if (mode !== 'idle' && mode !== 'still' && now >= nextChange) { const f = ORDER[step++ % ORDER.length]; nooks.forEach(n => N.change(n, f)); nextChange = now + 400; }
+    }
+    idles.forEach(i => i.stop());
+    gaps.shift();
+    const sorted = gaps.slice().sort((a, b) => a - b);
+    const r = { case: count + ' x ' + height + ' px ' + (grain ? 'grain' : 'untextured') + (mode === 'all' ? '' : ' ' + mode), render: +render.toFixed(1), frames: gaps.length,
+      mean: +(gaps.reduce((a, b) => a + b, 0) / gaps.length).toFixed(2), p95: +sorted[Math.floor(sorted.length * 0.95)].toFixed(2),
+      max: +sorted[sorted.length - 1].toFixed(1), over20: gaps.filter(g => g > 20).length };
+    document.querySelector('#results tbody').insertAdjacentHTML('beforeend', '<tr>' + Object.values(r).map(v => '<td>' + v + '</td>').join('') + '</tr>');
+    return r;
+  }
+  async function all(secs) {
+    const out = [];
+    for (const [count, height] of [[1, 300], [12, 132]]) for (const grain of [false, true, false, true]) out.push(await run(count, height, grain, secs));
+    stage.innerHTML = '';
+    return out;
+  }
+  window.bench = all;
+  window.benchOne = run;
+  document.getElementById('run').addEventListener('click', () => all(4));
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+/* Nook rig motion (round 4). Load with nook-art.js. Timings from review-opus-pass-1 section 4, as amended by
+   BUILD-BRIEF items 60 and 64 (no wrong-answer tilt; travel at most 12 px, scale at most 1.06).
+
+   Wrapper keyframes for the games. Put the class on the element that positions Nook (never on svg.nook, which
+   owns the breath), remove it on animationend:
+     .nook-hop          one 8 px hop: up 220 ms out, down 200 ms in, a small landing squash (540 ms in all)
+     .nook-hop-high     the same at 10 px (excited; set animation-iteration-count for three)
+     .nook-squash-once  one squash to .95 over 120 ms, back in 220 ms (angry)
+     .nook-grow         from the frame position to the centre, 300 ms out. Set --nook-dx, --nook-dy (px) and
+                        --nook-s on the wrapper first: the offset and scale of the small Nook relative to the large
+                        one. Render Nook at its large size and start it scaled down (iPad rasters stay sharp).
+     .nook-return       the reverse, 300 ms in-out, holding the small end state
+     .nook-fade-in      150 ms opacity: the Softer / reduced-motion replacement for grow and return
+
+   Inside the SVG (driven by NookArt.change and NookArt.idle in nook-art.js):
+     svg.nook                    breath: scaleY 1.015 over 4 s in-out, alternating; .nook-still pauses it
+     .nook-blink                 idle blink: eyes close in 70 ms (JS holds 50 ms), open in 90 ms
+     .nook-swap / .nook-opening  expression change: eyes close in 80 ms, features swap, open in 120 ms
+     .nook-changing              squash .97 in 100 ms, recover in 220 ms; leaves follow 60 ms late, two damped
+                                 swings of up to 3 degrees over 600 ms
+     transitions                 arms, leaves and posture settle in 300 ms; mitten shapes cross-fade in 150 ms
+
+   Softer (body.softer) and prefers-reduced-motion remove idle, travel and squash; opacity changes stay.
+   Pivots: every animated group in the SVG sits in a translate() wrapper at its pivot, so its CSS transform turns
+   about 0 0. That origin is pinned here; the markup never sets transform-origin or a centred rotate(). */
+:root {
+  --nook-out: cubic-bezier(.2, .7, .3, 1);
+  --nook-in: cubic-bezier(.4, 0, 1, 1);
+  --nook-inout: cubic-bezier(.45, 0, .55, 1);
+  --nook-settle: cubic-bezier(.3, 1.35, .6, 1);
+}
+
+svg.nook { overflow: visible; transform-origin: 50% 96%; animation: nook-breathe 4s cubic-bezier(.45, 0, .55, 1) infinite alternate; }
+svg.nook.nook-still { animation-play-state: paused; }
+svg.nook g { transform-box: view-box; transform-origin: 0 0; }
+@keyframes nook-breathe { from { transform: scaleY(1); } to { transform: scaleY(1.015); } }
+
+/* expression changes */
+.nook .nook-pose, .nook .nook-arm { transition: transform 300ms var(--nook-settle); }
+.nook .nook-leaf { transition: transform 300ms var(--nook-settle) 60ms; }
+.nook .nook-mitten { transition: opacity 150ms linear; }
+.nook .nook-lid { transition: transform 90ms var(--nook-out); }
+.nook.nook-blink .nook-lid { transform: scaleY(.1); transition: transform 70ms var(--nook-in); }
+.nook.nook-swap .nook-lid { transform: scaleY(.1); transition: transform 80ms var(--nook-in); }
+.nook.nook-opening .nook-lid { transition: transform 120ms var(--nook-out); }
+.nook.nook-opening .nook-mouth, .nook.nook-opening .nook-brows { animation: nook-feature-in 120ms var(--nook-out); }
+.nook.nook-changing .nook-squash { animation: nook-change-squash 320ms linear; }
+.nook.nook-changing .nook-follow-l { animation: nook-follow-l 600ms var(--nook-inout) 60ms; }
+.nook.nook-changing .nook-follow-r { animation: nook-follow-r 600ms var(--nook-inout) 60ms; }
+@keyframes nook-feature-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes nook-change-squash {
+  0% { transform: none; animation-timing-function: cubic-bezier(.4, 0, 1, 1); }
+  31% { transform: scale(1.01, .97); animation-timing-function: cubic-bezier(.3, 1.35, .6, 1); }
+  100% { transform: none; }
+}
+@keyframes nook-follow-l { 0% { transform: none; } 25% { transform: rotate(-3deg); } 55% { transform: rotate(1.5deg); } 80% { transform: rotate(-.6deg); } 100% { transform: none; } }
+@keyframes nook-follow-r { 0% { transform: none; } 25% { transform: rotate(3deg); } 55% { transform: rotate(-1.5deg); } 80% { transform: rotate(.6deg); } 100% { transform: none; } }
+
+/* wrapper keyframes for the games */
+.nook-hop, .nook-hop-high, .nook-squash-once { transform-origin: 50% 100%; }
+.nook-hop { animation: nook-hop 540ms both; }
+.nook-hop-high { animation: nook-hop-high 540ms both; }
+.nook-squash-once { animation: nook-squash-once 340ms both; }
+.nook-grow { transform-origin: 50% 100%; animation: nook-grow 300ms cubic-bezier(.2, .7, .3, 1) both; }
+.nook-return { transform-origin: 50% 100%; animation: nook-grow 300ms cubic-bezier(.45, 0, .55, 1) reverse both; }
+.nook-fade-in { animation: nook-fade-in 150ms linear both; }
+@keyframes nook-hop {
+  0% { transform: none; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  40.7% { transform: translateY(-8px); animation-timing-function: cubic-bezier(.4, 0, 1, 1); }
+  77.8% { transform: scale(1.02, .96); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  100% { transform: none; }
+}
+@keyframes nook-hop-high {
+  0% { transform: none; animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  40.7% { transform: translateY(-10px); animation-timing-function: cubic-bezier(.4, 0, 1, 1); }
+  77.8% { transform: scale(1.02, .96); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  100% { transform: none; }
+}
+@keyframes nook-squash-once {
+  0% { transform: none; animation-timing-function: cubic-bezier(.4, 0, 1, 1); }
+  35% { transform: scale(1.03, .95); animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
+  100% { transform: none; }
+}
+@keyframes nook-grow { from { transform: translate(var(--nook-dx, 0px), var(--nook-dy, 0px)) scale(var(--nook-s, .6)); } to { transform: none; } }
+@keyframes nook-fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* Softer and reduced motion: no idle, no travel, no squash; features swap instantly; cross-fades stay */
+.softer svg.nook, .softer .nook .nook-squash, .softer .nook .nook-follow-l, .softer .nook .nook-follow-r,
+.softer .nook .nook-mouth, .softer .nook .nook-brows,
+.softer .nook-hop, .softer .nook-hop-high, .softer .nook-squash-once, .softer .nook-grow, .softer .nook-return { animation: none; }
+.softer .nook .nook-pose, .softer .nook .nook-arm, .softer .nook .nook-leaf, .softer .nook .nook-lid { transition: none; }
+.softer .nook.nook-blink .nook-lid, .softer .nook.nook-swap .nook-lid { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  svg.nook, .nook .nook-squash, .nook .nook-follow-l, .nook .nook-follow-r, .nook .nook-mouth, .nook .nook-brows,
+  .nook-hop, .nook-hop-high, .nook-squash-once, .nook-grow, .nook-return { animation: none; }
+  .nook .nook-pose, .nook .nook-arm, .nook .nook-leaf, .nook .nook-lid { transition: none; }
+  .nook.nook-blink .nook-lid, .nook.nook-swap .nook-lid { transform: none; }
+}

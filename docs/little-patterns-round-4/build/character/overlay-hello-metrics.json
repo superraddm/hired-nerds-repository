@@ -1,0 +1,50 @@
+{
+ "silhouette": {
+  "iou": 0.9956,
+  "edge_median_px": 0.0,
+  "edge_p95_px": 1.0,
+  "edge_max_px": 5.4
+ },
+ "body": {
+  "iou": 0.9937,
+  "edge_median_px": 0.0,
+  "edge_p95_px": 1.0,
+  "edge_max_px": 8.8
+ },
+ "patch (cream and features)": {
+  "iou": 0.9851,
+  "edge_median_px": 0.0,
+  "edge_p95_px": 1.0,
+  "edge_max_px": 3.2
+ },
+ "eyes and mouth": {
+  "iou": 0.8917,
+  "edge_median_px": 0.0,
+  "edge_p95_px": 1.0,
+  "edge_max_px": 1.4
+ },
+ "freckles": {
+  "iou": 0.9783,
+  "edge_median_px": 0.0,
+  "edge_p95_px": 0.0,
+  "edge_max_px": 1.0
+ },
+ "mittens": {
+  "iou": 0.9863,
+  "edge_median_px": 0.0,
+  "edge_p95_px": 1.0,
+  "edge_max_px": 1.4
+ },
+ "leaves": {
+  "iou": 0.986,
+  "edge_median_px": 0.0,
+  "edge_p95_px": 1.0,
+  "edge_max_px": 5.0
+ },
+ "feet": {
+  "iou": 0.9853,
+  "edge_median_px": 0.0,
+  "edge_p95_px": 1.0,
+  "edge_max_px": 5.0
+ }
+}
