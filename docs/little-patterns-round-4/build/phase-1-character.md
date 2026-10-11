@@ -278,4 +278,4 @@ nearest honest version rather than a copy:
    `face(f, { ring: true })` (neutral ring `#8C8A99`; the colour is a proposal).
 4. **Jof's look at the stills (J5)**: the proud, frustrated and worried arms above are the ones most worth his eye.
 
-Commit: PENDING
+Commit: 0beec8e (0beec8e8d5563bdb1949a7da58aa5bc719fe9da2), with this line added in the commit that follows it.
