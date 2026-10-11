@@ -12,7 +12,7 @@ pushed.** The next step is Jof's device test on the S24 and the iPad 5 (`DEVICE-
 | 3 Shapes | Sides (tap each side, 22 px band, counted once) and Name, two levels, 33 examples. Near answers for Add and Take away levels 1 to 4. Nook's resting look. | a08d24e |
 | 4 Feelings | Nook feels... with a cancellable full-screen performance, Which feeling?, Friends (unchanged stories), Me (private: one fixed bundle, nothing saved or sent). Pay-offs: munch, held shape, bead string. | 0fbf2bf |
 | 5 Voice | 76 new clips and 3 comparison recordings; the library trimmed; joined speech in `shared.js`; the listening page for J6. | eacd635 |
-| 6 Checks | The fixes below, full verification, final screenshots, `DEVICE-TEST.md`, this report. | see last line |
+| 6 Checks | The fixes below, full verification, final screenshots, `DEVICE-TEST.md`, this report. | 71fa007 |
 
 Each phase also has a one-line commit recording its hash (e5bcd45, 8932918, 4f09efd, 6470e25, cda5f79); the builder
 notes are 54776b0.
@@ -81,3 +81,5 @@ a 360 px phone draws small apples; sentence breaks keep 300 ms; the narrow lands
 - **Removed:** `home.css`, `garden-live.css`, `garden-preview.css` (no longer loaded; `garden-preview.css` stays on
   disk for the unshipped workshop previews) and the 12 "You chose {x}." clips.
 - Unchanged: 71 files (Blocks, the symbols, phonics and studio sounds among them). 397 in all.
+
+Commit: 71fa007 (71fa007a0427de8eec93539f466426bd1d3a67dd), with this line added in the commit that follows it.
