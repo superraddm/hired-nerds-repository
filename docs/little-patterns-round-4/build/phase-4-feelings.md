@@ -203,4 +203,4 @@ clip started before Done was on screen, and DISAPPOINTED breaking in the landsca
 5. The old Match activity (the children's pictures) is gone from the UI as the brief replaces it; its data and clips
    stay because `spokenBank()` and the content page use them.
 
-Commit: COMMIT_HASH
+Commit: 0fbf2bf (0fbf2bf36cf5750d52a7de766c61d144d83acb93), with this line added in the commit that follows it.
