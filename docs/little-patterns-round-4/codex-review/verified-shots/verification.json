@@ -1,0 +1,621 @@
+{
+  "date": "2026-10-11",
+  "engine": "local headless Chrome",
+  "scope": "static mockups; no game interaction or physical device testing",
+  "cases": 114,
+  "findings": 0,
+  "records": [
+    {
+      "viewport": "phone",
+      "screen": "shelf",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "shelf-over-count",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "count",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "add",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "add-help",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "add-done",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "add-bridge",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "take",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "words",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "patterns",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "shapes-sides",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "shapes-sides-done",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "shapes-name",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "feelings-board",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "feelings-perform",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "feelings-perform-sad",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "feelings-match",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "feelings-me",
+      "findings": []
+    },
+    {
+      "viewport": "phone",
+      "screen": "nook-sheet",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "shelf",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "shelf-over-count",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "count",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "add",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "add-help",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "add-done",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "add-bridge",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "take",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "words",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "patterns",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "shapes-sides",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "shapes-sides-done",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "shapes-name",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "feelings-board",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "feelings-perform",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "feelings-perform-sad",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "feelings-match",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "feelings-me",
+      "findings": []
+    },
+    {
+      "viewport": "small",
+      "screen": "nook-sheet",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "shelf",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "shelf-over-count",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "count",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "add",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "add-help",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "add-done",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "add-bridge",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "take",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "words",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "patterns",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "shapes-sides",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "shapes-sides-done",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "shapes-name",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "feelings-board",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "feelings-perform",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "feelings-perform-sad",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "feelings-match",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "feelings-me",
+      "findings": []
+    },
+    {
+      "viewport": "land",
+      "screen": "nook-sheet",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "shelf",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "shelf-over-count",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "count",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "add",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "add-help",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "add-done",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "add-bridge",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "take",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "words",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "patterns",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "shapes-sides",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "shapes-sides-done",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "shapes-name",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "feelings-board",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "feelings-perform",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "feelings-perform-sad",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "feelings-match",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "feelings-me",
+      "findings": []
+    },
+    {
+      "viewport": "land2",
+      "screen": "nook-sheet",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "shelf",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "shelf-over-count",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "count",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "add",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "add-help",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "add-done",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "add-bridge",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "take",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "words",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "patterns",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "shapes-sides",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "shapes-sides-done",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "shapes-name",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "feelings-board",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "feelings-perform",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "feelings-perform-sad",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "feelings-match",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "feelings-me",
+      "findings": []
+    },
+    {
+      "viewport": "ipad",
+      "screen": "nook-sheet",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "shelf",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "shelf-over-count",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "count",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "add",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "add-help",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "add-done",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "add-bridge",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "take",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "words",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "patterns",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "shapes-sides",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "shapes-sides-done",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "shapes-name",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "feelings-board",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "feelings-perform",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "feelings-perform-sad",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "feelings-match",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "feelings-me",
+      "findings": []
+    },
+    {
+      "viewport": "desk",
+      "screen": "nook-sheet",
+      "findings": []
+    }
+  ],
+  "proposalSections": [
+    {
+      "text": "Little Patterns, round 4: the Nook frame",
+      "y": 28
+    },
+    {
+      "text": "Before and after on the S24 (portrait)",
+      "y": 297.546875
+    },
+    {
+      "text": "Every screen, phone portrait",
+      "y": 3562.203125
+    },
+    {
+      "text": "Landscape and tablet",
+      "y": 4313.359375
+    },
+    {
+      "text": "Nook with feelings",
+      "y": 4767.515625
+    },
+    {
+      "text": "What changes for Arthur",
+      "y": 6156.203125
+    },
+    {
+      "text": "Your eleven findings, answered",
+      "y": 6485.453125
+    },
+    {
+      "text": "The review loop",
+      "y": 7737
+    },
+    {
+      "text": "Five things only you can decide",
+      "y": 8189.046875
+    },
+    {
+      "text": "What happens on your approval",
+      "y": 8894.09375
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+/* The Nook frame: one layout for every game. Proposal for review round 4 (static mockup), revised after Opus pass 1.
+   Mobile first. Play screens carry only the shelf button, a mode chip pair and a level pill; sound and Grown-ups live on the shelf. */
+:root{font-family:"Trebuchet MS",Arial,sans-serif;color:#293d60;--ink:#293d60;--paper:#fffcdf;--sky:#dcf3ed;--grass:#c6df99;--mint:#b3e2d4;--mint-dark:#6bb9a6;--butter:#ffe393;--butter-dark:#debd50;--lilac:#e1d3f1;--lilac-dark:#b09bd0;--coral:#f8c1b5;--coral-dark:#d99389;--green:#376e5a;--green-dark:#285347;font-synthesis:none}
+*{box-sizing:border-box}html,body{margin:0;height:100%}body{background:linear-gradient(var(--sky) 0 38%,#f8edba 38% 100%);overflow:hidden;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;overscroll-behavior:none}
+button{font:inherit;color:inherit;appearance:none;border:0;background:none;padding:0;cursor:pointer}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* frame: top bar, Nook + bubble, task card, fixed two-slot action bar */
+.nf{height:100%;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:56px minmax(0,1fr) 92px;padding:0 0 env(safe-area-inset-bottom)}
+.nf-top{display:flex;align-items:center;gap:8px;padding:6px 10px;min-width:0}
+.nf-shelf{width:46px;height:46px;border-radius:14px;background:#fff;border:2px solid var(--lilac-dark);display:grid;place-items:center;color:#7862a4;flex:none}.nf-shelf svg{width:26px;height:26px}
+.nf-modes{display:flex;gap:6px;flex:1;min-width:0;justify-content:center}
+.chip{min-height:40px;padding:0 12px;border-radius:12px;background:#fffdf3;border:2px solid #d8d0a8;font-weight:900;font-size:14px;color:#5a5236;display:flex;align-items:center;gap:6px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip[aria-pressed=true]{background:var(--lilac);border-color:#7862a4;color:#4d3b73;box-shadow:inset 0 0 0 1px #7862a4}
+.chip .shape{width:14px;height:14px}
+.pill{min-height:40px;padding:0 12px;border-radius:20px;background:#fff1b5;border:2px solid #dcc05a;font-weight:900;font-size:14px;color:#5a4a12;display:flex;align-items:center;gap:6px;flex:none;white-space:nowrap}.pill:after{content:"▾";font-size:12px}
+.pill .shape{width:14px;height:14px}
+
+.nf-stage{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);gap:4px;min-height:0;min-width:0;padding:0 12px}
+.nf-nook{display:flex;align-items:flex-end;gap:10px;min-height:132px}
+.nf-nook .nook{width:112px;height:131px;flex:none}
+.speech{position:relative;flex:1;padding:12px 44px 12px 16px;border:2px solid #c0b1d7;background:#f0e7fa;border-radius:20px;font-size:21px;font-weight:900;line-height:1.25;color:#3d2f5e;margin-bottom:28px;text-align:left}
+.speech:after{content:"";position:absolute;left:-9px;bottom:14px;width:16px;height:16px;background:#f0e7fa;border-left:2px solid #c0b1d7;border-bottom:2px solid #c0b1d7;transform:rotate(45deg)}
+.speech .hear{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:28px;height:28px;color:#7862a4;opacity:.8}.speech .hear svg{width:100%;height:100%}
+.speech.success{background:#e4f3e3;border-color:#8fbf92}.speech.success:after{background:#e4f3e3;border-color:#8fbf92}
+.nf-task{min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto;align-items:stretch;justify-items:stretch;gap:10px;background:var(--paper);border:3px solid #e4d69c;border-radius:26px;padding:14px;position:relative;overflow:hidden}
+.nf-task:before{content:"";position:absolute;left:-6%;right:-6%;bottom:-96px;height:120px;border-radius:50% 50% 0 0;background:var(--grass);opacity:.7}
+.nf-task>*{position:relative;min-width:0}
+.objects{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;width:100%;min-height:0;height:100%}
+.nf.solo .nf-stage{grid-template-rows:minmax(0,1fr)}
+.nook{aspect-ratio:240/280}
+.nf-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 12px 20px}
+.nf-actions button{min-height:62px;border-radius:18px;font-weight:900;font-size:19px;display:flex;align-items:center;justify-content:center;gap:10px;border:3px solid;box-shadow:0 4px 0}
+.btn-help{background:#fff1b5;border-color:#dcc05a;color:#5a4a12;box-shadow:0 4px 0 #dcc05a}.btn-help svg{width:30px;height:30px}
+.btn-next{background:var(--green);border-color:var(--green-dark);box-shadow:0 4px 0 var(--green-dark);color:#fff}
+.btn-again{background:#fffdf3;border-color:#adcfc3;box-shadow:0 4px 0 #adcfc3;color:#2f675a;font-size:16px;width:72%;justify-self:start}
+.btn-ghost{visibility:hidden}
+
+/* objects */
+.five-frame{background:#f7d996;border:3px solid #cba65b;border-bottom:7px solid #bd9650;border-radius:22px;padding:10px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;width:100%;max-width:360px}
+.pocket{display:grid;place-items:center;aspect-ratio:1;border:2px dashed #b99655;background:#fff1cb;border-radius:14px}.pocket.full{border:2px solid #dba95e;background:#fff9e9}
+.apple{display:inline-block;position:relative;width:48px;height:48px;background:#e67b69;border:2px solid #b65b50;border-radius:42% 44% 48% 48%;box-shadow:inset 4px 0 0 #ffffff24;margin-top:8px;flex:none}
+.apple:before{content:"";position:absolute;left:21px;top:-12px;width:4px;height:10px;border-radius:3px;background:#6b6740;transform:rotate(12deg)}.apple:after{content:"";position:absolute;left:24px;top:-12px;width:16px;height:8px;border-radius:80% 0 80% 0;transform:rotate(-15deg);background:#4d9271}
+.pocket .apple{width:36px;height:36px;margin-top:6px}.pocket .apple:before{left:15px;top:-10px;height:8px}.pocket .apple:after{left:18px;top:-10px;width:12px;height:6px}
+.apple.gone{opacity:.35;filter:grayscale(.4)}
+.join-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:nowrap;width:100%}.join-row.stacked{flex-direction:column}
+.group{display:grid;grid-template-columns:repeat(var(--cols,5),auto);justify-content:start;gap:8px;padding:10px 12px;border-radius:18px;background:#fff6dc;border:2px solid #e8d7a3}.group .apple{width:40px;height:40px}.group .apple:before{left:17px;top:-11px}.group .apple:after{left:20px;top:-11px;width:14px;height:7px}
+.group.more{background:#fffaf5;border:3px dashed #d99389}
+.plus{font-size:40px;font-weight:900;color:#3b6a5c;line-height:1}
+.equation{font-size:36px;font-weight:900;letter-spacing:2px;color:#3b4a6b;margin:0}.equation .unknown{display:inline-block;min-width:1.4em;border-bottom:5px dashed #b39bc9;color:#6a558a;text-align:center}.equation .unknown.filled{color:#2f6a4a;border-bottom-color:#8fbf92}
+.answers{display:flex;gap:14px;justify-content:center;width:100%;min-height:100px;align-items:stretch}
+.answer{display:grid;place-items:center;flex:1;max-width:120px;min-height:96px;background:#ccead9;border:3px solid #75ad91;border-bottom-width:7px;border-radius:20px;font-size:42px;font-weight:900;color:#2f4f3c}
+.answer.card{max-width:none;font-size:17px;padding:8px 6px;letter-spacing:1px;grid-template-rows:auto auto;gap:4px}.answer.card img,.answer.card svg{width:40px;height:40px}
+.answer.word{font-size:clamp(13px,4.2vw,19px);letter-spacing:.5px;padding:4px}
+.answer.hint{outline:4px solid #477b59;outline-offset:4px}
+.answer.chosen{background:#9fd3b1;border-color:#3f8f5c}.answer.faded{opacity:.5}
+.count-tag{position:absolute;bottom:-6px;right:-8px;font-size:13px;font-weight:bold;background:#fff9d5;color:#345443;border-radius:50%;width:22px;height:22px;display:grid;place-items:center;border:1px solid #79996b}
+.tagged{position:relative;display:inline-block}
+.ten-pair{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:center;width:100%}
+.ten-pair .five-frame.more{border-style:dashed;background:#fff3e0}.ten-pair .five-frame{max-width:200px;padding:6px;gap:4px;border-radius:14px}.ten-pair .pocket{border-radius:8px}.ten-pair .pocket .apple{width:24px;height:24px;margin-top:4px}.ten-pair .pocket .apple:before{left:9px;top:-7px;height:6px;width:3px}.ten-pair .pocket .apple:after{left:11px;top:-7px;width:9px;height:5px}
+
+/* words */
+.sentence-row{display:flex;align-items:center;gap:10px;width:100%;justify-content:center;flex-wrap:wrap}
+.symbol{width:64px;height:64px;flex:none}
+.sentence{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#3f4a5c}
+.gap{min-width:92px;min-height:46px;border:3px dashed #839979;background:#fffdf0;border-radius:12px;color:#594777;display:grid;place-items:center;padding:0 8px;letter-spacing:2px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%}
+.card{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:14px;background:#fff4c9;border:2px solid #d4bd71;font-weight:900;font-size:16px;color:#594777;min-height:56px;min-width:0}.card img{width:40px;height:40px;flex:none}
+.keys{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:5px;width:100%}
+.key{min-height:52px;border-radius:9px;background:#fffdf3;border:2px solid #b4c49e;font-weight:900;font-size:18px;display:grid;place-items:center;min-width:0}
+.key.fn{grid-column:span 4;font-size:13px}.key.go{grid-column:span 5;background:var(--green);border-color:var(--green-dark);color:#fff;font-size:16px}
+.speech-inline[hidden]{display:none}
+
+/* patterns */
+.strip{display:flex;gap:clamp(3px,1.2vw,6px);justify-content:center;width:100%}
+.bead{width:clamp(40px,12vw,50px);height:58px;border-radius:12px;background:#fff7de;border:2px solid #d9c98f;display:grid;place-items:center}.bead.model{background:#fdf0c2}.bead.missing{border:3px dashed #7b8f6b;background:#fffdf0;font-size:26px;font-weight:900;color:#667d57}
+.shape{display:inline-block;width:28px;height:28px;background:#6bb9a6;border:2px solid #3f8f7c;border-radius:6px}
+.shape.circle{border-radius:50%}.shape.square{background:#a789ca;border-color:#7f62a3}.shape.triangle{width:0;height:0;background:transparent;border-left:16px solid transparent;border-right:16px solid transparent;border-top:0;border-bottom:28px solid #c28a45;border-radius:0}.shape.oval{width:40px;height:24px;border-radius:50%;background:#e0b04f;border-color:#a88028}
+.answer .shape{width:44px;height:44px}.answer .shape.triangle{width:0;height:0;border-left-width:24px;border-right-width:24px;border-bottom-width:42px}
+
+/* shapes game */
+.big-shape{width:min(70vw,290px);height:min(70vw,290px);max-height:100%}
+.big-shape .side{stroke:#9fb2a4;stroke-width:16;stroke-linecap:round;fill:none}.big-shape .side.lit{stroke:#f2b45a}.big-shape .hit{stroke:transparent;stroke-width:44;fill:none}
+.big-shape .fill{fill:#fff3d6}.big-shape .fill.warm{fill:#fde9b8}
+.big-shape .tag{font:900 22px "Trebuchet MS",Arial;fill:#345443}
+
+/* feelings */
+.board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%}
+.feel{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px;border-radius:16px;background:#fff8e4;border:2px solid #d9c98f;font-weight:900;font-size:15px;letter-spacing:1px;color:#4d3b73;min-height:72px;position:relative;min-width:0}.feel .nook-face-icon{width:44px;height:44px;flex:none}
+.feel.done{background:#fffdf3;border-color:#9bbf9f}.feel.done .tick{position:absolute;right:6px;top:6px;width:18px;height:18px;color:#3f8f5c}.feel .tick svg{width:100%;height:100%}
+.perform{display:grid;grid-template-rows:minmax(0,1fr) auto;align-items:center;justify-items:center;gap:6px;width:100%;height:100%}
+.perform .nook{height:100%;max-height:100%;width:auto;max-width:100%}
+.perform .word{font-size:34px;font-weight:900;letter-spacing:3px;color:#4d3b73;text-align:center}
+.perform .line{font-size:18px;color:#536647;font-weight:bold;text-align:center}
+.btn-done{background:#ccead9;border-color:#75ad91;box-shadow:0 4px 0 #75ad91;color:#2f4f3c;position:relative;overflow:hidden}
+.btn-done .progress{position:absolute;left:0;bottom:0;height:6px;width:var(--played,40%);background:#3f8f5c}
+.btn-done svg{width:28px;height:28px}
+.match-nook{height:100%;max-height:100%;width:auto;max-width:100%;min-height:0}
+.match{display:grid;grid-template-rows:auto minmax(0,1fr);gap:6px;width:100%;height:100%;justify-items:center}
+.me-card{display:flex;flex-direction:column;align-items:center;gap:10px;font-size:30px;font-weight:900;letter-spacing:2px;color:#4d3b73}.me-card .nook-face-icon{width:120px;height:120px}
+.me-line{font-size:18px;color:#536647;font-weight:bold;text-align:center}
+
+/* shelf (the hub and the in-game overlay) */
+.shelf{height:100%;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;padding:10px 12px;gap:6px}
+.shelf-top{display:flex;align-items:flex-end;gap:10px}.shelf-top .nook{width:120px;height:140px;flex:none}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-content:center;padding:4px 0}
+.tile{text-decoration:none;color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:112px;border-radius:22px;border:3px solid;box-shadow:0 5px 0;font-weight:900;font-size:19px;letter-spacing:.5px;width:100%}.tile svg{width:60px;height:60px}
+.tile[aria-current=true]{outline:4px solid #314b59;outline-offset:3px}
+.tile.count{background:var(--mint);border-color:var(--mint-dark);box-shadow:0 5px 0 var(--mint-dark)}.tile.add{background:var(--butter);border-color:var(--butter-dark);box-shadow:0 5px 0 var(--butter-dark)}.tile.words{background:var(--lilac);border-color:var(--lilac-dark);box-shadow:0 5px 0 var(--lilac-dark)}.tile.patterns{background:var(--coral);border-color:var(--coral-dark);box-shadow:0 5px 0 var(--coral-dark)}.tile.shapes{background:#fde9b8;border-color:#e3b85c;box-shadow:0 5px 0 #e3b85c}.tile.feelings{background:#ece4f6;border-color:#b09bd0;box-shadow:0 5px 0 #b09bd0}.tile.paint{background:#fff4d6;border-color:#d9b36b;box-shadow:0 5px 0 #d9b36b}.tile.blocks{background:#dbe8dc;border-color:#9bbf9f;box-shadow:0 5px 0 #9bbf9f}
+.shelf-foot{display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:0 2px 10px}
+.nf-grown{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#6d7a73;background:#fffdf3b0;border:1.5px solid #cfd6c7;flex:none}.nf-grown svg{width:22px;height:22px}
+.nf-grown{position:relative}.nf-grown .ring{position:absolute;inset:-5px;width:54px;height:54px}.nf-grown .ring circle{fill:none;stroke:#7862a4;stroke-width:4;stroke-dasharray:157;stroke-dashoffset:calc(157 - 157 * var(--hold,0));transform:rotate(-90deg);transform-origin:50% 50%}
+.overlay{position:absolute;inset:0;background:#fffcdf;display:grid;z-index:5}
+.overlay .shelf{height:100%}
+
+/* phone landscape: Nook folded into a left column, task centre, actions right */
+@media (orientation:landscape) and (max-height:520px){
+  .ten-pair{flex-wrap:nowrap}.ten-pair .five-frame{max-width:150px;padding:4px;gap:3px}.ten-pair .pocket .apple{width:18px;height:18px;margin-top:3px}
+  .feel{letter-spacing:.3px;font-size:10.5px}
+  .nf{grid-template-columns:124px minmax(0,1fr) 124px;grid-template-rows:48px minmax(0,1fr);gap:0 8px;padding:0 8px 8px}
+  .nf-top{grid-column:1/-1;padding:4px 0}.nf-shelf{width:40px;height:40px}.chip,.pill{min-height:34px;font-size:12px;padding:0 9px}
+  .nf-stage{display:contents}
+  .nf-nook{grid-column:1;flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;min-height:0}
+  .nf-nook .nook{width:82px;height:96px}
+  .speech{flex:none;width:100%;font-size:16px;padding:8px 30px 8px 10px;margin:0;border-radius:14px}.speech:after{left:46%;bottom:auto;top:-9px;transform:rotate(135deg)}.speech .hear{width:20px;height:20px;right:6px}
+  .nf-task{grid-column:2;padding:8px;gap:6px;border-radius:20px}.nf.solo .nf-task{grid-column:1/3}
+  .nf-actions{grid-column:3;grid-template-columns:1fr;grid-template-rows:auto 1fr auto;padding:0;gap:8px;align-content:space-between}
+  .nf-actions button{min-height:54px;font-size:15px;border-radius:14px}.btn-help svg{width:24px;height:24px}
+  .btn-help{grid-row:1}.btn-again{grid-row:1}.btn-next{grid-row:3}.btn-done{grid-row:3}.btn-ghost{grid-row:1}.btn-ghost+.btn-done{grid-row:3}
+  .five-frame{max-width:300px;padding:6px;gap:4px;border-radius:16px}.pocket{border-radius:10px}.pocket .apple{width:26px;height:26px;margin-top:5px}
+  .apple{width:34px;height:34px}.apple:before{left:14px;top:-10px}.apple:after{left:17px;top:-10px;width:12px;height:6px}
+  .answers{gap:10px;min-height:66px}.answer{min-height:64px;font-size:32px;border-radius:14px}.answer.card{font-size:14px}.answer.card svg{width:28px;height:28px}
+  .equation{font-size:26px}.plus{font-size:30px}.group{padding:6px 8px;gap:6px}
+  .nf.words{grid-template-columns:minmax(0,1fr) 110px}.nf.words .nf-nook{display:none}.nf.words .nf-task{grid-column:1}.nf.words .nf-actions{grid-column:2}
+  .nf.words .speech-inline{font-size:15px;font-weight:900;color:#3d2f5e;background:#f0e7fa;border:2px solid #c0b1d7;border-radius:12px;padding:4px 10px}
+  .keys{grid-template-columns:repeat(10,minmax(0,1fr));gap:4px}.key{min-height:40px;font-size:15px;border-radius:8px}.key.fn{grid-column:span 2}.key.go{grid-column:span 2}.symbol{width:40px;height:40px}.sentence{font-size:18px}.gap{min-height:36px;min-width:74px}.cards{gap:6px}.card{min-height:40px;font-size:13px;padding:3px 6px}.card img{width:28px;height:28px}
+  .bead{width:40px;height:44px}.big-shape{width:min(58vh,210px);height:min(58vh,210px)}
+  .board{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}.feel{gap:1px;font-size:11px;min-height:56px;padding:3px}.feel .nook-face-icon{width:34px;height:34px}
+  .perform{grid-template-rows:none;grid-template-columns:auto auto;gap:16px}.perform .word{font-size:28px}
+  .match{grid-template-rows:none;grid-template-columns:minmax(0,1fr) auto;align-items:center}
+  .shelf{grid-template-columns:150px minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;padding:8px 10px}
+  .shelf-top{flex-direction:column;align-items:center;justify-content:center;grid-row:1}.shelf-top .nook{width:96px;height:112px}.shelf-top .speech{margin:0;width:100%}.shelf-top .speech:after{left:46%;bottom:auto;top:-9px;transform:rotate(135deg)}
+  .tiles{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:4px 0}.tile{min-height:78px;font-size:14px;gap:2px;border-radius:16px}.tile svg{width:40px;height:40px}
+  .shelf-foot{grid-column:1/-1;padding-bottom:0}
+}
+/* tablets and desktop: more room, Nook larger beside the task */
+@media (min-width:760px) and (min-height:521px){
+  .nf{max-width:1000px;margin:auto;grid-template-rows:64px minmax(0,1fr) 100px}
+  .nf-stage{grid-template-columns:230px minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:16px;padding:0 20px}.nf.solo .nf-stage{grid-template-columns:minmax(0,1fr)}
+  .nf-nook{flex-direction:column;align-items:center;justify-content:center;gap:10px}
+  .nf-nook .nook{width:190px;height:222px}.nf-nook .speech{flex:none;width:100%;font-size:20px;margin:0;order:-1;text-align:center;padding:12px 40px 12px 16px}.nf-nook .speech:after{left:46%;bottom:-10px;transform:rotate(-45deg)}
+  .nf-actions{max-width:560px;margin:auto;width:100%}
+  .nf-task{padding:20px}.five-frame{max-width:380px;grid-template-columns:repeat(5,60px);width:max-content}.pocket .apple{width:38px;height:38px}
+  .answer{max-width:130px;min-height:104px;font-size:46px}.equation{font-size:40px}
+  .keys{max-width:620px}.key{min-height:48px}
+  .board{grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;max-width:760px}.feel{min-height:124px;font-size:16px}.feel .nook-face-icon{width:70px;height:70px}
+  .shelf{max-width:900px;margin:auto}.shelf-top .nook{width:170px;height:198px}.tiles{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.tile{min-height:150px;font-size:21px}.tile svg{width:76px;height:76px}
+}
+/* motion: breathing on the outer svg only, blink on the eyes, leaves sway on their inner group about the stem; off under reduced motion or Softer */
+.nook{transform-origin:50% 100%;animation:breathe 4s cubic-bezier(.45,0,.55,1) infinite}
+.nook .nook-eyes{transform-box:fill-box;transform-origin:50% 50%;animation:blink 5.2s infinite}
+.nook .nook-leaf{transform-box:view-box;transform-origin:120px 58px;animation:sway 3.2s cubic-bezier(.45,0,.55,1) infinite alternate}
+@keyframes breathe{50%{transform:scaleY(1.015)}}
+@keyframes blink{0%,95%,100%{transform:scaleY(1)}96.5%{transform:scaleY(.08)}}
+@keyframes sway{to{transform:rotate(3deg)}}
+@media (prefers-reduced-motion:reduce){.nook,.nook *{animation:none!important}}
+.softer .nook,.softer .nook *{animation:none!important}
+
+@media (max-width:380px){.group .apple{width:36px;height:36px}.group .apple:before{left:15px}.group .apple:after{left:18px;width:12px}.group{gap:6px;padding:8px 10px}.plus{font-size:32px}}

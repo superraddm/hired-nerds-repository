@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nook — original character, new feelings</title>
+<style>
+:root{color-scheme:light;font-family:"Trebuchet MS",Arial,sans-serif;color:#2a2964;background:#faf6ec}
+*{box-sizing:border-box}body{margin:0}main{max-width:1140px;margin:auto;padding:44px 24px 64px}h1{font-size:clamp(30px,5vw,52px);line-height:1.08;max-width:800px;margin:12px 0 18px;font-weight:800}h2{font-size:26px;margin:40px 0 16px}p{font-size:17px;line-height:1.55;max-width:760px}a{color:#654694;text-underline-offset:4px}a:focus-visible{outline:3px solid #654694;outline-offset:4px}.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:800;color:#615486}.links{display:flex;flex-wrap:wrap;gap:12px 22px;padding:8px 0}.links a{font-weight:700}.identity{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:680px;margin:24px 0}.identity figure{margin:0;background:#e9f2e9;border:1px solid #c6d9cf;border-radius:20px;padding:20px;text-align:center}.identity img,.identity svg{width:100%;height:260px;object-fit:contain;display:block;animation:none!important}.identity svg *{animation:none!important}.identity figcaption{font-size:16px;font-weight:800;padding-top:16px}.identity figcaption small{font-size:13px;font-weight:400;display:block;padding-top:5px;line-height:1.4}.sheet{width:100%;height:auto;display:block;border:1px solid #e4dcc9;border-radius:16px;background:#fffdf6}.faces{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.faces figure{margin:0;padding:16px 12px;background:#fffdf6;border:1px solid #e4dcc9;border-radius:16px;text-align:center}.faces svg{display:block;width:100%;height:auto}.faces figcaption{font-weight:800;font-size:18px;margin-top:8px}.faces p{font-size:14px;line-height:1.45;margin:8px 0 0}.notes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.notes article{background:#f1eadf;border-radius:16px;padding:20px}.notes h3{font-size:19px;margin:0 0 8px}.notes p{font-size:15px;margin:0}.status{font-size:13px;color:#655c78;border-top:1px solid #dfd5c7;padding-top:18px;margin-top:28px}@media(max-width:650px){main{padding:28px 16px 40px}.faces,.notes{grid-template-columns:repeat(2,minmax(0,1fr))}.identity{gap:10px}.identity figure{padding:12px}.identity img,.identity svg{height:210px}}@media(max-width:380px){.identity img,.identity svg{height:170px}.faces{gap:8px}}
+</style>
+</head>
+<body><main>
+<div class="eyebrow">Little Patterns · design review · 11 October 2026</div>
+<h1>The original Nook.<br>A clearer range of feelings.</h1>
+<p>Keep the familiar asymmetric sprout, uneven cream patch, turquoise mittens and soft paper texture. Give each feeling a readable face and a gentle posture.</p>
+<nav class="links" aria-label="Review documents"><a href="../review-codex-pass-1.md">Spec review · findings 54–68</a><a href="../nook-design-profile.md">Design profile for Opus</a><a href="opus-handoff.md">Build handoff</a><a href="nook-expression-sheet-final.png">Full-resolution expression sheet</a></nav>
+<div class="identity">
+<figure><img src="../../../public/fireworks/little-patterns/assets/nook.png" alt="Original Nook: textured asymmetric lavender sprout with large uneven leaves and a waving turquoise mitten"><figcaption>Identity master<small>The original remains the authority for proportions, texture and colour.</small></figcaption></figure>
+<figure><div id="previous" aria-label="Earlier proposed rounder vector Nook"></div><figcaption>Earlier proposal<small>Its rig structure is useful. Its character proportions are superseded.</small></figcaption></figure>
+</div>
+<h2>Ten feelings and a familiar hello</h2>
+<p>The new sheet supplies expressions and poses. Opus should build them on one traced master, with fixed geometry, freckles and eye positions.</p>
+<img class="sheet" src="nook-expression-sheet-final.png" alt="Nook contact sheet with Hello, Calm, Happy, Excited, Proud, Surprised, Sad, Worried, Angry, Frustrated and Disappointed, preserving the original paper illustration style">
+<h2>The four faces you asked to distinguish</h2>
+<div class="faces">
+<figure><svg viewBox="155 155 150 120" role="img" aria-label="Hello face crop"><image href="nook-expression-sheet-final.png" width="1448" height="1086"/></svg><figcaption>Hello</figcaption><p>Original oval eyes and the familiar closed smile.</p></figure>
+<figure><svg viewBox="483 155 150 120" role="img" aria-label="Calm face crop"><image href="nook-expression-sheet-final.png" width="1448" height="1086"/></svg><figcaption>Calm</figcaption><p>Relaxed closed eyelids and a small, shallow smile.</p></figure>
+<figure><svg viewBox="810 155 150 120" role="img" aria-label="Happy face crop"><image href="nook-expression-sheet-final.png" width="1448" height="1086"/></svg><figcaption>Happy</figcaption><p>Joyful eye arches and a broader open smile.</p></figure>
+<figure><svg viewBox="148 488 160 123" role="img" aria-label="Proud face crop"><image href="nook-expression-sheet-final.png" width="1448" height="1086"/></svg><figcaption>Proud</figcaption><p>Lifted brows and an asymmetric closed smile.</p></figure>
+</div>
+<h2>The changes I recommend before building</h2>
+<div class="notes">
+<article><h3>Keep the frame</h3><p>The shelf, one task and stable answer/action positions are a strong improvement. Resolve the conflicting Help/Next motion rule.</p></article>
+<article><h3>Restore crossed-out apples</h3><p>The Take away mock only fades the removed apples. Add the approved diagonal marks before answering.</p></article>
+<article><h3>Define the audio flow</h3><p>Replay cancels a pending return. Muted, blocked or failed speech leaves Done available. Late callbacks cannot finish a different performance.</p></article>
+<article><h3>Carry privacy forward</h3><p>Me reports stay temporary. Load a fixed acknowledgement bundle; choosing a feeling must not cause a revealing file request.</p></article>
+<article><h3>Check actual touch targets</h3><p>Measure shape hits in CSS pixels and inspect narrow keyboard keys. Repeated side taps must never count a neighbour.</p></article>
+<article><h3>Test the missing states</h3><p>The clean static set does not cover Count 100, zero subtraction, missing parts, typed feelings, enlarged text or native keyboards.</p></article>
+</div>
+<p class="status">114 static mockup cases passed at six viewports using local Chrome. <a href="verified-shots/verification.json">Verification record</a>. This validates static layout, not physical iPad performance, speech or learning outcomes. Character style fidelity was accepted by Jof; the facial refinements are supplied for review. No game build or deployment was performed.</p>
+</main><script src="../mockups/nook-art.js"></script><script>document.getElementById('previous').innerHTML=NookArt.svg('greet',{decorative:true});</script></body></html>
