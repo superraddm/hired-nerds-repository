@@ -139,4 +139,4 @@ uses a removed clip. The four frame pages' cache key is now `?v=20261011r4p5`.
 5. "We did it!" is rendered but no screen says it yet (phase 3's judgement 9).
 6. `docs/nook-voice-recordings.csv` was already out of date (255 rows); `new-lines.csv` is round 4's record.
 
-Commit: see the next line.
+Commit: eacd635 (eacd635cdf1ba56f823f5d2adb6f4efa8954f129), with this line added in the commit that follows it.
