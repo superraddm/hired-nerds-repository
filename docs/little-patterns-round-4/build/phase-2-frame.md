@@ -229,4 +229,4 @@ landscape on land/land2), `patterns`. Taken with `prefers-reduced-motion: no-pre
 6. **Suite command**: BUILDER-NOTES' test line could add `test-little-patterns-nook.cjs` and run the layout harness
    separately (it needs Chrome and takes about four minutes).
 
-Commit: recorded in the follow-up commit.
+Commit: 78f1b94 (78f1b947afe9412b2c68021d73d6bcbdd0f39e5d), with this line added in the commit that follows it.
