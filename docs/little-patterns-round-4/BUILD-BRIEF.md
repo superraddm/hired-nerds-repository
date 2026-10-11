@@ -17,6 +17,7 @@ and an earlier pass differ, this file wins. Nothing is built yet.
 | J6 | **Whole-sentence success clips: only after Jof has heard the joined samples** on the listening page. Two or three comparison recordings are rendered for that page; nothing else until he decides. |
 | J7 | **Local only.** The build is served and tested locally (`node tools/serve-fireworks.cjs`, the phone and iPad on the same Wi-Fi). No kpopboom preview, no production deploy, no push, until Jof says so. |
 | J8 | The round-4 documents, mockups and screenshots are committed to git. |
+| J9 | (11 October, afternoon) The mockups now show the original Nook picture in every frame; the vector drawing appears nowhere. Card words are centred. |
 
 Settled earlier in the round: nothing was built before the reviews completed; the Help! button keeps the hand sign
 passed in round 3; the Friends stories stay with their four drawn children and existing recordings.
@@ -92,12 +93,14 @@ callouts, the context menu and pull-to-refresh are off.
   ten-frames, the added frame dashed; Help fills the ten first ("Fill the ten first" is a Help line, not the prompt).
   Level 5 tens and level 6 missing part keep their approved pictures. Take away keeps the approved one-group
   crossing-out. Keypad answers, doubles and make ten, zero cases: all kept.
-- **Words**: Missing word with the three picture cards from the start (Grown-ups: word pictures show / hide). Keys
-  end in Delete and Enter, no Clear; ABC order; item 61 widths. Missing letter, Word order (drag with tap fallback)
+- **Words**: Missing word with the three picture cards from the start (Grown-ups: word pictures show / hide); the
+  picture and word on each card are centred together (Jof, 11 October). Keys end in Delete and Enter, no Clear; ABC
+  order; item 61 widths. Missing letter, Word order (drag with tap fallback)
   and Number words (spelling default) chosen from the pill.
 - **Patterns**: the three families as approved; make-your-own in the pill; no tab row.
 - **Shapes (new)**: Sides (polygons; tap each side, item 58; then three number answers) and Name (three word
-  answers, faces or pictures only as Help). Levels per item 15. Nook holds the shape up on success; "We did it! A
+  answers, faces or pictures only as Help). Levels per item 15: level 1 regular shapes, gently turned; level 2 adds
+  pentagon and hexagon with irregular and rotated examples (the mock screens show level 2). Nook holds the shape up on success; "We did it! A
   pentagon has five sides."
 - **Feelings**: *Nook feels...* (ten neutral cards, Nook face crop and word; tap one and Nook performs it full
   screen per item 56, says the word and "Nook feels happy."; difficult feelings take one breath back to calm; Nook

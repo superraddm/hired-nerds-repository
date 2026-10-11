@@ -9,6 +9,8 @@
   const q=new URLSearchParams(location.search),screen=q.get('screen')||'shelf';
   const I=window.LPIcons,N=window.NookArt;
   const SYM='../../../public/fireworks/little-patterns/assets/symbols/';
+  const NOOK='<img class="nook" src="../../../public/fireworks/little-patterns/assets/nook.png" width="560" height="672" alt="" draggable="false">';
+  N.svg=function(f,o){return NOOK.replace('class="nook"','class="nook '+((o&&o.className)||'')+'"');};
   const sym=n=>'<img class="symbol" src="'+SYM+n+'.svg" alt="" draggable="false">';
   const apple=(cls,tag)=>'<span class="tagged"><i class="apple '+(cls||'')+'"></i>'+(tag?'<b class="count-tag">'+tag+'</b>':'')+'</span>';
   // Top bar: shelf, at most two mode chips, one level pill. Sound and Grown-ups are not here (they live on the shelf).
@@ -45,7 +47,7 @@
   S['feelings-perform-sad']=()=>frame({modes:null,pill:null,noNook:true,objects:'<div class="perform">'+N.svg('sad',{decorative:true})+'<div><div class="word">SAD</div><div class="line">Nook feels sad.</div></div></div>',kind:'perform'});
   S['feelings-match']=()=>frame({modes:null,pill:'Which feeling?',noNook:true,objects:'<div class="match"><button class="speech" style="flex:none;width:100%;margin:0">How does Nook feel?'+hear+'</button>'+N.svg('worried',{decorative:true,className:'match-nook'})+'</div>',answers:'<div class="answers"><button class="answer word">WORRIED</button><button class="answer word">EXCITED</button><button class="answer word">PROUD</button></div>',kind:'play'});
   S['feelings-me']=()=>frame({modes:null,pill:'Me',feeling:'calm',bubble:'You feel sad. Thank you for telling me.',objects:'<div class="me-card">'+N.face('sad',{ring:'#9aa6b8'})+'<span>SAD</span></div><p class="me-line">Show this to a grown-up if you like.</p>',kind:'perform'});
-  S['nook-sheet']=()=>'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px;background:#fffcdf;height:100%;overflow:auto">'+['greet'].concat(N.FEELINGS).map(f=>'<div style="text-align:center;font:900 15px Trebuchet MS,Arial;color:#4d3b73">'+N.svg(f,{decorative:true,className:'sheet'})+'<div>'+f+'</div></div>').join('')+'</div><style>.nook.sheet{width:100%;height:auto;animation:none}</style>';
+  S['nook-sheet']=()=>'<div style="display:grid;place-items:center;padding:10px;background:#fffcdf;height:100%;grid-template-rows:minmax(0,1fr)"><img src="../codex-review/nook-expression-sheet-final.png" alt="Codex expression sheet, signed off by Jof" style="max-width:100%;max-height:calc(100vh - 20px);object-fit:contain"></div>';
   document.body.innerHTML=(S[screen]||S.shelf)();
   // landscape Words: the bubble folds into the card as an inline line
   if(screen==='words'&&matchMedia('(orientation:landscape) and (max-height:520px)').matches){const inl=document.querySelector('.speech-inline');if(inl)inl.hidden=false;}

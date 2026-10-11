@@ -28,7 +28,7 @@ button{font:inherit;color:inherit;appearance:none;border:0;background:none;paddi
 .nf-task>*{position:relative;min-width:0}
 .objects{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;width:100%;min-height:0;height:100%}
 .nf.solo .nf-stage{grid-template-rows:minmax(0,1fr)}
-.nook{aspect-ratio:240/280}
+.nook{aspect-ratio:560/672;object-fit:contain}
 .nf-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 12px 20px}
 .nf-actions button{min-height:62px;border-radius:18px;font-weight:900;font-size:19px;display:flex;align-items:center;justify-content:center;gap:10px;border:3px solid;box-shadow:0 4px 0}
 .btn-help{background:#fff1b5;border-color:#dcc05a;color:#5a4a12;box-shadow:0 4px 0 #dcc05a}.btn-help svg{width:30px;height:30px}
@@ -65,7 +65,7 @@ button{font:inherit;color:inherit;appearance:none;border:0;background:none;paddi
 .sentence{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#3f4a5c}
 .gap{min-width:92px;min-height:46px;border:3px dashed #839979;background:#fffdf0;border-radius:12px;color:#594777;display:grid;place-items:center;padding:0 8px;letter-spacing:2px}
 .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%}
-.card{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:14px;background:#fff4c9;border:2px solid #d4bd71;font-weight:900;font-size:16px;color:#594777;min-height:56px;min-width:0}.card img{width:40px;height:40px;flex:none}
+.card{display:flex;align-items:center;justify-content:center;gap:8px;padding:6px 8px;border-radius:14px;background:#fff4c9;border:2px solid #d4bd71;font-weight:900;font-size:16px;color:#594777;min-height:56px;min-width:0}.card img{width:40px;height:40px;flex:none}
 .keys{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:5px;width:100%}
 .key{min-height:52px;border-radius:9px;background:#fffdf3;border:2px solid #b4c49e;font-weight:900;font-size:18px;display:grid;place-items:center;min-width:0}
 .key.fn{grid-column:span 4;font-size:13px}.key.go{grid-column:span 5;background:var(--green);border-color:var(--green-dark);color:#fff;font-size:16px}
@@ -95,7 +95,7 @@ button{font:inherit;color:inherit;appearance:none;border:0;background:none;paddi
 .btn-done{background:#ccead9;border-color:#75ad91;box-shadow:0 4px 0 #75ad91;color:#2f4f3c;position:relative;overflow:hidden}
 .btn-done .progress{position:absolute;left:0;bottom:0;height:6px;width:var(--played,40%);background:#3f8f5c}
 .btn-done svg{width:28px;height:28px}
-.match-nook{height:100%;max-height:100%;width:auto;max-width:100%;min-height:0}
+.match-nook{height:auto;max-height:min(100%,58vh);width:auto;max-width:100%;min-height:0}
 .match{display:grid;grid-template-rows:auto minmax(0,1fr);gap:6px;width:100%;height:100%;justify-items:center}
 .me-card{display:flex;flex-direction:column;align-items:center;gap:10px;font-size:30px;font-weight:900;letter-spacing:2px;color:#4d3b73}.me-card .nook-face-icon{width:120px;height:120px}
 .me-line{font-size:18px;color:#536647;font-weight:bold;text-align:center}
@@ -167,3 +167,11 @@ button{font:inherit;color:inherit;appearance:none;border:0;background:none;paddi
 .softer .nook,.softer .nook *{animation:none!important}
 
 @media (max-width:380px){.group .apple{width:36px;height:36px}.group .apple:before{left:15px}.group .apple:after{left:18px;width:12px}.group{gap:6px;padding:8px 10px}.plus{font-size:32px}}
+
+/* the match Nook is an image sized by viewport height so it never outgrows the card */
+.nf .match-nook{width:auto;height:auto;max-width:100%;max-height:50vh}
+@media (orientation:landscape) and (max-height:520px){.nf .match-nook{max-height:58vh}}
+
+.nf .perform .nook{width:auto;height:auto;max-width:100%;max-height:50vh}
+@media (orientation:landscape) and (max-height:520px){.nf .perform .nook{max-height:58vh}}
+@media (min-width:760px) and (min-height:521px){.nf .match-nook{max-height:42vh}.nf .perform .nook{max-height:52vh}}
