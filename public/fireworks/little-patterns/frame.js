@@ -8,8 +8,9 @@
      nook(button, options)    Places the phase-1 rig in the button's .nook-pos wrapper (placement and hops on the
                               wrapper, breathing on the svg), starts idle blinks, and answers a tap with one of
                               three small calm responses in turn: name the feeling, a wiggle, a blink with hello.
-                              celebrate(feeling) changes the expression and makes one 8 px hop; rest() returns to
-                              calm. Nothing here reacts to a mistake, to leaving or to absence.
+                              Nook rests in the rig's rest state (the hello face, arms down) unless the game names
+                              another. celebrate(feeling) changes the expression and makes one 8 px hop; rest()
+                              returns to the resting look. Nothing here reacts to a mistake, to leaving or to absence.
      fit(task)                Adds fit-1, fit-2, fit-3 to the task until its content fits (games style these).
      onResize(fn)             Runs fn after the frame height follows a viewport change.
 
@@ -76,11 +77,12 @@
   function nook(button, options) {
     options = options || {};
     const pos = button.querySelector('.nook-pos');
-    pos.innerHTML = N.svg(options.feeling || 'calm', { decorative: true });
+    const resting = options.feeling || 'rest';
+    pos.innerHTML = N.svg(resting, { decorative: true });
     const svg = pos.querySelector('svg');
     const idle = N.idle(svg);
     let turn = 0, hopTimer = 0, blinkTimer = 0;
-    const feeling = () => svg.getAttribute('data-feeling') || 'calm';
+    const feeling = () => svg.getAttribute('data-feeling') || resting;
     const replay = cls => { pos.classList.remove('nook-hop', 'nook-wiggle'); void pos.offsetWidth; pos.classList.add(cls); };
     pos.addEventListener('animationend', e => { if (e.target === pos) pos.classList.remove('nook-hop', 'nook-wiggle'); });
     function change(f) { if (feeling() !== f) N.change(svg, f); }
@@ -90,7 +92,7 @@
       change(f);
       if (!quiet()) hopTimer = window.setTimeout(() => replay('nook-hop'), 320);
     }
-    function rest(f) { window.clearTimeout(hopTimer); change(f || options.feeling || 'calm'); }
+    function rest(f) { window.clearTimeout(hopTimer); change(f || resting); }
     function blink() {
       window.clearTimeout(blinkTimer);
       if (quiet()) return;
@@ -102,7 +104,7 @@
     // A tap always gets one small calm response, in turn; never a bigger one, never a change to the puzzle.
     function tap() {
       idle.poke();
-      const t = turn++ % 3, name = feeling() === 'greet' ? 'happy' : feeling();
+      const t = turn++ % 3, name = feeling() === 'greet' || feeling() === 'rest' ? 'happy' : feeling();
       if (t === 1 && !quiet()) { replay('nook-wiggle'); return 'wiggle'; }
       if (t === 2) { if (options.bubble) options.bubble.flash('Hello! I’m Nook. Let’s play.', ["Hello! I'm Nook. Let's play."], { speak: true }); blink(); return 'hello'; }
       if (options.bubble) options.bubble.flash('Nook feels ' + name + '.', ['Nook feels ' + name + '.'], { speak: true });

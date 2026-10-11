@@ -29,7 +29,7 @@
   function normalisePrefs(input){const p={...defaults};if(!input||typeof input!=='object')return p;for(const key of ['range','choices','case','countAnswer','addition','numberWords','keyboard','wordPictures','pace']){const allowed={range:[5,10],choices:[2,3],case:['upper','lower'],countAnswer:['choose','type'],addition:['choose','type','demo'],numberWords:['show','choose','type'],keyboard:['az','device'],wordPictures:['show','hide'],pace:[0,1800,850]}[key];if(allowed.includes(input[key]))p[key]=input[key];}p.soft=input.soft===true;if(Array.isArray(input.customWords))p.customWords=[...new Set(input.customWords.map(cleanWord).filter(Boolean))].slice(0,24);if(Array.isArray(input.customSentences))p.customSentences=[...new Set(input.customSentences.map(cleanSentence).filter(Boolean))].slice(0,12);return p;}
   function options(answer,pool,count,index=0){const other=[...new Set(pool)].filter(v=>v!==answer);const start=index%Math.max(1,other.length);const result=[answer,...other.slice(start).concat(other.slice(0,start)).slice(0,count-1)];const offset=index%result.length;return result.slice(offset).concat(result.slice(0,offset));}
   // Levels are chosen per activity and never advance on their own. The round index only varies examples within a level.
-  const LEVELS={count:6,add:6,numbers:4,patterns:14};
+  const LEVELS={count:6,add:6,numbers:4,patterns:14,shapes:2};
   const OPERATIONS=['add','take'];
   function clampLevel(kind,level){const max=LEVELS[kind]||1;return Number.isInteger(level)&&level>=1&&level<=max?level:1;}
   // Every round carries a stable puzzle id: kind, save version, level, operation and the content itself. Restoration matches on it.
@@ -68,7 +68,9 @@
   function countTokens(target){const tens=Math.floor(target/10),ones=target%10;return [...Array.from({length:tens},(_,i)=>'t'+i),...Array.from({length:ones},(_,i)=>'o'+i)];}
   function runningTotals(seen){let total=0;const totals={};for(const token of seen){total+=String(token).startsWith('t')?10:1;totals[token]=total;}return totals;}
   // pair optionally names a directly chosen sum; it must still fit the level.
-  function sumRound(index,prefs,level=1,operation='add',pair=null){level=clampLevel('add',level);if(!OPERATIONS.includes(operation))operation='add';if(operation==='take'&&level===6)level=5;const sums=sumSequence(level,operation);const valid=Array.isArray(pair)&&pair.length===2&&sums.some(([a,b])=>a===pair[0]&&b===pair[1]);const [a,b]=valid?pair:sums[index%sums.length];const missing=missingPart(level,operation);const total=operation==='take'?a-b:a+b;const answer=missing?b:total;return {id:identify('add',level,missing?'missing':operation,a+(operation==='take'?'-':'+')+b),level,operation,missing,a,b,total,answer,stage:'parts',draft:'',hint:0,choices:options(answer,arithmeticPool(level,operation),3,index),done:false};}
+  function sumRound(index,prefs,level=1,operation='add',pair=null){level=clampLevel('add',level);if(!OPERATIONS.includes(operation))operation='add';if(operation==='take'&&level===6)level=5;const sums=sumSequence(level,operation);const valid=Array.isArray(pair)&&pair.length===2&&sums.some(([a,b])=>a===pair[0]&&b===pair[1]);const [a,b]=valid?pair:sums[index%sums.length];const missing=missingPart(level,operation);const total=operation==='take'?a-b:a+b;const answer=missing?b:total;const id=identify('add',level,missing?'missing':operation,a+(operation==='take'?'-':'+')+b);
+    // Levels 1 to 4 offer the answer's near neighbours (8 + 7 offers 14, 15 and 16, not 1, 2 and 15), never below zero (addition never offers zero) and never above the level's range; tens and the missing part keep their pools.
+    return {id,level,operation,missing,a,b,total,answer,stage:'parts',draft:'',hint:0,choices:level<=4?nearChoices(answer,operation==='take'?0:1,levelRange(level,'add'),hashText(id)):options(answer,arithmeticPool(level,operation),3,index),done:false};}
   // Pattern rules. Levels 1 to 11 repeat a unit (longer units and two gaps from level 8). Growing, mirror and number patterns are separate named rules with their own hint text, never a silent step in the ladder.
   const PATTERN_RULES={repeat:{name:'Repeating pattern',prompt:'Let’s make a pattern!',title:'One bead is missing',titleTwo:'Two beads are missing',hint:''},grow:{name:'Growing pattern',prompt:'This pattern grows!',title:'The pattern grows',titleTwo:'The pattern grows',hint:'Each group has one more bead.'},mirror:{name:'Mirror pattern',prompt:'A mirror pattern!',title:'The pattern turns around',titleTwo:'The pattern turns around',hint:'The second half is the first half backwards.'},number:{name:'Number pattern',prompt:'Numbers in a row!',title:'What number comes next?',titleTwo:'What numbers are missing?',hint:'Count on in {step}.'}};
   const PATTERN_LEVELS=LEVELS.patterns;
@@ -114,6 +116,70 @@
   function customChoices(entry,prefs,index){const picks=[];for(const w of sentencePool(entry,prefs))if(picks.length<3&&!picks.includes(w))picks.push(w);const offset=index%picks.length;return picks.slice(offset).concat(picks.slice(0,offset));}
   function letterRound(index,prefs){const entries=PICTURES.concat(prefs.customWords.map(word=>({word,picture:(PICTURES.find(p=>p.word===word)||{}).picture||null})));const e=entries[index%entries.length];const positions=Array.from(e.word).map((c,i)=>/[A-Z]/.test(c)?i:-1).filter(i=>i>=0);const position=positions[(index+Math.floor(index/entries.length))%positions.length];const letter=e.word[position];const pool=[...new Set(Array.from(e.word.replace(/[^A-Z]/g,'')).concat(Array.from('AEIOUBTSLMNRDP')))];return {id:identify('letter',1,'letter',e.word+'#'+position),word:e.word,picture:e.picture,position,letter,hint:0,choices:options(letter,pool,prefs.choices,index),done:false};}
   function orderRound(index,prefs){const entries=sentenceEntries(prefs);const e=entries[index%entries.length];const words=sentenceWords(e.text);const shift=1+index%(words.length-1);let tiles=words.slice(shift).concat(words.slice(0,shift));if(index%2)tiles=tiles.reverse();if(tiles.join(' ')===words.join(' '))tiles=words.slice().reverse();return {id:identify('order',1,e.custom?'custom':'order',e.text+'#'+tiles.join(',')),text:e.text,words,tiles,picture:e.picture,custom:!!e.custom,used:[],hint:0,done:false};}
+  // ---- Shapes (round 4) ----
+  // Every shape is drawn from a point list in a 240 x 240 box (circles and ovals from a centre, two radii and a turn), so orientation and proportion vary: a triangle can point down or lie long and thin, a turned square is still a square (there is no "diamond"), and pentagons and hexagons are not only the regular ones. Level 1: triangles, squares and rectangles (Sides and Name) with circles and ovals (Name only: Sides is polygons). Level 2 keeps them all and adds pentagons and hexagons, regular, turned and irregular.
+  const SHAPE_SIDES={triangle:3,square:4,rectangle:4,pentagon:5,hexagon:6};
+  const SHAPE_LEVELS=[['triangle','square','rectangle','circle','oval'],['triangle','square','rectangle','circle','oval','pentagon','hexagon']];
+  const SHAPE_MODES=['sides','name'];
+  const ROUND_SHAPES=['circle','oval'];
+  const shapePoint=v=>{const n=Math.round(v*10)/10;return Object.is(n,-0)?0:n;};
+  function shapeTurn(points,deg){const a=deg*Math.PI/180,c=Math.cos(a),s=Math.sin(a);return points.map(([x,y])=>[120+(x-120)*c-(y-120)*s,120+(x-120)*s+(y-120)*c]);}
+  // Centred on its bounding box and rounded to a tenth; then listed clockwise on screen from the top corner (the leftmost of two level top corners), so side 1 is the first side clockwise from the top and Help counts round the shape the same way every time.
+  function shapeCentre(points){const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);const dx=120-(Math.min(...xs)+Math.max(...xs))/2,dy=120-(Math.min(...ys)+Math.max(...ys))/2;let out=points.map(([x,y])=>[shapePoint(x+dx),shapePoint(y+dy)]);
+    if(shapeArea(out)<0)out.reverse();let top=0;out.forEach((p,i)=>{if(p[1]<out[top][1]||(p[1]===out[top][1]&&p[0]<out[top][0]))top=i;});return out.slice(top).concat(out.slice(0,top));}
+  // Twice the signed area; positive when the corners run clockwise on screen (y grows downwards).
+  function shapeArea(points){let s=0;for(let i=0;i<points.length;i++){const [ax,ay]=points[i],[bx,by]=points[(i+1)%points.length];s+=ax*by-bx*ay;}return s;}
+  // A regular polygon of circumradius r, its first corner straight up, then turned by deg.
+  function shapeRegular(n,r,deg){return shapeCentre(Array.from({length:n},(_,i)=>{const a=(deg-90+i*360/n)*Math.PI/180;return [120+r*Math.cos(a),120+r*Math.sin(a)];}));}
+  function shapeBox(w,h,deg){return shapeCentre(shapeTurn([[120-w/2,120-h/2],[120+w/2,120-h/2],[120+w/2,120+h/2],[120-w/2,120+h/2]],deg||0));}
+  const SHAPE_CATALOGUE={
+    triangle:{up:shapeRegular(3,106,0),down:shapeRegular(3,106,180),tilted:shapeRegular(3,102,17),right:shapeCentre([[52,30],[52,210],[196,210]]),thin:shapeCentre([[28,84],[214,126],[36,170]])},
+    square:{upright:shapeBox(150,150),turned:shapeBox(140,140,15),half:shapeBox(134,134,30),corner:shapeBox(132,132,45),small:shapeBox(112,112)},
+    rectangle:{wide:shapeBox(192,106),tall:shapeBox(100,190),tilted:shapeBox(176,88,20),long:shapeBox(188,66,-35),standing:shapeBox(96,172,12)},
+    circle:{big:{cx:120,cy:120,rx:98,ry:98,turn:0},middle:{cx:120,cy:120,rx:84,ry:84,turn:0},small:{cx:120,cy:120,rx:68,ry:68,turn:0}},
+    oval:{wide:{cx:120,cy:120,rx:104,ry:62,turn:0},tall:{cx:120,cy:120,rx:60,ry:100,turn:0},tilted:{cx:120,cy:120,rx:100,ry:58,turn:-30}},
+    pentagon:{upright:shapeRegular(5,100,0),down:shapeRegular(5,100,36),turned:shapeRegular(5,98,14),uneven:shapeCentre([[120,30],[205,92],[172,205],[64,198],[32,96]]),house:shapeCentre([[40,104],[120,30],[200,104],[200,208],[40,208]]),wide:shapeCentre([[30,128],[92,46],[198,60],[214,158],[98,204]])},
+    hexagon:{flat:shapeRegular(6,100,30),pointy:shapeRegular(6,100,0),turned:shapeRegular(6,98,14),uneven:shapeCentre([[70,36],[172,30],[214,118],[164,210],[62,206],[26,118]]),long:shapeCentre([[22,120],[72,52],[168,52],[218,120],[168,188],[72,188]]),slanted:shapeCentre([[46,64],[150,34],[214,104],[196,190],[96,212],[30,150]])}
+  };
+  // A fixed, non-sequential order per level and mode: each shape's examples in their mixed order, dealt from a seeded sequence so the same shape never comes twice running and the next shape cannot be read off the last one. The first round is the plainest new shape (an upright triangle at level 1, an upright pentagon at level 2).
+  const shapeOrders={};
+  function shapeSequence(level,mode){level=clampLevel('shapes',level);mode=SHAPE_MODES.includes(mode)?mode:'sides';const key=level+mode;if(shapeOrders[key])return shapeOrders[key].map(e=>e.slice());
+    const names=SHAPE_LEVELS[level-1].filter(n=>mode==='name'||SHAPE_SIDES[n]);const queues={};for(const n of names)queues[n]=mixed(Object.keys(SHAPE_CATALOGUE[n]));
+    let seed=hashText('shapes'+key)||1,previous='';const next=()=>{seed=(Math.imul(seed,1103515245)+12345)>>>0;return seed/4294967296;};const out=[];
+    while(names.some(n=>queues[n].length)){const left=names.filter(n=>queues[n].length),total=left.reduce((s,n)=>s+queues[n].length,0);let pick=out.length?'':level===1?'triangle':'pentagon';
+      if(!pick){const most=left.find(n=>n!==previous&&queues[n].length*2>total+1);let pool=most?[most]:left.filter(n=>n!==previous);if(!pool.length)pool=left;const weight=pool.reduce((s,n)=>s+queues[n].length,0);let r=next()*weight;pick=pool[pool.length-1];for(const n of pool){r-=queues[n].length;if(r<0){pick=n;break;}}}
+      out.push([pick,queues[pick].shift()]);previous=pick;}
+    shapeOrders[key]=out;return out.map(e=>e.slice());}
+  // Number answers: the answer and two near neighbours (within three either side), inside the allowed range, never the same number twice, shown smallest first. Which neighbours (below, above or both) is fixed per puzzle by its id, so the answer is not always in the middle.
+  const NEAR=[[-1,1],[1,2],[-2,-1],[-1,2],[-2,1],[1,3],[-3,-1]];
+  function nearChoices(answer,low,high,seed){const ok=v=>Number.isInteger(v)&&v>=low&&v<=high&&v!==answer;const start=(seed>>>0)%NEAR.length;let picks=null;
+    for(let k=0;k<NEAR.length&&!picks;k++){const [x,y]=NEAR[(start+k)%NEAR.length];if(ok(answer+x)&&ok(answer+y))picks=[answer+x,answer+y];}
+    if(!picks){picks=[];for(let d=1;picks.length<2&&d<=Math.max(1,high-low);d++)for(const v of [answer-d,answer+d])if(picks.length<2&&ok(v))picks.push(v);}
+    return [answer,...picks].sort((a,b)=>a-b);}
+  // Name answers: the shape's name and two other names from the same level. SQUARE and RECTANGLE are never on offer together (a square is a rectangle too, so one of them would mark a right answer wrong), and at level 1 nor are CIRCLE and OVAL; at level 2 an oval and a circle may meet.
+  function shapeNameChoices(shape,level,seed){const names=SHAPE_LEVELS[level-1];const clash=(a,b)=>(a==='square'&&b==='rectangle')||(a==='rectangle'&&b==='square')||(level===1&&ROUND_SHAPES.includes(a)&&ROUND_SHAPES.includes(b));
+    const others=names.filter(n=>n!==shape&&!clash(shape,n)),pairs=[];for(let i=0;i<others.length;i++)for(let j=i+1;j<others.length;j++)if(!clash(others[i],others[j]))pairs.push([others[i],others[j]]);
+    const set=[shape,...pairs[(seed>>>0)%pairs.length]],offset=((seed>>>0)>>>8)%3;return set.slice(offset).concat(set.slice(0,offset)).map(n=>n.toUpperCase());}
+  // A Shapes round: Sides asks how many sides a polygon has (tap each side to count it); Name asks which shape it is (three words). counted holds side indices in tap order.
+  function shapeRound(index,prefs,level=1,mode='sides'){level=clampLevel('shapes',level);mode=SHAPE_MODES.includes(mode)?mode:'sides';const sequence=shapeSequence(level,mode);const [shape,variant]=sequence[((index%sequence.length)+sequence.length)%sequence.length];
+    const id=identify('shapes',level,mode,shape+'#'+variant),drawn=SHAPE_CATALOGUE[shape][variant],sides=SHAPE_SIDES[shape]||0,seed=hashText(id);
+    return {id,level,mode,shape,variant,sides,points:Array.isArray(drawn)?drawn.map(p=>p.slice()):null,ellipse:Array.isArray(drawn)?null:{...drawn},answer:mode==='sides'?sides:shape.toUpperCase(),choices:mode==='sides'?nearChoices(sides,3,8,seed):shapeNameChoices(shape,level,seed),counted:[],hint:0,done:false};}
+  // Which side a tap means. x, y and radius are in the shape's own units (the page converts the pointer and the 22 CSS-pixel radius). The nearest side within the radius wins. Just outside a corner both sides are exactly as near (the corner itself), so the side whose line runs closer to the tap wins, then a side not yet counted, then the lower index. -1 when no side is near enough.
+  function nearestSide(points,x,y,radius,counted){const n=Array.isArray(points)?points.length:0,EPS=1e-6,done=i=>Array.isArray(counted)&&counted.includes(i);let best=-1,bestD=Infinity,bestLine=Infinity;
+    for(let i=0;i<n;i++){const [ax,ay]=points[i],[bx,by]=points[(i+1)%n],dx=bx-ax,dy=by-ay,len2=dx*dx+dy*dy;if(!len2)continue;const t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/len2));const d=Math.hypot(x-(ax+t*dx),y-(ay+t*dy)),line=Math.abs((x-ax)*dy-(y-ay)*dx)/Math.sqrt(len2);
+      if(!(d<=radius+EPS))continue;
+      if(best<0||d<bestD-EPS||(d<=bestD+EPS&&(line<bestLine-EPS||(line<=bestLine+EPS&&!done(i)&&done(best))))){best=i;bestD=d;bestLine=line;}}
+    return best;}
+  // Where a side's number tag sits: off the middle of the side, outward from the shape's centre by gap units.
+  function sideTag(points,i,gap){const n=points.length,[ax,ay]=points[i],[bx,by]=points[(i+1)%n],mx=(ax+bx)/2,my=(ay+by)/2,cx=points.reduce((s,p)=>s+p[0],0)/n,cy=points.reduce((s,p)=>s+p[1],0)/n,len=Math.hypot(bx-ax,by-ay)||1;let nx=(by-ay)/len,ny=-(bx-ax)/len;if(nx*(mx-cx)+ny*(my-cy)<0){nx=-nx;ny=-ny;}return [shapePoint(mx+nx*gap),shapePoint(my+ny*gap)];}
+  const shapeArticle=name=>/^[aeiou]/.test(name)?'an':'a';
+  // The fact in a Shapes success line, as shown and as its bundled clip will say it.
+  function shapeFact(round){const name=round.shape;if(round.mode==='sides'){const line='A '+name+' has '+numberWord(round.sides).toLowerCase()+' sides.';return {text:line,said:line};}return {text:'It’s '+shapeArticle(name)+' '+name+'!',said:"It's "+shapeArticle(name)+' '+name+'!'};}
+  // Every line the Shapes game says (the side numbers it says are the existing number clips). Phase 5 renders these and merges them into spokenBank(); until then the voice test stays as it is, the success opener plays on its own and the bubble shows no speaker for the rest.
+  const SHAPES_SPEECH=[...SHAPE_LEVELS[1].map(n=>"It's "+shapeArticle(n)+' '+n+'!'),...Object.keys(SHAPE_SIDES).map(n=>'A '+n+' has '+numberWord(SHAPE_SIDES[n]).toLowerCase()+' sides.'),'Which shape is this?','How many sides?','Tap each side.'];
+  // A line has a clip once it is in the spoken bank (the voice test keeps the bank and the bundled manifest equal).
+  let bankKeys=null;
+  function voiced(line){if(!bankKeys)bankKeys=new Set(spokenBank());return bankKeys.has(String(line).trim().toLowerCase().replace(/\s+/g,' ').replace(/[.!?]+$/,''));}
   // Success feedback: short, factual and warm. The line restates the answer; the opener is chosen deterministically per puzzle so the same puzzle always gets the same words.
   const OPENERS=['Yes!','You found it.','That’s the one.','Spot on!'];
   // Keyboard sound lookup keys. The eight corrected sounds use explicit phonemes
@@ -125,6 +191,8 @@
     if(kind==='count'){fact=plural(round.target)+'.';speech=[...numberSpeech(round.target),round.target===1?'apple':'apples'];}
     else if(kind==='add'){const take=round.operation==='take';fact=round.a+(take?' − ':' + ')+round.b+' = '+round.total+'.';speech=[...numberSpeech(round.a),take?'take away':'plus',...numberSpeech(round.b),'equals',...numberSpeech(round.total)];}
     else if(kind==='patterns'){fact='The pattern fits.';speech=['The pattern fits.'];}
+    // Shapes: "A pentagon has five sides." or "It’s a hexagon!", spoken only once its clip exists (phase 5); until then the opener plays alone.
+    else if(kind==='shapes'){const f=shapeFact(round);fact=f.text;speech=voiced(f.said)?[f.said]:[];}
     else if(kind==='numbers'){fact=round.word+'.';speech=[round.word];}
     else if(kind==='letter'){fact=round.word+'.';speech=PICTURES.some(p=>p.word===round.word)?[round.word]:[];}
     else{const words=round.words.map(w=>w.toLowerCase());words[0]=words[0][0].toUpperCase()+words[0].slice(1);fact=words.join(' ')+'.';speech=round.custom||!SENTENCES.some(s=>s.text===round.text)?[]:[round.words.join(' ').toLowerCase()+'.'];}
@@ -136,6 +204,6 @@
   function matches(typed,expected){return String(typed).trim().replace(/\s+/g,' ').toLocaleUpperCase('en-GB')===String(expected).toLocaleUpperCase('en-GB');}
   // limit bounds the draft: 40 for the word inputs (matching their maxlength), 500 by default.
   function editText(value,start,end,key,limit=500){value=String(value);start=Math.max(0,Math.min(value.length,start));end=Math.max(start,Math.min(value.length,end));if(key==='Backspace'){if(start===end&&start>0)start-=Array.from(value.slice(0,start)).pop().length;return {value:value.slice(0,start)+value.slice(end),caret:start};}const insert=key==='Space'?' ':key;const next=value.slice(0,start)+insert+value.slice(end);if(next.length>limit)return {value,caret:end};return {value:next,caret:start+insert.length};}
-  const api={LETTER_SOUNDS,cleanSentence,sentenceProblem,SENTENCE_LIMIT,customSentenceEntry,sentenceEntries,NUMBER_WORDS,TENS_WORDS,numberSpeech,numberWord,arithmeticPool,missingPart,usesTray,usesSticks,RANGES,SUM_SETS,setRound,countTokens,runningTotals,mixed,arrangement,numberSequence,FEEDBACK,retryLine,PICTURES,SENTENCES,WORD_SYMBOLS,PATTERN_LEVELS,PATTERN_FAMILIES,familyRound,PATTERN_RULES,SHAPES,patternHint,MAKE_LIMIT,makeRound,makeEdit,readBack,LEVELS,OPERATIONS,VERSION,identify,clampLevel,levelRange,countSequence,sumSequence,sentenceWords,sentencePool,sentencePrompt,sentenceRound,letterRound,orderRound,defaults,normalisePrefs,cleanWord,options,countRound,sumRound,patternRound,wordRound,numberWordRound,OPENERS,successLine,spokenBank,matches,editText};
+  const api={LETTER_SOUNDS,cleanSentence,sentenceProblem,SENTENCE_LIMIT,customSentenceEntry,sentenceEntries,NUMBER_WORDS,TENS_WORDS,numberSpeech,numberWord,arithmeticPool,missingPart,usesTray,usesSticks,RANGES,SUM_SETS,setRound,countTokens,runningTotals,mixed,arrangement,numberSequence,FEEDBACK,retryLine,PICTURES,SENTENCES,WORD_SYMBOLS,PATTERN_LEVELS,PATTERN_FAMILIES,familyRound,PATTERN_RULES,SHAPES,patternHint,MAKE_LIMIT,makeRound,makeEdit,readBack,LEVELS,OPERATIONS,VERSION,identify,clampLevel,levelRange,countSequence,sumSequence,sentenceWords,sentencePool,sentencePrompt,sentenceRound,letterRound,orderRound,defaults,normalisePrefs,cleanWord,options,countRound,sumRound,patternRound,wordRound,numberWordRound,OPENERS,successLine,spokenBank,matches,editText,SHAPE_SIDES,SHAPE_LEVELS,SHAPE_MODES,SHAPE_CATALOGUE,shapeSequence,shapeRound,nearChoices,shapeNameChoices,nearestSide,sideTag,shapeArea,SHAPES_SPEECH,voiced};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.GardenLearning=api;
 })(typeof window!=='undefined'?window:globalThis);

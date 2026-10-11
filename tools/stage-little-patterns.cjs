@@ -7,7 +7,7 @@ const files = [
   // Round 4: the Nook frame, the shelf, the character rig, the icons and the home-screen manifest.
   'frame.css', 'frame.js', 'shelf.js', 'icons.js', 'nook-art.js', 'nook.css',
   'manifest.webmanifest', 'assets/icon-192.png', 'assets/icon-512.png',
-  'shapes.html', 'shapes-stub.js',
+  'shapes.html', 'shapes.js', 'shapes.css',
   'blocks.html', 'blocks.css', 'blocks-live.css', 'blocks.js', 'core.js',
   'garden.html', 'garden.css', 'garden.js',
   'assets/nook.png', 'assets/kpop-boom.png', 'LICENSE.txt', 'content.html', 'voice-library.js',

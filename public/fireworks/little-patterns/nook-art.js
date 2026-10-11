@@ -27,7 +27,9 @@
   'use strict';
   const C = { body: '#9776CD', face: '#F7ECD8', ink: '#2A2964', freckle: '#EF8668', mitten: '#46CAD3', leaf: '#95DCA0', vein: '#309558', feet: '#614591', glint: '#FFFFFF', ring: '#8C8A99' };
   const FEELINGS = ['calm', 'happy', 'sad', 'angry', 'worried', 'excited', 'proud', 'surprised', 'frustrated', 'disappointed'];
-  const STATES = FEELINGS.concat(['greet']);
+  // greet waves hello (the shelf); rest is the same hello face with both arms down, Nook's resting look on the play
+  // screens (round 4, phase 3). calm, with its closed eyes, stays a Feelings word.
+  const STATES = FEELINGS.concat(['greet', 'rest']);
   const AXIS = 581;                 // the arms mirror about x = 290.5 (the body's middle at shoulder height)
   const SHOULDER = { l: [161, 415], r: [420, 415] };
   const STEM = [266, 143];          // where the two leaf veins meet the stem
@@ -81,6 +83,7 @@
   // body: [tilt in degrees, vertical scale] about the base. leaves: lift in degrees (negative droops).
   const POSES = {
     greet: { arms: { l: { shape: 'rest' }, r: { shape: 'raised' } }, body: [0, 1], leaves: 0 },
+    rest: { arms: { shape: 'rest' }, body: [0, 1], leaves: 0 },
     calm: { arms: { shape: 'rest', swing: -4 }, body: [0, 1], leaves: 0 },
     happy: { arms: { shape: 'rest', swing: 33 }, body: [0, 1.01], leaves: 4 },
     excited: { arms: { shape: 'raised', swing: -4 }, body: [0, 1.02], leaves: 5 },
@@ -180,10 +183,11 @@
     angry: function () { return stroke(place('M-14 3L14 -1', MOUTH[0], MOUTH[1], TILT), 8.5); },
     frustrated: function () { return stroke(place('M-17 4L-9 -3L-1 4L7 -3L15 3', MOUTH[0], MOUTH[1], TILT), 7); },
     disappointed: function () { return stroke(place('M-14 7Q0 -3 14 7', MOUTH[0], MOUTH[1], TILT), 8); },
-    greet: function () { return stroke(GREET_MOUTH, 8.5); }
+    greet: function () { return stroke(GREET_MOUTH, 8.5); },
+    rest: function () { return stroke(GREET_MOUTH, 8.5); }
   };
   const FACE = {
-    greet: 'open', calm: 'calm', happy: 'joy', excited: 'wide', proud: 'up', surprised: 'wide',
+    greet: 'open', rest: 'open', calm: 'calm', happy: 'joy', excited: 'wide', proud: 'up', surprised: 'wide',
     sad: 'open', worried: 'glance', angry: 'narrow', frustrated: 'tense', disappointed: 'heavy'
   };
   function features(f) {
@@ -195,7 +199,7 @@
 
   // ---- rendering ----
   function state(feeling) { return STATES.indexOf(feeling) >= 0 ? feeling : 'calm'; }
-  function labelFor(f) { return f === 'greet' ? 'Nook waves hello' : 'Nook feels ' + f; }
+  function labelFor(f) { return f === 'greet' ? 'Nook waves hello' : f === 'rest' ? 'Nook smiles' : 'Nook feels ' + f; }
   function a11y(options, f) {
     return options.decorative ? 'aria-hidden="true" focusable="false"' : 'role="img" aria-label="' + String(options.label || labelFor(f)).replace(/[&<>"]/g, function (c) { return '&#' + c.charCodeAt(0) + ';'; }) + '"';
   }

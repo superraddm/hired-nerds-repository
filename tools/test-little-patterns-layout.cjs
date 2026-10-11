@@ -29,6 +29,12 @@ const position = extra => ({ [P + 'garden-position']: { mode: 'count', wordTab: 
 const prefs = p => ({ [P + 'little-patterns-v1']: p });
 const click = sel => `document.querySelector(${JSON.stringify(sel)}).click()`;
 const keys = word => Array.from(word).map(c => click(`[data-key="${c}"]`)).join(';');
+// Shapes: a seeded place in a level and mode, chosen by the example's name; taps land 6 px off the middle of each
+// side, through the element under that point, so the real pointer path (screen matrix, 22 px radius) is exercised.
+const L = require('../public/fireworks/little-patterns/learning.js');
+const shapes = (level, mode, example) => { const i = L.shapeSequence(level, mode).findIndex(([s, v]) => s + '#' + v === example); if (i < 0) throw Error('no ' + example); return { [P + 'shapes-position']: { mode, level, indices: { [mode]: i } } }; };
+const tapSides = n => `(()=>{for(let k=0;k<${n};k++){const svg=document.querySelector('svg.big-shape'),m=svg.getScreenCTM(),h=document.querySelectorAll('.big-shape .hit')[k];if(!h)break;const q=h.getPointAtLength(h.getTotalLength()/2),x=m.a*q.x+m.c*q.y+m.e+4,y=m.b*q.x+m.d*q.y+m.f+4;document.elementFromPoint(x,y).dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,clientX:x,clientY:y,detail:1}));}})()`;
+const answer = (level, mode, example) => { const i = L.shapeSequence(level, mode).findIndex(([s, v]) => s + '#' + v === example); return click(`[data-choice="${L.shapeRound(i, L.defaults, level, mode).answer}"]`); };
 // shot: part of the evidence set. act: script run in the page after load. wait: ms before checking.
 const SCENARIOS = [
   { name: 'shelf', page: 'index.html', shot: true },
@@ -61,7 +67,21 @@ const SCENARIOS = [
   { name: 'patterns-level-10', page: 'garden.html#patterns', seed: position({ mode: 'patterns', patternFamily: 0, levels: { patterns: 10 } }) },
   { name: 'patterns-mirror', page: 'garden.html#patterns', seed: position({ mode: 'patterns', patternFamily: 0, levels: { patterns: 13 }, indices: { patterns: 1 } }) },
   { name: 'make', page: 'garden.html#patterns', seed: position({ mode: 'patterns', patternMode: 'make' }), act: ['circle', 'square', 'circle', 'square', 'oval', 'triangle'].map(s => click(`[data-add="${s}"]`)).join(';') },
-  { name: 'shapes-stub', page: 'shapes.html' }
+  { name: 'shapes-sides', page: 'shapes.html', shot: true, seed: shapes(2, 'sides', 'pentagon#upright') },
+  { name: 'shapes-sides-two', page: 'shapes.html', shot: true, seed: shapes(2, 'sides', 'pentagon#upright'), act: tapSides(2), wait: 500 },
+  { name: 'shapes-sides-lit', page: 'shapes.html', shot: true, seed: shapes(2, 'sides', 'pentagon#upright'), act: tapSides(5), wait: 600 },
+  { name: 'shapes-sides-done', page: 'shapes.html', shot: true, seed: shapes(2, 'sides', 'pentagon#upright'), act: tapSides(5) + ';' + answer(2, 'sides', 'pentagon#upright'), wait: 1100 },
+  { name: 'shapes-sides-help', page: 'shapes.html', seed: shapes(1, 'sides', 'triangle#thin'), act: [1, 2, 3].map(() => click('#help')).join(';'), wait: 1700 },
+  { name: 'shapes-name', page: 'shapes.html', shot: true, seed: shapes(2, 'name', 'hexagon#uneven') },
+  { name: 'shapes-name-help', page: 'shapes.html', shot: true, seed: shapes(2, 'name', 'hexagon#uneven'), act: click('#help'), wait: 400 },
+  { name: 'shapes-name-done', page: 'shapes.html', shot: true, seed: shapes(2, 'name', 'hexagon#uneven'), act: answer(2, 'name', 'hexagon#uneven'), wait: 1100 },
+  { name: 'shapes-name-rectangle', page: 'shapes.html', seed: shapes(1, 'name', 'rectangle#long'), act: click('#help'), wait: 400 },
+  { name: 'shapes-house', page: 'shapes.html', shot: true, seed: shapes(2, 'sides', 'pentagon#house'), act: tapSides(2), wait: 500 },
+  { name: 'shapes-hexagon-slanted', page: 'shapes.html', shot: true, seed: shapes(2, 'sides', 'hexagon#slanted'), act: tapSides(6), wait: 600 },
+  { name: 'shapes-pentagon-wide', page: 'shapes.html', shot: true, seed: shapes(2, 'name', 'pentagon#wide') },
+  { name: 'shapes-square-corner', page: 'shapes.html', shot: true, seed: shapes(1, 'sides', 'square#corner'), act: tapSides(1), wait: 500 },
+  { name: 'shapes-oval-tilted', page: 'shapes.html', shot: true, seed: shapes(1, 'name', 'oval#tilted'), act: click('#help') + ';' + click('#help'), wait: 400 },
+  { name: 'shapes-chooser', page: 'shapes.html', act: click('#support'), wait: 400 }
 ];
 // Run in the page: every problem as a line of text.
 const CHECK = `(()=>{const out=[];

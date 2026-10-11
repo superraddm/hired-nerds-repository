@@ -44,9 +44,9 @@ function frontMitten(el, side) {
   return sample(shape.querySelector('path').getAttribute('d')).map(p => { const a = rot(p, +m[3]); const b = rot([a[0], a[1] + +m[2]], +m[1]); return [b[0] + s[0], b[1] + s[1]]; });
 }
 
-test('the module runs under Node and exports the ten feelings plus the greeting', () => {
+test('the module runs under Node and exports the ten feelings plus the greeting and the resting look', () => {
   assert.deepEqual(N.FEELINGS, TEN);
-  assert.deepEqual(N.STATES, TEN.concat('greet'));
+  assert.deepEqual(N.STATES, TEN.concat('greet', 'rest'));
   for (const k of ['svg', 'face', 'change', 'idle']) assert.equal(typeof N[k], 'function', k);
   assert.equal(typeof N.COLOURS.body, 'string');
 });
@@ -151,9 +151,10 @@ test('the canonical geometry does not wobble: body, patch, freckles, feet and le
   }
 });
 
-test('faces: every state has its own eyes-and-mouth, and the four happy-side faces differ by eyes and by mouth', () => {
+test('faces: every state has its own eyes-and-mouth (rest shares the hello face by design), and the four happy-side faces differ by eyes and by mouth', () => {
   const faces = N.STATES.map(f => parse(N.face(f)));
   for (let i = 0; i < faces.length; i++) for (let j = i + 1; j < faces.length; j++) {
+    if ([N.STATES[i], N.STATES[j]].sort().join() === 'greet,rest') continue;
     assert.notEqual(eyes(faces[i]) + mouth(faces[i]), eyes(faces[j]) + mouth(faces[j]), N.STATES[i] + ' and ' + N.STATES[j] + ' must not share a face');
   }
   const happySide = ['greet', 'calm', 'happy', 'proud'].map(f => parse(N.face(f)));
@@ -166,9 +167,30 @@ test('faces: every state has its own eyes-and-mouth, and the four happy-side fac
     assert.notEqual(mouth(x), mouth(y), a + '/' + b + ' mouths differ');
     assert.notEqual(eyes(x), eyes(y), a + '/' + b + ' eyes differ');
   }
-  // brows only where the profile asks for them; never on the greeting, calm, happy or excited
-  for (const f of ['greet', 'calm', 'happy', 'excited']) assert.equal(parse(N.svg(f)).querySelector('.nook-brows'), null, f);
+  // brows only where the profile asks for them; never on the greeting, the resting look, calm, happy or excited
+  for (const f of ['greet', 'rest', 'calm', 'happy', 'excited']) assert.equal(parse(N.svg(f)).querySelector('.nook-brows'), null, f);
   for (const f of ['proud', 'sad', 'worried', 'angry', 'frustrated']) assert.ok(parse(N.svg(f)).querySelector('.nook-brows'), f);
+});
+
+test('rest is the hello face (open eyes, the original smile, no brows) with both arms down: the resting Nook on play screens', () => {
+  const rest = parse(N.svg('rest')), greet = parse(N.svg('greet'));
+  assert.equal(rest.getAttribute('data-feeling'), 'rest');
+  assert.equal(rest.getAttribute('aria-label'), 'Nook smiles');
+  assert.equal(eyes(rest), eyes(greet), 'the open hello eyes with their glints');
+  assert.equal(mouth(rest), mouth(greet), 'the original smile');
+  assert.equal(rest.querySelector('.nook-brows'), null, 'no brows');
+  assert.equal(all(rest, '.nook-lid circle').length, 2, 'two glints: the eyes are open');
+  for (const side of ['l', 'r']) {
+    const shown = all(rest, '.nook-arm-' + side + ' .nook-mitten').filter(s => /opacity:\s*1/.test(s.getAttribute('style')));
+    assert.equal(shown.length, 1);
+    assert.equal(shown[0].getAttribute('data-shape'), 'rest', side + ': the resting mitten, arm down');
+  }
+  assert.notEqual(rest.querySelector('.nook-arm-front.nook-arm-r').getAttribute('style'), greet.querySelector('.nook-arm-front.nook-arm-r').getAttribute('style'), 'the waving arm comes down');
+  assert.equal(rest.querySelector('.nook-pose').getAttribute('style'), 'transform:rotate(0deg) scale(1,1)', 'upright, no lift');
+  // the two arms mirror each other about the body's middle
+  const t = side => /rotate\((-?[\d.]+)deg\) translate\(0px,(-?[\d.]+)px\) rotate\((-?[\d.]+)deg\)/.exec(rest.querySelector('.nook-arm-front.nook-arm-' + side).getAttribute('style')).slice(1).map(Number);
+  const [l, r] = [t('l'), t('r')];
+  assert.ok(Math.abs(l[0] + r[0]) < 0.2 && Math.abs(l[1] - r[1]) < 0.2 && Math.abs(l[2] + r[2]) < 0.2, 'mirrored arms: ' + l + ' / ' + r);
 });
 
 test('the palette is the profile\'s and feelings never recolour Nook', () => {

@@ -62,7 +62,7 @@ test('every picture word has a bundled Mulberry symbol that is a plain local SVG
 
 // Per-activity levels: chosen explicitly, clamped safely, and each level has its own sequence of examples.
 test('levels are per activity, clamped to the published maximum and drive their own example sequences',()=>{
-  assert.deepEqual(learning.LEVELS,{count:6,add:6,numbers:4,patterns:14});
+  assert.deepEqual(learning.LEVELS,{count:6,add:6,numbers:4,patterns:14,shapes:2});
   assert.deepEqual(learning.OPERATIONS,['add','take']);
   for(const kind of Object.keys(learning.LEVELS)){assert.equal(learning.clampLevel(kind,0),1);assert.equal(learning.clampLevel(kind,'2'),1);assert.equal(learning.clampLevel(kind,learning.LEVELS[kind]+1),1);assert.equal(learning.clampLevel(kind,learning.LEVELS[kind]),learning.LEVELS[kind]);}
   assert.deepEqual([...learning.countSequence(1)].sort(),[1,2,3,4,5]);assert.equal(learning.countSequence(2).length,10);
@@ -72,6 +72,19 @@ test('levels are per activity, clamped to the published maximum and drive their 
   assert.equal(learning.countRound(7,p,2).target,learning.countSequence(2)[7]);assert.equal(learning.countRound(7,p,1).target,learning.countSequence(1)[2]);
   assert.equal(learning.sumRound(0,p,1,'divide').operation,'add','unknown operations fall back to addition');
   assert.equal(learning.numberWordRound(0,p,2).choices.length,p.choices);
+});
+// Round 4, phase 3 (from the phase-2 review): Add and Take away levels 1 to 4 offer the answer's near neighbours, fixed per puzzle id.
+test('Add and Take away levels 1 to 4 offer near distractors: within three of the answer, inside the level, never below zero (addition never offers zero), never twice the same, fixed per puzzle',()=>{
+  const p=learning.defaults;
+  for(const level of [1,2,3,4])for(const op of learning.OPERATIONS){const seq=learning.sumSequence(level,op),low=op==='take'?0:1,high=learning.levelRange(level,'add');const where=new Set();
+    for(let i=0;i<seq.length;i++){const r=learning.sumRound(i,p,level,op);assert.equal(r.choices.length,3);assert.equal(new Set(r.choices).size,3);assert.ok(r.choices.includes(r.answer));
+      assert.ok(r.choices.every(n=>Number.isInteger(n)&&n>=low&&n<=high),r.id+' '+r.choices);assert.ok(r.choices.every(n=>Math.abs(n-r.answer)<=3),r.id+' near: '+r.choices);
+      assert.deepEqual(r.choices,r.choices.slice().sort((x,y)=>x-y),'smallest first');where.add(r.choices.indexOf(r.answer));
+      assert.deepEqual(learning.sumRound(0,p,level,op,[r.a,r.b]).choices,r.choices,'the same puzzle offers the same answers however it is reached');}
+    assert.ok(where.size>=2,'level '+level+' '+op+': the answer is not always in one place');}
+  const bridge=learning.sumRound(0,p,4,'add',[8,7]);assert.ok(bridge.choices.includes(15)&&bridge.choices.every(n=>n>=12&&n<=18),'8 + 7 offers neighbours of 15: '+bridge.choices);
+  assert.deepEqual(learning.setRound('doubles',2,p).choices,learning.sumRound(0,p,2,'add',[3,3]).choices,'a set round is the same puzzle as its sum');
+  assert.ok(learning.sumRound(0,p,5,'add').choices.every(n=>n%10===0),'tens keep their pool');assert.ok(learning.sumRound(0,p,6,'add').choices.includes(learning.sumRound(0,p,6,'add').b),'the missing part keeps its pool');
 });
 // Puzzle identity: stable for the same puzzle, distinct across levels and operations, and versioned for future migrations.
 test('every round carries a stable, versioned puzzle id that includes its level and operation',()=>{

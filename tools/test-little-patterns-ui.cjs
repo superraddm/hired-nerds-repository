@@ -776,7 +776,7 @@ test('Blocks keeps its named Sound control and named block controls; the Garden 
   assert.equal(a.query('#nook').tagName, 'BUTTON');
   assert.equal(a.query('#nook').getAttribute('aria-label'), 'Nook');
   assert.ok(a.query('#nook > .nook-pos > svg.nook[aria-hidden="true"]'), 'the phase-1 rig inside its position wrapper, decorative');
-  assert.equal(a.query('#nook svg.nook').getAttribute('data-feeling'), 'calm');
+  assert.equal(a.query('#nook svg.nook').getAttribute('data-feeling'), 'rest', 'the resting look: the hello face with both arms down');
   const b = app(t, 'blocks.html');
   assert.equal(b.query('[data-sound]').textContent, '♪ Sound: off');
   b.click('[data-sound]');
@@ -1804,13 +1804,13 @@ test('Add is one augmentation picture: the first group, a plus, the apples that 
   assert.ok(c.query('[data-choice="4"].chosen'));
 });
 
-test('Nook stays calm through mistakes, changes to a happy-side feeling with one small hop only on success, is calm again for the next round, and answers a tap with one of three small calm responses in turn', async t => {
+test('Nook keeps its resting look through mistakes, changes to a happy-side feeling with one small hop only on success, rests again for the next round, and answers a tap with one of three small calm responses in turn', async t => {
   const a = app(t, 'garden.html', {}, false, true);
   const svg = () => a.query('#nook svg.nook'), wrapper = a.query('#nook .nook-pos');
-  assert.equal(svg().getAttribute('data-feeling'), 'calm');
+  assert.equal(svg().getAttribute('data-feeling'), 'rest', 'the hello face with both arms down');
   Array.from(a.w.document.querySelectorAll('[data-choice]')).find(b => b.dataset.choice !== String(a.store('garden-rounds').count.target)).click();
   await wait(400);
-  assert.equal(svg().getAttribute('data-feeling'), 'calm', 'a wrong answer changes only the bubble');
+  assert.equal(svg().getAttribute('data-feeling'), 'rest', 'a wrong answer changes only the bubble');
   assert.ok(!wrapper.classList.contains('nook-hop') && !svg().classList.contains('nook-changing'));
   a.click(`[data-choice="${a.store('garden-rounds').count.target}"]`);
   await wait(400);
@@ -1818,17 +1818,17 @@ test('Nook stays calm through mistakes, changes to a happy-side feeling with one
   assert.ok(wrapper.classList.contains('nook-hop'), 'one hop, on the wrapper (the svg keeps its breath)');
   a.click('#next');
   await wait(200);
-  assert.equal(svg().getAttribute('data-feeling'), 'calm', 'calm again for the next round');
+  assert.equal(svg().getAttribute('data-feeling'), 'rest', 'resting again for the next round');
   const before = JSON.stringify(a.store('garden-rounds'));
   a.click('#nook');
-  assert.equal(a.query('#speech').textContent, 'Nook feels calm.', 'first tap: Nook names its feeling');
+  assert.equal(a.query('#speech').textContent, 'Nook feels happy.', 'first tap: Nook names its feeling (the resting smile is happy)');
   a.click('#nook');
   assert.ok(wrapper.classList.contains('nook-wiggle'), 'second tap: a small wiggle');
   a.click('#nook'); await tick();
   assert.equal(a.query('#speech').textContent, 'Hello! I’m Nook. Let’s play.', 'third tap: hello');
   assert.equal(a.plays.at(-1), a.w.LPVoiceLibrary.clips["hello! i'm nook. let's play"].file);
   a.click('#nook');
-  assert.equal(a.query('#speech').textContent, 'Nook feels calm.', 'then round again, never escalating');
+  assert.equal(a.query('#speech').textContent, 'Nook feels happy.', 'then round again, never escalating');
   assert.equal(JSON.stringify(a.store('garden-rounds')), before, 'taps never change the puzzle');
   await wait(2700);
   assert.equal(a.query('#speech').textContent, 'How many apples?', 'the line comes back');
@@ -1882,19 +1882,19 @@ test('the A to Z keys are in ABC order and end in Delete then Enter, exactly fou
   assert.match(css, /\.key\.space\{[^}]*grid-column:1\/-1;order:9\}/, 'on a narrow phone Space is a bar under the letters');
 });
 
-test('the Shapes tile lands on a phase-3 placeholder in the frame; Paint’s home goes to the shelf; the manifest and every new runtime file are on the deploy list', t => {
+test('the Shapes tile lands on the Shapes game in the frame (tools/test-little-patterns-shapes.cjs tests it in full); Paint’s home goes to the shelf; the manifest and every new runtime file are on the deploy list', t => {
   const a = app(t, 'shapes.html');
-  assert.equal(a.query('#speech').textContent, 'Shapes are coming soon.');
-  assert.match(a.query('.soon').textContent, /Coming in phase 3/);
-  assert.ok(a.query('#nook svg.nook'));
+  assert.equal(a.query('#speech').textContent, 'How many sides? Tap each side.');
+  assert.equal(a.query('.soon'), null, 'the phase-2 placeholder is gone');
+  assert.ok(a.query('#nook svg.nook') && a.query('.shape-stage svg.big-shape'));
   a.click('#shelf-open');
   assert.equal(a.query('#shelf-overlay [aria-current="true"]').dataset.shelf, 'shapes');
   assert.equal(a.query('#shelf-overlay [data-mode]'), null, 'outside the Garden every tile navigates');
   const studio = fs.readFileSync(path.join(root, 'studio-lab.html'), 'utf8');
   assert.match(studio, /<a id="home" href="\.\/" data-icon="back" aria-label="Back to Nook's games">/);
   const { files } = require('./stage-little-patterns.cjs');
-  for (const f of ['frame.css', 'frame.js', 'shelf.js', 'hub.js', 'icons.js', 'nook-art.js', 'nook.css', 'garden.css', 'manifest.webmanifest', 'assets/icon-192.png', 'assets/icon-512.png', 'shapes.html', 'shapes-stub.js']) assert.ok(files.includes(f), f + ' ships');
-  for (const old of ['home.css', 'garden-live.css', 'garden-preview.css']) assert.ok(!files.includes(old), old + ' no longer ships');
+  for (const f of ['frame.css', 'frame.js', 'shelf.js', 'hub.js', 'icons.js', 'nook-art.js', 'nook.css', 'garden.css', 'manifest.webmanifest', 'assets/icon-192.png', 'assets/icon-512.png', 'shapes.html', 'shapes.js', 'shapes.css']) assert.ok(files.includes(f), f + ' ships');
+  for (const old of ['home.css', 'garden-live.css', 'garden-preview.css', 'shapes-stub.js']) assert.ok(!files.includes(old), old + ' no longer ships');
   const manifest = JSON.parse(fs.readFileSync(path.join(root, 'manifest.webmanifest'), 'utf8'));
   assert.equal(manifest.start_url, './'); assert.equal(manifest.scope, './'); assert.equal(manifest.display, 'standalone');
   assert.ok(manifest.name && manifest.short_name && manifest.theme_color && manifest.background_color);

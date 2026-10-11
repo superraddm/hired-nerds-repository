@@ -186,8 +186,8 @@
   }
   // Mode chips: Add and Take away are the only two (Count, Words and Patterns have none).
   function modeChips(){const el=$('modes');if(mode!=='add'){if(el.firstChild)el.innerHTML='';return;}el.innerHTML=[['add','Add'],['take','Take away']].map(([op,label])=>'<button type="button" class="chip" data-operation="'+op+'" aria-pressed="'+(operation===op)+'">'+label+'</button>').join('');}
-  // Nook keeps the expression of a round it has just celebrated; any other round shows it calm.
-  function mood(){const r=current();if(!(r&&r.done&&r.id===celebrated))nook.rest('calm');}
+  // Nook keeps the expression of a round it has just celebrated; any other round shows its resting look (the hello face, arms down).
+  function mood(){const r=current();if(!(r&&r.done&&r.id===celebrated))nook.rest();}
   const FEELS=['happy','proud','excited'];
   function successFeeling(r){let h=0;for(const c of String(r.id||''))h=(h*31+c.charCodeAt(0))>>>0;return FEELS[h%FEELS.length];}
   // Fit the task to the card: the two groups side by side, or group, "+", group stacked, whichever needs less shrinking (side by side wins a near tie, so 3 + 2 stays on one line); then smaller pictures until it fits. A device keyboard or large text can still leave too little room, and then the card scrolls.
@@ -308,7 +308,7 @@
   function spellOnce(){if(needSpell&&LP.prefs.numberWords==='show')LP.savePrefs({...LP.prefs,numberWords:'type'});needSpell=false;}
   $('help').innerHTML=HELP_SIGN+'<span>Help!</span>';$('next').innerHTML='Next <span aria-hidden="true">→</span>';$('repeat').textContent='↻ Again';
   const talk=F.bubble($('bubble'),$('speech'));
-  const nook=F.nook($('nook'),{feeling:'calm',bubble:talk});
+  const nook=F.nook($('nook'),{feeling:'rest',bubble:talk});
   F.onResize(fitTask);
   restore();spellOnce();const requested=location.hash.slice(1);if(modes.includes(requested))mode=requested;
   S.mountOverlay({current:mode,onMode:value=>{setMode(value);focusTask();}});

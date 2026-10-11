@@ -1,0 +1,69 @@
+/* Shapes with Nook (round 4, phase 3): the shape and its answers inside the Nook frame (frame.css owns the frame,
+   the answer buttons and the action bar). The shape fills whatever the card leaves above the answers row; its
+   SVG keeps its viewBox fit, so a tap is converted back into the shape's units by shapes.js. Motion follows
+   review-opus-pass-1 section 4: a counted side fills amber from corner to corner (220 ms), its tag grows from
+   0.6 (200 ms), a counted side's tag bumps to 1.06 and back (180 ms; item 64 caps scale at 1.06), the fill warms over 300 ms. Softer and
+   reduced motion keep the colour changes only. */
+
+.shapes .objects{flex:1 1 0;min-height:0;width:100%;gap:0}
+.shape-stage{position:relative;flex:1 1 0;width:100%;min-height:120px;border-radius:20px;outline:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.shape-stage.counting{cursor:pointer}
+.shape-stage:focus-visible{box-shadow:inset 0 0 0 4px #7862a4}
+.shape-stage svg.big-shape{position:absolute;inset:0;margin:auto;display:block;width:100%;height:100%;max-width:420px;max-height:420px;overflow:visible}
+
+/* the shape */
+.big-shape .fill{fill:#fff3d6}
+.big-shape.warm .fill{fill:#fde9b8}
+.big-shape .fill.warming{animation:shape-warm 300ms linear}
+@keyframes shape-warm{from{fill:#fff3d6}to{fill:#fde9b8}}
+.big-shape .side,.big-shape .outline{fill:none;stroke:#9fb2a4;stroke-width:16;stroke-linecap:round;stroke-linejoin:round}
+.big-shape .side.lit,.big-shape .outline{stroke:#f2b45a}
+/* the dash pattern lives only in the keyframes, so a browser that ignores pathLength still ends on a solid side */
+.big-shape .side.lit.fresh{animation:side-fill 220ms var(--lp-out)}
+@keyframes side-fill{from{stroke-dasharray:1 2;stroke-dashoffset:1}to{stroke-dasharray:1 2;stroke-dashoffset:0}}
+/* each side's own invisible hit stroke: 44 CSS pixels wide at any size */
+.big-shape .hit{fill:none;stroke:transparent;stroke-width:44px;vector-effect:non-scaling-stroke;pointer-events:stroke}
+.big-shape .tag{transform-box:fill-box;transform-origin:center}
+.big-shape .tag circle{fill:#fff9d5;stroke:#79996b;stroke-width:2.5}
+.big-shape .tag text{font:900 23px "Trebuchet MS",Arial,sans-serif;fill:#345443;text-anchor:middle}
+.big-shape .tag.fresh{animation:tag-in 200ms var(--lp-out)}
+.big-shape .tag.bump{animation:tag-bump 180ms var(--lp-inout)}
+@keyframes tag-in{from{transform:scale(.6)}to{transform:none}}
+@keyframes tag-bump{0%,100%{transform:none}50%{transform:scale(1.06)}}
+
+/* answers: three numbers (frame.css) or three words */
+.shapes .choices{display:flex;justify-content:center;align-items:stretch;gap:14px;width:100%}
+.shapes .answer.word{flex-direction:column;gap:4px;max-width:210px;padding:2px 3px;font-size:clamp(13px,4vw,20px);letter-spacing:.3px;line-height:1.1}
+.shapes .answer.word .word{display:block;white-space:nowrap}
+.shapes .answer.word .pic{display:block;flex:none}
+.shape-icon{display:block;width:34px;height:34px;overflow:visible}
+.shape-icon path,.shape-icon ellipse{fill:#fff3d6;stroke:#d9953a;stroke-width:22;stroke-linejoin:round}
+.shapes .answer.word .pic{animation:lp-fade-in 150ms linear}
+
+/* the level chooser (the dialog itself is shared.css) */
+.shape-levels{display:flex;flex-direction:column;gap:10px;margin:12px 0 4px}
+.shape-levels button{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-height:56px;padding:10px 14px;text-align:left;font-size:15px;line-height:1.35}
+.shape-levels button b{font-size:18px}
+.shape-levels button[aria-pressed=true]{background:#e1d3f1;border-color:#b09bd0;color:#594777;outline:3px solid #594777;outline-offset:2px}
+.shape-levels .level-icons{display:flex;gap:6px;flex:none}
+.shape-levels .shape-icon{width:26px;height:26px}
+
+/* narrow phones: the word answers keep RECTANGLE on one line */
+@media (max-width:389px){.shapes .choices{gap:8px}.shapes .answer.word{font-size:clamp(12px,3.9vw,15px);letter-spacing:0;padding:2px 1px}}
+/* phone landscape: shorter answers row */
+@media (orientation:landscape) and (max-height:520px){
+  .shape-stage{min-height:96px}
+  .shapes .answer.word{font-size:16px;gap:2px}
+  .shape-icon{width:26px;height:26px}
+}
+/* tablets: a little more room */
+@media (min-width:760px) and (min-height:521px){
+  .shapes .answer.word{font-size:20px;max-width:220px}
+  .shape-icon{width:40px;height:40px}
+}
+
+/* Softer and reduced motion: colour changes only */
+.softer .big-shape .side.lit.fresh,.softer .big-shape .tag.fresh,.softer .big-shape .tag.bump,.softer .big-shape .fill.warming,.softer .shapes .answer.word .pic{animation:none}
+.softer .big-shape .side.lit,.softer .big-shape .outline{stroke:#e2b878}
+.softer .big-shape.warm .fill{fill:#f6e6c2}
+@media (prefers-reduced-motion:reduce){.big-shape .side.lit.fresh,.big-shape .tag.fresh,.big-shape .tag.bump,.big-shape .fill.warming,.shapes .answer.word .pic{animation:none}}
