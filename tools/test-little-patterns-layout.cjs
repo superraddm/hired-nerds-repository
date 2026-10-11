@@ -1,0 +1,149 @@
+// Layout harness for Little Patterns (round 4): the shelf and the Nook frame at six viewports, in headless Chrome
+// over the DevTools protocol (Node 22's global fetch and WebSocket), against `node tools/serve-fireworks.cjs`.
+//
+//   node --test tools/test-little-patterns-layout.cjs           check every scenario at every viewport
+//   LP_SHOTS=<dir> node --test tools/test-little-patterns-layout.cjs
+//                                                               also write <viewport>-<scenario>.png for the evidence
+//                                                               scenarios (LP_SHOTS_ALL=1: every scenario)
+//   LP_ONLY=add,words  LP_VIEWPORTS=small,land                  limit a run
+//
+// Fails on: page overflow; content clipped inside the task card (the card scrolling, or anything outside it);
+// truncated chip, pill, answer, tile, key, card and action labels; an answer or key over Nook; and any visible
+// tappable control under 44 by 44 CSS pixels. Test state is seeded from the hub page, never the game page (a game
+// saves on pagehide). Skips with a message when Chrome is not installed.
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const { spawn } = require('node:child_process');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const net = require('node:net');
+
+const CHROME = [process.env.CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
+  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser'].find(p => p && fs.existsSync(p));
+// CSS pixels: S24 Ultra portrait (412 x 860 inside Chrome), a small Android phone, S24 landscape with Chrome's bar,
+// a smaller landscape phone, iPad 5 landscape in Safari, and a desktop window.
+const VIEWPORTS = { phone: [412, 860, 2, true], small: [360, 740, 2, true], land: [915, 356, 2, true], land2: [740, 360, 2, true], ipad: [1024, 698, 1, true], desk: [1280, 800, 1, false] };
+const P = 'lp-player-player-1-';
+const position = extra => ({ [P + 'garden-position']: { mode: 'count', wordTab: 'sentence', indices: {}, selection: {}, levels: {}, operation: 'add', patternMode: 'finish', patternFamily: 2, strip: 1, spell: 1, ...extra } });
+const prefs = p => ({ [P + 'little-patterns-v1']: p });
+const click = sel => `document.querySelector(${JSON.stringify(sel)}).click()`;
+const keys = word => Array.from(word).map(c => click(`[data-key="${c}"]`)).join(';');
+// shot: part of the evidence set. act: script run in the page after load. wait: ms before checking.
+const SCENARIOS = [
+  { name: 'shelf', page: 'index.html', shot: true },
+  { name: 'gate-hold', page: 'index.html', shot: true, act: `(()=>{const b=document.querySelector('[data-grownups]');const r=b.getBoundingClientRect();b.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true,pointerId:7,isPrimary:true,clientX:r.left+20,clientY:r.top+20}));})()`, wait: 1250 },
+  { name: 'grownups-sheet', page: 'index.html', act: 'LPShelf.grownups()', wait: 400 },
+  { name: 'shelf-over-count', page: 'garden.html#count', shot: true, act: click('#shelf-open'), wait: 500 },
+  { name: 'count', page: 'garden.html#count', shot: true },
+  { name: 'count-help', page: 'garden.html#count', seed: position({ mode: 'count', selection: { count: 4 } }), act: click('#help') + ';' + click('#help'), wait: 300 },
+  { name: 'add', page: 'garden.html#add', shot: true, seed: position({ mode: 'add', selection: { add: [3, 2] } }) },
+  { name: 'add-help', page: 'garden.html#add', shot: true, seed: position({ mode: 'add', selection: { add: [3, 2] } }), act: click('#help'), wait: 2600 },
+  { name: 'add-done', page: 'garden.html#add', shot: true, seed: position({ mode: 'add', selection: { add: [3, 2] } }), act: click('[data-choice="5"]'), wait: 1100 },
+  { name: 'add-big', page: 'garden.html#add', seed: position({ mode: 'add', levels: { add: 2 }, selection: { add: [6, 4] } }) },
+  { name: 'add-bridge', page: 'garden.html#add', shot: true, seed: position({ mode: 'add', levels: { add: 4 }, selection: { add: [8, 7] } }) },
+  { name: 'add-bridge-help', page: 'garden.html#add', shot: true, seed: position({ mode: 'add', levels: { add: 4 }, selection: { add: [8, 7] } }), act: click('#help'), wait: 2400 },
+  { name: 'add-teens', page: 'garden.html#add', seed: position({ mode: 'add', levels: { add: 3 }, selection: { add: [12, 5] } }), act: click('#help'), wait: 2400 },
+  { name: 'add-tens', page: 'garden.html#add', seed: position({ mode: 'add', levels: { add: 5 }, selection: { add: [60, 30] } }), act: click('#help'), wait: 2800 },
+  { name: 'add-missing', page: 'garden.html#add', seed: position({ mode: 'add', levels: { add: 6 }, selection: { add: [3, 4] } }) },
+  { name: 'add-keypad', page: 'garden.html#add', seed: { ...position({ mode: 'add', selection: { add: [3, 2] } }), ...prefs({ addition: 'type' }) } },
+  { name: 'take', page: 'garden.html#add', shot: true, seed: position({ mode: 'add', operation: 'take', levels: { add: 2 }, selection: { add: [6, 2] } }) },
+  { name: 'take-tens', page: 'garden.html#add', seed: position({ mode: 'add', operation: 'take', levels: { add: 5 }, selection: { add: [70, 30] } }) },
+  { name: 'count-100', page: 'garden.html#count', seed: position({ mode: 'count', levels: { count: 6 }, selection: { count: 100 } }) },
+  { name: 'count-73-keypad', page: 'garden.html#count', seed: { ...position({ mode: 'count', levels: { count: 6 }, selection: { count: 73 } }), ...prefs({ countAnswer: 'type' }) } },
+  { name: 'words', page: 'garden.html#words', shot: true, seed: position({ mode: 'words', indices: { sentence: 1 } }), act: keys('S') },
+  { name: 'words-letter', page: 'garden.html#words', seed: position({ mode: 'words', wordTab: 'letter', indices: { letter: 9 } }) },
+  { name: 'words-order', page: 'garden.html#words', seed: position({ mode: 'words', wordTab: 'order', indices: { order: 24 } }) },
+  { name: 'words-numbers', page: 'garden.html#words', seed: position({ mode: 'words', wordTab: 'numbers', levels: { numbers: 4 }, selection: { numbers: 100 } }), act: keys('ONE') },
+  { name: 'words-device', page: 'garden.html#words', seed: { ...position({ mode: 'words', indices: { sentence: 0 } }), ...prefs({ keyboard: 'device' }) } },
+  { name: 'patterns', page: 'garden.html#patterns', shot: true, seed: position({ mode: 'patterns' }) },
+  { name: 'patterns-4', page: 'garden.html#patterns', seed: position({ mode: 'patterns', patternFamily: 4, indices: { patterns: 3 } }) },
+  { name: 'patterns-level-10', page: 'garden.html#patterns', seed: position({ mode: 'patterns', patternFamily: 0, levels: { patterns: 10 } }) },
+  { name: 'patterns-mirror', page: 'garden.html#patterns', seed: position({ mode: 'patterns', patternFamily: 0, levels: { patterns: 13 }, indices: { patterns: 1 } }) },
+  { name: 'make', page: 'garden.html#patterns', seed: position({ mode: 'patterns', patternMode: 'make' }), act: ['circle', 'square', 'circle', 'square', 'oval', 'triangle'].map(s => click(`[data-add="${s}"]`)).join(';') },
+  { name: 'shapes-stub', page: 'shapes.html' }
+];
+// Run in the page: every problem as a line of text.
+const CHECK = `(()=>{const out=[];
+  const vis=el=>{if(el.closest('[hidden],[inert]'))return false;const s=getComputedStyle(el);if(s.visibility==='hidden'||s.display==='none'||+s.opacity===0)return false;const r=el.getBoundingClientRect();return r.width>0&&r.height>0;};
+  const desc=el=>(el.id?'#'+el.id:el.tagName.toLowerCase()+(el.className&&typeof el.className==='string'?'.'+el.className.trim().split(/\\s+/).join('.'):''))+' "'+(el.getAttribute('aria-label')||el.textContent||'').trim().replace(/\\s+/g,' ').slice(0,24)+'"';
+  const d=document.documentElement;if(d.scrollHeight>innerHeight+1||d.scrollWidth>innerWidth+1)out.push('page overflow '+d.scrollWidth+'x'+d.scrollHeight);
+  const task=document.querySelector('.nf-task>.task');
+  if(task&&vis(task)){if(task.scrollHeight>task.clientHeight+1)out.push('card scrolls '+task.scrollHeight+' > '+task.clientHeight);if(task.scrollWidth>task.clientWidth+1)out.push('card overflows sideways '+task.scrollWidth+' > '+task.clientWidth);
+    const c=task.closest('.nf-task').getBoundingClientRect();for(const el of task.querySelectorAll('*')){if(!vis(el))continue;const q=el.getBoundingClientRect();if(q.left<c.left-1||q.right>c.right+1||q.top<c.top-1||q.bottom>c.bottom+1){out.push('clipped in card: '+desc(el)+' '+[q.left,q.top,q.right,q.bottom].map(Math.round)+' card '+[c.left,c.top,c.right,c.bottom].map(Math.round));break;}}}
+  for(const el of document.querySelectorAll('.chip,.pill,.answer,.choice,.tile,.key,.word-card,.nf-actions>button,.bubble-inline,.sentence-words,.make-tools button')){if(!vis(el))continue;if(el.scrollWidth>el.clientWidth+1||el.scrollHeight>el.clientHeight+1)out.push('label clipped: '+desc(el)+' '+el.scrollWidth+'x'+el.scrollHeight+' in '+el.clientWidth+'x'+el.clientHeight);}
+  for(const b of document.querySelectorAll('.nf-bubble')){if(!vis(b))continue;const q=b.getBoundingClientRect();if(q.bottom>innerHeight+1||q.right>innerWidth+1)out.push('bubble off screen: '+desc(b));}
+  const nook=document.querySelector('#nook .nook-pos svg');if(nook&&vis(nook)){const n=nook.getBoundingClientRect();for(const a of document.querySelectorAll('.answers button,.word-card,.nf-bubble,.nf-actions>button')){if(!vis(a))continue;const q=a.getBoundingClientRect();if(q.left<n.right-2&&q.right>n.left+2&&q.top<n.bottom-2&&q.bottom>n.top+2)out.push('over Nook: '+desc(a));}}
+  for(const el of document.querySelectorAll('button,a[href],input,select,textarea,[role=button]')){if(!vis(el))continue;const r=el.getBoundingClientRect();if(r.width<43.5||r.height<43.5)out.push('target '+Math.round(r.width)+'x'+Math.round(r.height)+': '+desc(el));}
+  return JSON.stringify(out);})()`;
+
+const freePort = () => new Promise((resolve, reject) => { const s = net.createServer(); s.on('error', reject); s.listen(0, '127.0.0.1', () => { const { port } = s.address(); s.close(() => resolve(port)); }); });
+const wait = ms => new Promise(r => setTimeout(r, ms));
+
+async function start() {
+  const webPort = await freePort(), cdpPort = await freePort();
+  const server = spawn(process.execPath, [path.join(__dirname, 'serve-fireworks.cjs'), String(webPort)], { stdio: ['ignore', 'pipe', 'inherit'] });
+  await new Promise((resolve, reject) => { server.stdout.on('data', d => { if (/fireworks:/.test(String(d))) resolve(); }); server.on('exit', c => reject(Error('server exited ' + c))); });
+  const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'lp-layout-'));
+  const chrome = spawn(CHROME, ['--headless=new', '--disable-gpu', '--hide-scrollbars', '--no-first-run', '--no-default-browser-check', '--mute-audio', '--remote-debugging-port=' + cdpPort, '--user-data-dir=' + profile, 'about:blank'], { stdio: 'ignore' });
+  let tabs = [];
+  for (let i = 0; i < 80 && !tabs.length; i++) { try { tabs = (await (await fetch(`http://127.0.0.1:${cdpPort}/json/list`)).json()).filter(t => t.type === 'page'); } catch (_) { /* not up yet */ } if (!tabs.length) await wait(150); }
+  if (!tabs.length) throw Error('Chrome did not open a page');
+  const ws = new WebSocket(tabs[0].webSocketDebuggerUrl);
+  await new Promise((resolve, reject) => { ws.onopen = resolve; ws.onerror = reject; });
+  let id = 0; const pending = new Map(), listeners = [];
+  ws.onmessage = m => { const msg = JSON.parse(m.data); if (msg.id && pending.has(msg.id)) { const p = pending.get(msg.id); pending.delete(msg.id); if (msg.error) p.reject(Error(msg.error.message)); else p.resolve(msg.result); } else if (msg.method) listeners.forEach(fn => fn(msg)); };
+  const send = (method, params = {}) => new Promise((resolve, reject) => { const n = ++id; pending.set(n, { resolve, reject }); ws.send(JSON.stringify({ id: n, method, params })); });
+  const loaded = () => new Promise(resolve => { const fn = m => { if (m.method === 'Page.loadEventFired') { listeners.splice(listeners.indexOf(fn), 1); resolve(); } }; listeners.push(fn); });
+  const evaluate = async expression => { const r = await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }); if (r.exceptionDetails) throw Error(r.exceptionDetails.exception?.description || r.exceptionDetails.text); return r.result.value; };
+  const go = async url => { const done = loaded(); await send('Page.navigate', { url }); await Promise.race([done, wait(8000)]); };
+  await send('Page.enable'); await send('Runtime.enable');
+  await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }] });
+  const base = `http://127.0.0.1:${webPort}/little-patterns/`;
+  const stop = () => { try { ws.close(); } catch (_) { /* closed */ } chrome.kill(); server.kill(); setTimeout(() => { try { fs.rmSync(profile, { recursive: true, force: true }); } catch (_) { /* Chrome still holds a lock */ } }, 500); };
+  return { send, evaluate, go, base, stop };
+}
+
+async function run(b, viewport, scenario, shots) {
+  const [w, h, dpr, mobile] = VIEWPORTS[viewport];
+  await b.send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: dpr, mobile });
+  await b.send('Emulation.setTouchEmulationEnabled', { enabled: mobile });
+  await b.go(b.base + 'index.html');
+  await b.evaluate(`localStorage.clear();sessionStorage.clear();${Object.entries(scenario.seed || {}).map(([k, v]) => `localStorage.setItem(${JSON.stringify(k)},${JSON.stringify(JSON.stringify(v))});`).join('')}true`);
+  await b.go(b.base + scenario.page);
+  await wait(350);
+  if (scenario.act) { await b.evaluate(scenario.act + ';true'); }
+  await wait(scenario.wait || 250);
+  const problems = JSON.parse(await b.evaluate(CHECK));
+  if (shots && (scenario.shot || process.env.LP_SHOTS_ALL)) {
+    const shot = await b.send('Page.captureScreenshot', { format: 'png' });
+    fs.writeFileSync(path.join(shots, `${viewport}-${scenario.name}.png`), Buffer.from(shot.data, 'base64'));
+  }
+  return problems;
+}
+
+const only = (process.env.LP_ONLY || '').split(',').filter(Boolean);
+const views = (process.env.LP_VIEWPORTS || '').split(',').filter(Boolean);
+const scenarios = SCENARIOS.filter(s => !only.length || only.includes(s.name));
+const viewports = Object.keys(VIEWPORTS).filter(v => !views.length || views.includes(v));
+
+if (!CHROME) {
+  test('layout harness', { skip: 'Chrome is not installed here (set CHROME_PATH to run the six-viewport layout checks)' }, () => {});
+} else {
+  let browser = null;
+  const shots = process.env.LP_SHOTS ? path.resolve(process.env.LP_SHOTS) : '';
+  if (shots) fs.mkdirSync(shots, { recursive: true });
+  test.before(async () => { browser = await start(); });
+  test.after(() => { if (browser) browser.stop(); });
+  for (const viewport of viewports) {
+    test(`layout at ${viewport} (${VIEWPORTS[viewport].slice(0, 2).join(' x ')}): no overflow, clipping, truncation, answers over Nook or targets under 44 px`, async () => {
+      const report = [];
+      for (const scenario of scenarios) {
+        const problems = await run(browser, viewport, scenario, shots);
+        for (const p of problems) report.push(`${viewport} ${scenario.name}: ${p}`);
+      }
+      assert.deepEqual(report, [], '\n' + report.join('\n'));
+    });
+  }
+}
+module.exports = { SCENARIOS, VIEWPORTS, CHECK };

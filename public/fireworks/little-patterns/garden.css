@@ -1,0 +1,414 @@
+/* Nook's Garden objects inside the Nook frame (round 4): Count, Add, Words and Patterns, and their chooser.
+   The frame itself (top bar, Nook, bubble, task card, answers row, action bar, shelf) is frame.css. The object
+   looks are carried over from garden-preview.css and garden-live.css (rounds 2 and 3), re-sized to fit the card;
+   the take-away crossing-out is copied exactly. garden.js adds fit-1, fit-2 and fit-3 to #task, in turn, until the
+   picture fits the card; a keyboard or large text that still leaves too little room makes the card scroll. */
+
+/* ---- apples, pockets, count tags ---- */
+.apple{display:inline-block;position:relative;width:38px;height:38px;background:#e67b69;border:2px solid #b65b50;border-radius:42% 44% 48% 48%;box-shadow:inset 4px 0 0 #ffffff24;flex-shrink:0;margin-top:8px}
+.apple:before{content:"";position:absolute;left:44%;top:-28%;width:max(2px,10%);height:26%;border-radius:3px;background:#6b6740;transform:rotate(12deg)}
+.apple:after{content:"";position:absolute;left:52%;top:-28%;width:39%;height:21%;border-radius:80% 0 80% 0;transform:rotate(-15deg);background:#4d9271}
+.count-tag{position:absolute;bottom:1px;right:2px;font-size:12px;font-weight:bold;background:#fff9d5;color:#345443;border-radius:50%;width:20px;height:20px;display:grid;place-items:center;border:1px solid #79996b;line-height:1}
+.tagged{position:relative;display:inline-flex;flex-shrink:0}
+.tagged .count-tag{bottom:-6px;right:-8px;width:22px;height:22px;font-size:13px}
+.fruit{position:relative;display:inline-flex}
+.fruit .count-tag{bottom:-8px;right:-10px}
+.five-frame{background:#f7d996;border:3px solid #cba65b;border-bottom:7px solid #bd9650;border-radius:22px;padding:10px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;width:100%;max-width:330px}
+.pocket{position:relative;display:grid;place-items:center;aspect-ratio:1;min-height:44px;padding:0;border:2px dashed #b99655;background:#fff1cb;border-radius:14px;font:inherit;color:inherit}
+.pocket.full{border:2px solid #dba95e;background:#fff9e9}
+.pocket .apple{width:62%;height:auto;aspect-ratio:1;margin-top:12%}
+.pocket.counted{border:3px solid #477b59;background:#e2efd7}
+button.pocket,button.five-frame,button.stick{cursor:pointer}
+.pocket:disabled{opacity:1}
+
+/* ---- Count: tens-and-ones trays (rows of ten small apples, five, a space, five) ---- */
+.tray{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;max-width:100%}
+.tray .five-frame{width:auto;max-width:none;grid-template-columns:repeat(5,var(--tp,44px));padding:6px;gap:4px;border-radius:14px;border-bottom-width:5px}
+.tray .pocket{width:var(--tp,44px);min-height:0;border-radius:9px}
+.tray.counting .five-frame:not(.loose){--tp:46px}
+.tray button.five-frame{position:relative}
+.tray button.five-frame.counted{border-color:#477b59;background:#e2efd7}
+.tray button.five-frame>.count-tag{position:absolute;top:-10px;right:-10px;width:auto;min-width:26px;height:26px;padding:0 6px;font-size:13px;border-radius:13px;background:#fff9d5;border:2px solid #477b59}
+.fruit.new .apple{outline:3px solid #b39bc9;outline-offset:2px;border-radius:45%}
+.stick,button.stick{--ra:17px;position:relative;display:grid;grid-template-columns:repeat(10,auto);align-items:end;justify-content:center;gap:3px;min-height:0;padding:12px 10px 6px 34px;margin:0;background:#fff4cf;border:2px solid #e0c983;border-bottom-width:4px;border-radius:14px;box-shadow:none;font:inherit;color:inherit}
+button.stick{min-height:48px}
+.stick i.apple{display:block;width:var(--ra);height:var(--ra);margin:0;border-width:1.5px;border-radius:42% 44% 48% 48%;background:#e67b69;box-shadow:inset 2px 0 0 #ffffff24}
+.stick i.apple:nth-of-type(6){margin-left:calc(var(--ra)*.5)}
+.stick>b:not(.count-tag){position:absolute;left:6px;top:50%;transform:translateY(-50%);font-size:12px;color:#5b4a2a;background:#fff7ce;border:1px solid #dcd091;border-radius:10px;padding:1px 5px}
+.stick.new{outline:3px solid #b39bc9;outline-offset:3px}
+button.stick.counted{background:#e2efd7;border-color:#477b59}
+.stick>.count-tag{position:absolute;top:-11px;right:-6px;left:auto;bottom:auto;width:auto;min-width:26px;height:24px;padding:0 6px;font-size:12px;border-radius:12px;background:#fff9d5;border:2px solid #477b59}
+.tray .five-frame.ones.loose{display:flex;flex-wrap:wrap;gap:4px;max-width:170px;padding:0;background:none;border:0;box-shadow:none}
+.tray .five-frame.ones.loose .pocket{width:48px;height:48px;min-height:48px;border:0;background:none;aspect-ratio:auto}
+.tray .five-frame.ones.loose span.pocket{width:24px;height:30px;min-height:0}
+.tray .five-frame.ones.loose span.pocket .apple{width:17px;height:17px;margin:0;border-width:1.5px}
+.tray .five-frame.ones.loose button.pocket .apple{width:26px;height:26px;margin:0}
+.tray .five-frame.ones.loose button.pocket.counted{background:#e2efd7;border:2px solid #477b59;border-radius:12px}
+.tray.counting button.pocket .count-tag{font-size:11px;width:22px;height:22px;bottom:0;right:0}
+.tray.counting{max-width:560px}
+
+/* ---- the answers row: numerals, and the keypad ---- */
+.choices{display:flex;justify-content:center;align-items:stretch;gap:14px;width:100%}
+.choices .answer.digits-2{font-size:38px}.choices .answer.digits-3{font-size:30px;letter-spacing:-1px}
+.choices .hint,.word-card.hint{outline:4px solid #477b59;outline-offset:4px}
+.keyboard{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;width:100%;align-content:end}
+.key{min-width:0;min-height:44px;padding:2px;display:inline-flex;align-items:center;justify-content:center;gap:2px;border:2px solid #b4c49e;border-bottom-width:4px;background:#fffdf3;border-radius:10px;font-size:20px;font-weight:900;line-height:1;color:#293d60;-webkit-user-select:none;user-select:none;white-space:nowrap;overflow:hidden;transition:transform 70ms var(--lp-out)}
+.key:active:not(:disabled){transform:translateY(2px);border-bottom-width:2px}
+.key-actions{display:contents}
+.key.function{background:#f6dccf;border-color:#cc9c8c;font-size:20px}
+.key.go{background:var(--green);border-color:var(--green-dark);color:#fff;font-size:22px}
+.key.space{background:#d4e9ef;border-color:#9cbdc6;font-size:15px;grid-column:1/-1;order:9}
+.key .key-word{display:none}
+.keyboard.actions-only{grid-template-columns:1fr 1fr;max-width:420px;margin:0 auto}
+.keyboard.actions-only .key{min-height:56px}
+.keyboard.actions-only .key-word,.keyboard.keypad .key-word{display:inline}
+.keyboard.keypad{grid-template-columns:repeat(5,minmax(0,1fr));max-width:400px;margin:0 auto}
+.keyboard.keypad .key{min-height:48px;font-size:24px}
+.keyboard.keypad .key.function,.keyboard.keypad .key.go{font-size:15px}
+.keyboard.keypad .key.go{grid-column:span 3}
+.keyboard.keypad .key.function{grid-column:span 2}
+
+/* ---- the equation; the chosen digit fills the "?" ---- */
+.equation{margin:0;font-size:36px;font-weight:900;letter-spacing:2px;line-height:1.15;color:#3b4a6b;white-space:nowrap;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.equation span{letter-spacing:0}
+.equation .unknown{display:inline-block;min-width:1.4em;padding:0 4px;border-bottom:5px dashed #b39bc9;color:#6a558a;text-align:center}
+.equation .unknown.filled{color:#2f6a4a;border-bottom-color:#8fbf92}
+.equation .unknown.arrive{animation:lp-digit-in 280ms var(--lp-inout) both}
+@keyframes lp-digit-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* ---- Add: one augmentation picture ---- */
+.join-row{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:nowrap;width:100%}
+.join-row.stacked{flex-direction:column;gap:4px}
+.group{display:grid;grid-template-columns:repeat(var(--cols,5),auto);justify-content:start;gap:8px;padding:10px 12px;border-radius:18px;background:#fff6dc;border:2px solid #e8d7a3;flex:none}
+.group>.tagged>.apple{width:40px;height:40px}
+.group.more{background:#fffaf5;border:3px dashed #d99389}
+.plus{font-size:40px;font-weight:900;color:#3b6a5c;line-height:1;flex:none}
+.group.rows{display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:8px}
+.group.rows .stick{padding-right:32px}
+.group.rows .stick>.count-tag{top:50%;right:3px;transform:translateY(-50%)}
+.group.rows .stick{background:#fff4cf}
+.arrive{animation:lp-drop 240ms var(--lp-out) both;animation-delay:var(--d,0ms)}
+.count-tag.arrive{animation:lp-fade-in 150ms linear both;animation-delay:var(--d,0ms)}
+.ten-pair{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;flex-wrap:nowrap}
+.ten-pair.stacked{flex-direction:column;gap:4px}
+.ten-pair .five-frame{position:relative;width:auto;max-width:none;flex:none;grid-template-columns:repeat(5,var(--tp,40px));padding:6px;gap:4px;border-radius:14px;border-bottom-width:5px}
+.ten-pair .pocket{width:var(--tp,40px);min-height:0;border-radius:9px}
+.ten-pair .five-frame.more{border-style:dashed;border-color:#d99389;background:#fff3e0}
+.ten-pair .pocket.more{border:2px dashed #d99389}
+.ten-pair .pocket.full.more{background:#fffaf5}
+.fruit.new .apple,.ten-pair .fruit.new .apple{outline:2px dashed #c97d72;outline-offset:1px;border-radius:45%}
+.ten-pair .fruit{width:62%;justify-content:center}
+.ten-pair .fruit .apple{width:100%;height:auto;aspect-ratio:1;margin-top:12%}
+.ten-pair .fruit .count-tag{bottom:-10px;right:-12px;width:20px;height:20px;font-size:11px}
+.ten-badge{position:absolute;top:-12px;right:-12px;min-width:30px;height:28px;padding:0 6px;display:grid;place-items:center;border-radius:14px;background:#fff9d5;border:2px solid #477b59;font-size:15px;color:#2f5a44;animation:lp-fade-in 150ms linear}
+/* Level 6, the missing part: the approved picture, compact */
+.sum-build{display:flex;justify-content:center;align-items:center;gap:8px}
+.number-group{background:#d2ead8;border:2px solid #91b79c;border-radius:18px;padding:8px 10px;min-width:0;text-align:center}
+.number-group.new{background:#e6d8f2;border-color:#b8a1cf}
+.number-group.missing-part{border-style:dashed}
+.group-label{font-size:11px;font-weight:900;display:block;margin-bottom:4px;color:#4f644f;letter-spacing:.5px}
+.number-group.new .group-label{color:#6a558a}
+.number-group strong{font-size:26px;display:block;margin-top:2px}
+.apples{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:6px;min-height:36px}
+.apples .apple{width:28px;height:28px}
+.apples .none{font-size:14px;font-weight:900;color:#7b8a6a;letter-spacing:1px}
+.number-group.missing-part .apples .none{font-size:30px;color:#6a558a}
+.operator{font-size:30px;font-weight:900}
+.join-arrow.equals{font-size:30px;font-weight:900;color:#2c4258;line-height:1}
+.sum-result{display:flex;align-items:center;justify-content:center;gap:12px;border:2px solid #d5bd69;background:#fff0b3;border-radius:18px;padding:8px 14px;max-width:100%;flex-wrap:wrap}
+.sum-result strong{font-size:32px;padding-left:12px;border-left:2px solid #d8c37c}
+.new-fruit{display:flex;flex-wrap:wrap;gap:6px;outline:3px solid #b39bc9;outline-offset:4px;border-radius:8px;margin-left:6px}
+
+/* ---- Take away: ONE group, the eaten apples crossed out (approved round 3c, unchanged), five to a row ---- */
+.take-one{display:flex;justify-content:center;margin:0 auto}
+.take-one .apples{display:grid;grid-template-columns:repeat(var(--cols,5),auto);justify-content:start;gap:14px;max-width:520px;padding:16px 22px;background:#fff1cb;border:2px solid #e0c983;border-bottom-width:5px;border-radius:22px;min-height:84px;min-width:120px}
+.take-one .apples .apple{width:40px;height:40px}
+.take-one .fruit{position:relative;display:inline-grid;place-items:center}
+.take-one .fruit.gone .apple,.tray i.apple.gone,.tray .fruit.gone .apple{opacity:.38}
+.take-one .fruit.gone:after,.tray .fruit.gone:after{content:"";position:absolute;left:-4px;right:-4px;top:54%;height:5px;border-radius:3px;background:#7a4a3f;transform:rotate(-38deg)}
+.tray .stick i.apple.gone{position:relative;overflow:visible}
+.tray .stick i.apple.gone:after,.tray .stick i.apple.gone:before{all:unset}
+.tray .stick i.apple.gone{background-image:linear-gradient(128deg,transparent 42%,#5e362d 42%,#5e362d 58%,transparent 58%);opacity:.5}
+.take-one .fruit.away,.tray i.apple.away,.tray .fruit.away{visibility:hidden}
+.take-one .tray .fruit{position:relative}
+.take-one .count-tag{position:absolute;right:-8px;bottom:-8px}
+.take-one .tray{flex-direction:column;align-items:flex-start;gap:6px;margin:0;padding:14px 18px;background:#fff1cb;border:2px solid #e0c983;border-bottom-width:5px;border-radius:22px}
+.take-one .tray .stick{padding:9px 4px 3px;margin:0;background:none;border:0;gap:5px;min-height:0}
+.take-one .tray .stick i.apple{width:25px;height:25px;border-width:2px}
+.take-one .tray .stick i.apple:nth-of-type(6){margin-left:14px}
+.take-one .tray .stick i.apple:before{left:10px;top:-8px;width:3px;height:7px}
+.take-one .tray .stick i.apple:after{left:12px;top:-8px;width:10px;height:5px}
+.take-one .tray .stick i.apple.gone{opacity:.55;background-color:#f3c9bf;background-image:linear-gradient(128deg,transparent 43%,#5e362d 43%,#5e362d 57%,transparent 57%)}
+.take-one .tray .five-frame.ones.loose{max-width:none;gap:5px;padding:9px 4px 3px;flex-wrap:nowrap}
+.take-one .tray .five-frame.ones.loose span.pocket{width:25px;height:25px}
+.take-one .tray .five-frame.ones.loose span.pocket:nth-child(6){margin-left:14px}
+.take-one .tray .five-frame.ones.loose span.pocket .apple{width:25px;height:25px;border-width:2px}
+.take-one .tray .five-frame.ones.loose span.pocket .apple:before{left:10px;top:-8px;width:3px;height:7px}
+.take-one .tray .five-frame.ones.loose span.pocket .apple:after{left:12px;top:-8px;width:10px;height:5px}
+.take-one .tray .fruit.gone .apple{opacity:.55}
+.take-one .tray .fruit.gone:after{left:-2px;right:-2px;top:50%;height:4px}
+
+/* ---- Patterns ---- */
+.shape{display:block;width:30px;height:30px;border:2px solid #32857d;background:#54b6a7;box-shadow:inset 3px 0 0 #ffffff30;flex:none}
+.shape.circle{border-radius:50%}
+.shape.square{border-radius:7px;background:#a789ca;border-color:#7f62a3}
+.shape.triangle{width:0;height:0;background:transparent;border-left:17px solid transparent;border-right:17px solid transparent;border-top:0;border-bottom:30px solid #c28a45;box-shadow:none;border-radius:0}
+.shape.diamond{width:22px;height:22px;margin:4px;border-radius:4px;background:#e58a8a;border-color:#b85c5c;transform:rotate(45deg);box-shadow:none}
+.shape.oval{width:38px;height:22px;border-radius:50%;background:#e0b04f;border-color:#a88028}
+.pattern-strip{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;width:100%}
+.bead-slot{position:relative;width:54px;height:62px;flex:none;display:inline-flex;align-items:center;justify-content:center;padding:0;border:2px solid #c4bb89;background:#f4edc4;border-radius:15px;font:inherit;color:#667d57}
+.bead-slot.missing{border:3px dashed #839979;background:#fffdf0;color:#667d57;font-size:30px;font-weight:900;min-width:44px;min-height:48px}
+.bead-slot.active{outline:4px solid #594777;outline-offset:3px;border-color:#594777;background:#f0e7fa}
+.bead-slot.filled{background:#e1d3f1;border-color:#b09bd0}
+.bead-slot.model{background:#e6f1d6;border-color:#9fbd86;box-shadow:0 7px 0 -3px #9fbd86}
+.bead-slot.number,.bead-slot.number b{font-size:24px;font-weight:900;color:#3f4a5c}
+.bead-slot.empty{border-style:dashed;background:#fffdf0;opacity:.7}
+.pattern-strip .emphasis{outline:4px solid #609475;outline-offset:2px}
+.bead-index{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:11px;color:#7b8a6a;font-weight:bold}
+.pattern-strip.one-row{flex-wrap:nowrap;gap:6px}
+.pattern-strip.one-row .bead-slot{flex:1 1 0;width:auto;min-width:0;max-width:66px}
+.pattern-strip.one-row button.bead-slot{min-width:44px}
+.pattern-strip.long{display:grid;grid-template-columns:repeat(5,54px);gap:22px 8px;justify-content:center;margin-bottom:16px}
+.pattern-strip.long.making{grid-template-columns:repeat(5,52px)}
+.pattern-strip.grouped{gap:10px;align-items:flex-end}
+.bead-group{display:flex;gap:4px;padding:4px;border:2px dashed #b2c393;border-radius:14px;background:#fbfbe9}
+.bead-group .bead-slot{width:40px;height:50px}
+.bead-group.emphasis{outline:4px solid #609475;outline-offset:2px}
+.mirror-line{width:5px;height:56px;border-radius:3px;background:#b09bd0;margin:0 2px;align-self:center}
+.pattern-strip.mirrored{flex-wrap:nowrap;gap:5px}
+.pattern-strip.mirrored .bead-slot{flex:1 1 0;width:auto;min-width:0;max-width:56px}
+.pattern-strip.mirrored button.bead-slot{min-width:44px}
+.repeat-label{margin:0;font-size:15px;font-weight:bold;color:#60704f;text-align:center}
+.pattern-choices .answer .shape{width:44px;height:44px}
+.pattern-choices .answer .shape.triangle{width:0;height:0;border-left-width:24px;border-right-width:24px;border-bottom-width:42px}
+.pattern-choices .answer .shape.oval{width:54px;height:32px}
+.pattern-choices .answer .shape.diamond{width:32px;height:32px}
+.pattern-choices .answer.number{font-size:38px}
+.make-choices{gap:8px}
+.make-choices .answer{min-width:44px;max-width:80px}
+.make-choices .answer .shape{width:34px;height:34px}.make-choices .answer .shape.oval{width:40px;height:24px}.make-choices .answer .shape.diamond{width:26px;height:26px}.make-choices .answer .shape.triangle{width:0;height:0;border-left-width:18px;border-right-width:18px;border-bottom-width:32px}
+.make-tools{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
+.make-tools button{min-height:44px;padding:4px 10px;border:2px solid #b4c49e;border-radius:13px;background:#fbffe8;font-size:14px;font-weight:bold}
+
+/* ---- Words ---- */
+.symbol{object-fit:contain}
+.word-picture{display:flex;align-items:center;justify-content:center;min-height:0}
+.word-picture img.symbol{width:72px;height:72px;display:block}
+.sentence-row{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;flex-wrap:wrap}
+.sentence-row.clue #sentence-picture{outline:4px solid #477b59;outline-offset:4px;border-radius:12px}
+.sentence{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 8px;margin:0}
+.sentence-words{display:inline-flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 .3em;min-height:48px;padding:4px 6px;border:0;background:transparent;font:900 24px/1.2 "Trebuchet MS",Arial,sans-serif;color:#3f4a5c}
+button.sentence-words{cursor:pointer;border-radius:12px;min-width:44px}
+button.sentence-words:active{background:#f4edc4}
+.sentence .stop{font-size:28px;font-weight:900;color:#3f4a5c;line-height:1;margin-left:-6px}
+.sentence input.gap-input{box-sizing:border-box;width:calc(var(--gap-ch,6)*1ch + 34px);max-width:100%;min-width:110px;min-height:54px;margin:0;padding:4px 12px;border:3px dashed #839979;border-radius:14px;background:#fffdf0;color:#594777;font:900 24px/1.2 "Trebuchet MS",Arial,sans-serif;letter-spacing:1px;text-align:center;caret-color:#6a558a;outline:3px solid #b2c393;outline-offset:3px}
+.sentence input.gap-input:focus,.sentence input.gap-input:focus-visible{outline:4px solid #594777;outline-offset:3px;border-color:#594777}
+.sentence input.gap-input[aria-invalid=true],.word-line[aria-invalid=true]{border-color:#b28e51;background:#fff6e8}
+.word-tile{min-height:48px;padding:6px 12px;border:2px solid #c4bb89;background:#f4edc4;border-radius:14px;font-size:22px;font-weight:900;color:#3f4a5c;display:grid;place-items:center;min-width:0;max-width:100%;overflow-wrap:anywhere}
+.word-tile.gap{border:3px dashed #839979;background:#fffdf0;color:#667d57;min-width:62px;outline:3px solid #b2c393;outline-offset:3px}
+.word-tile.filled{background:#e1d3f1;border-color:#b09bd0;color:#594777}
+.word-tile.stop{border:0;background:transparent;padding:0;min-width:0;min-height:0;font-size:28px;outline:0}
+.sentence.drop-ready .word-tile.gap:not([aria-hidden]){background:#e9f5dd;outline-color:#477b59}
+.word-bank.word-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%}
+button.word-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:100%;min-width:0;min-height:72px;margin:0;padding:6px 4px;border:2px solid #d4bd71;border-radius:16px;background:#fff4c9;color:#594777;font:900 clamp(14px,4vw,20px)/1.15 "Trebuchet MS",Arial,sans-serif;overflow-wrap:anywhere;text-align:center}
+.card-picture{display:block;width:36px;height:36px;flex:0 0 auto;visibility:hidden}
+.card-picture.revealed{visibility:visible}
+.card-picture img.symbol{width:100%;height:100%;display:block;margin:0}
+.card-word{display:block;min-width:0}
+.hear-tiles{display:block;width:100%;margin:0;padding:0;border:0;background:transparent;font:inherit;color:inherit;cursor:pointer;border-radius:16px;min-height:48px}
+.letter-tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.letter-tile{width:46px;height:54px;display:grid;place-items:center;border:2px solid #c4bb89;background:#f4edc4;border-radius:12px;font-size:28px;font-weight:900;color:#3f4a5c}
+.letter-tile.gap{border:3px dashed #839979;background:#fffdf0;color:#667d57;outline:3px solid #b2c393;outline-offset:3px}
+.letter-tile.filled{background:#e1d3f1;border-color:#b09bd0;color:#594777}
+.letter-tile.space{width:16px;border:0;background:transparent}
+.hear-tiles .sentence{gap:6px}
+.choice-label{margin:0;font-size:14px;color:#586644;font-weight:bold}
+.choices.word-options{flex-wrap:wrap;gap:10px}
+.choices .answer.word{font-size:clamp(26px,9vw,42px)}
+.choices .answer.word.long{max-width:none;font-size:clamp(15px,4.6vw,24px);white-space:normal;line-height:1.1;padding:4px 6px;overflow-wrap:anywhere}
+.choice.word-choice{flex:0 1 auto;min-width:60px;min-height:64px;padding:8px 14px;display:inline-flex;align-items:center;justify-content:center;background:#ccead9;border:3px solid #75ad91;border-bottom-width:6px;border-radius:18px;font-size:24px;font-weight:900;color:#2f4f3c;white-space:nowrap}
+.choice.word-choice.chosen{background:#9fd3b1;border-color:#3f8f5c}.choice.word-choice.faded{opacity:.5}
+.choice.word-choice:disabled:not(.chosen):not(.faded){opacity:.4}
+.word-options .word-choice{touch-action:none;cursor:grab}
+.word-options .word-choice.dragging{opacity:.25}
+.drag-ghost{position:fixed;left:0;top:0;z-index:30;margin:0;pointer-events:none;box-shadow:0 10px 22px #2c425833;cursor:grabbing;will-change:transform}
+.drag-ghost.reject{animation:tile-reject .36s ease-in-out;border-color:#c9837a!important;background:#fbe3dd!important}
+.word-choice.reject{animation:tile-reject .36s ease-in-out}
+@keyframes tile-reject{0%,100%{margin-left:0}20%{margin-left:-9px}40%{margin-left:9px}60%{margin-left:-6px}80%{margin-left:5px}}
+.number-total{font-size:40px;font-weight:900;color:#4d7357;line-height:1}
+.number-model{display:flex;align-items:center;justify-content:center;gap:14px}
+.number-model strong{font-size:38px}
+.number-model span{font-size:24px;font-weight:900;background:#e7d9ef;border:2px solid #b8a1ca;padding:8px 14px;border-radius:16px}
+.typing-row{display:flex;justify-content:center}
+.number-line{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.number-view{display:flex;flex-direction:column;align-items:center;gap:10px;max-width:100%}
+.join-row.missing-row{gap:8px}
+.word-line{width:13ch;max-width:100%;min-height:52px;padding:6px 12px;border:3px solid #b29acb;border-bottom-width:5px;border-radius:16px;background:#fffef7;color:#293d60;font:900 24px/1.2 "Trebuchet MS",Arial,sans-serif;text-align:left;letter-spacing:1px;caret-color:#6a558a}
+
+/* ---- tall portrait phones: the spare height goes to the keys (about 52 px) ---- */
+@media (max-width:759px) and (min-height:800px) and (orientation:portrait){.keyboard:not(.keypad):not(.actions-only) .key{min-height:52px}}
+
+/* ---- narrow portrait phones: seven keys to a row at 44 px or more, and 3 + 2 kept on one line ---- */
+@media (max-width:459px){
+  .nf.words .nook-btn{width:92px;height:110px}
+  .nf.words .nf-bubble{margin-bottom:20px;font-size:19px}
+  .nf.words .nf-stage{padding:0 6px}
+  .nf.words .nf-task>.task{padding:10px 5px}
+  .keyboard{gap:4px}
+}
+.join-row.compact{gap:6px}
+.join-row.compact .group{gap:6px;padding:8px 10px}
+.join-row.compact .group>.tagged>.apple{width:34px;height:34px}
+.join-row.compact .plus{font-size:32px}
+
+/* ---- landscape phones: the card is short and wide ---- */
+@media (orientation:landscape) and (max-height:520px){
+  .objects{gap:6px}
+  .five-frame{max-width:300px;padding:6px;gap:4px;border-radius:16px;border-bottom-width:5px}
+  .pocket{min-height:0;border-radius:10px}
+  .group>.tagged>.apple,.take-one .apples .apple{width:32px;height:32px}
+  .group{padding:6px 8px;gap:6px}
+  .plus{font-size:30px}
+  .equation{font-size:28px}
+  .ten-pair .five-frame{--tp:30px}
+  .keyboard{grid-template-columns:repeat(10,minmax(0,1fr));gap:4px}
+  .key{min-height:44px;font-size:18px;border-radius:8px}
+  .key .key-word{display:inline;font-size:14px}
+  .key.function,.key.go{grid-column:span 2}
+  .keyboard.with-space .key.function,.keyboard.with-space .key.go{grid-column:span 1}
+  .keyboard.with-space .key .key-word{display:none}
+  .key.space{grid-column:span 2;order:0}
+  .keyboard.keypad{grid-template-columns:repeat(6,minmax(0,1fr));max-width:none}
+  .keyboard.keypad .key{min-height:44px}
+  .keyboard.keypad .key.function,.keyboard.keypad .key.go{grid-column:span 1}
+  .keyboard.keypad .key-word{display:none}
+  .sentence-row{gap:8px;flex-wrap:nowrap}
+  .word-picture img.symbol{width:44px;height:44px}
+  .sentence-words{font-size:20px;min-height:44px}
+  .sentence input.gap-input{min-height:44px;font-size:20px;min-width:96px}
+  button.word-card{flex-direction:row;gap:8px;min-height:44px;padding:3px 8px;font-size:16px}
+  .card-picture{width:30px;height:30px}
+  .word-bank.word-cards{gap:6px}
+  .bead-slot{height:50px}
+  .take-one .apples{padding:10px 14px;gap:10px;min-height:0}
+  .letter-tile{width:40px;height:46px;font-size:24px}
+  .choice.word-choice{min-height:52px;font-size:20px}
+  .number-model strong{font-size:30px}.number-model span{font-size:20px;padding:4px 10px}
+}
+/* ---- tablets: more room ---- */
+@media (min-width:760px) and (min-height:521px){
+  .five-frame{max-width:460px}
+  .group>.tagged>.apple,.take-one .apples .apple{width:50px;height:50px}
+  .tray .five-frame{--tp:50px}
+  .pattern-strip.one-row .bead-slot{max-width:84px;height:84px}
+  .pattern-strip.one-row .shape{transform:scale(1.25)}
+  .pattern-strip.one-row .shape.diamond{transform:rotate(45deg) scale(1.25)}
+  .pattern-choices .answer .shape{width:52px;height:52px}
+  .equation{font-size:42px}
+  .ten-pair .five-frame{--tp:46px}
+  .keyboard{grid-template-columns:repeat(10,minmax(0,1fr));gap:6px;max-width:700px;margin:0 auto}
+  .key{min-height:52px}
+  .key .key-word{display:inline;font-size:16px}
+  .key.function,.key.go{grid-column:span 2}
+  .keyboard.with-space .key.function,.keyboard.with-space .key.go{grid-column:span 1}
+  .keyboard.with-space .key .key-word{display:none}
+  .key.space{grid-column:span 2;order:0}
+  .word-picture img.symbol{width:84px;height:84px}
+  .sentence-words{font-size:28px}
+  .sentence input.gap-input{font-size:28px;min-height:60px}
+  button.word-card{flex-direction:row;gap:10px;min-height:60px;font-size:20px}
+  .card-picture{width:40px;height:40px}
+  .word-bank.word-cards{max-width:700px;margin:0 auto}
+  .bead-slot{width:62px;height:70px}
+}
+
+/* ---- fit: smaller pictures until the card holds them (added in turn by garden.js) ---- */
+.fit-1 .objects{gap:6px}
+.fit-1 .group>.tagged>.apple,.fit-1 .take-one .apples .apple{width:32px;height:32px}
+.fit-1 .group{gap:6px;padding:6px 8px}
+.fit-1 .stick,.fit-1 button.stick{--ra:12px;padding:10px 6px 4px 30px;gap:2px}
+.fit-1 .ten-pair .five-frame{--tp:32px}
+.fit-1 .tray .five-frame{--tp:36px}
+.fit-1 .five-frame{max-width:280px}
+.fit-1 .equation{font-size:30px}
+.fit-1 .take-one .apples{gap:10px;padding:10px 12px}
+.fit-1 .word-picture img.symbol{width:52px;height:52px}
+.fit-1 button.word-card{min-height:56px}
+.fit-1 .bead-slot{height:50px}
+.fit-1 .pattern-strip.long{gap:18px 6px}
+.fit-2 .group>.tagged>.apple,.fit-2 .take-one .apples .apple{width:26px;height:26px}
+.fit-2 .stick,.fit-2 button.stick{--ra:9px;padding:9px 5px 3px 28px}
+.fit-2 .ten-pair .five-frame{--tp:26px}
+.fit-2 .tray .five-frame{--tp:30px}
+.fit-2 .five-frame{max-width:240px}
+.fit-2 .plus{font-size:26px}
+.fit-2 .equation{font-size:26px}
+.fit-2 .apples .apple{width:22px;height:22px}
+.fit-2 .take-one .tray .stick i.apple{width:18px;height:18px}
+.fit-2 .word-picture img.symbol{width:40px;height:40px}
+.fit-2 .card-picture{width:28px;height:28px}
+.fit-2 button.word-card{min-height:48px}
+.fit-2 .key{min-height:44px}
+.fit-3 .group>.tagged>.apple,.fit-3 .take-one .apples .apple{width:20px;height:20px}
+.fit-3 .stick,.fit-3 button.stick{--ra:7px;gap:1px}
+.fit-3 .ten-pair .five-frame{--tp:22px}
+.fit-3 .tray .five-frame{--tp:26px}
+.fit-3 .five-frame{max-width:200px}
+.fit-3 .equation{font-size:22px}
+.fit-3 .group{gap:3px;padding:4px 6px}
+.fit-3 .take-one .tray .stick i.apple{width:13px;height:13px}
+.fit-3 .take-one .tray .stick i.apple:nth-of-type(6){margin-left:8px}
+
+/* ---- landscape phones after fitting: keep the landscape sizes, fold more into rows ---- */
+.fit-2 button.stick{min-height:44px}
+/* pictures of rows of ten (not buttons) get thin when room is short */
+.fit-2 .group.rows .stick,.fit-2 .tray span.stick{padding:5px 5px 4px 28px}
+.fit-2 .group.rows .stick{padding-right:28px}
+.fit-2 .group.rows{gap:3px;padding:6px}
+.fit-3 .group.rows .stick,.fit-3 .tray span.stick{padding:3px 4px 3px 24px}
+.fit-3 .group.rows .stick{padding-right:26px}
+.fit-3 .take-one .tray .stick{gap:3px}
+.fit-3 .take-one .tray{padding:8px 10px}
+.fit-3 .stick>b:not(.count-tag){font-size:10px;padding:0 3px;left:3px}
+.fit-3 .group.rows .stick>.count-tag{height:18px;min-width:22px;font-size:10px;padding:0 3px}
+.fit-2 .tray{gap:4px}
+@media (orientation:landscape) and (max-height:520px){
+  .fit-1 button.word-card,.fit-2 button.word-card{min-height:44px}
+  .fit-1 .word-picture img.symbol{width:40px;height:40px}
+  .fit-1 .take-one .tray{display:grid;grid-template-columns:repeat(2,auto);column-gap:16px;row-gap:2px}
+  .fit-2 .pattern-strip.long{row-gap:6px;margin-bottom:0}
+  .fit-2 .pattern-strip.long .bead-index{display:none}
+  .fit-2 .bead-slot{height:44px}
+  .fit-2 .repeat-label{font-size:13px}
+  .number-view{flex-direction:row;justify-content:center;gap:16px}
+  .number-view .tray{max-width:66%}
+  .fit-2 .bubble-inline{font-size:14px;padding:1px 10px}
+  .fit-2 .number-total{font-size:30px}
+  .fit-2 .word-line{min-height:44px;font-size:20px}
+  .sum-build{gap:6px}
+}
+
+/* ---- the chooser (the pill's sheet) ---- */
+.level-picker,.set-picker,.family-picker{display:flex;flex-direction:column;gap:8px;margin:12px 0 4px}
+.level-picker button,.set-picker button,.family-picker button{min-height:48px;text-align:left;font-size:15px;padding:10px 14px}
+.level-picker button[aria-pressed=true],.family-picker button[aria-pressed=true]{background:#e1d3f1;border-color:#b09bd0;color:#594777;outline:3px solid #594777;outline-offset:2px}
+.set-picker button[aria-pressed=true]{background:#fff0ad;border-color:#d3b863;color:#66542a;outline:3px solid #66542a;outline-offset:2px}
+.family-picker button{display:flex;align-items:center;gap:10px}
+.puzzle-picker:empty{display:none}
+.operation-picker,.picker-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.operation-picker button,.picker-tabs button{flex:1 1 auto;min-height:48px;font-size:14px}
+.operation-picker button[aria-pressed=true],.picker-tabs button[aria-pressed=true]{background:#e1d3f1;border-color:#b09bd0;color:#594777;outline:3px solid #594777;outline-offset:2px}
+.level-beads{display:inline-flex;align-items:center;gap:4px;vertical-align:middle;margin:0 6px}
+.level-beads .shape{width:18px;height:18px;border-width:1px}
+.level-beads .shape.oval{width:24px;height:14px}
+.level-beads .shape.diamond{width:13px;height:13px;margin:0 3px}
+.level-beads .shape.triangle{border-left-width:9px;border-right-width:9px;border-bottom-width:16px}
+.level-beads .mini-group{display:inline-flex;gap:2px;padding:2px 3px;border:1px dashed #b2c393;border-radius:6px;margin-right:3px}
+.level-beads b{font-size:15px}
+.pill-beads{display:inline-flex;align-items:center;gap:3px}
+#pick-sum label{display:block}
+
+/* ---- Softer and reduced motion: the picture is shown at once ---- */
+.softer .arrive,.softer .equation .unknown.arrive,.softer .ten-badge{animation:none}
+.softer .apple{background:#ce9683;border-color:#9e7466}
+@media (prefers-reduced-motion:reduce){.arrive,.equation .unknown.arrive,.ten-badge,.drag-ghost.reject,.word-choice.reject{animation:none}}

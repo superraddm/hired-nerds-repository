@@ -1,0 +1,202 @@
+/* The Nook frame (round 4): one layout for every game, plus Nook's shelf, the in-game shelf overlay and the
+   Grown-ups hold. Layout reference: docs/little-patterns-round-4/mockups/frame.css. Load before the game's own
+   object stylesheet, with nook.css (the rig) and shared.css (dialogs).
+
+   Frame pages put class "lp-frame" on <html>. The frame height follows the visual viewport (frame.js sets --app-h
+   from visualViewport, falling back to 100dvh), so when a device keyboard or large text leaves less room the task
+   card scrolls inside the frame and the shelf button, Help, Delete and Enter stay reachable. Zoom stays on.
+
+   Layouts: phone portrait (Nook above the task); phone landscape under 520 px tall (Nook in a left column, task in
+   the centre, actions in a right column; Words folds the bubble into the card); tablet from 760 px wide (Nook
+   larger beside the task). Motion follows review-opus-pass-1 section 4 as amended by BUILD-BRIEF items 60 and 64:
+   travel at most 12 px, scale at most 1.06; Softer and reduced motion keep only short opacity changes. */
+:root{--ink:#293d60;--paper:#fffcdf;--sky:#dcf3ed;--sand:#f8edba;--grass:#c6df99;--mint:#b3e2d4;--mint-dark:#6bb9a6;--butter:#ffe393;--butter-dark:#debd50;--lilac:#e1d3f1;--lilac-dark:#b09bd0;--coral:#f8c1b5;--coral-dark:#d99389;--green:#376e5a;--green-dark:#285347;--lp-out:cubic-bezier(.2,.7,.3,1);--lp-in:cubic-bezier(.4,0,1,1);--lp-inout:cubic-bezier(.45,0,.55,1);--app-h:100vh;font-family:"Trebuchet MS",Arial,sans-serif;color:var(--ink);font-synthesis:none}
+@supports (height:100dvh){:root{--app-h:100dvh}}
+*{box-sizing:border-box}
+html.lp-frame,html.lp-frame body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}
+html.lp-frame body{background:linear-gradient(var(--sky) 0 38%,var(--sand) 38% 100%);-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html.lp-frame input,html.lp-frame textarea,html.lp-frame .lp-dialog p{-webkit-user-select:text;user-select:text}
+html.lp-frame img,html.lp-frame svg{-webkit-user-drag:none;-webkit-touch-callout:none}
+:where(.lp-frame) button{font:inherit;color:inherit;appearance:none;-webkit-appearance:none;border:0;background:none;padding:0;margin:0;cursor:pointer;touch-action:manipulation}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---- the frame: top bar, Nook and bubble, task card, two-slot action bar ---- */
+.nf{height:var(--app-h);max-width:1000px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:56px minmax(0,1fr) auto;padding:0 0 env(safe-area-inset-bottom)}
+.nf-top{display:flex;align-items:center;gap:8px;padding:6px 10px;min-width:0}
+.nf-shelf{width:46px;height:46px;flex:none;border-radius:14px;background:#fff;border:2px solid var(--lilac-dark);display:grid;place-items:center;color:#7862a4;box-shadow:0 3px 0 #cdbfe3}
+.nf-shelf svg{width:26px;height:26px}
+.nf-modes{display:flex;gap:6px;flex:1;min-width:0;justify-content:center}
+.chip{flex:none;min-height:44px;padding:0 12px;border-radius:12px;background:#fffdf3;border:2px solid #d8d0a8;font-weight:900;font-size:15px;color:#5a5236;display:flex;align-items:center;justify-content:center;white-space:nowrap;min-width:44px}
+.chip[aria-pressed=true]{background:var(--lilac);border-color:#7862a4;color:#4d3b73;box-shadow:inset 0 0 0 1px #7862a4}
+.pill{min-height:44px;min-width:44px;padding:0 12px;border-radius:22px;background:#fff1b5;border:2px solid #dcc05a;font-weight:900;font-size:15px;color:#5a4a12;display:flex;align-items:center;gap:6px;flex:none;white-space:nowrap;box-shadow:0 3px 0 #e5d085}
+.pill:after{content:"\25BE";font-size:12px}
+.pill .shape{width:14px;height:14px;flex:none}
+.pill .shape.triangle{border-left-width:8px;border-right-width:8px;border-bottom-width:14px}
+.pill .shape.oval{width:18px;height:11px}.pill .shape.diamond{width:11px;height:11px;margin:0 2px}
+
+.nf-stage{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);gap:4px;min-height:0;min-width:0;padding:0 12px}
+.nf-nook{display:flex;align-items:flex-end;gap:10px;min-width:0}
+.nook-btn{flex:none;position:relative;width:112px;height:134px;display:block;border-radius:24px}
+.nook-pos{position:absolute;inset:0;display:block}
+.nook-pos svg.nook{display:block;width:100%;height:100%}
+.nf-bubble{position:relative;flex:1;min-width:0;min-height:56px;margin-bottom:28px;padding:12px 44px 12px 16px;border:2px solid #c0b1d7;background:#f0e7fa;border-radius:20px;font-size:21px;font-weight:900;line-height:1.25;color:#3d2f5e;text-align:left;transition:background-color 150ms linear,border-color 150ms linear}
+.nf-bubble:after{content:"";position:absolute;left:-9px;bottom:14px;width:16px;height:16px;background:inherit;border-left:2px solid;border-bottom:2px solid;border-color:inherit;transform:rotate(45deg)}
+.nf-bubble .hear{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:28px;height:28px;color:#7862a4;opacity:.85}
+.nf-bubble .hear svg{display:block;width:100%;height:100%}
+.nf-bubble.silent{padding-right:16px}.nf-bubble.silent .hear{display:none}
+.nf-bubble.success{background:#e4f3e3;border-color:#8fbf92;color:#2f5a44}
+.nf-bubble #speech,.nf-bubble .line{display:block;overflow-wrap:break-word}
+.nf-bubble .line.fade{animation:lp-fade-in 150ms linear}
+.bubble-inline{display:none}
+
+.nf-task{position:relative;min-height:0;min-width:0;display:flex;flex-direction:column;background:var(--paper);border:3px solid #e4d69c;border-radius:26px;overflow:hidden}
+.nf-task:before{content:"";position:absolute;left:-6%;right:-6%;bottom:-96px;height:120px;border-radius:50% 50% 0 0;background:var(--grass);opacity:.7;pointer-events:none}
+.nf-task>.task{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;padding:14px;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain}
+.objects{flex:1 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-width:0}
+.answers{flex:none;display:flex;justify-content:center;align-items:stretch;gap:14px;min-height:96px;min-width:0}
+.answers:empty{display:none}
+
+/* The answer buttons shared by every game: tall, one colour, the chosen one green with a tick, the others faded. */
+.answer{flex:1 1 0;min-width:44px;max-width:120px;min-height:96px;display:inline-flex;align-items:center;justify-content:center;padding:0 4px;background:#ccead9;border:3px solid #75ad91;border-bottom-width:7px;border-radius:20px;font-size:42px;font-weight:900;line-height:1;color:#2f4f3c;white-space:nowrap;position:relative;transition:transform 70ms var(--lp-out),opacity 200ms linear,background-color 150ms linear,border-color 150ms linear}
+.answer:active:not(:disabled){transform:translateY(3px);border-bottom-width:4px}
+.answer.hint{outline:4px solid #477b59;outline-offset:4px}
+.answer.chosen{background:#9fd3b1;border-color:#3f8f5c;color:#20462f;opacity:1}
+.answer.chosen:after{content:"";position:absolute;right:6px;top:6px;width:18px;height:10px;border-left:4px solid #2f6a4a;border-bottom:4px solid #2f6a4a;transform:rotate(-45deg);animation:lp-fade-in 150ms linear}
+.answer.faded{opacity:.5}
+.answer:disabled{cursor:default}
+.answer.chosen:disabled{opacity:1}
+
+.nf-actions{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:62px;gap:10px;padding:10px 12px 20px}
+.nf-actions>button{grid-row:1;min-height:62px;min-width:44px;border-radius:18px;font-weight:900;font-size:19px;display:flex;align-items:center;justify-content:center;gap:10px;border:3px solid;transition:transform 70ms var(--lp-out),box-shadow 70ms var(--lp-out)}
+.nf-actions>button:active{transform:translateY(3px)}
+.nf-actions>.nf-help{grid-column:1;background:#fff1b5;border-color:#dcc05a;color:#5a4a12;box-shadow:0 4px 0 #dcc05a}
+.nf-help svg{width:32px;height:32px;flex:none}
+.nf-actions>.nf-again{grid-column:1;justify-self:start;width:72%;background:#fffdf3;border-color:#adcfc3;color:#2f675a;box-shadow:0 4px 0 #adcfc3;font-size:17px}
+.nf-actions>.nf-next{grid-column:2;background:var(--green);border-color:var(--green-dark);color:#fff;box-shadow:0 4px 0 var(--green-dark)}
+.nf-next:not([hidden]){animation:lp-fade-in 150ms linear}
+
+/* ---- phone landscape: Nook in a left column, task centre, actions right ---- */
+@media (orientation:landscape) and (max-height:520px){
+  .nf{grid-template-columns:124px minmax(0,1fr) 124px;grid-template-rows:52px minmax(0,1fr);gap:0 8px;padding:0 8px 8px;max-width:none}
+  .nf-top{grid-column:1/-1;padding:4px 0}
+  .nf-shelf{width:44px;height:44px}
+  .chip,.pill{font-size:14px;padding:0 10px}
+  .nf-stage{display:contents}
+  .nf-nook{grid-column:1;grid-row:2;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;min-height:0}
+  .nook-btn{width:82px;height:98px}
+  .nf-bubble{flex:none;width:100%;margin:0;padding:8px 30px 8px 10px;border-radius:14px;font-size:16px}
+  .nf-bubble.silent{padding-right:10px}
+  .nf-bubble:after{left:46%;bottom:auto;top:-9px;transform:rotate(135deg)}
+  .nf-bubble .hear{width:20px;height:20px;right:6px}
+  .nf-task{grid-column:2;grid-row:2;border-radius:20px}
+  .nf-task>.task{padding:6px 8px;gap:6px}
+  .answers{min-height:76px;gap:10px}
+  .answer{min-height:76px;font-size:34px;border-radius:16px}
+  .nf-actions{grid-column:3;grid-row:2;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;gap:8px;padding:0 0 12px}
+  .nf-actions>button{min-height:56px;font-size:16px;border-radius:14px;width:100%}
+  .nf-actions>.nf-help,.nf-actions>.nf-again{grid-row:1;grid-column:1;width:100%}.nf-actions>.nf-next{grid-row:3;grid-column:1}
+  .nf-help svg{width:26px;height:26px}
+  .nf-actions>.nf-again{font-size:15px}
+  /* Words: the bubble folds into the card and the keyboard gets the width */
+  .nf.words{grid-template-columns:minmax(0,1fr) 116px}
+  .nf.words .nf-nook{display:none}
+  .nf.words .nf-task{grid-column:1}
+  .nf.words .nf-actions{grid-column:2}
+  .nf.words .bubble-inline{display:block;flex:none;align-self:center;max-width:100%;margin:0;padding:3px 12px;border:2px solid #c0b1d7;background:#f0e7fa;border-radius:12px;font-size:16px;font-weight:900;line-height:1.25;color:#3d2f5e;text-align:center}
+  .nf.words .bubble-inline.success{background:#e4f3e3;border-color:#8fbf92;color:#2f5a44}
+}
+/* ---- tablets and desktop: Nook larger beside the task ---- */
+@media (min-width:760px) and (min-height:521px){
+  .nf{grid-template-rows:64px minmax(0,1fr) auto}
+  .nf-top{padding:8px 20px}
+  .nf-stage{grid-template-columns:230px minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:16px;padding:0 20px}
+  .nf-nook{flex-direction:column;align-items:center;justify-content:center;gap:12px}
+  .nook-btn{width:190px;height:228px}
+  .nf-bubble{flex:none;width:100%;margin:0;order:-1;padding:12px 42px 12px 16px;font-size:20px;text-align:center}
+  .nf-bubble.silent{padding:12px 16px}
+  .nf-bubble:after{left:46%;bottom:-10px;transform:rotate(-45deg)}
+  .nf-task>.task{padding:20px}
+  .answer{max-width:130px;min-height:104px;font-size:46px}
+  .answers{min-height:104px}
+  .nf-actions{width:100%;max-width:600px;margin:0 auto;padding:12px 20px 20px}
+}
+
+@media (max-width:389px){.nf-top{gap:6px;padding:6px 8px}.chip,.pill{padding:0 9px;font-size:14px}.nf-modes{gap:4px}}
+
+/* ---- Nook's small calm responses (wrapper only; never the svg, which owns the breath) ---- */
+.nook-wiggle{animation:lp-wiggle 520ms var(--lp-inout) both;transform-origin:50% 100%}
+@keyframes lp-wiggle{0%,100%{transform:none}25%{transform:rotate(-3deg)}55%{transform:rotate(2.5deg)}80%{transform:rotate(-1deg)}}
+@keyframes lp-fade-in{from{opacity:0}to{opacity:1}}
+@keyframes lp-rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes lp-drop{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+@keyframes lp-fade-out{from{opacity:1}to{opacity:0}}
+
+/* ---- the shelf: the hub page and the in-game overlay ---- */
+.shelf{height:var(--app-h);max-width:900px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;gap:6px;padding:10px 12px 0}
+.shelf-top{display:flex;align-items:flex-end;gap:10px;min-width:0}
+.shelf-top .nook-btn{width:116px;height:139px}
+.shelf-top .nf-bubble{margin-bottom:34px}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:12px;align-content:center;min-height:0;padding:6px 0 8px}
+.tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:88px;max-height:150px;min-width:0;width:100%;border-radius:22px;border:3px solid;box-shadow:0 5px 0;font-weight:900;font-size:19px;letter-spacing:.5px;color:var(--ink);transition:transform 140ms var(--lp-out),box-shadow 140ms var(--lp-out)}
+.tile:active{transform:translateY(3px);transition-duration:70ms}
+.tile svg{width:56px;height:56px;flex:none}
+.tile span{white-space:nowrap}
+.tile[aria-current=true]{outline:4px solid #314b59;outline-offset:3px}
+.tile.count{background:var(--mint);border-color:var(--mint-dark);box-shadow:0 5px 0 var(--mint-dark)}.tile.add{background:var(--butter);border-color:var(--butter-dark);box-shadow:0 5px 0 var(--butter-dark)}.tile.words{background:var(--lilac);border-color:var(--lilac-dark);box-shadow:0 5px 0 var(--lilac-dark)}.tile.patterns{background:var(--coral);border-color:var(--coral-dark);box-shadow:0 5px 0 var(--coral-dark)}.tile.shapes{background:#fde9b8;border-color:#e3b85c;box-shadow:0 5px 0 #e3b85c}.tile.feelings{background:#ece4f6;border-color:#b09bd0;box-shadow:0 5px 0 #b09bd0}.tile.paint{background:#fff4d6;border-color:#d9b36b;box-shadow:0 5px 0 #d9b36b}.tile.blocks{background:#dbe8dc;border-color:#9bbf9f;box-shadow:0 5px 0 #9bbf9f}
+.tile:active{box-shadow:0 2px 0 currentColor}
+.tile.count:active{box-shadow:0 2px 0 var(--mint-dark)}.tile.add:active{box-shadow:0 2px 0 var(--butter-dark)}.tile.words:active{box-shadow:0 2px 0 var(--lilac-dark)}.tile.patterns:active{box-shadow:0 2px 0 var(--coral-dark)}.tile.shapes:active{box-shadow:0 2px 0 #e3b85c}.tile.feelings:active{box-shadow:0 2px 0 #b09bd0}.tile.paint:active{box-shadow:0 2px 0 #d9b36b}.tile.blocks:active{box-shadow:0 2px 0 #9bbf9f}
+.shelf-foot{display:flex;justify-content:flex-end;align-items:center;gap:12px;min-height:68px;padding:6px 6px calc(14px + env(safe-area-inset-bottom))}
+.sound-badge{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:#fffdf3;border:1.5px solid #cfd6c7;color:#6d7a73}
+.sound-badge svg{width:20px;height:20px}
+.nf-grown{position:relative;width:48px;height:48px;flex:none;border-radius:50%;display:grid;place-items:center;color:#6d7a73;background:#fffdf3;border:1.5px solid #cfd6c7;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:none}
+.nf-grown>svg:not(.ring){width:24px;height:24px}
+.nf-grown .ring{position:absolute;left:-7px;top:-7px;width:62px;height:62px;overflow:visible;pointer-events:none}
+.nf-grown .ring circle{fill:none;stroke:#7862a4;stroke-width:4;stroke-linecap:round;stroke-dasharray:169.65;stroke-dashoffset:169.65;transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset 250ms var(--lp-out)}
+.nf-grown.holding .ring circle{stroke-dashoffset:0;transition:stroke-dashoffset 1700ms linear}
+.lp-modal.lp-rise .lp-dialog{animation:lp-rise 220ms var(--lp-out)}
+
+.lp-overlay{position:fixed;left:0;right:0;top:0;height:var(--app-h);z-index:50;background:#fffcdf;animation:lp-fade-in 180ms linear}
+.lp-overlay>.shelf{animation:lp-rise 220ms var(--lp-out)}
+.lp-overlay.closing{animation:lp-fade-out 160ms var(--lp-in) forwards}
+.lp-overlay .shelf{background:linear-gradient(var(--sky) 0 30%,#fffcdf 30% 100%);max-width:none}
+.lp-overlay .shelf>*{width:100%;max-width:900px;margin:0 auto}
+
+@media (orientation:landscape) and (max-height:520px){
+  .shelf{grid-template-columns:150px minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;column-gap:12px;padding:8px 10px 0;max-width:none}
+  .shelf-top{grid-row:1;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+  .shelf-top .nook-btn{width:92px;height:110px}
+  .shelf-top .nf-bubble{flex:none;width:100%;margin:0;padding:8px 30px 8px 10px;border-radius:14px;font-size:16px}
+  .shelf-top .nf-bubble.silent{padding-right:10px}
+  .shelf-top .nf-bubble:after{left:46%;bottom:auto;top:-9px;transform:rotate(135deg)}
+  .shelf-top .nf-bubble .hear{width:20px;height:20px;right:6px}
+  .tiles{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:4px 0}
+  .tile{min-height:72px;font-size:15px;gap:2px;border-radius:16px}
+  .tile svg{width:40px;height:40px}
+  .shelf-foot{grid-column:1/-1;min-height:56px;padding:2px 4px calc(6px + env(safe-area-inset-bottom))}
+  .lp-overlay .shelf>*{max-width:none}
+}
+@media (min-width:760px) and (min-height:521px){
+  .shelf{padding:16px 24px 0}
+  .shelf-top{justify-content:center}
+  .shelf-top .nook-btn{width:160px;height:192px}
+  .shelf-top .nf-bubble{flex:0 1 420px;font-size:22px}
+  .tiles{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+  .tile{min-height:140px;max-height:190px;font-size:21px}
+  .tile svg{width:76px;height:76px}
+}
+
+/* ---- the Grown-ups sheet (inside shared.js's dialog) ---- */
+.gu-list{display:flex;flex-direction:column;gap:8px;margin:16px 0}
+.gu-list button{text-align:left}
+.gu-list a{min-height:48px;display:flex;align-items:center;padding:10px 16px;border:1px solid #a6bba0;border-radius:12px;background:#fff;color:inherit;font-weight:700;text-decoration:none}
+
+/* ---- Softer and reduced motion: no travel, no wiggle; short fades only ---- */
+.softer .nook-wiggle,.softer .lp-overlay>.shelf,.softer .lp-modal.lp-rise .lp-dialog{animation:none}
+.softer .tile,.softer .answer,.softer .nf-actions>button{transition:opacity 120ms linear}
+.softer .tile:active,.softer .answer:active,.softer .nf-actions>button:active{transform:none}
+@media (prefers-reduced-motion:reduce){
+  .nook-wiggle,.lp-overlay>.shelf,.lp-modal.lp-rise .lp-dialog{animation:none}
+  .lp-overlay{animation-duration:120ms}
+  .tile,.answer,.nf-actions>button{transition:opacity 120ms linear}
+  .tile:active,.answer:active,.nf-actions>button:active{transform:none}
+}

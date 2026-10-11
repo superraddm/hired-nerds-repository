@@ -3,9 +3,13 @@ const fs = require('node:fs');
 const path = require('node:path');
 const source = path.resolve(__dirname, '../public/fireworks/little-patterns');
 const files = [
-  'index.html', 'home.css', 'shared.css', 'shared.js', 'learning.js',
+  'index.html', 'hub.js', 'shared.css', 'shared.js', 'learning.js',
+  // Round 4: the Nook frame, the shelf, the character rig, the icons and the home-screen manifest.
+  'frame.css', 'frame.js', 'shelf.js', 'icons.js', 'nook-art.js', 'nook.css',
+  'manifest.webmanifest', 'assets/icon-192.png', 'assets/icon-512.png',
+  'shapes.html', 'shapes-stub.js',
   'blocks.html', 'blocks.css', 'blocks-live.css', 'blocks.js', 'core.js',
-  'garden.html', 'garden-preview.css', 'garden-live.css', 'garden.js',
+  'garden.html', 'garden.css', 'garden.js',
   'assets/nook.png', 'assets/kpop-boom.png', 'LICENSE.txt', 'content.html', 'voice-library.js',
   'assets/voice/manifest.json', 'assets/voice/NOTICE.txt',
   'feelings.html', 'feelings.css', 'feelings.js', 'feelings-data.js', 'feelings-art.js',
