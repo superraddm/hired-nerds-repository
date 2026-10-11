@@ -144,7 +144,7 @@
     overlay.setAttribute('aria-label', 'Nook’s games');
     overlay.innerHTML = markup({ current, modes: !!onMode });
     doc.body.appendChild(overlay);
-    overlayNook = dress(overlay.querySelector('.shelf'), 'What shall we play?', []).nook;
+    overlayNook = dress(overlay.querySelector('.shelf'), 'What shall we play?', ['What shall we play?']).nook;
     overlay.addEventListener('click', e => {
       const tile = e.target.closest('[data-shelf]');
       if (!tile) return;

@@ -6,147 +6,171 @@ window.LPVoiceLibrary={
   "clips": {
     "a blank can grow": {
       "file": "assets/voice/7c85b58605ba4690.wav",
-      "seconds": 2.36
+      "seconds": 2.175
     },
     "a butterfly lands near robin. robin says, i feel surprised": {
       "file": "assets/voice/c39b5a6b1e86bc59.wav",
-      "seconds": 8.059
+      "seconds": 7.03
     },
     "a different picture. look again": {
       "file": "assets/voice/dce2bb2a4ba8155e.wav",
-      "seconds": 3.927
+      "seconds": 3.145
     },
     "a fish can blank": {
       "file": "assets/voice/3719c09a907af3ed.wav",
-      "seconds": 3.063
+      "seconds": 2.56
     },
     "a fish can swim": {
       "file": "assets/voice/65fcb2650cd81890.wav",
-      "seconds": 3.226
+      "seconds": 2.395
     },
     "a flower can grow": {
       "file": "assets/voice/f2d7718dc6ee0e57.wav",
-      "seconds": 3.028
+      "seconds": 2.365
+    },
+    "a hexagon has six sides": {
+      "file": "assets/voice/a0894c592cd8078b.wav",
+      "seconds": 2.375
+    },
+    "a mirror pattern": {
+      "file": "assets/voice/c925eacd315cec19.wav",
+      "seconds": 1.37
+    },
+    "a pentagon has five sides": {
+      "file": "assets/voice/f17832764c3e4c13.wav",
+      "seconds": 2.59
+    },
+    "a rectangle has four sides": {
+      "file": "assets/voice/52cc26a58dac6736.wav",
+      "seconds": 2.535
+    },
+    "a square has four sides": {
+      "file": "assets/voice/878c6977cec9b406.wav",
+      "seconds": 2.28
+    },
+    "a triangle has three sides": {
+      "file": "assets/voice/cc7e51b0eebb5dfa.wav",
+      "seconds": 2.59
     },
     "a wet blank can swim": {
       "file": "assets/voice/86e258c3a844eeca.wav",
-      "seconds": 3.582
+      "seconds": 3.03
     },
     "a wet fish can swim": {
       "file": "assets/voice/7a723b73120985af.wav",
-      "seconds": 3.114
+      "seconds": 3.015
     },
     "a word for my feeling": {
       "file": "assets/voice/5f8cde56dc435dbd.wav",
-      "seconds": 2.535
+      "seconds": 2.405
     },
     "ali has planted a seed. ali says, i feel proud": {
       "file": "assets/voice/883c0ccf70e9b30d.wav",
-      "seconds": 8.483
+      "seconds": 6.595
     },
     "ali is angry": {
       "file": "assets/voice/b03aeb9c03608cf5.wav",
-      "seconds": 2.894
+      "seconds": 2.155
     },
     "ali is building. the tower keeps falling. ali says, i feel angry": {
       "file": "assets/voice/92f87d62864e66bc.wav",
-      "seconds": 9.635
+      "seconds": 7.43
     },
     "ali is calm": {
       "file": "assets/voice/e7d6d2df7785ef25.wav",
-      "seconds": 3.04
+      "seconds": 2.195
     },
     "ali is disappointed": {
       "file": "assets/voice/7a78ccea383fb0e1.wav",
-      "seconds": 2.878
+      "seconds": 2.625
     },
     "ali is excited": {
       "file": "assets/voice/5cc2940172304fee.wav",
-      "seconds": 2.647
+      "seconds": 2.305
     },
     "ali is frustrated": {
       "file": "assets/voice/961f7d87d50e6bc4.wav",
-      "seconds": 2.393
+      "seconds": 2.275
     },
     "ali is happy": {
       "file": "assets/voice/2b1b98054d2926ff.wav",
-      "seconds": 1.916
+      "seconds": 1.845
     },
     "ali is proud": {
       "file": "assets/voice/d1d4409c0adab4e1.wav",
-      "seconds": 2.711
+      "seconds": 2.415
     },
     "ali is sad": {
       "file": "assets/voice/6fd8833ce05ee515.wav",
-      "seconds": 2.321
+      "seconds": 2.245
     },
     "ali is surprised": {
       "file": "assets/voice/2646900b098d30bd.wav",
-      "seconds": 2.898
+      "seconds": 2.39
     },
     "ali is trying a new slide. ali says, i feel worried": {
       "file": "assets/voice/3f7fb8105101aed5.wav",
-      "seconds": 7.348
+      "seconds": 6.055
     },
     "ali is trying to untie a knot. ali says, i feel frustrated": {
       "file": "assets/voice/794f8a5949554b87.wav",
-      "seconds": 8.756
+      "seconds": 7.525
     },
     "ali is worried": {
       "file": "assets/voice/38295c7bb34f7f81.wav",
-      "seconds": 2.821
+      "seconds": 2.275
     },
     "ali says, i feel angry": {
       "file": "assets/voice/6ed069af135f0f5e.wav",
-      "seconds": 3.793
+      "seconds": 3.315
     },
     "ali says, i feel frustrated": {
       "file": "assets/voice/73a5b7de315ceb53.wav",
-      "seconds": 4.375
+      "seconds": 3.555
     },
     "ali says, i feel happy": {
       "file": "assets/voice/0ad4af6315388732.wav",
-      "seconds": 4.06
+      "seconds": 3.48
     },
     "ali says, i feel proud": {
       "file": "assets/voice/dda41cb18dd7079f.wav",
-      "seconds": 4.439
+      "seconds": 3.845
     },
     "ali says, i feel worried": {
       "file": "assets/voice/1d013fd25d89c292.wav",
-      "seconds": 3.77
+      "seconds": 2.83
     },
     "ali sees a flower in the garden. ali says, i feel happy": {
       "file": "assets/voice/595dcdaa4faed0d8.wav",
-      "seconds": 8.617
+      "seconds": 7.29
     },
     "angry": {
       "file": "assets/voice/5c7c1a50b2aa17ec.wav",
-      "seconds": 1.183
+      "seconds": 1.11
     },
     "apple": {
       "file": "assets/voice/ae09156c59f7f200.wav",
-      "seconds": 1.084
+      "seconds": 0.735
     },
     "apples": {
       "file": "assets/voice/9dbbc2c66ff4d0bc.wav",
-      "seconds": 1.128
+      "seconds": 1.055
     },
     "asleep": {
       "file": "assets/voice/d739ba5def8b0fb3.wav",
-      "seconds": 1.628
+      "seconds": 1.285
     },
     "ball": {
       "file": "assets/voice/2a1fee4b1bd10229.wav",
-      "seconds": 1.237
+      "seconds": 1.12
     },
     "basket": {
       "file": "assets/voice/9c8a3e6c015ed3a8.wav",
-      "seconds": 1.331
+      "seconds": 0.96
     },
     "big": {
       "file": "assets/voice/c73cba1196e2c6b4.wav",
-      "seconds": 0.718
+      "seconds": 0.61
     },
     "buh": {
       "file": "assets/voice/dd51c7fcb3337393.wav",
@@ -154,27 +178,55 @@ window.LPVoiceLibrary={
     },
     "bus": {
       "file": "assets/voice/1e9a6907c73d47ca.wav",
-      "seconds": 0.988
+      "seconds": 0.59
     },
     "calm": {
       "file": "assets/voice/009c1f27159c1ec6.wav",
-      "seconds": 1.473
+      "seconds": 1.08
     },
     "cat": {
       "file": "assets/voice/741c705b45d6252b.wav",
-      "seconds": 0.984
+      "seconds": 0.72
+    },
+    "choose the number word": {
+      "file": "assets/voice/d77ec1d297bd01a1.wav",
+      "seconds": 2.87
     },
     "circle": {
       "file": "assets/voice/de93c64b7e4d4142.wav",
-      "seconds": 1.461
+      "seconds": 1.13
     },
     "copy if you like. or just look": {
       "file": "assets/voice/ff4c848d3a9461a8.wav",
-      "seconds": 4.206
+      "seconds": 3.5
     },
     "correct": {
       "file": "assets/voice/6d6364eba8dbb12c.wav",
-      "seconds": 1.039
+      "seconds": 0.93
+    },
+    "count on": {
+      "file": "assets/voice/343823182096f51b.wav",
+      "seconds": 1.31
+    },
+    "count the apples that are left": {
+      "file": "assets/voice/36a690ee17479f2f.wav",
+      "seconds": 2.685
+    },
+    "count the new apples with me": {
+      "file": "assets/voice/699bc79bd60ae43a.wav",
+      "seconds": 2.74
+    },
+    "count the tens with me": {
+      "file": "assets/voice/95cf17432d8e252c.wav",
+      "seconds": 2.285
+    },
+    "count them all with me": {
+      "file": "assets/voice/413cc078e4b0524f.wav",
+      "seconds": 1.7
+    },
+    "count with me": {
+      "file": "assets/voice/15e2bbac71ad4cca.wav",
+      "seconds": 1.05
     },
     "cuh": {
       "file": "assets/voice/5c63c365db5d30dd.wav",
@@ -182,35 +234,43 @@ window.LPVoiceLibrary={
     },
     "diamond": {
       "file": "assets/voice/4bdcbcef4068b489.wav",
-      "seconds": 1.126
+      "seconds": 1.05
     },
     "disappointed": {
       "file": "assets/voice/d6fad12cc109f4f3.wav",
-      "seconds": 1.464
+      "seconds": 1.355
     },
     "dog": {
       "file": "assets/voice/b8f1b8df04142069.wav",
-      "seconds": 0.949
+      "seconds": 0.61
+    },
+    "drag the words, first to last": {
+      "file": "assets/voice/1d11271945acfb3f.wav",
+      "seconds": 4.205
     },
     "dry": {
       "file": "assets/voice/4a0faec8d760c630.wav",
-      "seconds": 0.948
+      "seconds": 0.85
     },
     "duh": {
       "file": "assets/voice/746dc0410b8d8e05.wav",
       "seconds": 0.791
     },
+    "each group has one more": {
+      "file": "assets/voice/990a18361f8f1645.wav",
+      "seconds": 2.515
+    },
     "eight": {
       "file": "assets/voice/1129c57f84e6f0a6.wav",
-      "seconds": 1.036
+      "seconds": 0.655
     },
     "eighteen": {
       "file": "assets/voice/9e97fab23456cae3.wav",
-      "seconds": 1.424
+      "seconds": 1.225
     },
     "eighty": {
       "file": "assets/voice/801336ad51ef1c9f.wav",
-      "seconds": 1.172
+      "seconds": 0.97
     },
     "eleven": {
       "file": "assets/voice/421f5992a38038ef.wav",
@@ -218,55 +278,59 @@ window.LPVoiceLibrary={
     },
     "equals": {
       "file": "assets/voice/95fa3ae4a5c402df.wav",
-      "seconds": 1.687
+      "seconds": 1.285
     },
     "excited": {
       "file": "assets/voice/9ad5998c0af126ee.wav",
-      "seconds": 1.658
+      "seconds": 1.195
     },
     "fast": {
       "file": "assets/voice/b59c32fc7b0a2eca.wav",
-      "seconds": 1.358
+      "seconds": 1.095
     },
     "fifteen": {
       "file": "assets/voice/97907215b207a598.wav",
-      "seconds": 1.464
+      "seconds": 1.35
     },
     "fifty": {
       "file": "assets/voice/f5634c0c9c2e41e9.wav",
-      "seconds": 1.335
+      "seconds": 1.275
+    },
+    "fill the ten first": {
+      "file": "assets/voice/34a2f596583db149.wav",
+      "seconds": 2.14
     },
     "find the same picture": {
       "file": "assets/voice/3e9e6fd63e505ecd.wav",
-      "seconds": 2.908
+      "seconds": 2.665
     },
     "fish": {
       "file": "assets/voice/f171c1687de86935.wav",
-      "seconds": 1.058
+      "seconds": 0.76
     },
     "five": {
       "file": "assets/voice/1fadffc7cf0596db.wav",
-      "seconds": 1.149
+      "seconds": 1.085
     },
     "flower": {
       "file": "assets/voice/b0904d9ae3461b1d.wav",
-      "seconds": 0.979
+      "seconds": 0.905
     },
     "forty": {
       "file": "assets/voice/784ab513feef4b2c.wav",
-      "seconds": 1.158
+      "seconds": 0.94
     },
     "four": {
       "file": "assets/voice/4c7f8eb5e05ff06f.wav",
-      "seconds": 1.196
+      "seconds": 1.14
     },
     "fourteen": {
       "file": "assets/voice/c8a544b6607af3c9.wav",
-      "seconds": 1.87
+      "seconds": 1.5
     },
     "frustrated": {
       "file": "assets/voice/5136092b1ee4e8ca.wav",
-      "seconds": 1.953
+      "seconds": 1.545
     },
     "fuh": {
       "file": "assets/voice/fbd6ed7f1ecf31fb.wav",
@@ -274,11 +338,11 @@ window.LPVoiceLibrary={
     },
     "good matching": {
       "file": "assets/voice/ac7e627b9826ec4f.wav",
-      "seconds": 1.066
+      "seconds": 0.995
     },
     "good try! let's look again": {
       "file": "assets/voice/e1ae7ef9b7f84a79.wav",
-      "seconds": 2.857
+      "seconds": 2.445
     },
     "guh": {
       "file": "assets/voice/5f6d98402f9a72fb.wav",
@@ -286,99 +350,159 @@ window.LPVoiceLibrary={
     },
     "happy": {
       "file": "assets/voice/50ec84a5e74b179b.wav",
-      "seconds": 1.061
+      "seconds": 0.67
     },
     "hello! i'm nook. let's play": {
       "file": "assets/voice/0b8e57b837dd931d.wav",
-      "seconds": 3.66
+      "seconds": 2.83
     },
     "hot": {
       "file": "assets/voice/c30b77bdf8c7788b.wav",
-      "seconds": 0.925
+      "seconds": 0.845
+    },
+    "how do you feel": {
+      "file": "assets/voice/5c1dbc03b08fbf12.wav",
+      "seconds": 1.37
+    },
+    "how does nook feel": {
+      "file": "assets/voice/2688b7bdd9209d75.wav",
+      "seconds": 2.08
+    },
+    "how many": {
+      "file": "assets/voice/8fbe2e1779508491.wav",
+      "seconds": 0.935
+    },
+    "how many apples": {
+      "file": "assets/voice/3667ba4efb0c4179.wav",
+      "seconds": 2.05
+    },
+    "how many are left": {
+      "file": "assets/voice/1efafa94d613b398.wav",
+      "seconds": 1.275
+    },
+    "how many more came": {
+      "file": "assets/voice/021dfc8ce2db1869.wav",
+      "seconds": 1.757
+    },
+    "how many sides": {
+      "file": "assets/voice/485ab8dbcd4c7fdc.wav",
+      "seconds": 1.485
     },
     "huh": {
       "file": "assets/voice/9c4264c848624a05.wav",
       "seconds": 0.605
     },
+    "it turns around": {
+      "file": "assets/voice/f39d3e9049769b88.wav",
+      "seconds": 1.89
+    },
+    "it's a circle": {
+      "file": "assets/voice/3a8dc07f51d7cff0.wav",
+      "seconds": 1.955
+    },
+    "it's a hexagon": {
+      "file": "assets/voice/87aaa13caddc5734.wav",
+      "seconds": 1.375
+    },
+    "it's a pentagon": {
+      "file": "assets/voice/4bb02adfd595ff91.wav",
+      "seconds": 1.41
+    },
+    "it's a rectangle": {
+      "file": "assets/voice/207b8e8f8bb4925e.wav",
+      "seconds": 1.44
+    },
+    "it's a square": {
+      "file": "assets/voice/ccd3876ba461a33b.wav",
+      "seconds": 1.25
+    },
+    "it's a triangle": {
+      "file": "assets/voice/82d53718e40d39fa.wav",
+      "seconds": 1.5
+    },
+    "it's an oval": {
+      "file": "assets/voice/eb8afbd638a752a2.wav",
+      "seconds": 1.345
+    },
     "jo is angry": {
       "file": "assets/voice/7d1c3a3d01003614.wav",
-      "seconds": 2.274
+      "seconds": 1.925
     },
     "jo is calm": {
       "file": "assets/voice/e4a447b04fe2f67a.wav",
-      "seconds": 2.676
+      "seconds": 2.265
     },
     "jo is disappointed": {
       "file": "assets/voice/85ebc7cb7982f8e3.wav",
-      "seconds": 2.631
+      "seconds": 2.5
     },
     "jo is excited": {
       "file": "assets/voice/3de147c0898e8b40.wav",
-      "seconds": 2.305
+      "seconds": 2.22
     },
     "jo is frustrated": {
       "file": "assets/voice/e6f06a9ec86078ac.wav",
-      "seconds": 2.516
+      "seconds": 2.085
     },
     "jo is getting ready for a picnic. jo says, i feel excited": {
       "file": "assets/voice/5b523c85fedd0e5a.wav",
-      "seconds": 7.234
+      "seconds": 6.685
     },
     "jo is happy": {
       "file": "assets/voice/978f00afe851a83e.wav",
-      "seconds": 2.394
+      "seconds": 1.745
     },
     "jo is proud": {
       "file": "assets/voice/64c53a915f282a7f.wav",
-      "seconds": 2.355
+      "seconds": 2.115
     },
     "jo is reading in a cosy chair. jo says, i feel calm": {
       "file": "assets/voice/70d9e05503ea0816.wav",
-      "seconds": 8.238
+      "seconds": 6.61
     },
     "jo is sad": {
       "file": "assets/voice/83dc77c941c03605.wav",
-      "seconds": 2.305
+      "seconds": 2.05
     },
     "jo is surprised": {
       "file": "assets/voice/91454cb034c828e6.wav",
-      "seconds": 2.534
+      "seconds": 2.45
     },
     "jo is worried": {
       "file": "assets/voice/475fd433c696b7bd.wav",
-      "seconds": 2.147
+      "seconds": 1.76
     },
     "jo says, i feel calm": {
       "file": "assets/voice/0bde0d96c7c50279.wav",
-      "seconds": 4.706
+      "seconds": 3.79
     },
     "jo says, i feel disappointed": {
       "file": "assets/voice/a6344c27a91c20ac.wav",
-      "seconds": 4.252
+      "seconds": 3.89
     },
     "jo says, i feel excited": {
       "file": "assets/voice/9fe073e104eea84f.wav",
-      "seconds": 4.207
+      "seconds": 3.49
     },
     "jo says, i feel sad": {
       "file": "assets/voice/dd15a305bed9f84f.wav",
-      "seconds": 3.818
+      "seconds": 2.775
     },
     "jo says, i feel surprised": {
       "file": "assets/voice/135dee31ea14655e.wav",
-      "seconds": 4.277
+      "seconds": 3.86
     },
     "jo sees a new shoot in the pot. jo says, i feel surprised": {
       "file": "assets/voice/210c7701bda9767f.wav",
-      "seconds": 8.433
+      "seconds": 7.13
     },
     "jo wanted blue paint. the pot is empty. jo says, i feel disappointed": {
       "file": "assets/voice/23e9e7daccf4c1f8.wav",
-      "seconds": 10.248
+      "seconds": 8.38
     },
     "jo's favourite song has ended. jo says, i feel sad": {
       "file": "assets/voice/5c7425471645fec9.wav",
-      "seconds": 7.565
+      "seconds": 6.19
     },
     "juh": {
       "file": "assets/voice/cb06e22140a6a658.wav",
@@ -386,7 +510,7 @@ window.LPVoiceLibrary={
     },
     "jump": {
       "file": "assets/voice/f69726361e6123f9.wav",
-      "seconds": 1.36
+      "seconds": 0.91
     },
     "kuh": {
       "file": "assets/voice/129e3d6e874b4a27.wav",
@@ -396,17 +520,29 @@ window.LPVoiceLibrary={
       "file": "assets/voice/75c09f49de4256d3.wav",
       "seconds": 0.688
     },
+    "look for the part that repeats": {
+      "file": "assets/voice/daac2f7edc23b1db.wav",
+      "seconds": 2.695
+    },
     "loud": {
       "file": "assets/voice/f6ece9a9c57df738.wav",
-      "seconds": 1.079
+      "seconds": 0.96
     },
     "lovely counting": {
       "file": "assets/voice/a727d11331508a5a.wav",
-      "seconds": 1.841
+      "seconds": 1.56
+    },
+    "make a bead string": {
+      "file": "assets/voice/2f037726dc3810e9.wav",
+      "seconds": 1.515
     },
     "moon": {
       "file": "assets/voice/5e7838f0521a336d.wav",
-      "seconds": 1.412
+      "seconds": 1.365
+    },
+    "more": {
+      "file": "assets/voice/2c00b711e741ea1a.wav",
+      "seconds": 1.311
     },
     "muh": {
       "file": "assets/voice/5f7494de5f6ea8ab.wav",
@@ -414,67 +550,131 @@ window.LPVoiceLibrary={
     },
     "nine": {
       "file": "assets/voice/9f6de2a51ab9b5ba.wav",
-      "seconds": 1.13
+      "seconds": 1.055
     },
     "nineteen": {
       "file": "assets/voice/646c40573a60a318.wav",
-      "seconds": 1.387
+      "seconds": 1.34
     },
     "ninety": {
       "file": "assets/voice/6ec2e522c16aa677.wav",
-      "seconds": 1.64
+      "seconds": 1.24
+    },
+    "nook eats": {
+      "file": "assets/voice/835b5ee9c016099c.wav",
+      "seconds": 1.75
     },
     "nook eats an apple": {
       "file": "assets/voice/39e9775b0aa75718.wav",
-      "seconds": 2.603
+      "seconds": 2.42
     },
     "nook eats an blank": {
       "file": "assets/voice/0bde669a35913403.wav",
-      "seconds": 3.113
+      "seconds": 2.91
+    },
+    "nook eats none. how many are left": {
+      "file": "assets/voice/ff70db77b579081b.wav",
+      "seconds": 3.64
+    },
+    "nook eats them all. how many are left": {
+      "file": "assets/voice/61d1d3e32d507996.wav",
+      "seconds": 5.0
+    },
+    "nook feels angry": {
+      "file": "assets/voice/9f91b2662a4b8828.wav",
+      "seconds": 2.305
+    },
+    "nook feels calm": {
+      "file": "assets/voice/6c44618da332f965.wav",
+      "seconds": 2.135
+    },
+    "nook feels disappointed": {
+      "file": "assets/voice/0adb5c06a90a5307.wav",
+      "seconds": 3.08
+    },
+    "nook feels excited": {
+      "file": "assets/voice/f54a8fdc7d3c160f.wav",
+      "seconds": 2.995
+    },
+    "nook feels frustrated": {
+      "file": "assets/voice/6e03b54ccfe3be1c.wav",
+      "seconds": 2.64
+    },
+    "nook feels happy": {
+      "file": "assets/voice/3c0721ea6a2beb23.wav",
+      "seconds": 2.46
+    },
+    "nook feels proud": {
+      "file": "assets/voice/f91de21dd7b9a6fb.wav",
+      "seconds": 2.32
+    },
+    "nook feels sad": {
+      "file": "assets/voice/af30364a06be5174.wav",
+      "seconds": 2.535
+    },
+    "nook feels surprised": {
+      "file": "assets/voice/2af2b595497c0c03.wav",
+      "seconds": 2.235
+    },
+    "nook feels worried": {
+      "file": "assets/voice/f9aafa2e8157826f.wav",
+      "seconds": 2.305
+    },
+    "nook feels… tap one": {
+      "file": "assets/voice/de720b966ecedb7e.wav",
+      "seconds": 3.26
     },
     "nook has a ball": {
       "file": "assets/voice/522dcc13e07bf55e.wav",
-      "seconds": 2.836
+      "seconds": 2.28
     },
     "nook has a blank": {
       "file": "assets/voice/76c820645d0d6548.wav",
-      "seconds": 2.855
+      "seconds": 2.58
     },
     "nook has a soft ball": {
       "file": "assets/voice/8a6857d95b387e83.wav",
-      "seconds": 3.305
+      "seconds": 3.13
     },
     "nook has a soft blank": {
       "file": "assets/voice/f1e4970c8fe404ab.wav",
-      "seconds": 3.525
+      "seconds": 3.26
+    },
+    "nook takes a breath": {
+      "file": "assets/voice/360a280992243fc5.wav",
+      "seconds": 1.965
     },
     "not quite. you can do it": {
       "file": "assets/voice/da692cfc0296b151.wav",
-      "seconds": 2.218
+      "seconds": 1.98
     },
     "not sure": {
       "file": "assets/voice/d400d4d55a937caa.wav",
-      "seconds": 1.255
+      "seconds": 1.16
     },
     "nuh": {
       "file": "assets/voice/cfb648a827116105.wav",
       "seconds": 0.644
     },
+    "numbers in a row": {
+      "file": "assets/voice/50e24992cf1dddd7.wav",
+      "seconds": 2.53
+    },
     "one": {
       "file": "assets/voice/fa988b5cc643bb13.wav",
-      "seconds": 0.621
+      "seconds": 0.585
     },
     "one hundred": {
       "file": "assets/voice/5ff9d4568c2ce84c.wav",
-      "seconds": 2.355
+      "seconds": 1.9
     },
     "oops-a-daisy! one more go": {
       "file": "assets/voice/c697cdd960ae0be9.wav",
-      "seconds": 2.865
+      "seconds": 2.17
     },
     "oval": {
       "file": "assets/voice/7cd2e076c5379f84.wav",
-      "seconds": 1.133
+      "seconds": 1.045
     },
     "phonics-a": {
       "file": "assets/voice/19ff33f9e26ffef5.wav",
@@ -510,11 +710,11 @@ window.LPVoiceLibrary={
     },
     "plus": {
       "file": "assets/voice/643aae3fa38853d0.wav",
-      "seconds": 0.98
+      "seconds": 0.9
     },
     "proud": {
       "file": "assets/voice/f0433818fbc60bbf.wav",
-      "seconds": 1.329
+      "seconds": 0.96
     },
     "puh": {
       "file": "assets/voice/7c9615c5a925c93d.wav",
@@ -522,215 +722,219 @@ window.LPVoiceLibrary={
     },
     "read": {
       "file": "assets/voice/9ad42f3f5f779dbf.wav",
-      "seconds": 1.172
+      "seconds": 0.905
+    },
+    "read the number word": {
+      "file": "assets/voice/875408f761bdd54a.wav",
+      "seconds": 2.37
     },
     "robin hears a favourite song. robin says, i feel excited": {
       "file": "assets/voice/5088abbc94ad6d69.wav",
-      "seconds": 8.66
+      "seconds": 7.335
     },
     "robin is angry": {
       "file": "assets/voice/ceaf7a2b6ffc0a15.wav",
-      "seconds": 2.548
+      "seconds": 2.24
     },
     "robin is calm": {
       "file": "assets/voice/c48785a75ec1692c.wav",
-      "seconds": 2.608
+      "seconds": 2.35
     },
     "robin is disappointed": {
       "file": "assets/voice/7a8ab227032d08db.wav",
-      "seconds": 3.352
+      "seconds": 2.865
     },
     "robin is excited": {
       "file": "assets/voice/656b3e8af0067de7.wav",
-      "seconds": 2.161
+      "seconds": 2.005
     },
     "robin is frustrated": {
       "file": "assets/voice/7925b1df8f551804.wav",
-      "seconds": 2.844
+      "seconds": 2.675
     },
     "robin is happy": {
       "file": "assets/voice/f0cd29b6c9873d1f.wav",
-      "seconds": 2.385
+      "seconds": 1.945
     },
     "robin is proud": {
       "file": "assets/voice/ad80901eb29286f0.wav",
-      "seconds": 2.62
+      "seconds": 2.46
     },
     "robin is sad": {
       "file": "assets/voice/d69cb8b5438aae2e.wav",
-      "seconds": 2.127
+      "seconds": 1.72
     },
     "robin is surprised": {
       "file": "assets/voice/302c7566bde2c53a.wav",
-      "seconds": 3.263
+      "seconds": 2.74
     },
     "robin is worried": {
       "file": "assets/voice/1dce5aeb49622529.wav",
-      "seconds": 2.204
+      "seconds": 1.85
     },
     "robin says, i feel angry": {
       "file": "assets/voice/575eb22fd41fd793.wav",
-      "seconds": 4.085
+      "seconds": 3.57
     },
     "robin says, i feel disappointed": {
       "file": "assets/voice/cd16364873b9020e.wav",
-      "seconds": 4.292
+      "seconds": 3.865
     },
     "robin says, i feel excited": {
       "file": "assets/voice/c07314607cdc7d6f.wav",
-      "seconds": 4.337
+      "seconds": 3.885
     },
     "robin says, i feel sad": {
       "file": "assets/voice/0816109b24953fbe.wav",
-      "seconds": 4.15
+      "seconds": 3.56
     },
     "robin says, i feel surprised": {
       "file": "assets/voice/fca7fc3849958358.wav",
-      "seconds": 4.667
+      "seconds": 3.88
     },
     "robin wanted the swings. they are closed today. robin says, i feel disappointed": {
       "file": "assets/voice/7fdf20f84e7c4fbd.wav",
-      "seconds": 10.729
+      "seconds": 9.35
     },
     "robin wanted to play outside. it is raining. robin says, i feel sad": {
       "file": "assets/voice/5d516b550114c007.wav",
-      "seconds": 10.585
+      "seconds": 9.145
     },
     "robin's zip is stuck. robin says, i feel angry": {
       "file": "assets/voice/9c02c70d647d2a22.wav",
-      "seconds": 6.705
+      "seconds": 5.265
     },
     "run": {
       "file": "assets/voice/3a6ed8677751a8cc.wav",
-      "seconds": 0.947
+      "seconds": 0.835
     },
     "sad": {
       "file": "assets/voice/29e5eda37df5b431.wav",
-      "seconds": 1.14
+      "seconds": 1.02
     },
     "sam has finished a drawing. sam says, i feel proud": {
       "file": "assets/voice/6fa1b4392ccaebc5.wav",
-      "seconds": 7.555
+      "seconds": 6.225
     },
     "sam is angry": {
       "file": "assets/voice/d0416dfaf7442b83.wav",
-      "seconds": 2.945
+      "seconds": 2.635
     },
     "sam is calm": {
       "file": "assets/voice/4b4983446d51bcaf.wav",
-      "seconds": 2.669
+      "seconds": 1.985
     },
     "sam is disappointed": {
       "file": "assets/voice/c88adbe4e34b115b.wav",
-      "seconds": 2.925
+      "seconds": 2.33
     },
     "sam is excited": {
       "file": "assets/voice/c8113c4b4e78a43b.wav",
-      "seconds": 3.04
+      "seconds": 2.485
     },
     "sam is frustrated": {
       "file": "assets/voice/40d5a8f3207ee7ce.wav",
-      "seconds": 2.98
+      "seconds": 2.87
     },
     "sam is happy": {
       "file": "assets/voice/b6cce986d1f9237e.wav",
-      "seconds": 2.172
+      "seconds": 1.925
     },
     "sam is playing with bubbles. sam says, i feel happy": {
       "file": "assets/voice/753c6a8a7e62ee7c.wav",
-      "seconds": 8.189
+      "seconds": 6.735
     },
     "sam is proud": {
       "file": "assets/voice/8cad2c2e12146de0.wav",
-      "seconds": 2.682
+      "seconds": 2.315
     },
     "sam is resting under a tree. sam says, i feel calm": {
       "file": "assets/voice/b37665d6c5299338.wav",
-      "seconds": 9.801
+      "seconds": 8.145
     },
     "sam is sad": {
       "file": "assets/voice/76c89b89d72fdd65.wav",
-      "seconds": 2.302
+      "seconds": 1.92
     },
     "sam is surprised": {
       "file": "assets/voice/661115ffaeca5fa3.wav",
-      "seconds": 3.072
+      "seconds": 2.62
     },
     "sam is trying a new swimming class. sam says, i feel worried": {
       "file": "assets/voice/1114c50882c29493.wav",
-      "seconds": 7.935
+      "seconds": 7.36
     },
     "sam is trying to thread a bead. sam says, i feel frustrated": {
       "file": "assets/voice/be084795be69a300.wav",
-      "seconds": 7.96
+      "seconds": 6.565
     },
     "sam is worried": {
       "file": "assets/voice/36f599f73ebe67b6.wav",
-      "seconds": 2.594
+      "seconds": 2.31
     },
     "sam says, i feel calm": {
       "file": "assets/voice/2cca839edb382632.wav",
-      "seconds": 4.995
+      "seconds": 4.025
     },
     "sam says, i feel frustrated": {
       "file": "assets/voice/194988d2728e46a5.wav",
-      "seconds": 3.888
+      "seconds": 3.56
     },
     "sam says, i feel happy": {
       "file": "assets/voice/774f1e2db453aace.wav",
-      "seconds": 3.998
+      "seconds": 3.455
     },
     "sam says, i feel proud": {
       "file": "assets/voice/9fce3c6c26b07c69.wav",
-      "seconds": 4.315
+      "seconds": 3.59
     },
     "sam says, i feel worried": {
       "file": "assets/voice/54e1cf6b551d3825.wav",
-      "seconds": 3.763
+      "seconds": 3.11
     },
     "seven": {
       "file": "assets/voice/d5b9c4e88aae062c.wav",
-      "seconds": 1.061
+      "seconds": 0.745
     },
     "seventeen": {
       "file": "assets/voice/be6f4a213a7cc268.wav",
-      "seconds": 2.017
+      "seconds": 1.87
     },
     "seventy": {
       "file": "assets/voice/62fa07a5a9fb3c65.wav",
-      "seconds": 1.406
+      "seconds": 1.17
     },
     "sing": {
       "file": "assets/voice/7dc21641425faa65.wav",
-      "seconds": 0.824
+      "seconds": 0.635
     },
     "six": {
       "file": "assets/voice/9ee99fa2b74c06c5.wav",
-      "seconds": 1.256
+      "seconds": 1.025
     },
     "sixteen": {
       "file": "assets/voice/1eb632783da3e4ef.wav",
-      "seconds": 1.921
+      "seconds": 1.725
     },
     "sixty": {
       "file": "assets/voice/d9ef3b4d2adaed48.wav",
-      "seconds": 1.098
+      "seconds": 1.015
     },
     "soft": {
       "file": "assets/voice/6d3f4880f56a81f1.wav",
-      "seconds": 1.619
+      "seconds": 1.03
     },
     "something else": {
       "file": "assets/voice/8348496b6e79dfa5.wav",
-      "seconds": 1.545
+      "seconds": 1.465
     },
     "spot on": {
       "file": "assets/voice/1ecf430f2e04664e.wav",
-      "seconds": 0.95
+      "seconds": 0.845
     },
     "square": {
       "file": "assets/voice/c87264f335f7494e.wav",
-      "seconds": 1.345
+      "seconds": 1.255
     },
     "suh": {
       "file": "assets/voice/b8b69d8db9c01caf.wav",
@@ -738,199 +942,223 @@ window.LPVoiceLibrary={
     },
     "sun": {
       "file": "assets/voice/e68a0cbad4687e63.wav",
-      "seconds": 1.294
+      "seconds": 0.895
     },
     "surprised": {
       "file": "assets/voice/8d0be59153fd4324.wav",
-      "seconds": 1.374
+      "seconds": 1.27
     },
     "swim": {
       "file": "assets/voice/4bdc20de839793dc.wav",
-      "seconds": 1.218
+      "seconds": 0.96
     },
     "take away": {
       "file": "assets/voice/daae8fb416e3a69b.wav",
-      "seconds": 1.492
+      "seconds": 1.175
     },
     "tall": {
       "file": "assets/voice/d7999f0c5d28b558.wav",
-      "seconds": 1.536
+      "seconds": 0.985
+    },
+    "tap each side": {
+      "file": "assets/voice/36b3aa5d0e753761.wav",
+      "seconds": 1.845
+    },
+    "tap the missing letter": {
+      "file": "assets/voice/d32fd554328f99e9.wav",
+      "seconds": 2.005
     },
     "ten": {
       "file": "assets/voice/a20421151f929099.wav",
-      "seconds": 1.108
+      "seconds": 0.8
+    },
+    "thank you for telling me": {
+      "file": "assets/voice/846f9d1e7da16821.wav",
+      "seconds": 1.485
     },
     "that's ok. have another go": {
       "file": "assets/voice/c82ef6591fcc64a0.wav",
-      "seconds": 2.89
+      "seconds": 2.325
+    },
+    "that's ok. not sure is fine": {
+      "file": "assets/voice/e877f8be672f3747.wav",
+      "seconds": 3.295
     },
     "that's right": {
       "file": "assets/voice/edda86189c4b23e4.wav",
-      "seconds": 1.16
+      "seconds": 1.065
     },
     "that’s the one": {
       "file": "assets/voice/3e0768e84f314fde.wav",
-      "seconds": 1.88
+      "seconds": 1.235
     },
     "the ball is wet": {
       "file": "assets/voice/fe6404a8f6f0bda2.wav",
-      "seconds": 2.427
+      "seconds": 1.86
     },
     "the big blank can run": {
       "file": "assets/voice/381df56117375283.wav",
-      "seconds": 3.462
+      "seconds": 3.06
     },
     "the big dog can run": {
       "file": "assets/voice/87b8baa814c4f4e8.wav",
-      "seconds": 2.769
+      "seconds": 2.35
     },
     "the blank can run": {
       "file": "assets/voice/676550a4a264a8ca.wav",
-      "seconds": 2.832
+      "seconds": 2.255
     },
     "the blank can swim": {
       "file": "assets/voice/fd0d83c5c35f4858.wav",
-      "seconds": 3.289
+      "seconds": 2.76
     },
     "the blank is asleep": {
       "file": "assets/voice/18434590ba6138dd.wav",
-      "seconds": 2.886
+      "seconds": 2.395
     },
     "the blank is big": {
       "file": "assets/voice/1a86746c4e96c75b.wav",
-      "seconds": 2.889
+      "seconds": 2.095
     },
     "the blank is dry": {
       "file": "assets/voice/dce6fbadc93bd65a.wav",
-      "seconds": 2.612
+      "seconds": 2.4
     },
     "the blank is hot": {
       "file": "assets/voice/fc06f566cb452a9b.wav",
-      "seconds": 2.958
+      "seconds": 2.28
     },
     "the blank is out": {
       "file": "assets/voice/e0d150e424105419.wav",
-      "seconds": 2.863
+      "seconds": 2.21
     },
     "the blank is wet": {
       "file": "assets/voice/912dfd9c0f44e841.wav",
-      "seconds": 2.282
+      "seconds": 2.01
     },
     "the bus is big": {
       "file": "assets/voice/6c7dd03a12163edb.wav",
-      "seconds": 2.744
+      "seconds": 2.18
     },
     "the bus is blank": {
       "file": "assets/voice/81c79c563867db56.wav",
-      "seconds": 3.13
+      "seconds": 2.22
     },
     "the cat is asleep": {
       "file": "assets/voice/36816a2ca8dd332b.wav",
-      "seconds": 3.856
+      "seconds": 2.925
     },
     "the cat is asleep now": {
       "file": "assets/voice/11affc3b90f12bfc.wav",
-      "seconds": 3.389
+      "seconds": 3.075
     },
     "the cat is blank now": {
       "file": "assets/voice/22d158f4d04502e3.wav",
-      "seconds": 3.389
+      "seconds": 2.82
     },
     "the cat is dry": {
       "file": "assets/voice/1597a9da017982da.wav",
-      "seconds": 2.209
+      "seconds": 1.895
     },
     "the dog can blank": {
       "file": "assets/voice/f94c0e6ba40727d3.wav",
-      "seconds": 3.305
+      "seconds": 2.44
     },
     "the dog can jump": {
       "file": "assets/voice/d154a7af1b4da503.wav",
-      "seconds": 3.087
+      "seconds": 2.55
     },
     "the dog can run": {
       "file": "assets/voice/5046fdfc04fdce1a.wav",
-      "seconds": 2.358
+      "seconds": 2.0
     },
     "the dog is wet": {
       "file": "assets/voice/b9dd11e410a0b567.wav",
-      "seconds": 2.798
+      "seconds": 2.395
     },
     "the fish can swim": {
       "file": "assets/voice/2746d296e61e5e19.wav",
-      "seconds": 2.85
+      "seconds": 2.095
     },
     "the fish is blank": {
       "file": "assets/voice/bec581646082512b.wav",
-      "seconds": 3.178
+      "seconds": 2.29
     },
     "the fish is wet": {
       "file": "assets/voice/e8b8ce5acec5eb8b.wav",
-      "seconds": 2.345
+      "seconds": 2.1
     },
     "the little blank is fast": {
       "file": "assets/voice/c07905d2b8b99174.wav",
-      "seconds": 3.491
+      "seconds": 2.87
     },
     "the little bus is fast": {
       "file": "assets/voice/fce1efe70403b79e.wav",
-      "seconds": 3.152
+      "seconds": 3.06
     },
     "the moon is big": {
       "file": "assets/voice/dbae23880c04e043.wav",
-      "seconds": 2.954
+      "seconds": 2.39
     },
     "the moon is out": {
       "file": "assets/voice/8b0f00c7e94f87b6.wav",
-      "seconds": 2.115
+      "seconds": 1.695
     },
     "the pattern fits": {
       "file": "assets/voice/236b4bda8f28bff4.wav",
-      "seconds": 2.329
+      "seconds": 2.065
     },
     "the sun is blank": {
       "file": "assets/voice/c4a408ad37b9df94.wav",
-      "seconds": 2.584
+      "seconds": 2.34
     },
     "the sun is hot": {
       "file": "assets/voice/ab6d26065dc220f7.wav",
-      "seconds": 2.458
+      "seconds": 2.31
     },
     "the tall blank is dry": {
       "file": "assets/voice/dadfcd501d0327dc.wav",
-      "seconds": 3.861
+      "seconds": 3.035
     },
     "the tall tree is dry": {
       "file": "assets/voice/db136ff6a9dc3380.wav",
-      "seconds": 3.599
+      "seconds": 3.075
     },
     "the tree is blank": {
       "file": "assets/voice/abe95f3f3f163c2a.wav",
-      "seconds": 3.229
+      "seconds": 2.73
     },
     "the tree is tall": {
       "file": "assets/voice/3e0bb7f1dddd5e5e.wav",
-      "seconds": 2.816
+      "seconds": 2.55
+    },
+    "then": {
+      "file": "assets/voice/d3ec540fdbe367a8.wav",
+      "seconds": 0.931
     },
     "thirteen": {
       "file": "assets/voice/e366fee05b3a075f.wav",
-      "seconds": 1.847
+      "seconds": 1.55
     },
     "thirty": {
       "file": "assets/voice/036962bf53c12457.wav",
-      "seconds": 1.534
+      "seconds": 1.29
+    },
+    "this pattern grows": {
+      "file": "assets/voice/f0b11961f37858e1.wav",
+      "seconds": 1.615
     },
     "three": {
       "file": "assets/voice/8d300ba177475aad.wav",
-      "seconds": 1.233
+      "seconds": 1.1
     },
     "tree": {
       "file": "assets/voice/785a8601c7acf8b7.wav",
-      "seconds": 0.985
+      "seconds": 0.945
     },
     "triangle": {
       "file": "assets/voice/6b93ec12cdcc3209.wav",
-      "seconds": 1.424
+      "seconds": 1.185
     },
     "tuh": {
       "file": "assets/voice/c64c03066f3a7d99.wav",
@@ -938,15 +1166,23 @@ window.LPVoiceLibrary={
     },
     "twelve": {
       "file": "assets/voice/c2d29c2cd2d1b8cf.wav",
-      "seconds": 1.055
+      "seconds": 0.975
     },
     "twenty": {
       "file": "assets/voice/6cfe91a73738cb08.wav",
-      "seconds": 0.882
+      "seconds": 0.8
     },
     "two": {
       "file": "assets/voice/6a5d8925681ff8e3.wav",
-      "seconds": 1.096
+      "seconds": 0.65
+    },
+    "type the missing word": {
+      "file": "assets/voice/2ccf8bf9213ad072.wav",
+      "seconds": 2.365
+    },
+    "type the number word": {
+      "file": "assets/voice/0a0c8925785ce7b6.wav",
+      "seconds": 2.105
     },
     "uh": {
       "file": "assets/voice/b7a74e1a6cca72fa.wav",
@@ -956,21 +1192,49 @@ window.LPVoiceLibrary={
       "file": "assets/voice/e2caffe648621001.wav",
       "seconds": 0.808
     },
+    "we did it": {
+      "file": "assets/voice/289746b1de04f253.wav",
+      "seconds": 1.01
+    },
+    "we said all the feelings": {
+      "file": "assets/voice/26e939897ed57959.wav",
+      "seconds": 2.405
+    },
     "well done": {
       "file": "assets/voice/d4d8a8c330b3cb56.wav",
-      "seconds": 1.061
+      "seconds": 0.95
     },
     "wet": {
       "file": "assets/voice/579e69e0a0649916.wav",
-      "seconds": 1.197
+      "seconds": 0.915
+    },
+    "what a string": {
+      "file": "assets/voice/67cf30d1b1af30b0.wav",
+      "seconds": 1.355
+    },
+    "what comes next": {
+      "file": "assets/voice/f949f623fd12f469.wav",
+      "seconds": 1.49
+    },
+    "what shall we play": {
+      "file": "assets/voice/ad7b76f30715c428.wav",
+      "seconds": 1.445
+    },
+    "which bead is missing": {
+      "file": "assets/voice/f1bce46943e4958e.wav",
+      "seconds": 1.69
+    },
+    "which shape is this": {
+      "file": "assets/voice/2ed5d9f85ac15df1.wav",
+      "seconds": 2.125
     },
     "whoops! have another go": {
       "file": "assets/voice/e10f10a9db6f6c3e.wav",
-      "seconds": 2.649
+      "seconds": 2.25
     },
     "worried": {
       "file": "assets/voice/3be0c338fb857db8.wav",
-      "seconds": 1.094
+      "seconds": 1.02
     },
     "wuh": {
       "file": "assets/voice/de623334c2af8fa9.wav",
@@ -978,59 +1242,51 @@ window.LPVoiceLibrary={
     },
     "yes": {
       "file": "assets/voice/3cffdb47fd33cb2e.wav",
-      "seconds": 0.875
+      "seconds": 0.75
     },
-    "you chose angry": {
-      "file": "assets/voice/a1119a552aa9fd07.wav",
-      "seconds": 2.435
+    "you feel angry. thank you for telling me": {
+      "file": "assets/voice/2d87d56c4cb755fa.wav",
+      "seconds": 3.645
     },
-    "you chose calm": {
-      "file": "assets/voice/07761bf07e36e157.wav",
-      "seconds": 2.397
+    "you feel calm. thank you for telling me": {
+      "file": "assets/voice/f2f2bea45a8015e2.wav",
+      "seconds": 2.705
     },
-    "you chose disappointed": {
-      "file": "assets/voice/9d86695ed5ab9f72.wav",
-      "seconds": 2.47
+    "you feel disappointed. thank you for telling me": {
+      "file": "assets/voice/19ac6e38a1c26b5e.wav",
+      "seconds": 4.165
     },
-    "you chose excited": {
-      "file": "assets/voice/56bc305037290ea3.wav",
-      "seconds": 2.562
+    "you feel excited. thank you for telling me": {
+      "file": "assets/voice/b3a2f8d9a48574f1.wav",
+      "seconds": 2.855
     },
-    "you chose frustrated": {
-      "file": "assets/voice/2a94052a296ba22a.wav",
-      "seconds": 2.796
+    "you feel frustrated. thank you for telling me": {
+      "file": "assets/voice/65ec5637d47ee20a.wav",
+      "seconds": 3.805
     },
-    "you chose happy": {
-      "file": "assets/voice/c9d35e0ae3314e7a.wav",
-      "seconds": 2.594
+    "you feel happy. thank you for telling me": {
+      "file": "assets/voice/bf150cd9e9d11140.wav",
+      "seconds": 3.155
     },
-    "you chose not sure": {
-      "file": "assets/voice/0ce3e3b047737dd6.wav",
-      "seconds": 2.66
+    "you feel proud. thank you for telling me": {
+      "file": "assets/voice/af55fdb73915f266.wav",
+      "seconds": 4.09
     },
-    "you chose proud": {
-      "file": "assets/voice/e62a6afc2d3581ac.wav",
-      "seconds": 2.75
+    "you feel sad. thank you for telling me": {
+      "file": "assets/voice/6654c4eac532ddf1.wav",
+      "seconds": 3.11
     },
-    "you chose sad": {
-      "file": "assets/voice/1c8a02a05aa9b353.wav",
-      "seconds": 2.883
+    "you feel surprised. thank you for telling me": {
+      "file": "assets/voice/fe491b921f3d30a1.wav",
+      "seconds": 3.9
     },
-    "you chose something else": {
-      "file": "assets/voice/c730b06d9a4aef49.wav",
-      "seconds": 2.233
-    },
-    "you chose surprised": {
-      "file": "assets/voice/0a3348ca7e700ef6.wav",
-      "seconds": 2.893
-    },
-    "you chose worried": {
-      "file": "assets/voice/83685536116b7ebd.wav",
-      "seconds": 2.473
+    "you feel worried. thank you for telling me": {
+      "file": "assets/voice/63dfaad5aa610ad7.wav",
+      "seconds": 3.905
     },
     "you found it": {
       "file": "assets/voice/7ca9e4bfbd14709f.wav",
-      "seconds": 1.443
+      "seconds": 1.225
     },
     "yuh": {
       "file": "assets/voice/fd0cf5f9971aa2ea.wav",
@@ -1038,7 +1294,7 @@ window.LPVoiceLibrary={
     },
     "zero": {
       "file": "assets/voice/a13a6e5226543771.wav",
-      "seconds": 1.348
+      "seconds": 1.01
     }
   }
 };

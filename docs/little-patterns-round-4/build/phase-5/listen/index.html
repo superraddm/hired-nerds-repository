@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nook's voice: listen</title>
+<style>
+:root{--bg:#fbf8ef;--ink:#2f2a3a;--soft:#6b6478;--card:#fff;--line:#e4dccb;--accent:#2f7d6d;--accent-ink:#fff;--warm:#b4561f;--chip:#efe8d8}
+@media (prefers-color-scheme:dark){:root{--bg:#1d1b22;--ink:#ece8f2;--soft:#a9a2b6;--card:#272430;--line:#3a3646;--accent:#5fc0a9;--accent-ink:#10251f;--warm:#f0a46e;--chip:#332f3d}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:960px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:1.6rem;margin:.2em 0 .3em}h2{font-size:1.2rem;margin:2em 0 .4em}
+p{max-width:72ch}.soft{color:var(--soft)}
+.row{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0}
+.row h3{font-size:1.05rem;margin:0 0 6px;font-weight:600}
+.parts{font-size:.85rem;color:var(--soft);margin:0 0 8px}
+.buttons{display:flex;flex-wrap:wrap;gap:8px}
+button{font:inherit;font-size:.95rem;min-height:44px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--chip);color:var(--ink);cursor:pointer}
+button.main{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+button.whole{border-color:var(--warm)}
+button[aria-pressed="true"]{outline:3px solid var(--warm);outline-offset:2px}
+button small{opacity:.8;margin-left:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px}
+.note{border-left:4px solid var(--warm);padding:4px 12px;margin:12px 0}
+code{background:var(--chip);padding:1px 6px;border-radius:6px;font-size:.9em}
+.stop{position:sticky;top:8px;float:right;z-index:2}
+</style>
+</head>
+<body>
+<main>
+<button class="stop" type="button" id="stop">Stop</button>
+<h1>Nook's voice: listen and choose</h1>
+<p class="soft">Serve this folder on its own, then open it on this PC or the iPad (same Wi-Fi):
+<code>python -m http.server 8790 --directory docs/little-patterns-round-4/build/phase-5/listen</code>, then
+<code>http://localhost:8790/</code> (or <code>http://&lt;this PC&gt;:8790/</code>). Opened as a plain file, the joined buttons cannot load their clips.</p>
+<p>Round 4, phase 5. Every clip was trimmed (the quiet rumble before and after each word is gone, long pauses inside a clip
+are shorter), and a line made of several clips can now play as one joined clip with short gaps instead of clip after clip.
+Nothing on this page is deployed. Listen on the iPad if you can.</p>
+<div class="note"><p><b>Start here:</b> the first three lines each have four buttons. <b>Today</b> is the live game (the
+old clips one after another). <b>Joined</b> is the new build. <b>Joined 1.05</b> is the same, five per cent quicker, pitch
+kept. <b>Whole sentence</b> is one recording of the whole line. The question (J6): are the joined lines good enough, or
+should the most-played success lines (Add and Take away within ten, Count, the shapes) get whole-sentence recordings?</p></div>
+<section id="success"><h2>Success lines</h2></section>
+<section id="prompts"><h2>Prompts (new clips; the first two are joined from phrases and number clips)</h2></section>
+<section><h2>Nook feels &hellip; (the performance: the word, then the line)</h2><div class="grid" id="feelings"></div></section>
+<section id="audition"><h2>Before and after trimming</h2>
+<p class="soft">Listen for the ends of words: the <i>f</i> and <i>v</i> of FIVE, the <i>s</i> and <i>x</i> of SIX, the <i>s</i> of APPLES and
+SIDES, the <i>ts</i> of FITS. Long pauses inside a clip became 150 ms (300 ms between sentences). "more" and "then" breathe out
+at the end of the take, which is why they are long.</p></section>
+<p class="soft" style="margin-top:3em">Built by <code>tools/build-little-patterns-listen.py</code>. The joined lines are joined here in
+the browser by a copy of the game's own <code>shared.js</code>, from the trimmed clips, exactly as the game does.</p>
+<p class="soft" id="joiner"></p>
+</main>
+<script src="shared.js"></script>
+<script>
+const DATA = {"success": [{"id": "add-3-2", "shown": "Yes! 3 + 2 = 5.", "parts": [{"text": "Yes!", "file": "clips/3cffdb47fd33cb2e.wav"}, {"text": "THREE", "file": "clips/8d300ba177475aad.wav"}, {"text": "plus", "file": "clips/643aae3fa38853d0.wav"}, {"text": "TWO", "file": "clips/6a5d8925681ff8e3.wav"}, {"text": "equals", "file": "clips/95fa3ae4a5c402df.wav"}, {"text": "FIVE", "file": "clips/1fadffc7cf0596db.wav"}], "gaps": [150, 30, 30, 30, 30], "joined_s": 6.04, "today": ["before/3cffdb47fd33cb2e.wav", "before/8d300ba177475aad.wav", "before/643aae3fa38853d0.wav", "before/6a5d8925681ff8e3.wav", "before/95fa3ae4a5c402df.wav", "before/1fadffc7cf0596db.wav"], "today_s": 7.02, "whole": "compare/add-3-2.wav", "whole_s": 3.71}, {"id": "count-4", "shown": "Spot on! 4 apples.", "parts": [{"text": "Spot on!", "file": "clips/1ecf430f2e04664e.wav"}, {"text": "FOUR", "file": "clips/4c7f8eb5e05ff06f.wav"}, {"text": "apples", "file": "clips/9dbbc2c66ff4d0bc.wav"}], "gaps": [150, 30], "joined_s": 3.22, "today": ["before/1ecf430f2e04664e.wav", "before/4c7f8eb5e05ff06f.wav", "before/9dbbc2c66ff4d0bc.wav"], "today_s": 3.27, "whole": "compare/count-4.wav", "whole_s": 2.63}, {"id": "take-6-2", "shown": "That’s the one. 6 − 2 = 4.", "parts": [{"text": "That’s the one.", "file": "clips/3e0768e84f314fde.wav"}, {"text": "SIX", "file": "clips/9ee99fa2b74c06c5.wav"}, {"text": "take away", "file": "clips/daae8fb416e3a69b.wav"}, {"text": "TWO", "file": "clips/6a5d8925681ff8e3.wav"}, {"text": "equals", "file": "clips/95fa3ae4a5c402df.wav"}, {"text": "FOUR", "file": "clips/4c7f8eb5e05ff06f.wav"}], "gaps": [150, 30, 30, 30, 30], "joined_s": 6.78, "today": ["before/3e0768e84f314fde.wav", "before/9ee99fa2b74c06c5.wav", "before/daae8fb416e3a69b.wav", "before/6a5d8925681ff8e3.wav", "before/95fa3ae4a5c402df.wav", "before/4c7f8eb5e05ff06f.wav"], "today_s": 8.61, "whole": "compare/take-6-2.wav", "whole_s": 4.07}, {"id": "add-4-5", "shown": "You found it. 4 + 5 = 9.", "parts": [{"text": "You found it.", "file": "clips/7ca9e4bfbd14709f.wav"}, {"text": "FOUR", "file": "clips/4c7f8eb5e05ff06f.wav"}, {"text": "plus", "file": "clips/643aae3fa38853d0.wav"}, {"text": "FIVE", "file": "clips/1fadffc7cf0596db.wav"}, {"text": "equals", "file": "clips/95fa3ae4a5c402df.wav"}, {"text": "NINE", "file": "clips/9f6de2a51ab9b5ba.wav"}], "gaps": [150, 30, 30, 30, 30], "joined_s": 6.96, "today": ["before/7ca9e4bfbd14709f.wav", "before/4c7f8eb5e05ff06f.wav", "before/643aae3fa38853d0.wav", "before/1fadffc7cf0596db.wav", "before/95fa3ae4a5c402df.wav", "before/9f6de2a51ab9b5ba.wav"], "today_s": 7.58}, {"id": "count-7", "shown": "7 apples. Lovely counting.", "parts": [{"text": "SEVEN", "file": "clips/d5b9c4e88aae062c.wav"}, {"text": "apples", "file": "clips/9dbbc2c66ff4d0bc.wav"}, {"text": "Lovely counting.", "file": "clips/a727d11331508a5a.wav"}], "gaps": [30, 150], "joined_s": 3.54, "today": ["before/d5b9c4e88aae062c.wav", "before/9dbbc2c66ff4d0bc.wav", "before/a727d11331508a5a.wav"], "today_s": 4.03}, {"id": "pentagon", "shown": "Spot on! A pentagon has five sides.", "parts": [{"text": "Spot on!", "file": "clips/1ecf430f2e04664e.wav"}, {"text": "A pentagon has five sides.", "file": "clips/f17832764c3e4c13.wav"}], "gaps": [150], "joined_s": 3.58, "today": ["before/1ecf430f2e04664e.wav", "before/f17832764c3e4c13.wav"], "today_s": 3.84}, {"id": "oval", "shown": "It’s an oval! Yes!", "parts": [{"text": "It's an oval!", "file": "clips/eb8afbd638a752a2.wav"}, {"text": "Yes!", "file": "clips/3cffdb47fd33cb2e.wav"}], "gaps": [150], "joined_s": 2.25, "today": ["before/eb8afbd638a752a2.wav", "before/3cffdb47fd33cb2e.wav"], "today_s": 2.47}, {"id": "pattern", "shown": "That’s the one. The pattern fits.", "parts": [{"text": "That’s the one.", "file": "clips/3e0768e84f314fde.wav"}, {"text": "The pattern fits.", "file": "clips/236b4bda8f28bff4.wav"}], "gaps": [150], "joined_s": 3.45, "today": ["before/3e0768e84f314fde.wav", "before/236b4bda8f28bff4.wav"], "today_s": 4.21}, {"id": "which", "shown": "Well done! Proud.", "parts": [{"text": "Well done!", "file": "clips/d4d8a8c330b3cb56.wav"}, {"text": "Proud", "file": "clips/f0433818fbc60bbf.wav"}], "gaps": [150], "joined_s": 2.06, "today": ["before/d4d8a8c330b3cb56.wav", "before/f0433818fbc60bbf.wav"], "today_s": 2.39}], "prompts": [{"id": "prompt-add", "shown": "Three, then two more. How many?", "parts": [{"text": "three,", "file": "clips/8d300ba177475aad.wav"}, {"text": "then", "file": "clips/d3ec540fdbe367a8.wav"}, {"text": "two", "file": "clips/6a5d8925681ff8e3.wav"}, {"text": "more.", "file": "clips/2c00b711e741ea1a.wav"}, {"text": "How many?", "file": "clips/8fbe2e1779508491.wav"}], "gaps": [150, 30, 30, 150], "joined_s": 5.29}, {"id": "prompt-take", "shown": "Nook eats two. How many are left?", "parts": [{"text": "Nook eats", "file": "clips/835b5ee9c016099c.wav"}, {"text": "two.", "file": "clips/6a5d8925681ff8e3.wav"}, {"text": "How many are left?", "file": "clips/1efafa94d613b398.wav"}], "gaps": [30, 150], "joined_s": 3.85}, {"id": "prompt-take-all", "shown": "Nook eats them all. How many are left?", "parts": [{"text": "Nook eats them all. How many are left?", "file": "clips/61d1d3e32d507996.wav"}], "gaps": [], "joined_s": 5}, {"id": "prompt-count", "shown": "How many apples?", "parts": [{"text": "How many apples?", "file": "clips/3667ba4efb0c4179.wav"}], "gaps": [], "joined_s": 2.05}, {"id": "prompt-board", "shown": "Nook feels… Tap one.", "parts": [{"text": "Nook feels… Tap one.", "file": "clips/de720b966ecedb7e.wav"}], "gaps": [], "joined_s": 3.26}], "feelings": [{"feeling": "happy", "parts": [{"text": "Happy", "file": "clips/50ec84a5e74b179b.wav"}, {"text": "Nook feels happy.", "file": "clips/3c0721ea6a2beb23.wav"}], "gaps": [150], "joined_s": 3.28, "line_s": 2.46}, {"feeling": "calm", "parts": [{"text": "Calm", "file": "clips/009c1f27159c1ec6.wav"}, {"text": "Nook feels calm.", "file": "clips/6c44618da332f965.wav"}], "gaps": [150], "joined_s": 3.37, "line_s": 2.135}, {"feeling": "proud", "parts": [{"text": "Proud", "file": "clips/f0433818fbc60bbf.wav"}, {"text": "Nook feels proud.", "file": "clips/f91de21dd7b9a6fb.wav"}], "gaps": [150], "joined_s": 3.43, "line_s": 2.32}, {"feeling": "excited", "parts": [{"text": "Excited", "file": "clips/9ad5998c0af126ee.wav"}, {"text": "Nook feels excited.", "file": "clips/f54a8fdc7d3c160f.wav"}], "gaps": [150], "joined_s": 4.34, "line_s": 2.995}, {"feeling": "surprised", "parts": [{"text": "Surprised", "file": "clips/8d0be59153fd4324.wav"}, {"text": "Nook feels surprised.", "file": "clips/2af2b595497c0c03.wav"}], "gaps": [150], "joined_s": 3.65, "line_s": 2.235}, {"feeling": "sad", "parts": [{"text": "Sad", "file": "clips/29e5eda37df5b431.wav"}, {"text": "Nook feels sad.", "file": "clips/af30364a06be5174.wav"}], "gaps": [150], "joined_s": 3.71, "line_s": 2.535}, {"feeling": "worried", "parts": [{"text": "Worried", "file": "clips/3be0c338fb857db8.wav"}, {"text": "Nook feels worried.", "file": "clips/f9aafa2e8157826f.wav"}], "gaps": [150], "joined_s": 3.48, "line_s": 2.305}, {"feeling": "disappointed", "parts": [{"text": "Disappointed", "file": "clips/d6fad12cc109f4f3.wav"}, {"text": "Nook feels disappointed.", "file": "clips/0adb5c06a90a5307.wav"}], "gaps": [150], "joined_s": 4.58, "line_s": 3.08}, {"feeling": "angry", "parts": [{"text": "Angry", "file": "clips/5c7c1a50b2aa17ec.wav"}, {"text": "Nook feels angry.", "file": "clips/9f91b2662a4b8828.wav"}], "gaps": [150], "joined_s": 3.56, "line_s": 2.305}, {"feeling": "frustrated", "parts": [{"text": "Frustrated", "file": "clips/5136092b1ee4e8ca.wav"}, {"text": "Nook feels frustrated.", "file": "clips/6e03b54ccfe3be1c.wav"}], "gaps": [150], "joined_s": 4.33, "line_s": 2.64}], "audition": [{"text": "five", "before": "before/1fadffc7cf0596db.wav", "before_s": 1.149, "after": "clips/1fadffc7cf0596db.wav", "after_s": 1.085, "pauses": [], "lowered": [], "clicks": []}, {"text": "six", "before": "before/9ee99fa2b74c06c5.wav", "before_s": 1.256, "after": "clips/9ee99fa2b74c06c5.wav", "after_s": 1.025, "pauses": [], "lowered": [], "clicks": []}, {"text": "seven", "before": "before/d5b9c4e88aae062c.wav", "before_s": 1.061, "after": "clips/d5b9c4e88aae062c.wav", "after_s": 0.745, "pauses": [], "lowered": [], "clicks": [["start", 10, 25]]}, {"text": "apples", "before": "before/9dbbc2c66ff4d0bc.wav", "before_s": 1.128, "after": "clips/9dbbc2c66ff4d0bc.wav", "after_s": 1.055, "pauses": [], "lowered": [], "clicks": []}, {"text": "equals", "before": "before/95fa3ae4a5c402df.wav", "before_s": 1.687, "after": "clips/95fa3ae4a5c402df.wav", "after_s": 1.285, "pauses": [], "lowered": [], "clicks": []}, {"text": "plus", "before": "before/643aae3fa38853d0.wav", "before_s": 0.98, "after": "clips/643aae3fa38853d0.wav", "after_s": 0.9, "pauses": [], "lowered": [], "clicks": []}, {"text": "the pattern fits", "before": "before/236b4bda8f28bff4.wav", "before_s": 2.329, "after": "clips/236b4bda8f28bff4.wav", "after_s": 2.065, "pauses": [], "lowered": [], "clicks": [["start", 10, 45]]}, {"text": "a hexagon has six sides", "before": "before/a0894c592cd8078b.wav", "before_s": 2.651, "after": "clips/a0894c592cd8078b.wav", "after_s": 2.375, "pauses": [], "lowered": [], "clicks": [["start", 10, 25]]}, {"text": "how many sides", "before": "before/485ab8dbcd4c7fdc.wav", "before_s": 1.595, "after": "clips/485ab8dbcd4c7fdc.wav", "after_s": 1.485, "pauses": [], "lowered": [], "clicks": []}, {"text": "nook takes a breath", "before": "before/360a280992243fc5.wav", "before_s": 2.487, "after": "clips/360a280992243fc5.wav", "after_s": 1.965, "pauses": [[525, 150]], "lowered": [], "clicks": []}, {"text": "it turns around", "before": "before/f39d3e9049769b88.wav", "before_s": 2.458, "after": "clips/f39d3e9049769b88.wav", "after_s": 1.89, "pauses": [[320, 150]], "lowered": [], "clicks": []}, {"text": "count on", "before": "before/343823182096f51b.wav", "before_s": 1.438, "after": "clips/343823182096f51b.wav", "after_s": 1.31, "pauses": [], "lowered": [], "clicks": []}, {"text": "hello! i'm nook. let's play", "before": "before/0b8e57b837dd931d.wav", "before_s": 3.66, "after": "clips/0b8e57b837dd931d.wav", "after_s": 2.83, "pauses": [[695, 300], [660, 300]], "lowered": [], "clicks": []}, {"text": "good try! let's look again", "before": "before/e1ae7ef9b7f84a79.wav", "before_s": 2.857, "after": "clips/e1ae7ef9b7f84a79.wav", "after_s": 2.445, "pauses": [[685, 300]], "lowered": ["end"], "clicks": []}, {"text": "a fish can swim", "before": "before/65fcb2650cd81890.wav", "before_s": 3.226, "after": "clips/65fcb2650cd81890.wav", "after_s": 2.395, "pauses": [[495, 150]], "lowered": [], "clicks": []}, {"text": "ali sees a flower in the garden. ali says, i feel happy", "before": "before/595dcdaa4faed0d8.wav", "before_s": 8.617, "after": "clips/595dcdaa4faed0d8.wav", "after_s": 7.29, "pauses": [[275, 150], [1160, 300], [440, 150]], "lowered": [], "clicks": []}, {"text": "more", "before": "before/2c00b711e741ea1a.wav", "before_s": 1.311, "after": "clips/2c00b711e741ea1a.wav", "after_s": 1.311, "pauses": [], "lowered": [], "clicks": []}, {"text": "then", "before": "before/d3ec540fdbe367a8.wav", "before_s": 0.931, "after": "clips/d3ec540fdbe367a8.wav", "after_s": 0.931, "pauses": [], "lowered": [], "clicks": []}, {"text": "drag the words, first to last", "before": "before/1d11271945acfb3f.wav", "before_s": 4.276, "after": "clips/1d11271945acfb3f.wav", "after_s": 4.205, "pauses": [], "lowered": [], "clicks": []}]};
+const J = window.LPVoiceJoin;
+const audio = new Audio(); audio.preload = 'auto';
+let queue = [], pressed = null, url = '', unlocked = false;
+const SILENT = 'data:audio/wav;base64,UklGRgQCAABXQVZFZm10IBAAAAABAAEAwF0AAIC7AAACABAAZGF0YeABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=';
+const pcm = new Map();
+function rate(r){ audio.defaultPlaybackRate = r; audio.playbackRate = r; audio.preservesPitch = true; audio.webkitPreservesPitch = true; audio.mozPreservesPitch = true; }
+function stop(){ queue = []; audio.pause(); audio.onended = null; if (pressed) pressed.setAttribute('aria-pressed', 'false'); pressed = null; }
+function play(files, r, button){
+  stop(); queue = files.slice(); pressed = button; if (button) button.setAttribute('aria-pressed', 'true');
+  const next = () => { if (!queue.length) { if (pressed) pressed.setAttribute('aria-pressed', 'false'); pressed = null; return; } audio.src = queue.shift(); rate(r); audio.onended = next; audio.play().catch(() => {}); };
+  next();
+}
+// The game's join, in the browser: fetch each trimmed part, parse it, join with the phrase gaps, play the one Blob.
+async function joined(parts){
+  const pcms = await Promise.all(parts.map(async p => { if (!pcm.has(p.file)) { const r = await fetch(p.file); pcm.set(p.file, J.parseWav(await r.arrayBuffer())); } return pcm.get(p.file); }));
+  const j = J.join(parts.map(p => p.text), pcms);
+  if (url) URL.revokeObjectURL(url);
+  url = URL.createObjectURL(new Blob([j.wav], { type: 'audio/wav' }));
+  return { url, total: j.total };
+}
+const el = (tag, attrs, text) => { const e = document.createElement(tag); Object.assign(e, attrs || {}); if (text != null) e.textContent = text; return e; };
+function button(label, seconds, action, r, cls){
+  const b = el('button', { type: 'button', className: cls || '' }), small = el('small', {}, seconds ? '(' + seconds.toFixed(1) + ' s)' : '');
+  b.append(label); b.append(small); b.setAttribute('aria-pressed', 'false');
+  b.onclick = async () => {
+    if (pressed === b) return stop();
+    // iPad Safari lets a page start sound only from a tap: a joined line is built after a fetch, so the first tap plays a
+    // 10 ms silence at once, which unlocks this one player for the rest of the visit (the game does the same with its first clip).
+    if (!unlocked) { audio.src = SILENT; audio.play().then(() => { unlocked = true; }).catch(() => {}); }
+    if (typeof action === 'function') { const j = await action(); small.textContent = '(' + (j.total / r).toFixed(1) + ' s)'; play([j.url], r, b); }
+    else play(action, r, b);
+  };
+  return b;
+}
+const gapsText = (parts, gaps) => parts.map((p, i) => p.text + (i < gaps.length ? '  →' + gaps[i] + ' ms→  ' : '')).join('');
+function line(row, host, extra){
+  const r = el('div', { className: 'row' }); r.append(el('h3', {}, row.shown || row.feeling.toUpperCase()));
+  if (row.parts.length > 1) r.append(el('p', { className: 'parts' }, 'Parts and gaps: ' + gapsText(row.parts, row.gaps)));
+  const bs = el('div', { className: 'buttons' });
+  if (row.today) bs.append(button('Today', row.today_s, row.today, 1));
+  const one = row.parts.length === 1;
+  bs.append(button(one ? 'Clip' : 'Joined', row.joined_s, one ? [row.parts[0].file] : () => joined(row.parts), 1, 'main'));
+  bs.append(button((one ? 'Clip' : 'Joined') + ' 1.05', row.joined_s / 1.05, one ? [row.parts[0].file] : () => joined(row.parts), 1.05, 'main'));
+  if (row.whole) bs.append(button('Whole sentence', row.whole_s, [row.whole], 1, 'whole'));
+  if (extra) extra(bs);
+  r.append(bs); host.append(r);
+}
+if (!J) document.getElementById('joiner').textContent = 'shared.js did not load, so the joined buttons cannot work: serve this folder as the top of the page explains.';
+for (const s of DATA.success) line(s, document.getElementById('success'));
+for (const s of DATA.prompts) line(s, document.getElementById('prompts'));
+for (const f of DATA.feelings) line(f, document.getElementById('feelings'), bs => bs.append(button('"Nook feels ' + f.feeling + '." alone', f.line_s, [f.parts[1].file], 1)));
+for (const a of DATA.audition) {
+  const row = el('div', { className: 'row' }); row.append(el('h3', {}, a.text));
+  const notes = [];
+  if (a.pauses.length) notes.push('pauses ' + a.pauses.map(p => p[0] + '→' + p[1] + ' ms').join(', '));
+  if (a.lowered.length) notes.push('kept a fading sound at the ' + a.lowered.join(' and '));
+  if (a.clicks.length) notes.push('left out a click');
+  if (notes.length) row.append(el('p', { className: 'parts' }, notes.join('; ')));
+  const bs = el('div', { className: 'buttons' });
+  bs.append(button('Before', a.before_s, [a.before], 1));
+  bs.append(button('After', a.after_s, [a.after], 1, 'main'));
+  row.append(bs); document.getElementById('audition').append(row);
+}
+document.getElementById('stop').onclick = stop;
+</script>
+</body>
+</html>

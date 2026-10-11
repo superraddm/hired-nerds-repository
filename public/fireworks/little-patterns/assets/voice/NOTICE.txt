@@ -9,7 +9,12 @@ Every clip in this folder uses that voice, including the 26 alphabet
 (phonics) sounds. The previous Piper "Jenny (Dioco)" voice is no longer used.
 
 The clips were generated once, on a build computer, with
-tools/nook-voice-gemini.py, then trimmed and volume-balanced. The game never
+tools/nook-voice-gemini.py, then trimmed and volume-balanced. Since round 4
+(October 2026: 323 clips, the new prompt, Help, Shapes and Feelings lines
+included) tools/nook-voice-polish.py also trims each clip against its own
+peak and shortens long pauses inside it; the 26 phonics sounds are left as
+they were. Lines made of several clips may be joined on the device into one
+clip with short gaps; nothing is sent anywhere to do that. The game never
 calls a speech service: only these WAV clips and a text-to-clip index are
 distributed. The audio carries Google's inaudible SynthID watermark, which
 identifies it as AI-generated.

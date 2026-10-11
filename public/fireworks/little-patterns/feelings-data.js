@@ -190,6 +190,7 @@
     const statement=matchStatement(round.person,round.feeling);
     return {text:opener+' '+statement,speech:[opener,statement]};
   }
+  // Round 3's Me acknowledgement. No screen says it since round 4 (Me says meLine), so it has no clip; kept for old callers.
   const acknowledgement=id=>'You chose '+WORDS[ME_KEYS.includes(id)?id:'unsure'].toLowerCase()+'.';
   const statement=story=>person(story.person).name+' says, '+(story.reportedFeeling==='unsure'?"I'm not sure how I feel.":'I feel '+story.reportedFeeling+'.');
   const storyPrompt=story=>story.context+' '+statement(story);
@@ -220,8 +221,7 @@
   const ME_REPLIES={other:'Thank you for telling me.',unsure:"That's OK. Not sure is fine."};
   const meLine=id=>FEELINGS.includes(id)?youFeel(id):ME_REPLIES[id==='other'?'other':'unsure'];
   const LINES={board:'Nook feels… Tap one.',which:'How does Nook feel?',me:'How do you feel?',breath:'Nook takes a breath.',all:'We said all the feelings.',done:'We did it!',type:'Type your words. Then tap the speaker.'};
-  // Every new line Feelings says, for phase 5 to render and merge into spokenBank(). Until then the text shows and only
-  // the parts that already have clips play (the feeling names, the openers, Not sure and Something else).
+  // Every line round 4 added to Feelings; in spokenBank() since phase 5 (with the board prompt, LINES.board).
   const FEELINGS_SPEECH=[...FEELINGS.map(nookFeels),...FEELINGS.map(youFeel),LINES.breath,ME_REPLIES.other,ME_REPLIES.unsure,LINES.which,LINES.me,LINES.all,LINES.done];
   // Me's one fixed private bundle: every name and every acknowledgement, fetched before any choice (item 57).
   const ME_BUNDLE=[...ME_KEYS.map(id=>WORDS[id]),...ME_KEYS.map(meLine)];
@@ -252,7 +252,7 @@
   // and the deck's seed. Never an answer, a tick or a Me report. Round-3 saves (match, people) open on Which feeling? and
   // Friends.
   function normalise(saved){saved=saved&&typeof saved==='object'?saved:{};const integer=(n,max)=>Number.isSafeInteger(n)&&n>=0&&n<=max?n:0;const legacy={match:'which',people:'friends'};return {version:2,mode:ACTIVITIES.includes(saved.mode)?saved.mode:legacy[saved.mode]||'board',index:integer(saved.index,1000000),level:saved.level===2?2:1,story:integer(saved.story,STORIES.length-1),seed:(integer(saved.seed,0xffffffff)||1)};}
-  function spokenBank(){return [...Object.values(WORDS),...Object.values(PROMPTS),...MATCH_OPENERS,...PEOPLE.flatMap(p=>FEELINGS.map(f=>matchStatement(p.id,f))),...ME_KEYS.map(acknowledgement),...STORIES.flatMap(s=>[storyPrompt(s),statement(s)])];}
+  function spokenBank(){return [...Object.values(WORDS),...Object.values(PROMPTS),...MATCH_OPENERS,...PEOPLE.flatMap(p=>FEELINGS.map(f=>matchStatement(p.id,f))),...STORIES.flatMap(s=>[storyPrompt(s),statement(s)]),...FEELINGS_SPEECH,LINES.board];}
   function validate(){
     if(new Set(STORIES.map(s=>s.id)).size!==STORIES.length)throw Error('Duplicate story');
     for(const s of STORIES){if(!PEOPLE.some(p=>p.id===s.person)||!ME_KEYS.includes(s.reportedFeeling)||!FEELINGS.includes(s.expression)||s.expression!==s.reportedFeeling||!s.scene||!s.context)throw Error('Invalid story '+s.id);}

@@ -62,7 +62,7 @@ test('the data: ten feelings on the board in a fixed order, the four activities,
   assert.deepEqual(Object.keys(F.normalise({ meChoice: 'sad', text: 'x', ticks: ['happy'] })).sort(), ['index', 'level', 'mode', 'seed', 'story', 'version']);
 });
 
-test('FEELINGS_SPEECH lists the 27 new lines for phase 5, none of them in the spoken bank yet (the voice test is unchanged)', () => {
+test('FEELINGS_SPEECH lists the 27 round-4 lines; since phase 5 they and the board prompt are in the spoken bank, and the old "You chose" lines are not', () => {
   const expected = [
     ...F.FEELINGS.map(f => 'Nook feels ' + f + '.'),
     ...F.FEELINGS.map(f => 'You feel ' + f + '. Thank you for telling me.'),
@@ -71,7 +71,8 @@ test('FEELINGS_SPEECH lists the 27 new lines for phase 5, none of them in the sp
   ];
   assert.deepEqual(F.FEELINGS_SPEECH, expected);
   const bank = new Set(L.spokenBank());
-  for (const line of F.FEELINGS_SPEECH) assert.ok(!bank.has(key(line)), line + ' waits for phase 5');
+  for (const line of [...F.FEELINGS_SPEECH, F.LINES.board]) assert.ok(bank.has(key(line)), line + ' has a clip');
+  for (const id of F.ME_KEYS) assert.ok(!bank.has(key(F.acknowledgement(id))), 'no screen says ' + F.acknowledgement(id));
   for (const f of F.FEELINGS) assert.ok(bank.has(key(F.WORDS[f])), 'the bare name ' + f + ' has a clip');
   assert.deepEqual(F.ME_BUNDLE, [...F.ME_KEYS.map(k => F.WORDS[k]), ...F.ME_KEYS.map(F.meLine)], 'Me bundles every name and every acknowledgement');
 });
@@ -179,6 +180,11 @@ test('performance with sound: the word plays from the tap; enter, perform, then 
   assert.equal(a.perf().phase, 'perform', 'no invented countdown: still waiting for the clip');
   assert.equal(a.perf().speaking, true);
   a.ended();
+  assert.equal(a.plays.at(-1), a.clip('Nook feels happy.'), 'then Nook says the line (its clip since phase 5)');
+  await flush();
+  assert.equal(a.perf().phase, 'perform', 'still speaking: no hold yet');
+  assert.ok(a.query('#done .progress').classList.contains('on'), 'the line keeps following the second clip');
+  a.ended();
   assert.ok(!a.query('#done .progress').classList.contains('on'));
   tick(599);
   assert.equal(a.perf().phase, 'perform');
@@ -205,7 +211,7 @@ test('performance with sound: the word plays from the tap; enter, perform, then 
 test('a difficult feeling settles with one visible breath back to calm, captioned only while it happens; the happy side never breathes', async t => {
   const a = app(t), tick = timers(t);
   a.click('[data-feel="sad"]'); await flush();
-  tick(160); a.ended();
+  tick(160); a.ended(); await flush(); a.ended();   // the word, then "Nook feels sad."
   tick(600);
   assert.equal(a.perf().phase, 'perform', 'held, but the gesture is still showing');
   assert.ok(!a.query('.perform.breathing'), 'no caption yet');
@@ -226,7 +232,7 @@ test('a difficult feeling settles with one visible breath back to calm, captione
   for (const f of ['excited', 'proud', 'surprised', 'calm']) {
     tick(300);
     a.click(`[data-feel="${f}"]`); await flush();
-    tick(160); a.ended(); tick(1400);
+    tick(160); a.ended(); await flush(); a.ended(); tick(1400);
     assert.equal(a.perf() && a.perf().phase, 'return', f + ' returns without a breath');
     assert.equal(a.perf().breathed, false);
     tick(300);
@@ -354,6 +360,20 @@ test('the generation token: a late callback from an earlier performance never mo
   assert.equal(a.perf().phase, 'settle', 'the current one moves on its own end');
 });
 
+test('the Feelings prompts can be heard again (phase 5): "Nook feels… Tap one.", "How does Nook feel?" and "How do you feel?"', async t => {
+  const a = app(t);
+  assert.equal(a.query('#speech').textContent, F.LINES.board);
+  assert.ok(!a.query('#bubble').classList.contains('silent'), 'the board prompt has its clip');
+  a.click('#bubble'); await flush();
+  assert.equal(a.plays.at(-1), a.clip(F.LINES.board));
+  const b = app(t, { seed: feelings({ mode: 'which', index: 3, seed: 1 }) });
+  assert.equal(b.query('#which-bubble .line').textContent, F.LINES.which);
+  assert.ok(!b.query('#which-bubble').classList.contains('silent'));
+  const c = app(t, { seed: feelings({ mode: 'me' }) });
+  assert.equal(c.query('#speech').textContent, F.LINES.me);
+  assert.ok(!c.query('#bubble').classList.contains('silent'));
+});
+
 test('the progress line follows actual playback only: on while a clip plays, hidden with sound off', async t => {
   const a = app(t), tick = timers(t);
   a.click('[data-feel="calm"]');
@@ -361,6 +381,8 @@ test('the progress line follows actual playback only: on while a clip plays, hid
   await flush(); tick(160);
   assert.ok(a.query('#done .progress').classList.contains('on'));
   assert.match(a.query('#done .progress').style.transition, /linear/);
+  a.ended(); await flush();
+  assert.ok(a.query('#done .progress').classList.contains('on'), 'still on through "Nook feels calm."');
   a.ended();
   assert.ok(!a.query('#done .progress').classList.contains('on'));
   const b = app(t, { seed: SOUND_OFF });

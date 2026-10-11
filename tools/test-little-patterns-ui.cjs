@@ -640,6 +640,113 @@ test('automatic speech plays only bundled clips while sound is on, and chained c
   assert.equal(a.spoken.at(-1), 'apple not in the library', 'a tapped request still falls back to the local voice as one phrase');
 });
 
+// Round 4, phase 5: a line of several clips is joined into ONE clip (phrase-aware gaps) and played through the same player.
+// jsdom has no real media element, so 'auto' keeps the chain here (the tests above); these force the join on.
+function joinApp(t, { fetchFails = false } = {}) {
+  const a = app(t, 'garden.html', {}, false, true), requests = [], urls = [], revoked = [], blobs = [];
+  a.w.URL.createObjectURL = blob => { blobs.push(blob); const url = 'blob:joined-' + urls.length; urls.push(url); return url; };
+  a.w.URL.revokeObjectURL = url => revoked.push(url);
+  a.w.fetch = async (url, options) => {
+    requests.push({ url, options });
+    if (fetchFails) throw new Error('Offline');
+    const bytes = fs.readFileSync(path.join(root, url));
+    return { ok: true, arrayBuffer: async () => bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.length) };
+  };
+  a.w.LP.audio.join = true;
+  return Object.assign(a, { requests, urls, revoked, blobs });
+}
+const flushAll = () => new Promise(resolve => setImmediate(resolve));
+const PARTS = ['Yes!', 'THREE', 'plus', 'TWO', 'equals', 'FIVE'];
+
+test('joined speech: the parts are fetched once (same-origin, no credentials, bundled files only), joined with phrase gaps and played as ONE clip from the one player; start reports each part in turn', async t => {
+  const a = joinApp(t), J = require('../public/fireworks/little-patterns/shared.js');
+  const lib = a.w.LPVoiceLibrary.clips, file = p => lib[p.toLowerCase().replace(/[.!?,]+$/, '')].file;
+  const starts = [], ends = [];
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  try {
+  a.w.LP.audio.speak(PARTS, { auto: true, on: { start: (i, n, clip) => starts.push([i, n, clip.file, clip.seconds]), end: () => ends.push(1) } });
+  for (let i = 0; i < 6; i++) await flushAll();
+  assert.deepEqual(a.requests.map(r => r.url), PARTS.map(file), 'each part once, by its bundled path');
+  assert.ok(a.requests.every(r => r.options.credentials === 'omit' && r.options.referrerPolicy === 'no-referrer'));
+  assert.equal(a.plays.at(-1), 'blob:joined-0', 'one joined clip');
+  assert.equal(a.players.length, 1, 'the same player');
+  assert.equal(a.blobs[0].type, 'audio/wav');
+  const pcms = PARTS.map(p => { const b = fs.readFileSync(path.join(root, file(p))); return J.parseWav(b.buffer.slice(b.byteOffset, b.byteOffset + b.length)); });
+  const expected = J.join(PARTS, pcms);
+  assert.equal(a.blobs[0].size, expected.wav.byteLength, 'the bytes the joiner builds');
+  assert.deepEqual(starts.map(s => s[0]), [0], 'the first part starts with the clip');
+  t.mock.timers.tick(Math.ceil(expected.offsets[5] * 1000));
+  assert.deepEqual(starts.map(s => s[0]), [0, 1, 2, 3, 4, 5], 'then each part as it starts');
+  assert.ok(starts.every(s => s[1] === 6 && Math.abs(s[3] - lib[PARTS[s[0]].toLowerCase().replace(/[.!?,]+$/, '')].seconds) < .002), 'with that part\'s own length');
+  a.players[0].onended();
+  assert.equal(ends.length, 1, 'end once, after the joined clip');
+  // Every part is now in memory: the same line again is built and played at once, inside the tap, with no request.
+  const before = a.requests.length;
+  a.w.LP.audio.speak(PARTS, { auto: true });
+  assert.equal(a.plays.at(-1), 'blob:joined-1', 'played synchronously from memory');
+  assert.equal(a.requests.length, before);
+  assert.deepEqual(a.revoked, ['blob:joined-0'], 'the previous joined clip is released');
+  a.w.LP.audio.stopSpeech();
+  assert.deepEqual(a.revoked, ['blob:joined-0', 'blob:joined-1']);
+  } finally { t.mock.timers.reset(); }   // before the page's own after-hook waits on a real timer
+});
+
+test('joined speech falls back to the old chain when a part cannot be fetched or is not a 24 kHz mono WAV, and a single clip never waits for a fetch', async t => {
+  const a = joinApp(t, { fetchFails: true }), lib = a.w.LPVoiceLibrary.clips;
+  a.w.LP.audio.speak(['apple'], { auto: true });
+  assert.deepEqual(a.plays, [lib.apple.file], 'a single clip plays from the tap, no fetch');
+  assert.equal(a.requests.length, 0);
+  a.w.LP.audio.speak(['apple', 'sun'], { auto: true });
+  for (let i = 0; i < 4; i++) await flushAll();
+  assert.ok(a.requests.length >= 1, 'it tried');
+  assert.equal(a.plays.at(-1), lib.apple.file, 'then the chain, in order');
+  a.players[0].onended();
+  assert.equal(a.plays.at(-1), lib.sun.file);
+  assert.equal(a.urls.length, 0, 'no joined clip was made');
+  assert.doesNotMatch(a.query('#status').textContent, /could not play/, 'and no error message');
+  // A clip in another format is refused by the joiner and the chain plays instead.
+  const b = joinApp(t);
+  b.w.fetch = async () => ({ ok: true, arrayBuffer: async () => new ArrayBuffer(64) });
+  b.w.LP.audio.speak(['apple', 'sun'], { auto: true });
+  for (let i = 0; i < 4; i++) await flushAll();
+  assert.equal(b.plays.at(-1), lib.apple.file);
+  assert.equal(b.urls.length, 0);
+  // In jsdom (no real media element) the default 'auto' never joins.
+  const c = app(t, 'garden.html', {}, false, true);
+  assert.equal(c.w.LP.audio.join, 'auto');
+  c.w.LP.audio.speak(['apple', 'sun'], { auto: true });
+  assert.equal(c.plays.at(-1), lib.apple.file, 'the chain, synchronously');
+});
+
+test('speech rate: 1.0 by default, at most 1.05, the pitch kept', async t => {
+  const a = app(t, 'garden.html', {}, false, true);
+  assert.equal(a.w.LP.audio.rate, 1);
+  a.w.LP.audio.rate = 1.2; assert.equal(a.w.LP.audio.rate, 1.05);
+  a.w.LP.audio.rate = .5; assert.equal(a.w.LP.audio.rate, 1);
+  a.w.LP.audio.rate = 1.05;
+  a.w.LP.audio.speak(['apple'], { auto: true });
+  const p = a.players[0];
+  assert.equal(p.playbackRate, 1.05); assert.equal(p.defaultPlaybackRate, 1.05);
+  assert.equal(p.preservesPitch, true); assert.equal(p.webkitPreservesPitch, true);
+});
+
+test('every prompt and Help line in the Garden has its clip (phase 5): the bubble shows the speaker in each mode and word tab, Help lines and the shelf question can be heard again', async t => {
+  const a = app(t, 'garden.html', {}, false, true);
+  const voiced = label => assert.ok(!a.query('#bubble').classList.contains('silent'), label + ': ' + a.query('#speech').textContent);
+  for (const mode of ['count', 'add', 'patterns']) { a.click(`[data-mode="${mode}"]`); voiced(mode); }
+  a.click('[data-mode="add"]'); a.click('#help');
+  assert.equal(a.query('#speech').textContent, 'Count them all with me.'); voiced('add Help');
+  a.click('[data-mode="add"]');
+  a.click('[data-mode="words"]');
+  for (const tab of ['sentence', 'letter', 'order', 'numbers']) { wordTab(a, tab); voiced(tab); }
+  const overlay = a.query('#shelf-overlay');
+  assert.equal(overlay.querySelector('[data-bubble] .line').textContent, 'What shall we play?');
+  assert.ok(!overlay.querySelector('[data-bubble]').classList.contains('silent'), 'the shelf question has its clip');
+  a.plays.length = 0;
+  overlay.querySelector('[data-bubble]').click(); await tick();
+  assert.deepEqual(a.plays, [a.w.LPVoiceLibrary.clips['what shall we play'].file]);
+});
+
 test('success is announced once: the completed model stays, no duplicate result line is drawn', t => {
   const a = app(t);
   a.click('[data-choice="1"]');
@@ -1601,7 +1708,15 @@ test('the bubble is a button that hears its line again from bundled clips while 
   assert.equal(a.query('#bubble').tagName, 'BUTTON');
   assert.equal(a.query('#speech').closest('button'), a.query('#bubble'));
   assert.equal(a.query('#speech').textContent, 'How many apples?');
-  assert.ok(a.query('#bubble').classList.contains('silent'), 'the Count prompt has no clip yet, so no speaker shows');
+  assert.ok(!a.query('#bubble').classList.contains('silent'), 'the Count prompt has its clip (phase 5), so the speaker shows');
+  a.click('#bubble'); await tick();
+  assert.deepEqual(a.plays, [a.w.LPVoiceLibrary.clips['how many apples'].file], 'a tap hears the prompt again');
+  // A line without a clip: no speaker, nothing to replay and no device voice.
+  delete a.w.LPVoiceLibrary.clips['how many apples'];
+  a.click('[data-mode="add"]'); a.click('[data-mode="count"]');
+  assert.equal(a.query('#speech').textContent, 'How many apples?');
+  assert.ok(a.query('#bubble').classList.contains('silent'), 'without its clip the prompt shows no speaker');
+  a.plays.length = 0;
   a.click('#bubble'); await tick();
   assert.equal(a.plays.length, 0, 'nothing to replay, and no device voice');
   assert.equal(a.spoken.length, 0);

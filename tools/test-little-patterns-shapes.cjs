@@ -221,9 +221,9 @@ test('number tags sit off the middle of each side, outside the shape and inside 
   }
 });
 
-test('success lines: "A pentagon has five sides." and "It’s an oval!" always as text; spoken only once phase 5 has the clip, so today only the opener plays', () => {
+test('success lines: "A pentagon has five sides." and "It’s an oval!" as text, and since phase 5 spoken from their own clips with the opener', () => {
   const bank = new Set(L.spokenBank());
-  for (const line of L.SHAPES_SPEECH) assert.ok(!bank.has(key(line)), 'not in the spoken bank yet: ' + line);
+  for (const line of L.SHAPES_SPEECH) assert.ok(bank.has(key(line)), 'in the spoken bank: ' + line);
   assert.deepEqual(L.SHAPES_SPEECH.slice(-3), ['Which shape is this?', 'How many sides?', 'Tap each side.']);
   assert.ok(L.SHAPES_SPEECH.includes("It's an oval!") && L.SHAPES_SPEECH.includes('A hexagon has six sides.'));
   for (const r of allRounds()) {
@@ -232,11 +232,13 @@ test('success lines: "A pentagon has five sides." and "It’s an oval!" always a
     const fact = r.mode === 'sides' ? 'A ' + r.shape + ' has ' + L.numberWord(r.sides).toLowerCase() + ' sides.' : 'It’s ' + (r.shape === 'oval' ? 'an' : 'a') + ' ' + r.shape + '!';
     assert.ok(line.text.includes(fact), line.text);
     assert.ok(L.SHAPES_SPEECH.includes(fact.replace('’', "'")), 'every fact is on the phase-5 list: ' + fact);
-    assert.equal(line.speech.length, 1); assert.ok(L.OPENERS.includes(line.speech[0]), 'the opener alone, as a private word');
+    assert.equal(line.speech.length, 2);
+    assert.ok(L.OPENERS.includes(line.speech[0]) || L.OPENERS.includes(line.speech[1]), 'the opener, before or after');
+    assert.ok(line.speech.includes(fact.replace('’', "'")), 'and the fact, said as one clip');
     assert.ok(line.speech.every(part => bank.has(key(part))), 'whatever is spoken has a clip');
     assert.deepEqual(L.successLine('shapes', r), line, 'the same puzzle always gets the same words');
   }
-  assert.equal(L.voiced('Spot on!'), true); assert.equal(L.voiced('How many sides?'), false);
+  assert.equal(L.voiced('Spot on!'), true); assert.equal(L.voiced('How many sides?'), true); assert.equal(L.voiced('How many corners?'), false);
 });
 
 // ---- the page ----
@@ -282,7 +284,8 @@ test('the Shapes page is the frame: Sides and Name chips, one "Shapes 1" pill, a
   assert.equal(a.query('#nook svg.nook').getAttribute('data-feeling'), 'rest', 'Nook rests: the hello face, arms down');
   assert.equal(a.all('#page .nf-bubble').length, 1);
   assert.equal(a.query('#speech').textContent, 'How many sides? Tap each side.');
-  assert.ok(a.query('#bubble').classList.contains('silent'), 'the prompt has no clip until phase 5, so no speaker shows');
+  assert.ok(!a.query('#bubble').classList.contains('silent'), 'the prompt has its clips (phase 5), so the speaker shows');
+  assert.deepEqual(a.w.LP.audio.has(['How many sides?', 'Tap each side.']), true);
   assert.equal(a.query('.shape-stage').dataset.shape, 'triangle');
   assert.equal(a.all('.big-shape .side').length, 3, 'one visible stroke per side');
   assert.equal(a.all('.big-shape .hit').length, 3, 'and one invisible wide hit stroke per side');
@@ -417,7 +420,7 @@ test('a wrong number changes only the bubble; the right one locks the round: gre
   const line = L.successLine('shapes', { ...r, done: true });
   assert.equal(a.query('#speech').textContent, line.text);
   assert.match(line.text, /A pentagon has five sides\./);
-  assert.equal(a.plays.at(-1), a.clip(line.speech[0]), 'the opener plays (the rest waits for its phase-5 clip)');
+  assert.equal(a.plays.at(-1), a.clip(line.speech[0]), 'the line starts from the answering tap (the second part follows when the first ends)');
   assert.equal(a.query('#nook svg.nook').getAttribute('data-feeling'), 'excited', 'both mittens up');
   assert.ok(a.query('#nook .nook-prop svg.shape-icon'), 'Nook holds the shape up: a small copy hops beside the raised mitten (round 4 item 33)');
   assert.ok(!a.query('#nook .nook-pos').classList.contains('nook-hop'), 'the shape hops instead of Nook');

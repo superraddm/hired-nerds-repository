@@ -110,6 +110,18 @@ voice; output carries Google's inaudible SynthID watermark), listen to a handful
   intended text before treating that as a fault. gemini-3.5-flash hears "ah" for every vowel, so don't use it for phonics.
 - `tools/test-little-patterns-voice.cjs` now allows clips up to 14 s: the Feelings stories run to about 11 s.
 
+## Round 4 (11 October 2026)
+
+- 76 new lines (prompts, Help, Shapes, Feelings; frozen in `docs/little-patterns-round-4/build/phase-5/new-lines.csv`)
+  and three whole-sentence comparison recordings (`compare`, written beside the listening page only): 79 requests,
+  about $0.055. The 12 "You chose {x}." clips were dropped.
+- `library voice_l1goo4gqobvj` and `library northampton` now share the raw cache (`gemini-raw/northampton`). Before,
+  the voice id pointed at an empty folder and would have rendered all 233 old lines again.
+- The round-4 lines are sent with the game's own punctuation (questions stay questions); older lines are unchanged so
+  their cached takes stay valid.
+- New step after every library run: `python tools/nook-voice-polish.py` (trim against each clip's own peak, shorten long
+  pauses, phonics untouched). Listening page: `python tools/build-little-patterns-listen.py`.
+
 ## Still to decide after listening
 
 - Which voice, and whether the description needs another turn (slower, softer, more or less regional).

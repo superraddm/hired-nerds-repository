@@ -5,6 +5,8 @@ Two jobs, both run on this PC and both produce ordinary WAV files; the game itse
   python tools/nook-voice-gemini.py audition            ten telling lines x every candidate voice -> a local listening page
   python tools/nook-voice-gemini.py library <voice>     the full built-in script (spokenBank) with one chosen voice -> assets/voice
   python tools/nook-voice-gemini.py script               write docs/nook-voice-gemini-script.csv: exactly what the library run will send
+  python tools/nook-voice-gemini.py compare <voice>      the few whole-sentence comparison recordings (COMPARISONS) for the round-4
+                                                         listening page; they never enter assets/voice
   add --dry-run to audition or library to see the plan and the cost estimate without spending anything
 
 Keys live in .wrangler/voice-build/.env (gitignored), one per line:
@@ -17,6 +19,9 @@ about 5 minutes of speech, roughly 10p. SPEND_CAP_USD below is a hard stop the t
 
 Phonics sounds (the 26 rows the recording sheet marks as phonics) stay on the existing Piper clips unless --phonics is given: asking a text model for "the
 short a sound" is the least reliable thing here, and the Piper clips are rendered from explicit phonemes.
+
+After a library run, tools/nook-voice-polish.py trims each clip against its own peak and shortens long pauses (round 4).
+The library run re-polishes every clip from the raw cache, so run the polish step again after it (it skips clips it already did).
 
 Standard library only. Nothing here reads player data.
 """
@@ -106,6 +111,53 @@ LINE_STYLE.update({k: RETRY_STYLE + "; say only these words, starting on the fir
                    for k in ("good try! let's look again", 'oops-a-daisy! one more go')})
 LINE_STYLE.update({k: BLANK_NOTE for k in ('nook has a soft blank', 'the blank is dry', 'the blank is wet',
                                            'the cat is blank now', 'the tall blank is dry', 'the tree is blank')})
+# Round 4, phase 5 (11 Oct 2026): the prompt, Help, Shapes and Feelings lines. Playful first takes have tended to gain a "Ho-ho"
+# or "Oh" in front, so every new line says to start on its first word. These lines are sent with the game's own punctuation
+# (questions stay questions): see round4_text().
+ONLY = "; say only these words, starting on the first word: no laugh, chuckle, ho-ho, oh or other extra words"
+NOOK = "; the name Nook rhymes with book and look, never with sock"
+QUESTION = "warm, gentle and unhurried, a kind grandfather asking a small child a simple question, with a smile in the voice"
+PLEASED = "pleased and encouraging"
+THANKS = "warm, calm and accepting, a kind grandfather thanking a small child for saying how they feel"
+FEELING_NAMES = ('happy', 'sad', 'angry', 'calm', 'worried', 'excited', 'proud', 'surprised', 'frustrated', 'disappointed')
+LINE_STYLE.update({k: PLEASED + ONLY for k in ("it's a triangle", "it's a square", "it's a rectangle", "it's a circle", "it's a pentagon",
+                                               "it's a hexagon")})
+LINE_STYLE["it's an oval"] = PLEASED + "; say an oval, with an, never a oval" + ONLY
+LINE_STYLE.update({k: PLEASED + ", stating a simple fact" + ONLY for k in ('a triangle has three sides', 'a square has four sides',
+                                                                         'a rectangle has four sides', 'a pentagon has five sides',
+                                                                         'a hexagon has six sides')})
+LINE_STYLE.update({k: QUESTION + ONLY for k in ('which shape is this', 'how many sides', 'how many apples', 'how many more came',
+                                                'what comes next', 'which bead is missing', 'how do you feel', 'what shall we play',
+                                                'how many', 'how many are left')})
+LINE_STYLE['how does nook feel'] = QUESTION + ONLY + NOOK
+LINE_STYLE.update({k: STYLE + ONLY for k in ('tap each side', 'type the missing word', 'tap the missing letter', 'drag the words, first to last',
+                                             'read the number word', 'choose the number word', 'type the number word',
+                                             'count with me', 'count them all with me', 'count the tens with me', 'count the apples that are left',
+                                             'count the new apples with me', 'fill the ten first', 'look for the part that repeats',
+                                             'each group has one more', 'it turns around', 'count on')})
+LINE_STYLE.update({k: 'quietly delighted' + ONLY for k in ('this pattern grows', 'a mirror pattern', 'numbers in a row', 'make a bead string',
+                                                           'what a string', 'we did it', 'we said all the feelings')})
+LINE_STYLE.update({'nook feels ' + f: STYLE + ', calmly naming the feeling, not acting it out' + ONLY + NOOK for f in FEELING_NAMES})
+LINE_STYLE.update({'you feel ' + f + '. thank you for telling me': THANKS + ONLY for f in FEELING_NAMES})
+LINE_STYLE['thank you for telling me'] = THANKS + ONLY
+LINE_STYLE["that's ok. not sure is fine"] = "soft, warm and reassuring, a kind grandfather telling a small child it is fine not to know" + ONLY
+LINE_STYLE['nook takes a breath'] = "calm, soft and slow, a kind grandfather settling" + ONLY + NOOK
+LINE_STYLE['nook feels… tap one'] = STYLE + "; a gentle invitation: a short thoughtful pause after Nook feels, then Tap one" + ONLY + NOOK
+LINE_STYLE.update({k: STYLE + ONLY + NOOK for k in ('nook eats none. how many are left', 'nook eats them all. how many are left')})
+# Phrases the game joins with number clips: "Three, then two more. How many?" and "Nook eats two. How many are left?"
+LINE_STYLE['then'] = (STYLE + "; one word taken from the middle of the sentence 'Three, then two more': say only the single word then, "
+                      "level and continuing as if the sentence goes on" + ONLY)
+LINE_STYLE['more'] = STYLE + "; the last word of the sentence 'then two more.': say only the single word more" + ONLY
+LINE_STYLE['nook eats'] = (STYLE + "; the start of a sentence that goes on with a number, as in 'Nook eats two.': say only the two words "
+                           "Nook eats, level and continuing, not finished" + ONLY + NOOK)
+# Whole-sentence comparison recordings for the round-4 listening page (J6), rendered by `compare` into the listening folder only;
+# the game never plays them. Each is a success line the game builds from clips, said in one go.
+COMPARISONS = [
+    ('add-3-2', 'Yes! Three plus two equals five.', PLEASED + ONLY),
+    ('count-4', 'Spot on! Four apples.', PLEASED + ONLY),
+    ('take-6-2', "That's the one. Six take away two equals four.", PLEASED + ONLY),
+]
+COMPARE_DIR = ROOT / 'docs' / 'little-patterns-round-4' / 'build' / 'phase-5' / 'listen' / 'compare'
 PHONICS_STYLE = ("this is a phonics sound for a child learning to read: say only the short letter sound, as a teacher does when "
                  "sounding out a word, never the letter's name, one short sound and nothing else")
 # 28 Sept: sounds the first render got wrong, each with its own extra note (the voice is unchanged).
@@ -304,7 +356,26 @@ def piper_module():
     return mod
 
 
+_ROUND4 = None
+
+
+def round4_text():
+    """key -> the line as the game writes it, for the lines added in round 4, so questions and exclamations reach the model.
+    Older lines keep the sentence-case form they were rendered with, so their cached takes stay valid."""
+    global _ROUND4
+    if _ROUND4 is None:
+        import subprocess
+        program = ("const L=require('./public/fireworks/little-patterns/learning.js'),F=require('./public/fireworks/little-patterns/feelings-data.js');"
+                   "console.log(JSON.stringify([...L.SHAPES_SPEECH,...L.PROMPT_SPEECH,...F.FEELINGS_SPEECH,F.LINES.board]));")
+        out = subprocess.run(['node', '-e', program], cwd=ROOT, check=True, capture_output=True, text=True, encoding='utf-8').stdout
+        key = lambda t: re.sub(r'[.!?]+$', '', re.sub(r'\s+', ' ', t.strip().lower()))
+        _ROUND4 = {key(t): t.replace('\u2019', "'") for t in json.loads(out)}
+    return _ROUND4
+
+
 def spoken_form(text):
+    if text in round4_text():                     # as written: the phrases "then" and "more." stay lower case, "Nook eats" open
+        return re.sub(r'\bok\b', 'OK', round4_text()[text])
     # the same spellings the Piper build uses (bar READ, which gets a style note instead of a respelling), so both libraries say the same things
     fixed = {'read': 'Read.', 'yes': 'Yes!', 'spot on': 'Spot on!', 'correct': 'Correct!', 'good matching': 'Good matching!',
              "that's right": "That's right!", 'well done': 'Well done!'}
@@ -429,6 +500,17 @@ def audio(path):
     return f'<audio controls preload="none" src="{html.escape(rel)}"></audio>'
 
 
+def design_name(voice_arg):
+    """The raw takes are cached under the design's name (gemini-raw/northampton). Given that design's voice id instead
+    (voice_l1goo4gqobvj), use the same folder and label, or every line would be rendered and paid for again."""
+    cache = AUD / 'voices.json'
+    known = json.loads(cache.read_text(encoding='utf-8')) if cache.exists() else {}
+    for name, entry in known.items():
+        if entry.get('id') == voice_arg and name in DESIGNS:
+            return name
+    return voice_arg
+
+
 def library(keys, voice_arg, label, dry, phonics_too):
     """Render every line of the built-in script with one voice into assets/voice, writing the manifest the game already reads."""
     g = keys.get('GEMINI_API_KEY')
@@ -485,12 +567,41 @@ def library(keys, voice_arg, label, dry, phonics_too):
     print(f'Library: {len(clips)} clips, {total / 1024 / 1024:.2f} MiB. Now run the voice tests and update NOTICE.txt before deploying.')
 
 
+def compare(keys, voice_arg, dry):
+    """The whole-sentence comparison recordings (COMPARISONS) for the listening page: same voice, cache and polish as the
+    library, written beside the page and never into assets/voice."""
+    g = keys.get('GEMINI_API_KEY')
+    if not g:
+        raise SystemExit('compare needs GEMINI_API_KEY in .wrangler/voice-build/.env.')
+    spend = Spend(dry)
+    voice = gemini_design(g, voice_arg, DESIGNS[voice_arg], spend) if voice_arg in DESIGNS else voice_arg
+    raw_dir = BUILD / 'gemini-raw' / voice_arg.replace('/', '_')
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    if not dry:
+        COMPARE_DIR.mkdir(parents=True, exist_ok=True)
+    for name, text, style in COMPARISONS:
+        raw = raw_dir / (hashlib.sha256(f'gemini:{voice}:{text}:{style}'.encode()).hexdigest()[:16] + '.wav')
+        if not raw.exists():
+            data = gemini_speak(g, text, voice, style, spend)
+            if data is None:
+                continue
+            raw.write_bytes(data)
+        if not dry:
+            print(f'{name}: {polish(raw.read_bytes(), COMPARE_DIR / (name + ".wav"))} s  {text}')
+    spend.report()
+
+
 def main(argv):
     dry = '--dry-run' in argv
     args = [a for a in argv if not a.startswith('--')]
     keys = env()
     if args and args[0] == 'script':
         write_script('--phonics' in argv)
+        return 0
+    if args and args[0] == 'compare':
+        if len(args) < 2:
+            raise SystemExit('compare needs a voice, as for library')
+        compare(keys, design_name(args[1]), dry)
         return 0
     if not args or args[0] not in ('audition', 'library'):
         print(__doc__)
@@ -500,7 +611,7 @@ def main(argv):
     else:
         if len(args) < 2:
             raise SystemExit('library needs a voice: a design name (' + ', '.join(DESIGNS) + '), a Google preset such as Gacrux, or a voice_... id')
-        voice = args[1]
+        voice = design_name(args[1])
         label = f'Gemini 3.8 Flash TTS, {voice}' if voice in DESIGNS or voice in PRESETS else f'Gemini 3.8 Flash TTS, designed voice {voice}'
         library(keys, voice, label, dry, '--phonics' in argv)
     return 0

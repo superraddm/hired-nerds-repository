@@ -190,5 +190,28 @@ if (!CHROME) {
       assert.deepEqual(report, [], '\n' + report.join('\n'));
     });
   }
+  // Round 4, phase 5: the join in a real media element (jsdom cannot play audio). After the first clip has played (from a
+  // tap on a device), a line of several clips plays as ONE joined Blob clip at the chosen rate with the pitch kept; the
+  // same line again is built from memory at once.
+  test('joined speech in a real browser: one Blob clip of the expected length, rate 1.05 with the pitch kept, the second time straight from memory', async () => {
+    const J = require('../public/fireworks/little-patterns/shared.js');
+    const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, '../public/fireworks/little-patterns/assets/voice/manifest.json'), 'utf8'));
+    const parts = ['Yes!', 'THREE', 'plus', 'TWO', 'equals', 'FIVE'], clipOf = t => manifest.clips[t.toLowerCase().replace(/[.!?,]+$/, '')];
+    const pcms = parts.map(t => { const b = fs.readFileSync(path.join(__dirname, '../public/fireworks/little-patterns', clipOf(t).file)); return J.parseWav(b.buffer.slice(b.byteOffset, b.byteOffset + b.length)); });
+    const expected = J.join(parts, pcms).total;
+    await browser.go(browser.base + 'index.html');
+    await browser.evaluate('localStorage.clear();sessionStorage.clear();true');
+    await browser.go(browser.base + 'garden.html'); await wait(350);
+    await browser.evaluate(`window.__plays=[];const play=HTMLMediaElement.prototype.play;HTMLMediaElement.prototype.play=function(){window.__el=this;window.__plays.push(String(this.src).slice(0,5));return play.call(this);};true`);
+    await browser.evaluate(`LP.audio.speak(['apple'],{auto:true});true`); await wait(700);
+    await browser.evaluate(`LP.audio.rate=1.05;LP.audio.speak(${JSON.stringify(parts)},{auto:true});true`); await wait(1200);
+    const r = await browser.evaluate('({plays:window.__plays,duration:window.__el.duration,paused:window.__el.paused,rate:window.__el.playbackRate,pitch:window.__el.preservesPitch,status:document.getElementById("status").textContent})');
+    assert.deepEqual(r.plays, ['http:', 'blob:'], 'the first line plays its clip, the joined line one Blob');
+    assert.ok(Math.abs(r.duration - expected) < .02, `joined length ${r.duration} s, expected ${expected} s`);
+    assert.equal(r.paused, false); assert.equal(r.rate, 1.05); assert.equal(r.pitch, true);
+    assert.doesNotMatch(r.status, /could not play/);
+    const again = await browser.evaluate(`(LP.audio.speak(${JSON.stringify(parts)},{auto:true}),window.__plays.length)`);
+    assert.equal(again, 3, 'from memory, inside the same call');
+  });
 }
 module.exports = { SCENARIOS, VIEWPORTS, CHECK };

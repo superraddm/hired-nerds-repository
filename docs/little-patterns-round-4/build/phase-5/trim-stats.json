@@ -1,0 +1,6206 @@
+{
+ "a blank can grow": {
+  "after_s": 2.175,
+  "before_s": 2.36,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2290,
+  "file": "7c85b58605ba4690.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 2240,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 115,
+  "pauses_ms": [
+   [
+    265,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2255,
+  "tail_cut_ms": 70,
+  "tail_loss_first_try_ms": 0
+ },
+ "a butterfly lands near robin. robin says, i feel surprised": {
+  "after_s": 7.03,
+  "before_s": 8.059,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 7975,
+  "file": "c39b5a6b1e86bc59.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 7925,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 945,
+  "pauses_ms": [
+   [
+    985,
+    300
+   ],
+   [
+    410,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 7940,
+  "tail_cut_ms": 84,
+  "tail_loss_first_try_ms": 0
+ },
+ "a different picture. look again": {
+  "after_s": 3.145,
+  "before_s": 3.927,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    30
+   ]
+  ],
+  "cut_at_ms": 3880,
+  "file": "dce2bb2a4ba8155e.wav",
+  "first_voiced_ms": 350,
+  "last_voiced_ms": 3830,
+  "lead_cut_ms": 320,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 415,
+  "pauses_ms": [
+   [
+    715,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 3865,
+  "tail_cut_ms": 47,
+  "tail_loss_first_try_ms": 0
+ },
+ "a fish can blank": {
+  "after_s": 2.56,
+  "before_s": 3.063,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2995,
+  "file": "3719c09a907af3ed.wav",
+  "first_voiced_ms": 155,
+  "last_voiced_ms": 2945,
+  "lead_cut_ms": 125,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 310,
+  "pauses_ms": [
+   [
+    460,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2950,
+  "tail_cut_ms": 68,
+  "tail_loss_first_try_ms": 0
+ },
+ "a fish can swim": {
+  "after_s": 2.395,
+  "before_s": 3.226,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3140,
+  "file": "65fcb2650cd81890.wav",
+  "first_voiced_ms": 430,
+  "last_voiced_ms": 3090,
+  "lead_cut_ms": 400,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 345,
+  "pauses_ms": [
+   [
+    495,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3090,
+  "tail_cut_ms": 86,
+  "tail_loss_first_try_ms": 0
+ },
+ "a flower can grow": {
+  "after_s": 2.365,
+  "before_s": 3.028,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2940,
+  "file": "f2d7718dc6ee0e57.wav",
+  "first_voiced_ms": 425,
+  "last_voiced_ms": 2890,
+  "lead_cut_ms": 395,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 180,
+  "pauses_ms": [
+   [
+    330,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2895,
+  "tail_cut_ms": 88,
+  "tail_loss_first_try_ms": 0
+ },
+ "a hexagon has six sides": {
+  "after_s": 2.375,
+  "before_s": 2.651,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    25
+   ]
+  ],
+  "cut_at_ms": 2580,
+  "file": "a0894c592cd8078b.wav",
+  "first_voiced_ms": 235,
+  "last_voiced_ms": 2530,
+  "lead_cut_ms": 205,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2535,
+  "tail_cut_ms": 71,
+  "tail_loss_first_try_ms": 0
+ },
+ "a mirror pattern": {
+  "after_s": 1.37,
+  "before_s": 1.399,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1370,
+  "file": "c925eacd315cec19.wav",
+  "first_voiced_ms": 0,
+  "last_voiced_ms": 1320,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1330,
+  "tail_cut_ms": 29,
+  "tail_loss_first_try_ms": 0
+ },
+ "a pentagon has five sides": {
+  "after_s": 2.59,
+  "before_s": 2.888,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2815,
+  "file": "f17832764c3e4c13.wav",
+  "first_voiced_ms": 255,
+  "last_voiced_ms": 2765,
+  "lead_cut_ms": 225,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2775,
+  "tail_cut_ms": 73,
+  "tail_loss_first_try_ms": 0
+ },
+ "a rectangle has four sides": {
+  "after_s": 2.535,
+  "before_s": 2.825,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2755,
+  "file": "52cc26a58dac6736.wav",
+  "first_voiced_ms": 250,
+  "last_voiced_ms": 2705,
+  "lead_cut_ms": 220,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2710,
+  "tail_cut_ms": 70,
+  "tail_loss_first_try_ms": 0
+ },
+ "a square has four sides": {
+  "after_s": 2.28,
+  "before_s": 2.672,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2560,
+  "file": "878c6977cec9b406.wav",
+  "first_voiced_ms": 310,
+  "last_voiced_ms": 2510,
+  "lead_cut_ms": 280,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2525,
+  "tail_cut_ms": 112,
+  "tail_loss_first_try_ms": 0
+ },
+ "a triangle has three sides": {
+  "after_s": 2.59,
+  "before_s": 3.057,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2615,
+  "file": "cc7e51b0eebb5dfa.wav",
+  "first_voiced_ms": 55,
+  "last_voiced_ms": 2565,
+  "lead_cut_ms": 25,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2570,
+  "tail_cut_ms": 442,
+  "tail_loss_first_try_ms": 0
+ },
+ "a wet blank can swim": {
+  "after_s": 3.03,
+  "before_s": 3.582,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    15
+   ]
+  ],
+  "cut_at_ms": 3515,
+  "file": "86e258c3a844eeca.wav",
+  "first_voiced_ms": 325,
+  "last_voiced_ms": 3465,
+  "lead_cut_ms": 295,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 190,
+  "pauses_ms": [
+   [
+    340,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3475,
+  "tail_cut_ms": 67,
+  "tail_loss_first_try_ms": 0
+ },
+ "a wet fish can swim": {
+  "after_s": 3.015,
+  "before_s": 3.114,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3015,
+  "file": "7a723b73120985af.wav",
+  "first_voiced_ms": 25,
+  "last_voiced_ms": 2965,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 3010,
+  "tail_cut_ms": 98,
+  "tail_loss_first_try_ms": 0
+ },
+ "a word for my feeling": {
+  "after_s": 2.405,
+  "before_s": 2.535,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2460,
+  "file": "5f8cde56dc435dbd.wav",
+  "first_voiced_ms": 85,
+  "last_voiced_ms": 2410,
+  "lead_cut_ms": 55,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2435,
+  "tail_cut_ms": 75,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali has planted a seed. ali says, i feel proud": {
+  "after_s": 6.595,
+  "before_s": 8.483,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 8385,
+  "file": "883c0ccf70e9b30d.wav",
+  "first_voiced_ms": 195,
+  "last_voiced_ms": 8335,
+  "lead_cut_ms": 165,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 1625,
+  "pauses_ms": [
+   [
+    400,
+    150
+   ],
+   [
+    1240,
+    300
+   ],
+   [
+    585,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 8350,
+  "tail_cut_ms": 98,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali is angry": {
+  "after_s": 2.155,
+  "before_s": 2.894,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2815,
+  "file": "b03aeb9c03608cf5.wav",
+  "first_voiced_ms": 280,
+  "last_voiced_ms": 2765,
+  "lead_cut_ms": 250,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 410,
+  "pauses_ms": [
+   [
+    445,
+    150
+   ],
+   [
+    265,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2785,
+  "tail_cut_ms": 80,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali is building. the tower keeps falling. ali says, i feel angry": {
+  "after_s": 7.43,
+  "before_s": 9.635,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 9570,
+  "file": "92f87d62864e66bc.wav",
+  "first_voiced_ms": 120,
+  "last_voiced_ms": 9520,
+  "lead_cut_ms": 90,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 2050,
+  "pauses_ms": [
+   [
+    275,
+    150
+   ],
+   [
+    915,
+    300
+   ],
+   [
+    1135,
+    300
+   ],
+   [
+    455,
+    150
+   ],
+   [
+    320,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 9540,
+  "tail_cut_ms": 65,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali is calm": {
+  "after_s": 2.195,
+  "before_s": 3.04,
+  "clicks_left_out_ms": [
+   [
+    "end",
+    2575,
+    15
+   ]
+  ],
+  "cut_at_ms": 2655,
+  "file": "e7d6d2df7785ef25.wav",
+  "first_voiced_ms": 210,
+  "last_voiced_ms": 2380,
+  "lead_cut_ms": 180,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [
+   "end"
+  ],
+  "pause_removed_ms": 280,
+  "pauses_ms": [
+   [
+    295,
+    150
+   ],
+   [
+    285,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2605,
+  "tail_cut_ms": 385,
+  "tail_loss_first_try_ms": 175
+ },
+ "ali is disappointed": {
+  "after_s": 2.625,
+  "before_s": 2.878,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2650,
+  "file": "7a78ccea383fb0e1.wav",
+  "first_voiced_ms": 55,
+  "last_voiced_ms": 2600,
+  "lead_cut_ms": 25,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2640,
+  "tail_cut_ms": 228,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali is excited": {
+  "after_s": 2.305,
+  "before_s": 2.647,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    25
+   ]
+  ],
+  "cut_at_ms": 2530,
+  "file": "5cc2940172304fee.wav",
+  "first_voiced_ms": 255,
+  "last_voiced_ms": 2480,
+  "lead_cut_ms": 225,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2525,
+  "tail_cut_ms": 118,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali is frustrated": {
+  "after_s": 2.275,
+  "before_s": 2.393,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2275,
+  "file": "961f7d87d50e6bc4.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 2225,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2280,
+  "tail_cut_ms": 118,
+  "tail_loss_first_try_ms": 5
+ },
+ "ali is happy": {
+  "after_s": 1.845,
+  "before_s": 1.916,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1845,
+  "file": "2b1b98054d2926ff.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 1795,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1815,
+  "tail_cut_ms": 71,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali is proud": {
+  "after_s": 2.415,
+  "before_s": 2.711,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    40,
+    15
+   ]
+  ],
+  "cut_at_ms": 2610,
+  "file": "d1d4409c0adab4e1.wav",
+  "first_voiced_ms": 225,
+  "last_voiced_ms": 2560,
+  "lead_cut_ms": 195,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2590,
+  "tail_cut_ms": 101,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali is sad": {
+  "after_s": 2.245,
+  "before_s": 2.321,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2245,
+  "file": "6fd8833ce05ee515.wav",
+  "first_voiced_ms": 10,
+  "last_voiced_ms": 2195,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2205,
+  "tail_cut_ms": 76,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali is surprised": {
+  "after_s": 2.39,
+  "before_s": 2.898,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2810,
+  "file": "2646900b098d30bd.wav",
+  "first_voiced_ms": 320,
+  "last_voiced_ms": 2760,
+  "lead_cut_ms": 290,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 130,
+  "pauses_ms": [
+   [
+    280,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2765,
+  "tail_cut_ms": 88,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali is trying a new slide. ali says, i feel worried": {
+  "after_s": 6.055,
+  "before_s": 7.348,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    25
+   ]
+  ],
+  "cut_at_ms": 7275,
+  "file": "3f7fb8105101aed5.wav",
+  "first_voiced_ms": 290,
+  "last_voiced_ms": 7225,
+  "lead_cut_ms": 260,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 960,
+  "pauses_ms": [
+   [
+    990,
+    300
+   ],
+   [
+    420,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 7235,
+  "tail_cut_ms": 73,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali is trying to untie a knot. ali says, i feel frustrated": {
+  "after_s": 7.525,
+  "before_s": 8.756,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    75,
+    20
+   ]
+  ],
+  "cut_at_ms": 8685,
+  "file": "794f8a5949554b87.wav",
+  "first_voiced_ms": 250,
+  "last_voiced_ms": 8635,
+  "lead_cut_ms": 220,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 940,
+  "pauses_ms": [
+   [
+    1035,
+    300
+   ],
+   [
+    355,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 8645,
+  "tail_cut_ms": 71,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali is worried": {
+  "after_s": 2.275,
+  "before_s": 2.821,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2280,
+  "file": "38295c7bb34f7f81.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 2230,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2255,
+  "tail_cut_ms": 541,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali says, i feel angry": {
+  "after_s": 3.315,
+  "before_s": 3.793,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3705,
+  "file": "6ed069af135f0f5e.wav",
+  "first_voiced_ms": 140,
+  "last_voiced_ms": 3655,
+  "lead_cut_ms": 110,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 280,
+  "pauses_ms": [
+   [
+    430,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3665,
+  "tail_cut_ms": 88,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali says, i feel frustrated": {
+  "after_s": 3.555,
+  "before_s": 4.375,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 4140,
+  "file": "73a5b7de315ceb53.wav",
+  "first_voiced_ms": 250,
+  "last_voiced_ms": 4090,
+  "lead_cut_ms": 155,
+  "lead_loss_first_try_ms": 35,
+  "lowered_at": [
+   "start"
+  ],
+  "pause_removed_ms": 430,
+  "pauses_ms": [
+   [
+    580,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 4100,
+  "tail_cut_ms": 235,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali says, i feel happy": {
+  "after_s": 3.48,
+  "before_s": 4.06,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3995,
+  "file": "0ad4af6315388732.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 3945,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 515,
+  "pauses_ms": [
+   [
+    665,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3955,
+  "tail_cut_ms": 65,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali says, i feel proud": {
+  "after_s": 3.845,
+  "before_s": 4.439,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 4310,
+  "file": "dda41cb18dd7079f.wav",
+  "first_voiced_ms": 205,
+  "last_voiced_ms": 4260,
+  "lead_cut_ms": 175,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 290,
+  "pauses_ms": [
+   [
+    440,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 4285,
+  "tail_cut_ms": 129,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali says, i feel worried": {
+  "after_s": 2.83,
+  "before_s": 3.77,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3675,
+  "file": "1d013fd25d89c292.wav",
+  "first_voiced_ms": 90,
+  "last_voiced_ms": 3625,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 30,
+  "lowered_at": [
+   "start"
+  ],
+  "pause_removed_ms": 845,
+  "pauses_ms": [
+   [
+    995,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3650,
+  "tail_cut_ms": 95,
+  "tail_loss_first_try_ms": 0
+ },
+ "ali sees a flower in the garden. ali says, i feel happy": {
+  "after_s": 7.29,
+  "before_s": 8.617,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 8565,
+  "file": "595dcdaa4faed0d8.wav",
+  "first_voiced_ms": 10,
+  "last_voiced_ms": 8515,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 1275,
+  "pauses_ms": [
+   [
+    275,
+    150
+   ],
+   [
+    1160,
+    300
+   ],
+   [
+    440,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 8525,
+  "tail_cut_ms": 52,
+  "tail_loss_first_try_ms": 0
+ },
+ "angry": {
+  "after_s": 1.11,
+  "before_s": 1.183,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1110,
+  "file": "5c7c1a50b2aa17ec.wav",
+  "first_voiced_ms": 25,
+  "last_voiced_ms": 1060,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1075,
+  "tail_cut_ms": 73,
+  "tail_loss_first_try_ms": 0
+ },
+ "apple": {
+  "after_s": 0.735,
+  "before_s": 1.084,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    0,
+    40
+   ]
+  ],
+  "cut_at_ms": 970,
+  "file": "ae09156c59f7f200.wav",
+  "first_voiced_ms": 265,
+  "last_voiced_ms": 920,
+  "lead_cut_ms": 235,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 960,
+  "tail_cut_ms": 114,
+  "tail_loss_first_try_ms": 0
+ },
+ "apples": {
+  "after_s": 1.055,
+  "before_s": 1.128,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1055,
+  "file": "9dbbc2c66ff4d0bc.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 1005,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1015,
+  "tail_cut_ms": 73,
+  "tail_loss_first_try_ms": 0
+ },
+ "asleep": {
+  "after_s": 1.285,
+  "before_s": 1.628,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    30
+   ]
+  ],
+  "cut_at_ms": 1520,
+  "file": "d739ba5def8b0fb3.wav",
+  "first_voiced_ms": 265,
+  "last_voiced_ms": 1470,
+  "lead_cut_ms": 235,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1475,
+  "tail_cut_ms": 108,
+  "tail_loss_first_try_ms": 0
+ },
+ "ball": {
+  "after_s": 1.12,
+  "before_s": 1.237,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1120,
+  "file": "2a1fee4b1bd10229.wav",
+  "first_voiced_ms": 15,
+  "last_voiced_ms": 1070,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1125,
+  "tail_cut_ms": 117,
+  "tail_loss_first_try_ms": 5
+ },
+ "basket": {
+  "after_s": 0.96,
+  "before_s": 1.331,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1260,
+  "file": "9c8a3e6c015ed3a8.wav",
+  "first_voiced_ms": 330,
+  "last_voiced_ms": 1210,
+  "lead_cut_ms": 300,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1220,
+  "tail_cut_ms": 71,
+  "tail_loss_first_try_ms": 0
+ },
+ "big": {
+  "after_s": 0.61,
+  "before_s": 0.718,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 610,
+  "file": "c73cba1196e2c6b4.wav",
+  "first_voiced_ms": 25,
+  "last_voiced_ms": 560,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 560,
+  "tail_cut_ms": 108,
+  "tail_loss_first_try_ms": 0
+ },
+ "bus": {
+  "after_s": 0.59,
+  "before_s": 0.988,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 900,
+  "file": "1e9a6907c73d47ca.wav",
+  "first_voiced_ms": 340,
+  "last_voiced_ms": 850,
+  "lead_cut_ms": 310,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 875,
+  "tail_cut_ms": 88,
+  "tail_loss_first_try_ms": 0
+ },
+ "calm": {
+  "after_s": 1.08,
+  "before_s": 1.473,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1385,
+  "file": "009c1f27159c1ec6.wav",
+  "first_voiced_ms": 335,
+  "last_voiced_ms": 1335,
+  "lead_cut_ms": 305,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1365,
+  "tail_cut_ms": 88,
+  "tail_loss_first_try_ms": 0
+ },
+ "cat": {
+  "after_s": 0.72,
+  "before_s": 0.984,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 920,
+  "file": "741c705b45d6252b.wav",
+  "first_voiced_ms": 230,
+  "last_voiced_ms": 870,
+  "lead_cut_ms": 200,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 880,
+  "tail_cut_ms": 64,
+  "tail_loss_first_try_ms": 0
+ },
+ "choose the number word": {
+  "after_s": 2.87,
+  "before_s": 3.311,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2870,
+  "file": "d77ec1d297bd01a1.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 2820,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2845,
+  "tail_cut_ms": 441,
+  "tail_loss_first_try_ms": 0
+ },
+ "circle": {
+  "after_s": 1.13,
+  "before_s": 1.461,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1140,
+  "file": "de93c64b7e4d4142.wav",
+  "first_voiced_ms": 40,
+  "last_voiced_ms": 1090,
+  "lead_cut_ms": 10,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1135,
+  "tail_cut_ms": 321,
+  "tail_loss_first_try_ms": 0
+ },
+ "copy if you like. or just look": {
+  "after_s": 3.5,
+  "before_s": 4.206,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    250,
+    15
+   ]
+  ],
+  "cut_at_ms": 4110,
+  "file": "ff4c848d3a9461a8.wav",
+  "first_voiced_ms": 425,
+  "last_voiced_ms": 4060,
+  "lead_cut_ms": 395,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 215,
+  "pauses_ms": [
+   [
+    360,
+    300
+   ],
+   [
+    305,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 4090,
+  "tail_cut_ms": 96,
+  "tail_loss_first_try_ms": 0
+ },
+ "correct": {
+  "after_s": 0.93,
+  "before_s": 1.039,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 960,
+  "file": "6d6364eba8dbb12c.wav",
+  "first_voiced_ms": 60,
+  "last_voiced_ms": 910,
+  "lead_cut_ms": 30,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 920,
+  "tail_cut_ms": 79,
+  "tail_loss_first_try_ms": 0
+ },
+ "count on": {
+  "after_s": 1.31,
+  "before_s": 1.438,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1345,
+  "file": "343823182096f51b.wav",
+  "first_voiced_ms": 65,
+  "last_voiced_ms": 1295,
+  "lead_cut_ms": 35,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1320,
+  "tail_cut_ms": 93,
+  "tail_loss_first_try_ms": 0
+ },
+ "count the apples that are left": {
+  "after_s": 2.685,
+  "before_s": 2.809,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2685,
+  "file": "36a690ee17479f2f.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 2635,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2655,
+  "tail_cut_ms": 124,
+  "tail_loss_first_try_ms": 0
+ },
+ "count the new apples with me": {
+  "after_s": 2.74,
+  "before_s": 3.069,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3000,
+  "file": "699bc79bd60ae43a.wav",
+  "first_voiced_ms": 290,
+  "last_voiced_ms": 2950,
+  "lead_cut_ms": 260,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2955,
+  "tail_cut_ms": 69,
+  "tail_loss_first_try_ms": 0
+ },
+ "count the tens with me": {
+  "after_s": 2.285,
+  "before_s": 2.521,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2420,
+  "file": "95cf17432d8e252c.wav",
+  "first_voiced_ms": 165,
+  "last_voiced_ms": 2370,
+  "lead_cut_ms": 135,
+  "lead_loss_first_try_ms": 15,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2410,
+  "tail_cut_ms": 101,
+  "tail_loss_first_try_ms": 0
+ },
+ "count them all with me": {
+  "after_s": 1.7,
+  "before_s": 1.895,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1830,
+  "file": "413cc078e4b0524f.wav",
+  "first_voiced_ms": 160,
+  "last_voiced_ms": 1780,
+  "lead_cut_ms": 130,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1795,
+  "tail_cut_ms": 65,
+  "tail_loss_first_try_ms": 0
+ },
+ "count with me": {
+  "after_s": 1.05,
+  "before_s": 1.174,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1090,
+  "file": "15e2bbac71ad4cca.wav",
+  "first_voiced_ms": 70,
+  "last_voiced_ms": 1040,
+  "lead_cut_ms": 40,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1060,
+  "tail_cut_ms": 84,
+  "tail_loss_first_try_ms": 0
+ },
+ "diamond": {
+  "after_s": 1.05,
+  "before_s": 1.126,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1050,
+  "file": "4bdcbcef4068b489.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 1000,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1015,
+  "tail_cut_ms": 76,
+  "tail_loss_first_try_ms": 0
+ },
+ "disappointed": {
+  "after_s": 1.355,
+  "before_s": 1.464,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1355,
+  "file": "d6fad12cc109f4f3.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 1305,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1350,
+  "tail_cut_ms": 108,
+  "tail_loss_first_try_ms": 0
+ },
+ "dog": {
+  "after_s": 0.61,
+  "before_s": 0.949,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    30
+   ]
+  ],
+  "cut_at_ms": 865,
+  "file": "b8f1b8df04142069.wav",
+  "first_voiced_ms": 285,
+  "last_voiced_ms": 815,
+  "lead_cut_ms": 255,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 835,
+  "tail_cut_ms": 84,
+  "tail_loss_first_try_ms": 0
+ },
+ "drag the words, first to last": {
+  "after_s": 4.205,
+  "before_s": 4.276,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 4205,
+  "file": "1d11271945acfb3f.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 4155,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 4170,
+  "tail_cut_ms": 71,
+  "tail_loss_first_try_ms": 0
+ },
+ "dry": {
+  "after_s": 0.85,
+  "before_s": 0.948,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 850,
+  "file": "4a0faec8d760c630.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 800,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 835,
+  "tail_cut_ms": 98,
+  "tail_loss_first_try_ms": 0
+ },
+ "each group has one more": {
+  "after_s": 2.515,
+  "before_s": 2.852,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2715,
+  "file": "990a18361f8f1645.wav",
+  "first_voiced_ms": 230,
+  "last_voiced_ms": 2665,
+  "lead_cut_ms": 200,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2690,
+  "tail_cut_ms": 137,
+  "tail_loss_first_try_ms": 0
+ },
+ "eight": {
+  "after_s": 0.655,
+  "before_s": 1.036,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 945,
+  "file": "1129c57f84e6f0a6.wav",
+  "first_voiced_ms": 320,
+  "last_voiced_ms": 895,
+  "lead_cut_ms": 290,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 915,
+  "tail_cut_ms": 91,
+  "tail_loss_first_try_ms": 0
+ },
+ "eighteen": {
+  "after_s": 1.225,
+  "before_s": 1.424,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1335,
+  "file": "9e97fab23456cae3.wav",
+  "first_voiced_ms": 140,
+  "last_voiced_ms": 1285,
+  "lead_cut_ms": 110,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1295,
+  "tail_cut_ms": 89,
+  "tail_loss_first_try_ms": 0
+ },
+ "eighty": {
+  "after_s": 0.97,
+  "before_s": 1.172,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1095,
+  "file": "801336ad51ef1c9f.wav",
+  "first_voiced_ms": 10,
+  "last_voiced_ms": 1045,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 125,
+  "pauses_ms": [
+   [
+    275,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 1060,
+  "tail_cut_ms": 77,
+  "tail_loss_first_try_ms": 0
+ },
+ "eleven": {
+  "after_s": 1.318,
+  "before_s": 1.318,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1318,
+  "file": "421f5992a38038ef.wav",
+  "first_voiced_ms": 5,
+  "last_voiced_ms": 1320,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1320,
+  "tail_cut_ms": 0,
+  "tail_loss_first_try_ms": 2
+ },
+ "equals": {
+  "after_s": 1.285,
+  "before_s": 1.687,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1555,
+  "file": "95fa3ae4a5c402df.wav",
+  "first_voiced_ms": 300,
+  "last_voiced_ms": 1505,
+  "lead_cut_ms": 270,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1510,
+  "tail_cut_ms": 132,
+  "tail_loss_first_try_ms": 0
+ },
+ "excited": {
+  "after_s": 1.195,
+  "before_s": 1.658,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    25
+   ]
+  ],
+  "cut_at_ms": 1540,
+  "file": "9ad5998c0af126ee.wav",
+  "first_voiced_ms": 375,
+  "last_voiced_ms": 1490,
+  "lead_cut_ms": 345,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1525,
+  "tail_cut_ms": 118,
+  "tail_loss_first_try_ms": 0
+ },
+ "fast": {
+  "after_s": 1.095,
+  "before_s": 1.358,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1255,
+  "file": "b59c32fc7b0a2eca.wav",
+  "first_voiced_ms": 190,
+  "last_voiced_ms": 1205,
+  "lead_cut_ms": 160,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1215,
+  "tail_cut_ms": 103,
+  "tail_loss_first_try_ms": 0
+ },
+ "fifteen": {
+  "after_s": 1.35,
+  "before_s": 1.464,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1350,
+  "file": "97907215b207a598.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 1300,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1350,
+  "tail_cut_ms": 114,
+  "tail_loss_first_try_ms": 0
+ },
+ "fifty": {
+  "after_s": 1.275,
+  "before_s": 1.335,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1275,
+  "file": "f5634c0c9c2e41e9.wav",
+  "first_voiced_ms": 25,
+  "last_voiced_ms": 1225,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1245,
+  "tail_cut_ms": 60,
+  "tail_loss_first_try_ms": 0
+ },
+ "fill the ten first": {
+  "after_s": 2.14,
+  "before_s": 2.423,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2330,
+  "file": "34a2f596583db149.wav",
+  "first_voiced_ms": 220,
+  "last_voiced_ms": 2280,
+  "lead_cut_ms": 190,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2305,
+  "tail_cut_ms": 93,
+  "tail_loss_first_try_ms": 0
+ },
+ "find the same picture": {
+  "after_s": 2.665,
+  "before_s": 2.908,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2805,
+  "file": "3e9e6fd63e505ecd.wav",
+  "first_voiced_ms": 170,
+  "last_voiced_ms": 2755,
+  "lead_cut_ms": 140,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2775,
+  "tail_cut_ms": 103,
+  "tail_loss_first_try_ms": 0
+ },
+ "fish": {
+  "after_s": 0.76,
+  "before_s": 1.058,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    30
+   ]
+  ],
+  "cut_at_ms": 945,
+  "file": "f171c1687de86935.wav",
+  "first_voiced_ms": 215,
+  "last_voiced_ms": 895,
+  "lead_cut_ms": 185,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 895,
+  "tail_cut_ms": 113,
+  "tail_loss_first_try_ms": 0
+ },
+ "five": {
+  "after_s": 1.085,
+  "before_s": 1.149,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1085,
+  "file": "1fadffc7cf0596db.wav",
+  "first_voiced_ms": 20,
+  "last_voiced_ms": 1035,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1050,
+  "tail_cut_ms": 64,
+  "tail_loss_first_try_ms": 0
+ },
+ "flower": {
+  "after_s": 0.905,
+  "before_s": 0.979,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 905,
+  "file": "b0904d9ae3461b1d.wav",
+  "first_voiced_ms": 0,
+  "last_voiced_ms": 855,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 870,
+  "tail_cut_ms": 74,
+  "tail_loss_first_try_ms": 0
+ },
+ "forty": {
+  "after_s": 0.94,
+  "before_s": 1.158,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    45
+   ]
+  ],
+  "cut_at_ms": 1120,
+  "file": "784ab513feef4b2c.wav",
+  "first_voiced_ms": 210,
+  "last_voiced_ms": 1070,
+  "lead_cut_ms": 180,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1085,
+  "tail_cut_ms": 38,
+  "tail_loss_first_try_ms": 0
+ },
+ "four": {
+  "after_s": 1.14,
+  "before_s": 1.196,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1140,
+  "file": "4c7f8eb5e05ff06f.wav",
+  "first_voiced_ms": 0,
+  "last_voiced_ms": 1090,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1090,
+  "tail_cut_ms": 56,
+  "tail_loss_first_try_ms": 0
+ },
+ "fourteen": {
+  "after_s": 1.5,
+  "before_s": 1.87,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1535,
+  "file": "c8a544b6607af3c9.wav",
+  "first_voiced_ms": 65,
+  "last_voiced_ms": 1485,
+  "lead_cut_ms": 35,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1510,
+  "tail_cut_ms": 335,
+  "tail_loss_first_try_ms": 0
+ },
+ "frustrated": {
+  "after_s": 1.545,
+  "before_s": 1.953,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1625,
+  "file": "5136092b1ee4e8ca.wav",
+  "first_voiced_ms": 110,
+  "last_voiced_ms": 1575,
+  "lead_cut_ms": 80,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1620,
+  "tail_cut_ms": 328,
+  "tail_loss_first_try_ms": 0
+ },
+ "good matching": {
+  "after_s": 0.995,
+  "before_s": 1.066,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 995,
+  "file": "ac7e627b9826ec4f.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 945,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 970,
+  "tail_cut_ms": 71,
+  "tail_loss_first_try_ms": 0
+ },
+ "good try! let's look again": {
+  "after_s": 2.445,
+  "before_s": 2.857,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2830,
+  "file": "e1ae7ef9b7f84a79.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 2690,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [
+   "end"
+  ],
+  "pause_removed_ms": 385,
+  "pauses_ms": [
+   [
+    685,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 2780,
+  "tail_cut_ms": 27,
+  "tail_loss_first_try_ms": 40
+ },
+ "happy": {
+  "after_s": 0.67,
+  "before_s": 1.061,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    30
+   ]
+  ],
+  "cut_at_ms": 985,
+  "file": "50ec84a5e74b179b.wav",
+  "first_voiced_ms": 345,
+  "last_voiced_ms": 935,
+  "lead_cut_ms": 315,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 945,
+  "tail_cut_ms": 76,
+  "tail_loss_first_try_ms": 0
+ },
+ "hello! i'm nook. let's play": {
+  "after_s": 2.83,
+  "before_s": 3.66,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3595,
+  "file": "0b8e57b837dd931d.wav",
+  "first_voiced_ms": 40,
+  "last_voiced_ms": 3545,
+  "lead_cut_ms": 10,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 755,
+  "pauses_ms": [
+   [
+    695,
+    300
+   ],
+   [
+    660,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 3575,
+  "tail_cut_ms": 65,
+  "tail_loss_first_try_ms": 0
+ },
+ "hot": {
+  "after_s": 0.845,
+  "before_s": 0.925,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 850,
+  "file": "c30b77bdf8c7788b.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 800,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 805,
+  "tail_cut_ms": 75,
+  "tail_loss_first_try_ms": 0
+ },
+ "how do you feel": {
+  "after_s": 1.37,
+  "before_s": 1.483,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1385,
+  "file": "5c1dbc03b08fbf12.wav",
+  "first_voiced_ms": 45,
+  "last_voiced_ms": 1335,
+  "lead_cut_ms": 15,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1350,
+  "tail_cut_ms": 98,
+  "tail_loss_first_try_ms": 0
+ },
+ "how does nook feel": {
+  "after_s": 2.08,
+  "before_s": 2.415,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    30
+   ]
+  ],
+  "cut_at_ms": 2345,
+  "file": "2688b7bdd9209d75.wav",
+  "first_voiced_ms": 295,
+  "last_voiced_ms": 2295,
+  "lead_cut_ms": 265,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2310,
+  "tail_cut_ms": 70,
+  "tail_loss_first_try_ms": 0
+ },
+ "how many": {
+  "after_s": 0.935,
+  "before_s": 1.185,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 935,
+  "file": "8fbe2e1779508491.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 885,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 885,
+  "tail_cut_ms": 250,
+  "tail_loss_first_try_ms": 0
+ },
+ "how many apples": {
+  "after_s": 2.05,
+  "before_s": 2.126,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2050,
+  "file": "3667ba4efb0c4179.wav",
+  "first_voiced_ms": 10,
+  "last_voiced_ms": 2000,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2015,
+  "tail_cut_ms": 76,
+  "tail_loss_first_try_ms": 0
+ },
+ "how many are left": {
+  "after_s": 1.275,
+  "before_s": 1.335,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1275,
+  "file": "1efafa94d613b398.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 1225,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1230,
+  "tail_cut_ms": 60,
+  "tail_loss_first_try_ms": 0
+ },
+ "how many more came": {
+  "after_s": 1.757,
+  "before_s": 1.757,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1757,
+  "file": "021dfc8ce2db1869.wav",
+  "first_voiced_ms": 10,
+  "last_voiced_ms": 1730,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1730,
+  "tail_cut_ms": 0,
+  "tail_loss_first_try_ms": 0
+ },
+ "how many sides": {
+  "after_s": 1.485,
+  "before_s": 1.595,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1530,
+  "file": "485ab8dbcd4c7fdc.wav",
+  "first_voiced_ms": 75,
+  "last_voiced_ms": 1480,
+  "lead_cut_ms": 45,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1500,
+  "tail_cut_ms": 65,
+  "tail_loss_first_try_ms": 0
+ },
+ "it turns around": {
+  "after_s": 1.89,
+  "before_s": 2.458,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2335,
+  "file": "f39d3e9049769b88.wav",
+  "first_voiced_ms": 305,
+  "last_voiced_ms": 2285,
+  "lead_cut_ms": 275,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 170,
+  "pauses_ms": [
+   [
+    320,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2340,
+  "tail_cut_ms": 123,
+  "tail_loss_first_try_ms": 5
+ },
+ "it's a circle": {
+  "after_s": 1.955,
+  "before_s": 2.161,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2030,
+  "file": "3a8dc07f51d7cff0.wav",
+  "first_voiced_ms": 105,
+  "last_voiced_ms": 1980,
+  "lead_cut_ms": 75,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2015,
+  "tail_cut_ms": 131,
+  "tail_loss_first_try_ms": 0
+ },
+ "it's a hexagon": {
+  "after_s": 1.375,
+  "before_s": 1.71,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1620,
+  "file": "87aaa13caddc5734.wav",
+  "first_voiced_ms": 275,
+  "last_voiced_ms": 1570,
+  "lead_cut_ms": 245,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1595,
+  "tail_cut_ms": 90,
+  "tail_loss_first_try_ms": 0
+ },
+ "it's a pentagon": {
+  "after_s": 1.41,
+  "before_s": 1.51,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1430,
+  "file": "4bb02adfd595ff91.wav",
+  "first_voiced_ms": 50,
+  "last_voiced_ms": 1380,
+  "lead_cut_ms": 20,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1390,
+  "tail_cut_ms": 80,
+  "tail_loss_first_try_ms": 0
+ },
+ "it's a rectangle": {
+  "after_s": 1.44,
+  "before_s": 1.76,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1665,
+  "file": "207b8e8f8bb4925e.wav",
+  "first_voiced_ms": 255,
+  "last_voiced_ms": 1615,
+  "lead_cut_ms": 225,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1640,
+  "tail_cut_ms": 96,
+  "tail_loss_first_try_ms": 0
+ },
+ "it's a square": {
+  "after_s": 1.25,
+  "before_s": 1.355,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1250,
+  "file": "ccd3876ba461a33b.wav",
+  "first_voiced_ms": 20,
+  "last_voiced_ms": 1200,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1220,
+  "tail_cut_ms": 105,
+  "tail_loss_first_try_ms": 0
+ },
+ "it's a triangle": {
+  "after_s": 1.5,
+  "before_s": 1.812,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1725,
+  "file": "82d53718e40d39fa.wav",
+  "first_voiced_ms": 255,
+  "last_voiced_ms": 1675,
+  "lead_cut_ms": 225,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1690,
+  "tail_cut_ms": 87,
+  "tail_loss_first_try_ms": 0
+ },
+ "it's an oval": {
+  "after_s": 1.345,
+  "before_s": 1.592,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1460,
+  "file": "eb8afbd638a752a2.wav",
+  "first_voiced_ms": 145,
+  "last_voiced_ms": 1410,
+  "lead_cut_ms": 115,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1440,
+  "tail_cut_ms": 132,
+  "tail_loss_first_try_ms": 0
+ },
+ "jo is angry": {
+  "after_s": 1.925,
+  "before_s": 2.274,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2200,
+  "file": "7d1c3a3d01003614.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 2150,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 275,
+  "pauses_ms": [
+   [
+    425,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2195,
+  "tail_cut_ms": 74,
+  "tail_loss_first_try_ms": 0
+ },
+ "jo is calm": {
+  "after_s": 2.265,
+  "before_s": 2.676,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    25
+   ]
+  ],
+  "cut_at_ms": 2610,
+  "file": "e4a447b04fe2f67a.wav",
+  "first_voiced_ms": 240,
+  "last_voiced_ms": 2560,
+  "lead_cut_ms": 210,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 135,
+  "pauses_ms": [
+   [
+    285,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2565,
+  "tail_cut_ms": 66,
+  "tail_loss_first_try_ms": 0
+ },
+ "jo is disappointed": {
+  "after_s": 2.5,
+  "before_s": 2.631,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2500,
+  "file": "85ebc7cb7982f8e3.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 2450,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2505,
+  "tail_cut_ms": 131,
+  "tail_loss_first_try_ms": 5
+ },
+ "jo is excited": {
+  "after_s": 2.22,
+  "before_s": 2.305,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2220,
+  "file": "3de147c0898e8b40.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 2170,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2190,
+  "tail_cut_ms": 85,
+  "tail_loss_first_try_ms": 0
+ },
+ "jo is frustrated": {
+  "after_s": 2.085,
+  "before_s": 2.516,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2360,
+  "file": "e6f06a9ec86078ac.wav",
+  "first_voiced_ms": 305,
+  "last_voiced_ms": 2310,
+  "lead_cut_ms": 275,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2360,
+  "tail_cut_ms": 156,
+  "tail_loss_first_try_ms": 0
+ },
+ "jo is getting ready for a picnic. jo says, i feel excited": {
+  "after_s": 6.685,
+  "before_s": 7.234,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 7160,
+  "file": "5b523c85fedd0e5a.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 7110,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 475,
+  "pauses_ms": [
+   [
+    575,
+    300
+   ],
+   [
+    350,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 7120,
+  "tail_cut_ms": 74,
+  "tail_loss_first_try_ms": 0
+ },
+ "jo is happy": {
+  "after_s": 1.745,
+  "before_s": 2.394,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2290,
+  "file": "978f00afe851a83e.wav",
+  "first_voiced_ms": 365,
+  "last_voiced_ms": 2240,
+  "lead_cut_ms": 335,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 210,
+  "pauses_ms": [
+   [
+    360,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2285,
+  "tail_cut_ms": 104,
+  "tail_loss_first_try_ms": 0
+ },
+ "jo is proud": {
+  "after_s": 2.115,
+  "before_s": 2.355,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2235,
+  "file": "64c53a915f282a7f.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 2185,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 120,
+  "pauses_ms": [
+   [
+    270,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2225,
+  "tail_cut_ms": 120,
+  "tail_loss_first_try_ms": 0
+ },
+ "jo is reading in a cosy chair. jo says, i feel calm": {
+  "after_s": 6.61,
+  "before_s": 8.238,
+  "clicks_left_out_ms": [
+   [
+    "end",
+    8075,
+    15
+   ]
+  ],
+  "cut_at_ms": 8055,
+  "file": "70d9e05503ea0816.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 7920,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [
+   "end"
+  ],
+  "pause_removed_ms": 1445,
+  "pauses_ms": [
+   [
+    1220,
+    300
+   ],
+   [
+    675,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 8005,
+  "tail_cut_ms": 183,
+  "tail_loss_first_try_ms": 35
+ },
+ "jo is sad": {
+  "after_s": 2.05,
+  "before_s": 2.305,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2050,
+  "file": "83dc77c941c03605.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 2000,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2000,
+  "tail_cut_ms": 255,
+  "tail_loss_first_try_ms": 0
+ },
+ "jo is surprised": {
+  "after_s": 2.45,
+  "before_s": 2.534,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2450,
+  "file": "91454cb034c828e6.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 2400,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2420,
+  "tail_cut_ms": 84,
+  "tail_loss_first_try_ms": 0
+ },
+ "jo is worried": {
+  "after_s": 1.76,
+  "before_s": 2.147,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2080,
+  "file": "475fd433c696b7bd.wav",
+  "first_voiced_ms": 215,
+  "last_voiced_ms": 2030,
+  "lead_cut_ms": 185,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 135,
+  "pauses_ms": [
+   [
+    285,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2035,
+  "tail_cut_ms": 67,
+  "tail_loss_first_try_ms": 0
+ },
+ "jo says, i feel calm": {
+  "after_s": 3.79,
+  "before_s": 4.706,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    15,
+    25
+   ]
+  ],
+  "cut_at_ms": 4620,
+  "file": "0bde0d96c7c50279.wav",
+  "first_voiced_ms": 245,
+  "last_voiced_ms": 4570,
+  "lead_cut_ms": 215,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 615,
+  "pauses_ms": [
+   [
+    465,
+    150
+   ],
+   [
+    450,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 4595,
+  "tail_cut_ms": 86,
+  "tail_loss_first_try_ms": 0
+ },
+ "jo says, i feel disappointed": {
+  "after_s": 3.89,
+  "before_s": 4.252,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 4170,
+  "file": "a6344c27a91c20ac.wav",
+  "first_voiced_ms": 95,
+  "last_voiced_ms": 4045,
+  "lead_cut_ms": 65,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [
+   "end"
+  ],
+  "pause_removed_ms": 215,
+  "pauses_ms": [
+   [
+    365,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 4120,
+  "tail_cut_ms": 82,
+  "tail_loss_first_try_ms": 25
+ },
+ "jo says, i feel excited": {
+  "after_s": 3.49,
+  "before_s": 4.207,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    25,
+    15
+   ]
+  ],
+  "cut_at_ms": 4130,
+  "file": "9fe073e104eea84f.wav",
+  "first_voiced_ms": 305,
+  "last_voiced_ms": 4080,
+  "lead_cut_ms": 275,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 365,
+  "pauses_ms": [
+   [
+    515,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 4095,
+  "tail_cut_ms": 77,
+  "tail_loss_first_try_ms": 0
+ },
+ "jo says, i feel sad": {
+  "after_s": 2.775,
+  "before_s": 3.818,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3655,
+  "file": "dd15a305bed9f84f.wav",
+  "first_voiced_ms": 295,
+  "last_voiced_ms": 3605,
+  "lead_cut_ms": 265,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 615,
+  "pauses_ms": [
+   [
+    765,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3665,
+  "tail_cut_ms": 163,
+  "tail_loss_first_try_ms": 10
+ },
+ "jo says, i feel surprised": {
+  "after_s": 3.86,
+  "before_s": 4.277,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 4160,
+  "file": "135dee31ea14655e.wav",
+  "first_voiced_ms": 40,
+  "last_voiced_ms": 4110,
+  "lead_cut_ms": 10,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 290,
+  "pauses_ms": [
+   [
+    440,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 4130,
+  "tail_cut_ms": 117,
+  "tail_loss_first_try_ms": 0
+ },
+ "jo sees a new shoot in the pot. jo says, i feel surprised": {
+  "after_s": 7.13,
+  "before_s": 8.433,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 8215,
+  "file": "210c7701bda9767f.wav",
+  "first_voiced_ms": 75,
+  "last_voiced_ms": 8165,
+  "lead_cut_ms": 45,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 1040,
+  "pauses_ms": [
+   [
+    730,
+    150
+   ],
+   [
+    760,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 8180,
+  "tail_cut_ms": 218,
+  "tail_loss_first_try_ms": 0
+ },
+ "jo wanted blue paint. the pot is empty. jo says, i feel disappointed": {
+  "after_s": 8.38,
+  "before_s": 10.248,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 10015,
+  "file": "23e9e7daccf4c1f8.wav",
+  "first_voiced_ms": 120,
+  "last_voiced_ms": 9965,
+  "lead_cut_ms": 90,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 1545,
+  "pauses_ms": [
+   [
+    840,
+    300
+   ],
+   [
+    265,
+    150
+   ],
+   [
+    570,
+    300
+   ],
+   [
+    405,
+    150
+   ],
+   [
+    515,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 9975,
+  "tail_cut_ms": 233,
+  "tail_loss_first_try_ms": 0
+ },
+ "jo's favourite song has ended. jo says, i feel sad": {
+  "after_s": 6.19,
+  "before_s": 7.565,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 7360,
+  "file": "5c7425471645fec9.wav",
+  "first_voiced_ms": 200,
+  "last_voiced_ms": 7310,
+  "lead_cut_ms": 170,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 1000,
+  "pauses_ms": [
+   [
+    1070,
+    300
+   ],
+   [
+    380,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 7345,
+  "tail_cut_ms": 205,
+  "tail_loss_first_try_ms": 0
+ },
+ "jump": {
+  "after_s": 0.91,
+  "before_s": 1.36,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1225,
+  "file": "f69726361e6123f9.wav",
+  "first_voiced_ms": 345,
+  "last_voiced_ms": 1175,
+  "lead_cut_ms": 315,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1215,
+  "tail_cut_ms": 135,
+  "tail_loss_first_try_ms": 0
+ },
+ "look for the part that repeats": {
+  "after_s": 2.695,
+  "before_s": 3.044,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2815,
+  "file": "daac2f7edc23b1db.wav",
+  "first_voiced_ms": 10,
+  "last_voiced_ms": 2765,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 120,
+  "pauses_ms": [
+   [
+    270,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2800,
+  "tail_cut_ms": 229,
+  "tail_loss_first_try_ms": 0
+ },
+ "loud": {
+  "after_s": 0.96,
+  "before_s": 1.079,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 990,
+  "file": "f6ece9a9c57df738.wav",
+  "first_voiced_ms": 60,
+  "last_voiced_ms": 940,
+  "lead_cut_ms": 30,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 955,
+  "tail_cut_ms": 89,
+  "tail_loss_first_try_ms": 0
+ },
+ "lovely counting": {
+  "after_s": 1.56,
+  "before_s": 1.841,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1790,
+  "file": "a727d11331508a5a.wav",
+  "first_voiced_ms": 260,
+  "last_voiced_ms": 1740,
+  "lead_cut_ms": 230,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1770,
+  "tail_cut_ms": 51,
+  "tail_loss_first_try_ms": 0
+ },
+ "make a bead string": {
+  "after_s": 1.515,
+  "before_s": 2.125,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    25
+   ]
+  ],
+  "cut_at_ms": 1805,
+  "file": "2f037726dc3810e9.wav",
+  "first_voiced_ms": 375,
+  "last_voiced_ms": 1755,
+  "lead_cut_ms": 290,
+  "lead_loss_first_try_ms": 25,
+  "lowered_at": [
+   "start"
+  ],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1795,
+  "tail_cut_ms": 320,
+  "tail_loss_first_try_ms": 0
+ },
+ "moon": {
+  "after_s": 1.365,
+  "before_s": 1.412,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1365,
+  "file": "5e7838f0521a336d.wav",
+  "first_voiced_ms": 10,
+  "last_voiced_ms": 1315,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1315,
+  "tail_cut_ms": 47,
+  "tail_loss_first_try_ms": 0
+ },
+ "more": {
+  "after_s": 1.311,
+  "before_s": 1.311,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1311,
+  "file": "2c00b711e741ea1a.wav",
+  "first_voiced_ms": 5,
+  "last_voiced_ms": 1315,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1315,
+  "tail_cut_ms": 0,
+  "tail_loss_first_try_ms": 4
+ },
+ "nine": {
+  "after_s": 1.055,
+  "before_s": 1.13,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1060,
+  "file": "9f6de2a51ab9b5ba.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 1010,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1030,
+  "tail_cut_ms": 70,
+  "tail_loss_first_try_ms": 0
+ },
+ "nineteen": {
+  "after_s": 1.34,
+  "before_s": 1.387,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1345,
+  "file": "646c40573a60a318.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 1295,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1325,
+  "tail_cut_ms": 42,
+  "tail_loss_first_try_ms": 0
+ },
+ "ninety": {
+  "after_s": 1.24,
+  "before_s": 1.64,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1240,
+  "file": "6ec2e522c16aa677.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 1190,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1200,
+  "tail_cut_ms": 400,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook eats": {
+  "after_s": 1.75,
+  "before_s": 2.242,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    30
+   ]
+  ],
+  "cut_at_ms": 2175,
+  "file": "835b5ee9c016099c.wav",
+  "first_voiced_ms": 335,
+  "last_voiced_ms": 2125,
+  "lead_cut_ms": 305,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 120,
+  "pauses_ms": [
+   [
+    270,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2135,
+  "tail_cut_ms": 67,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook eats an apple": {
+  "after_s": 2.42,
+  "before_s": 2.603,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2470,
+  "file": "39e9775b0aa75718.wav",
+  "first_voiced_ms": 80,
+  "last_voiced_ms": 2420,
+  "lead_cut_ms": 50,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2450,
+  "tail_cut_ms": 133,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook eats an blank": {
+  "after_s": 2.91,
+  "before_s": 3.113,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3060,
+  "file": "0bde669a35913403.wav",
+  "first_voiced_ms": 70,
+  "last_voiced_ms": 3010,
+  "lead_cut_ms": 40,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 110,
+  "pauses_ms": [
+   [
+    260,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3030,
+  "tail_cut_ms": 53,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook eats none. how many are left": {
+  "after_s": 3.64,
+  "before_s": 4.5,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 4345,
+  "file": "ff70db77b579081b.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 4295,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 705,
+  "pauses_ms": [
+   [
+    1005,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 4315,
+  "tail_cut_ms": 155,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook eats them all. how many are left": {
+  "after_s": 5.0,
+  "before_s": 5.777,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 5705,
+  "file": "61d1d3e32d507996.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 5655,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 700,
+  "pauses_ms": [
+   [
+    370,
+    150
+   ],
+   [
+    425,
+    150
+   ],
+   [
+    505,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 5655,
+  "tail_cut_ms": 72,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook feels angry": {
+  "after_s": 2.305,
+  "before_s": 2.374,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2310,
+  "file": "9f91b2662a4b8828.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 2260,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2275,
+  "tail_cut_ms": 64,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook feels calm": {
+  "after_s": 2.135,
+  "before_s": 2.206,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2140,
+  "file": "6c44618da332f965.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 2090,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2110,
+  "tail_cut_ms": 66,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook feels disappointed": {
+  "after_s": 3.08,
+  "before_s": 3.188,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3095,
+  "file": "0adb5c06a90a5307.wav",
+  "first_voiced_ms": 45,
+  "last_voiced_ms": 3045,
+  "lead_cut_ms": 15,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 3075,
+  "tail_cut_ms": 93,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook feels excited": {
+  "after_s": 2.995,
+  "before_s": 3.098,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3025,
+  "file": "f54a8fdc7d3c160f.wav",
+  "first_voiced_ms": 120,
+  "last_voiced_ms": 2975,
+  "lead_cut_ms": 30,
+  "lead_loss_first_try_ms": 30,
+  "lowered_at": [
+   "start"
+  ],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2985,
+  "tail_cut_ms": 73,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook feels frustrated": {
+  "after_s": 2.64,
+  "before_s": 3.008,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    25
+   ]
+  ],
+  "cut_at_ms": 2890,
+  "file": "6e03b54ccfe3be1c.wav",
+  "first_voiced_ms": 280,
+  "last_voiced_ms": 2840,
+  "lead_cut_ms": 250,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2850,
+  "tail_cut_ms": 118,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook feels happy": {
+  "after_s": 2.46,
+  "before_s": 2.79,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2725,
+  "file": "3c0721ea6a2beb23.wav",
+  "first_voiced_ms": 295,
+  "last_voiced_ms": 2675,
+  "lead_cut_ms": 265,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2710,
+  "tail_cut_ms": 65,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook feels proud": {
+  "after_s": 2.32,
+  "before_s": 2.47,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2360,
+  "file": "f91de21dd7b9a6fb.wav",
+  "first_voiced_ms": 70,
+  "last_voiced_ms": 2310,
+  "lead_cut_ms": 40,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2355,
+  "tail_cut_ms": 110,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook feels sad": {
+  "after_s": 2.535,
+  "before_s": 2.638,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2535,
+  "file": "af30364a06be5174.wav",
+  "first_voiced_ms": 10,
+  "last_voiced_ms": 2485,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2535,
+  "tail_cut_ms": 103,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook feels surprised": {
+  "after_s": 2.235,
+  "before_s": 2.744,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2635,
+  "file": "2af2b595497c0c03.wav",
+  "first_voiced_ms": 255,
+  "last_voiced_ms": 2585,
+  "lead_cut_ms": 225,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 175,
+  "pauses_ms": [
+   [
+    325,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2595,
+  "tail_cut_ms": 108,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook feels worried": {
+  "after_s": 2.305,
+  "before_s": 2.462,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2315,
+  "file": "f9aafa2e8157826f.wav",
+  "first_voiced_ms": 40,
+  "last_voiced_ms": 2265,
+  "lead_cut_ms": 10,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2315,
+  "tail_cut_ms": 147,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook feels… tap one": {
+  "after_s": 3.26,
+  "before_s": 4.122,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 4020,
+  "file": "de720b966ecedb7e.wav",
+  "first_voiced_ms": 70,
+  "last_voiced_ms": 3875,
+  "lead_cut_ms": 40,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [
+   "end"
+  ],
+  "pause_removed_ms": 720,
+  "pauses_ms": [
+   [
+    1020,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 3970,
+  "tail_cut_ms": 102,
+  "tail_loss_first_try_ms": 45
+ },
+ "nook has a ball": {
+  "after_s": 2.28,
+  "before_s": 2.836,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2740,
+  "file": "522dcc13e07bf55e.wav",
+  "first_voiced_ms": 350,
+  "last_voiced_ms": 2690,
+  "lead_cut_ms": 320,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 140,
+  "pauses_ms": [
+   [
+    290,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2720,
+  "tail_cut_ms": 96,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook has a blank": {
+  "after_s": 2.58,
+  "before_s": 2.855,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2780,
+  "file": "76c820645d0d6548.wav",
+  "first_voiced_ms": 55,
+  "last_voiced_ms": 2730,
+  "lead_cut_ms": 25,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 175,
+  "pauses_ms": [
+   [
+    325,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2740,
+  "tail_cut_ms": 75,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook has a soft ball": {
+  "after_s": 3.13,
+  "before_s": 3.305,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3130,
+  "file": "8a6857d95b387e83.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 2915,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [
+   "end"
+  ],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 3080,
+  "tail_cut_ms": 175,
+  "tail_loss_first_try_ms": 115
+ },
+ "nook has a soft blank": {
+  "after_s": 3.26,
+  "before_s": 3.525,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3455,
+  "file": "f1e4970c8fe404ab.wav",
+  "first_voiced_ms": 50,
+  "last_voiced_ms": 3405,
+  "lead_cut_ms": 20,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 175,
+  "pauses_ms": [
+   [
+    325,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3425,
+  "tail_cut_ms": 70,
+  "tail_loss_first_try_ms": 0
+ },
+ "nook takes a breath": {
+  "after_s": 1.965,
+  "before_s": 2.487,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2390,
+  "file": "360a280992243fc5.wav",
+  "first_voiced_ms": 80,
+  "last_voiced_ms": 2340,
+  "lead_cut_ms": 50,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 375,
+  "pauses_ms": [
+   [
+    525,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2375,
+  "tail_cut_ms": 97,
+  "tail_loss_first_try_ms": 0
+ },
+ "not quite. you can do it": {
+  "after_s": 1.98,
+  "before_s": 2.218,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2130,
+  "file": "da692cfc0296b151.wav",
+  "first_voiced_ms": 85,
+  "last_voiced_ms": 2080,
+  "lead_cut_ms": 55,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 95,
+  "pauses_ms": [
+   [
+    395,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 2100,
+  "tail_cut_ms": 88,
+  "tail_loss_first_try_ms": 0
+ },
+ "not sure": {
+  "after_s": 1.16,
+  "before_s": 1.255,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1160,
+  "file": "d400d4d55a937caa.wav",
+  "first_voiced_ms": 0,
+  "last_voiced_ms": 1110,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1145,
+  "tail_cut_ms": 95,
+  "tail_loss_first_try_ms": 0
+ },
+ "numbers in a row": {
+  "after_s": 2.53,
+  "before_s": 2.637,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2530,
+  "file": "50e24992cf1dddd7.wav",
+  "first_voiced_ms": 10,
+  "last_voiced_ms": 2480,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2480,
+  "tail_cut_ms": 107,
+  "tail_loss_first_try_ms": 0
+ },
+ "one": {
+  "after_s": 0.585,
+  "before_s": 0.621,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 585,
+  "file": "fa988b5cc643bb13.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 535,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 535,
+  "tail_cut_ms": 36,
+  "tail_loss_first_try_ms": 0
+ },
+ "one hundred": {
+  "after_s": 1.9,
+  "before_s": 2.355,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2290,
+  "file": "5ff9d4568c2ce84c.wav",
+  "first_voiced_ms": 280,
+  "last_voiced_ms": 2240,
+  "lead_cut_ms": 250,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 140,
+  "pauses_ms": [
+   [
+    290,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2245,
+  "tail_cut_ms": 65,
+  "tail_loss_first_try_ms": 0
+ },
+ "oops-a-daisy! one more go": {
+  "after_s": 2.17,
+  "before_s": 2.865,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2635,
+  "file": "c697cdd960ae0be9.wav",
+  "first_voiced_ms": 75,
+  "last_voiced_ms": 2585,
+  "lead_cut_ms": 45,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 420,
+  "pauses_ms": [
+   [
+    720,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 2615,
+  "tail_cut_ms": 230,
+  "tail_loss_first_try_ms": 0
+ },
+ "oval": {
+  "after_s": 1.045,
+  "before_s": 1.133,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1045,
+  "file": "7cd2e076c5379f84.wav",
+  "first_voiced_ms": 5,
+  "last_voiced_ms": 995,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1025,
+  "tail_cut_ms": 88,
+  "tail_loss_first_try_ms": 0
+ },
+ "plus": {
+  "after_s": 0.9,
+  "before_s": 0.98,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 900,
+  "file": "643aae3fa38853d0.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 850,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 910,
+  "tail_cut_ms": 80,
+  "tail_loss_first_try_ms": 10
+ },
+ "proud": {
+  "after_s": 0.96,
+  "before_s": 1.329,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1225,
+  "file": "f0433818fbc60bbf.wav",
+  "first_voiced_ms": 295,
+  "last_voiced_ms": 1175,
+  "lead_cut_ms": 265,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1200,
+  "tail_cut_ms": 104,
+  "tail_loss_first_try_ms": 0
+ },
+ "read": {
+  "after_s": 0.905,
+  "before_s": 1.172,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    35
+   ]
+  ],
+  "cut_at_ms": 1110,
+  "file": "9ad42f3f5f779dbf.wav",
+  "first_voiced_ms": 235,
+  "last_voiced_ms": 1060,
+  "lead_cut_ms": 205,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1060,
+  "tail_cut_ms": 62,
+  "tail_loss_first_try_ms": 0
+ },
+ "read the number word": {
+  "after_s": 2.37,
+  "before_s": 2.883,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2610,
+  "file": "875408f761bdd54a.wav",
+  "first_voiced_ms": 270,
+  "last_voiced_ms": 2560,
+  "lead_cut_ms": 240,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2580,
+  "tail_cut_ms": 273,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin hears a favourite song. robin says, i feel excited": {
+  "after_s": 7.335,
+  "before_s": 8.66,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 8570,
+  "file": "5088abbc94ad6d69.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 8520,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 1230,
+  "pauses_ms": [
+   [
+    1120,
+    300
+   ],
+   [
+    560,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 8535,
+  "tail_cut_ms": 90,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin is angry": {
+  "after_s": 2.24,
+  "before_s": 2.548,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2460,
+  "file": "ceaf7a2b6ffc0a15.wav",
+  "first_voiced_ms": 250,
+  "last_voiced_ms": 2410,
+  "lead_cut_ms": 220,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2450,
+  "tail_cut_ms": 88,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin is calm": {
+  "after_s": 2.35,
+  "before_s": 2.608,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2510,
+  "file": "c48785a75ec1692c.wav",
+  "first_voiced_ms": 55,
+  "last_voiced_ms": 2460,
+  "lead_cut_ms": 25,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 135,
+  "pauses_ms": [
+   [
+    285,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2465,
+  "tail_cut_ms": 98,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin is disappointed": {
+  "after_s": 2.865,
+  "before_s": 3.352,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3250,
+  "file": "7a8ab227032d08db.wav",
+  "first_voiced_ms": 40,
+  "last_voiced_ms": 3200,
+  "lead_cut_ms": 10,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 375,
+  "pauses_ms": [
+   [
+    300,
+    150
+   ],
+   [
+    375,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3235,
+  "tail_cut_ms": 102,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin is excited": {
+  "after_s": 2.005,
+  "before_s": 2.161,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2030,
+  "file": "656b3e8af0067de7.wav",
+  "first_voiced_ms": 55,
+  "last_voiced_ms": 1980,
+  "lead_cut_ms": 25,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1990,
+  "tail_cut_ms": 131,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin is frustrated": {
+  "after_s": 2.675,
+  "before_s": 2.844,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2675,
+  "file": "7925b1df8f551804.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 2625,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2650,
+  "tail_cut_ms": 169,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin is happy": {
+  "after_s": 1.945,
+  "before_s": 2.385,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2280,
+  "file": "f0cd29b6c9873d1f.wav",
+  "first_voiced_ms": 105,
+  "last_voiced_ms": 2230,
+  "lead_cut_ms": 75,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 260,
+  "pauses_ms": [
+   [
+    410,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2255,
+  "tail_cut_ms": 105,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin is proud": {
+  "after_s": 2.46,
+  "before_s": 2.62,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2465,
+  "file": "ad80901eb29286f0.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 2415,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2455,
+  "tail_cut_ms": 155,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin is sad": {
+  "after_s": 1.72,
+  "before_s": 2.127,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1970,
+  "file": "d69cb8b5438aae2e.wav",
+  "first_voiced_ms": 280,
+  "last_voiced_ms": 1920,
+  "lead_cut_ms": 250,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1940,
+  "tail_cut_ms": 157,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin is surprised": {
+  "after_s": 2.74,
+  "before_s": 3.263,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3085,
+  "file": "302c7566bde2c53a.wav",
+  "first_voiced_ms": 50,
+  "last_voiced_ms": 3035,
+  "lead_cut_ms": 20,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 325,
+  "pauses_ms": [
+   [
+    475,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3055,
+  "tail_cut_ms": 178,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin is worried": {
+  "after_s": 1.85,
+  "before_s": 2.204,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2090,
+  "file": "1dce5aeb49622529.wav",
+  "first_voiced_ms": 40,
+  "last_voiced_ms": 2040,
+  "lead_cut_ms": 10,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 230,
+  "pauses_ms": [
+   [
+    380,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2075,
+  "tail_cut_ms": 114,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin says, i feel angry": {
+  "after_s": 3.57,
+  "before_s": 4.085,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 4010,
+  "file": "575eb22fd41fd793.wav",
+  "first_voiced_ms": 70,
+  "last_voiced_ms": 3960,
+  "lead_cut_ms": 40,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 400,
+  "pauses_ms": [
+   [
+    320,
+    150
+   ],
+   [
+    380,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3995,
+  "tail_cut_ms": 75,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin says, i feel disappointed": {
+  "after_s": 3.865,
+  "before_s": 4.292,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 4205,
+  "file": "cd16364873b9020e.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 4155,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 335,
+  "pauses_ms": [
+   [
+    485,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 4175,
+  "tail_cut_ms": 87,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin says, i feel excited": {
+  "after_s": 3.885,
+  "before_s": 4.337,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 4235,
+  "file": "c07314607cdc7d6f.wav",
+  "first_voiced_ms": 65,
+  "last_voiced_ms": 4185,
+  "lead_cut_ms": 35,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 315,
+  "pauses_ms": [
+   [
+    465,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 4220,
+  "tail_cut_ms": 102,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin says, i feel sad": {
+  "after_s": 3.56,
+  "before_s": 4.15,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    15,
+    15
+   ]
+  ],
+  "cut_at_ms": 4045,
+  "file": "0816109b24953fbe.wav",
+  "first_voiced_ms": 255,
+  "last_voiced_ms": 3995,
+  "lead_cut_ms": 225,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 260,
+  "pauses_ms": [
+   [
+    410,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 4060,
+  "tail_cut_ms": 105,
+  "tail_loss_first_try_ms": 15
+ },
+ "robin says, i feel surprised": {
+  "after_s": 3.88,
+  "before_s": 4.667,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 4570,
+  "file": "fca7fc3849958358.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 4520,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 690,
+  "pauses_ms": [
+   [
+    840,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 4545,
+  "tail_cut_ms": 97,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin wanted the swings. they are closed today. robin says, i feel disappointed": {
+  "after_s": 9.35,
+  "before_s": 10.729,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 10605,
+  "file": "7fdf20f84e7c4fbd.wav",
+  "first_voiced_ms": 200,
+  "last_voiced_ms": 10555,
+  "lead_cut_ms": 170,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 1085,
+  "pauses_ms": [
+   [
+    660,
+    300
+   ],
+   [
+    595,
+    300
+   ],
+   [
+    380,
+    150
+   ],
+   [
+    350,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 10590,
+  "tail_cut_ms": 124,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin wanted to play outside. it is raining. robin says, i feel sad": {
+  "after_s": 9.145,
+  "before_s": 10.585,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 10490,
+  "file": "5d516b550114c007.wav",
+  "first_voiced_ms": 210,
+  "last_voiced_ms": 10440,
+  "lead_cut_ms": 180,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 1165,
+  "pauses_ms": [
+   [
+    960,
+    300
+   ],
+   [
+    805,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 10445,
+  "tail_cut_ms": 95,
+  "tail_loss_first_try_ms": 0
+ },
+ "robin's zip is stuck. robin says, i feel angry": {
+  "after_s": 5.265,
+  "before_s": 6.705,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 6640,
+  "file": "9c02c70d647d2a22.wav",
+  "first_voiced_ms": 45,
+  "last_voiced_ms": 6590,
+  "lead_cut_ms": 15,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 1360,
+  "pauses_ms": [
+   [
+    415,
+    150
+   ],
+   [
+    1000,
+    300
+   ],
+   [
+    390,
+    150
+   ],
+   [
+    305,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 6590,
+  "tail_cut_ms": 65,
+  "tail_loss_first_try_ms": 0
+ },
+ "run": {
+  "after_s": 0.835,
+  "before_s": 0.947,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 850,
+  "file": "3a6ed8677751a8cc.wav",
+  "first_voiced_ms": 45,
+  "last_voiced_ms": 800,
+  "lead_cut_ms": 15,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 835,
+  "tail_cut_ms": 97,
+  "tail_loss_first_try_ms": 0
+ },
+ "sad": {
+  "after_s": 1.02,
+  "before_s": 1.14,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1045,
+  "file": "29e5eda37df5b431.wav",
+  "first_voiced_ms": 55,
+  "last_voiced_ms": 995,
+  "lead_cut_ms": 25,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1025,
+  "tail_cut_ms": 95,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam has finished a drawing. sam says, i feel proud": {
+  "after_s": 6.225,
+  "before_s": 7.555,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 7385,
+  "file": "6fa1b4392ccaebc5.wav",
+  "first_voiced_ms": 40,
+  "last_voiced_ms": 7335,
+  "lead_cut_ms": 10,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 1150,
+  "pauses_ms": [
+   [
+    685,
+    150
+   ],
+   [
+    305,
+    150
+   ],
+   [
+    760,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 7360,
+  "tail_cut_ms": 170,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam is angry": {
+  "after_s": 2.635,
+  "before_s": 2.945,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2840,
+  "file": "d0416dfaf7442b83.wav",
+  "first_voiced_ms": 235,
+  "last_voiced_ms": 2790,
+  "lead_cut_ms": 205,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2810,
+  "tail_cut_ms": 105,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam is calm": {
+  "after_s": 1.985,
+  "before_s": 2.669,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    25
+   ],
+   [
+    "end",
+    2495,
+    40
+   ]
+  ],
+  "cut_at_ms": 2370,
+  "file": "4b4983446d51bcaf.wav",
+  "first_voiced_ms": 295,
+  "last_voiced_ms": 2320,
+  "lead_cut_ms": 265,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 120,
+  "pauses_ms": [
+   [
+    270,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2345,
+  "tail_cut_ms": 299,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam is disappointed": {
+  "after_s": 2.33,
+  "before_s": 2.925,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    30
+   ]
+  ],
+  "cut_at_ms": 2835,
+  "file": "c88adbe4e34b115b.wav",
+  "first_voiced_ms": 370,
+  "last_voiced_ms": 2785,
+  "lead_cut_ms": 340,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 165,
+  "pauses_ms": [
+   [
+    315,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2810,
+  "tail_cut_ms": 90,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam is excited": {
+  "after_s": 2.485,
+  "before_s": 3.04,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2620,
+  "file": "c8113c4b4e78a43b.wav",
+  "first_voiced_ms": 230,
+  "last_voiced_ms": 2570,
+  "lead_cut_ms": 135,
+  "lead_loss_first_try_ms": 35,
+  "lowered_at": [
+   "start"
+  ],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2600,
+  "tail_cut_ms": 420,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam is frustrated": {
+  "after_s": 2.87,
+  "before_s": 2.98,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2875,
+  "file": "40d5a8f3207ee7ce.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 2825,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2855,
+  "tail_cut_ms": 105,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam is happy": {
+  "after_s": 1.925,
+  "before_s": 2.172,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2060,
+  "file": "b6cce986d1f9237e.wav",
+  "first_voiced_ms": 45,
+  "last_voiced_ms": 2010,
+  "lead_cut_ms": 15,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 120,
+  "pauses_ms": [
+   [
+    270,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2060,
+  "tail_cut_ms": 112,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam is playing with bubbles. sam says, i feel happy": {
+  "after_s": 6.735,
+  "before_s": 8.189,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 7860,
+  "file": "753c6a8a7e62ee7c.wav",
+  "first_voiced_ms": 190,
+  "last_voiced_ms": 7810,
+  "lead_cut_ms": 160,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 965,
+  "pauses_ms": [
+   [
+    260,
+    150
+   ],
+   [
+    875,
+    300
+   ],
+   [
+    430,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 7825,
+  "tail_cut_ms": 329,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam is proud": {
+  "after_s": 2.315,
+  "before_s": 2.682,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2520,
+  "file": "8cad2c2e12146de0.wav",
+  "first_voiced_ms": 235,
+  "last_voiced_ms": 2390,
+  "lead_cut_ms": 205,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [
+   "end"
+  ],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2470,
+  "tail_cut_ms": 162,
+  "tail_loss_first_try_ms": 30
+ },
+ "sam is resting under a tree. sam says, i feel calm": {
+  "after_s": 8.145,
+  "before_s": 9.801,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    30
+   ]
+  ],
+  "cut_at_ms": 9715,
+  "file": "b37665d6c5299338.wav",
+  "first_voiced_ms": 270,
+  "last_voiced_ms": 9665,
+  "lead_cut_ms": 240,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 1330,
+  "pauses_ms": [
+   [
+    340,
+    150
+   ],
+   [
+    475,
+    150
+   ],
+   [
+    720,
+    300
+   ],
+   [
+    545,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 9690,
+  "tail_cut_ms": 86,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam is sad": {
+  "after_s": 1.92,
+  "before_s": 2.302,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2220,
+  "file": "76c89b89d72fdd65.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 2170,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 295,
+  "pauses_ms": [
+   [
+    445,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2180,
+  "tail_cut_ms": 82,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam is surprised": {
+  "after_s": 2.62,
+  "before_s": 3.072,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    25
+   ]
+  ],
+  "cut_at_ms": 2865,
+  "file": "661115ffaeca5fa3.wav",
+  "first_voiced_ms": 275,
+  "last_voiced_ms": 2815,
+  "lead_cut_ms": 245,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2825,
+  "tail_cut_ms": 207,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam is trying a new swimming class. sam says, i feel worried": {
+  "after_s": 7.36,
+  "before_s": 7.935,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 7835,
+  "file": "1114c50882c29493.wav",
+  "first_voiced_ms": 85,
+  "last_voiced_ms": 7785,
+  "lead_cut_ms": 55,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 420,
+  "pauses_ms": [
+   [
+    310,
+    150
+   ],
+   [
+    560,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 7800,
+  "tail_cut_ms": 100,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam is trying to thread a bead. sam says, i feel frustrated": {
+  "after_s": 6.565,
+  "before_s": 7.96,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    15
+   ]
+  ],
+  "cut_at_ms": 7540,
+  "file": "be084795be69a300.wav",
+  "first_voiced_ms": 255,
+  "last_voiced_ms": 7490,
+  "lead_cut_ms": 225,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 750,
+  "pauses_ms": [
+   [
+    825,
+    300
+   ],
+   [
+    375,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 7500,
+  "tail_cut_ms": 420,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam is worried": {
+  "after_s": 2.31,
+  "before_s": 2.594,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2485,
+  "file": "36f599f73ebe67b6.wav",
+  "first_voiced_ms": 205,
+  "last_voiced_ms": 2435,
+  "lead_cut_ms": 175,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2455,
+  "tail_cut_ms": 109,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam says, i feel calm": {
+  "after_s": 4.025,
+  "before_s": 4.995,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    15,
+    20
+   ]
+  ],
+  "cut_at_ms": 4865,
+  "file": "2cca839edb382632.wav",
+  "first_voiced_ms": 265,
+  "last_voiced_ms": 4705,
+  "lead_cut_ms": 235,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [
+   "end"
+  ],
+  "pause_removed_ms": 605,
+  "pauses_ms": [
+   [
+    275,
+    150
+   ],
+   [
+    630,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 4815,
+  "tail_cut_ms": 130,
+  "tail_loss_first_try_ms": 60
+ },
+ "sam says, i feel frustrated": {
+  "after_s": 3.56,
+  "before_s": 3.888,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3805,
+  "file": "194988d2728e46a5.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 3755,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 240,
+  "pauses_ms": [
+   [
+    390,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3765,
+  "tail_cut_ms": 83,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam says, i feel happy": {
+  "after_s": 3.455,
+  "before_s": 3.998,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3880,
+  "file": "774f1e2db453aace.wav",
+  "first_voiced_ms": 80,
+  "last_voiced_ms": 3830,
+  "lead_cut_ms": 50,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 375,
+  "pauses_ms": [
+   [
+    525,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3855,
+  "tail_cut_ms": 118,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam says, i feel proud": {
+  "after_s": 3.59,
+  "before_s": 4.315,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 4165,
+  "file": "9fce3c6c26b07c69.wav",
+  "first_voiced_ms": 250,
+  "last_voiced_ms": 4115,
+  "lead_cut_ms": 220,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 355,
+  "pauses_ms": [
+   [
+    505,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 4125,
+  "tail_cut_ms": 150,
+  "tail_loss_first_try_ms": 0
+ },
+ "sam says, i feel worried": {
+  "after_s": 3.11,
+  "before_s": 3.763,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3670,
+  "file": "54e1cf6b551d3825.wav",
+  "first_voiced_ms": 70,
+  "last_voiced_ms": 3620,
+  "lead_cut_ms": 40,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 520,
+  "pauses_ms": [
+   [
+    670,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3630,
+  "tail_cut_ms": 93,
+  "tail_loss_first_try_ms": 0
+ },
+ "seven": {
+  "after_s": 0.745,
+  "before_s": 1.061,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    25
+   ]
+  ],
+  "cut_at_ms": 940,
+  "file": "d5b9c4e88aae062c.wav",
+  "first_voiced_ms": 225,
+  "last_voiced_ms": 890,
+  "lead_cut_ms": 195,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 935,
+  "tail_cut_ms": 121,
+  "tail_loss_first_try_ms": 0
+ },
+ "seventeen": {
+  "after_s": 1.87,
+  "before_s": 2.017,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1895,
+  "file": "be6f4a213a7cc268.wav",
+  "first_voiced_ms": 55,
+  "last_voiced_ms": 1845,
+  "lead_cut_ms": 25,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1875,
+  "tail_cut_ms": 122,
+  "tail_loss_first_try_ms": 0
+ },
+ "seventy": {
+  "after_s": 1.17,
+  "before_s": 1.406,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    35
+   ]
+  ],
+  "cut_at_ms": 1340,
+  "file": "62fa07a5a9fb3c65.wav",
+  "first_voiced_ms": 200,
+  "last_voiced_ms": 1290,
+  "lead_cut_ms": 170,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1305,
+  "tail_cut_ms": 66,
+  "tail_loss_first_try_ms": 0
+ },
+ "sing": {
+  "after_s": 0.635,
+  "before_s": 0.824,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 725,
+  "file": "7dc21641425faa65.wav",
+  "first_voiced_ms": 120,
+  "last_voiced_ms": 675,
+  "lead_cut_ms": 90,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 695,
+  "tail_cut_ms": 99,
+  "tail_loss_first_try_ms": 0
+ },
+ "six": {
+  "after_s": 1.025,
+  "before_s": 1.256,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1165,
+  "file": "9ee99fa2b74c06c5.wav",
+  "first_voiced_ms": 170,
+  "last_voiced_ms": 1115,
+  "lead_cut_ms": 140,
+  "lead_loss_first_try_ms": 15,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1115,
+  "tail_cut_ms": 91,
+  "tail_loss_first_try_ms": 0
+ },
+ "sixteen": {
+  "after_s": 1.725,
+  "before_s": 1.921,
+  "clicks_left_out_ms": [
+   [
+    "end",
+    1715,
+    45
+   ]
+  ],
+  "cut_at_ms": 1745,
+  "file": "1eb632783da3e4ef.wav",
+  "first_voiced_ms": 50,
+  "last_voiced_ms": 1535,
+  "lead_cut_ms": 20,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [
+   "end"
+  ],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1695,
+  "tail_cut_ms": 176,
+  "tail_loss_first_try_ms": 110
+ },
+ "sixty": {
+  "after_s": 1.015,
+  "before_s": 1.098,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1030,
+  "file": "d9ef3b4d2adaed48.wav",
+  "first_voiced_ms": 45,
+  "last_voiced_ms": 980,
+  "lead_cut_ms": 15,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 990,
+  "tail_cut_ms": 68,
+  "tail_loss_first_try_ms": 0
+ },
+ "soft": {
+  "after_s": 1.03,
+  "before_s": 1.619,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1265,
+  "file": "6d3f4880f56a81f1.wav",
+  "first_voiced_ms": 265,
+  "last_voiced_ms": 1215,
+  "lead_cut_ms": 235,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1225,
+  "tail_cut_ms": 354,
+  "tail_loss_first_try_ms": 0
+ },
+ "something else": {
+  "after_s": 1.465,
+  "before_s": 1.545,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1465,
+  "file": "8348496b6e79dfa5.wav",
+  "first_voiced_ms": 25,
+  "last_voiced_ms": 1415,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1445,
+  "tail_cut_ms": 80,
+  "tail_loss_first_try_ms": 0
+ },
+ "spot on": {
+  "after_s": 0.845,
+  "before_s": 0.95,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 845,
+  "file": "1ecf430f2e04664e.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 795,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 835,
+  "tail_cut_ms": 105,
+  "tail_loss_first_try_ms": 0
+ },
+ "square": {
+  "after_s": 1.255,
+  "before_s": 1.345,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1285,
+  "file": "c87264f335f7494e.wav",
+  "first_voiced_ms": 60,
+  "last_voiced_ms": 1235,
+  "lead_cut_ms": 30,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1255,
+  "tail_cut_ms": 60,
+  "tail_loss_first_try_ms": 0
+ },
+ "sun": {
+  "after_s": 0.895,
+  "before_s": 1.294,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    15,
+    20
+   ]
+  ],
+  "cut_at_ms": 1200,
+  "file": "e68a0cbad4687e63.wav",
+  "first_voiced_ms": 335,
+  "last_voiced_ms": 1150,
+  "lead_cut_ms": 305,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1210,
+  "tail_cut_ms": 94,
+  "tail_loss_first_try_ms": 10
+ },
+ "surprised": {
+  "after_s": 1.27,
+  "before_s": 1.374,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1270,
+  "file": "8d0be59153fd4324.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 1220,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1260,
+  "tail_cut_ms": 104,
+  "tail_loss_first_try_ms": 0
+ },
+ "swim": {
+  "after_s": 0.96,
+  "before_s": 1.218,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1125,
+  "file": "4bdc20de839793dc.wav",
+  "first_voiced_ms": 195,
+  "last_voiced_ms": 1075,
+  "lead_cut_ms": 165,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1085,
+  "tail_cut_ms": 93,
+  "tail_loss_first_try_ms": 0
+ },
+ "take away": {
+  "after_s": 1.175,
+  "before_s": 1.492,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1375,
+  "file": "daae8fb416e3a69b.wav",
+  "first_voiced_ms": 230,
+  "last_voiced_ms": 1325,
+  "lead_cut_ms": 200,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1355,
+  "tail_cut_ms": 117,
+  "tail_loss_first_try_ms": 0
+ },
+ "tall": {
+  "after_s": 0.985,
+  "before_s": 1.536,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1385,
+  "file": "d7999f0c5d28b558.wav",
+  "first_voiced_ms": 430,
+  "last_voiced_ms": 1335,
+  "lead_cut_ms": 400,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1395,
+  "tail_cut_ms": 150,
+  "tail_loss_first_try_ms": 10
+ },
+ "tap each side": {
+  "after_s": 1.845,
+  "before_s": 2.607,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1995,
+  "file": "36b3aa5d0e753761.wav",
+  "first_voiced_ms": 180,
+  "last_voiced_ms": 1945,
+  "lead_cut_ms": 150,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1950,
+  "tail_cut_ms": 612,
+  "tail_loss_first_try_ms": 0
+ },
+ "tap the missing letter": {
+  "after_s": 2.005,
+  "before_s": 2.469,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2265,
+  "file": "d32fd554328f99e9.wav",
+  "first_voiced_ms": 290,
+  "last_voiced_ms": 2215,
+  "lead_cut_ms": 260,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2240,
+  "tail_cut_ms": 204,
+  "tail_loss_first_try_ms": 0
+ },
+ "ten": {
+  "after_s": 0.8,
+  "before_s": 1.108,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1025,
+  "file": "a20421151f929099.wav",
+  "first_voiced_ms": 255,
+  "last_voiced_ms": 975,
+  "lead_cut_ms": 225,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 990,
+  "tail_cut_ms": 83,
+  "tail_loss_first_try_ms": 0
+ },
+ "thank you for telling me": {
+  "after_s": 1.485,
+  "before_s": 1.597,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1485,
+  "file": "846f9d1e7da16821.wav",
+  "first_voiced_ms": 25,
+  "last_voiced_ms": 1435,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1450,
+  "tail_cut_ms": 112,
+  "tail_loss_first_try_ms": 0
+ },
+ "that's ok. have another go": {
+  "after_s": 2.325,
+  "before_s": 2.89,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2715,
+  "file": "c82ef6591fcc64a0.wav",
+  "first_voiced_ms": 130,
+  "last_voiced_ms": 2665,
+  "lead_cut_ms": 100,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 290,
+  "pauses_ms": [
+   [
+    590,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 2710,
+  "tail_cut_ms": 175,
+  "tail_loss_first_try_ms": 0
+ },
+ "that's ok. not sure is fine": {
+  "after_s": 3.295,
+  "before_s": 3.88,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3810,
+  "file": "e877f8be672f3747.wav",
+  "first_voiced_ms": 45,
+  "last_voiced_ms": 3760,
+  "lead_cut_ms": 15,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 500,
+  "pauses_ms": [
+   [
+    800,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 3775,
+  "tail_cut_ms": 70,
+  "tail_loss_first_try_ms": 0
+ },
+ "that's right": {
+  "after_s": 1.065,
+  "before_s": 1.16,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1085,
+  "file": "edda86189c4b23e4.wav",
+  "first_voiced_ms": 50,
+  "last_voiced_ms": 1035,
+  "lead_cut_ms": 20,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1045,
+  "tail_cut_ms": 75,
+  "tail_loss_first_try_ms": 0
+ },
+ "that’s the one": {
+  "after_s": 1.235,
+  "before_s": 1.88,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1500,
+  "file": "3e0768e84f314fde.wav",
+  "first_voiced_ms": 295,
+  "last_voiced_ms": 1450,
+  "lead_cut_ms": 265,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1470,
+  "tail_cut_ms": 380,
+  "tail_loss_first_try_ms": 0
+ },
+ "the ball is wet": {
+  "after_s": 1.86,
+  "before_s": 2.427,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    45
+   ]
+  ],
+  "cut_at_ms": 2360,
+  "file": "fe6404a8f6f0bda2.wav",
+  "first_voiced_ms": 355,
+  "last_voiced_ms": 2310,
+  "lead_cut_ms": 325,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 175,
+  "pauses_ms": [
+   [
+    325,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2310,
+  "tail_cut_ms": 67,
+  "tail_loss_first_try_ms": 0
+ },
+ "the big blank can run": {
+  "after_s": 3.06,
+  "before_s": 3.462,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3365,
+  "file": "381df56117375283.wav",
+  "first_voiced_ms": 210,
+  "last_voiced_ms": 3210,
+  "lead_cut_ms": 180,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [
+   "end"
+  ],
+  "pause_removed_ms": 125,
+  "pauses_ms": [
+   [
+    275,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3315,
+  "tail_cut_ms": 97,
+  "tail_loss_first_try_ms": 55
+ },
+ "the big dog can run": {
+  "after_s": 2.35,
+  "before_s": 2.769,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2690,
+  "file": "87b8baa814c4f4e8.wav",
+  "first_voiced_ms": 370,
+  "last_voiced_ms": 2640,
+  "lead_cut_ms": 340,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2660,
+  "tail_cut_ms": 79,
+  "tail_loss_first_try_ms": 0
+ },
+ "the blank can run": {
+  "after_s": 2.255,
+  "before_s": 2.832,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2615,
+  "file": "676550a4a264a8ca.wav",
+  "first_voiced_ms": 50,
+  "last_voiced_ms": 2565,
+  "lead_cut_ms": 20,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 340,
+  "pauses_ms": [
+   [
+    490,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2585,
+  "tail_cut_ms": 217,
+  "tail_loss_first_try_ms": 0
+ },
+ "the blank can swim": {
+  "after_s": 2.76,
+  "before_s": 3.289,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3205,
+  "file": "fd0d83c5c35f4858.wav",
+  "first_voiced_ms": 350,
+  "last_voiced_ms": 3155,
+  "lead_cut_ms": 320,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 125,
+  "pauses_ms": [
+   [
+    275,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3170,
+  "tail_cut_ms": 84,
+  "tail_loss_first_try_ms": 0
+ },
+ "the blank is asleep": {
+  "after_s": 2.395,
+  "before_s": 2.886,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2790,
+  "file": "18434590ba6138dd.wav",
+  "first_voiced_ms": 280,
+  "last_voiced_ms": 2740,
+  "lead_cut_ms": 250,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 145,
+  "pauses_ms": [
+   [
+    295,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2755,
+  "tail_cut_ms": 96,
+  "tail_loss_first_try_ms": 0
+ },
+ "the blank is big": {
+  "after_s": 2.095,
+  "before_s": 2.889,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    35
+   ]
+  ],
+  "cut_at_ms": 2795,
+  "file": "1a86746c4e96c75b.wav",
+  "first_voiced_ms": 290,
+  "last_voiced_ms": 2745,
+  "lead_cut_ms": 260,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 440,
+  "pauses_ms": [
+   [
+    385,
+    150
+   ],
+   [
+    355,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2780,
+  "tail_cut_ms": 94,
+  "tail_loss_first_try_ms": 0
+ },
+ "the blank is dry": {
+  "after_s": 2.4,
+  "before_s": 2.612,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2515,
+  "file": "dce6fbadc93bd65a.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 2465,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 115,
+  "pauses_ms": [
+   [
+    265,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2500,
+  "tail_cut_ms": 97,
+  "tail_loss_first_try_ms": 0
+ },
+ "the blank is hot": {
+  "after_s": 2.28,
+  "before_s": 2.958,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2875,
+  "file": "fc06f566cb452a9b.wav",
+  "first_voiced_ms": 355,
+  "last_voiced_ms": 2825,
+  "lead_cut_ms": 325,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 270,
+  "pauses_ms": [
+   [
+    420,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2845,
+  "tail_cut_ms": 83,
+  "tail_loss_first_try_ms": 0
+ },
+ "the blank is out": {
+  "after_s": 2.21,
+  "before_s": 2.863,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2785,
+  "file": "e0d150e424105419.wav",
+  "first_voiced_ms": 325,
+  "last_voiced_ms": 2735,
+  "lead_cut_ms": 295,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 280,
+  "pauses_ms": [
+   [
+    430,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2745,
+  "tail_cut_ms": 78,
+  "tail_loss_first_try_ms": 0
+ },
+ "the blank is wet": {
+  "after_s": 2.01,
+  "before_s": 2.282,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2185,
+  "file": "912dfd9c0f44e841.wav",
+  "first_voiced_ms": 50,
+  "last_voiced_ms": 2135,
+  "lead_cut_ms": 20,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 155,
+  "pauses_ms": [
+   [
+    305,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2160,
+  "tail_cut_ms": 97,
+  "tail_loss_first_try_ms": 0
+ },
+ "the bus is big": {
+  "after_s": 2.18,
+  "before_s": 2.744,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2650,
+  "file": "6c7dd03a12163edb.wav",
+  "first_voiced_ms": 315,
+  "last_voiced_ms": 2600,
+  "lead_cut_ms": 285,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 185,
+  "pauses_ms": [
+   [
+    335,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2620,
+  "tail_cut_ms": 94,
+  "tail_loss_first_try_ms": 0
+ },
+ "the bus is blank": {
+  "after_s": 2.22,
+  "before_s": 3.13,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    25
+   ]
+  ],
+  "cut_at_ms": 3060,
+  "file": "81c79c563867db56.wav",
+  "first_voiced_ms": 390,
+  "last_voiced_ms": 3010,
+  "lead_cut_ms": 360,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 480,
+  "pauses_ms": [
+   [
+    420,
+    150
+   ],
+   [
+    360,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3020,
+  "tail_cut_ms": 70,
+  "tail_loss_first_try_ms": 0
+ },
+ "the cat is asleep": {
+  "after_s": 2.925,
+  "before_s": 3.856,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3530,
+  "file": "36816a2ca8dd332b.wav",
+  "first_voiced_ms": 335,
+  "last_voiced_ms": 3480,
+  "lead_cut_ms": 305,
+  "lead_loss_first_try_ms": 15,
+  "lowered_at": [],
+  "pause_removed_ms": 300,
+  "pauses_ms": [
+   [
+    450,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3490,
+  "tail_cut_ms": 326,
+  "tail_loss_first_try_ms": 0
+ },
+ "the cat is asleep now": {
+  "after_s": 3.075,
+  "before_s": 3.389,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3250,
+  "file": "11affc3b90f12bfc.wav",
+  "first_voiced_ms": 75,
+  "last_voiced_ms": 3200,
+  "lead_cut_ms": 45,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 130,
+  "pauses_ms": [
+   [
+    280,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3260,
+  "tail_cut_ms": 139,
+  "tail_loss_first_try_ms": 10
+ },
+ "the cat is blank now": {
+  "after_s": 2.82,
+  "before_s": 3.389,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3215,
+  "file": "22d158f4d04502e3.wav",
+  "first_voiced_ms": 320,
+  "last_voiced_ms": 3165,
+  "lead_cut_ms": 290,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 105,
+  "pauses_ms": [
+   [
+    255,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3210,
+  "tail_cut_ms": 174,
+  "tail_loss_first_try_ms": 0
+ },
+ "the cat is dry": {
+  "after_s": 1.895,
+  "before_s": 2.209,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2125,
+  "file": "1597a9da017982da.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 2075,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 230,
+  "pauses_ms": [
+   [
+    380,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2100,
+  "tail_cut_ms": 84,
+  "tail_loss_first_try_ms": 0
+ },
+ "the dog can blank": {
+  "after_s": 2.44,
+  "before_s": 3.305,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    40
+   ]
+  ],
+  "cut_at_ms": 3240,
+  "file": "f94c0e6ba40727d3.wav",
+  "first_voiced_ms": 395,
+  "last_voiced_ms": 3190,
+  "lead_cut_ms": 365,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 435,
+  "pauses_ms": [
+   [
+    585,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3200,
+  "tail_cut_ms": 65,
+  "tail_loss_first_try_ms": 0
+ },
+ "the dog can jump": {
+  "after_s": 2.55,
+  "before_s": 3.087,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3005,
+  "file": "d154a7af1b4da503.wav",
+  "first_voiced_ms": 330,
+  "last_voiced_ms": 2955,
+  "lead_cut_ms": 300,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 155,
+  "pauses_ms": [
+   [
+    305,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2970,
+  "tail_cut_ms": 82,
+  "tail_loss_first_try_ms": 0
+ },
+ "the dog can run": {
+  "after_s": 2.0,
+  "before_s": 2.358,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2260,
+  "file": "5046fdfc04fdce1a.wav",
+  "first_voiced_ms": 290,
+  "last_voiced_ms": 2210,
+  "lead_cut_ms": 260,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2240,
+  "tail_cut_ms": 98,
+  "tail_loss_first_try_ms": 0
+ },
+ "the dog is wet": {
+  "after_s": 2.395,
+  "before_s": 2.798,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2710,
+  "file": "b9dd11e410a0b567.wav",
+  "first_voiced_ms": 10,
+  "last_voiced_ms": 2660,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 315,
+  "pauses_ms": [
+   [
+    280,
+    150
+   ],
+   [
+    335,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2670,
+  "tail_cut_ms": 88,
+  "tail_loss_first_try_ms": 0
+ },
+ "the fish can swim": {
+  "after_s": 2.095,
+  "before_s": 2.85,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2675,
+  "file": "2746d296e61e5e19.wav",
+  "first_voiced_ms": 350,
+  "last_voiced_ms": 2540,
+  "lead_cut_ms": 320,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [
+   "end"
+  ],
+  "pause_removed_ms": 260,
+  "pauses_ms": [
+   [
+    410,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2625,
+  "tail_cut_ms": 175,
+  "tail_loss_first_try_ms": 35
+ },
+ "the fish is blank": {
+  "after_s": 2.29,
+  "before_s": 3.178,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3110,
+  "file": "bec581646082512b.wav",
+  "first_voiced_ms": 355,
+  "last_voiced_ms": 3060,
+  "lead_cut_ms": 325,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 495,
+  "pauses_ms": [
+   [
+    425,
+    150
+   ],
+   [
+    370,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3065,
+  "tail_cut_ms": 68,
+  "tail_loss_first_try_ms": 0
+ },
+ "the fish is wet": {
+  "after_s": 2.1,
+  "before_s": 2.345,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2225,
+  "file": "e8b8ce5acec5eb8b.wav",
+  "first_voiced_ms": 10,
+  "last_voiced_ms": 2175,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 125,
+  "pauses_ms": [
+   [
+    275,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2205,
+  "tail_cut_ms": 120,
+  "tail_loss_first_try_ms": 0
+ },
+ "the little blank is fast": {
+  "after_s": 2.87,
+  "before_s": 3.491,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3405,
+  "file": "c07905d2b8b99174.wav",
+  "first_voiced_ms": 295,
+  "last_voiced_ms": 3355,
+  "lead_cut_ms": 265,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 270,
+  "pauses_ms": [
+   [
+    420,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3390,
+  "tail_cut_ms": 86,
+  "tail_loss_first_try_ms": 0
+ },
+ "the little bus is fast": {
+  "after_s": 3.06,
+  "before_s": 3.152,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3065,
+  "file": "fce1efe70403b79e.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 3015,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 3040,
+  "tail_cut_ms": 87,
+  "tail_loss_first_try_ms": 0
+ },
+ "the moon is big": {
+  "after_s": 2.39,
+  "before_s": 2.954,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2840,
+  "file": "dbae23880c04e043.wav",
+  "first_voiced_ms": 45,
+  "last_voiced_ms": 2790,
+  "lead_cut_ms": 15,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 435,
+  "pauses_ms": [
+   [
+    350,
+    150
+   ],
+   [
+    385,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2825,
+  "tail_cut_ms": 114,
+  "tail_loss_first_try_ms": 0
+ },
+ "the moon is out": {
+  "after_s": 1.695,
+  "before_s": 2.115,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    15,
+    15
+   ]
+  ],
+  "cut_at_ms": 1970,
+  "file": "8b0f00c7e94f87b6.wav",
+  "first_voiced_ms": 305,
+  "last_voiced_ms": 1920,
+  "lead_cut_ms": 275,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1930,
+  "tail_cut_ms": 145,
+  "tail_loss_first_try_ms": 0
+ },
+ "the pattern fits": {
+  "after_s": 2.065,
+  "before_s": 2.329,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    45
+   ]
+  ],
+  "cut_at_ms": 2260,
+  "file": "236b4bda8f28bff4.wav",
+  "first_voiced_ms": 225,
+  "last_voiced_ms": 2210,
+  "lead_cut_ms": 195,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2215,
+  "tail_cut_ms": 69,
+  "tail_loss_first_try_ms": 0
+ },
+ "the sun is blank": {
+  "after_s": 2.34,
+  "before_s": 2.584,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2505,
+  "file": "c4a408ad37b9df94.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 2455,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 160,
+  "pauses_ms": [
+   [
+    310,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2470,
+  "tail_cut_ms": 79,
+  "tail_loss_first_try_ms": 0
+ },
+ "the sun is hot": {
+  "after_s": 2.31,
+  "before_s": 2.458,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2335,
+  "file": "ab6d26065dc220f7.wav",
+  "first_voiced_ms": 55,
+  "last_voiced_ms": 2285,
+  "lead_cut_ms": 25,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2300,
+  "tail_cut_ms": 123,
+  "tail_loss_first_try_ms": 0
+ },
+ "the tall blank is dry": {
+  "after_s": 3.035,
+  "before_s": 3.861,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3740,
+  "file": "dadfcd501d0327dc.wav",
+  "first_voiced_ms": 340,
+  "last_voiced_ms": 3690,
+  "lead_cut_ms": 310,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 395,
+  "pauses_ms": [
+   [
+    545,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3710,
+  "tail_cut_ms": 121,
+  "tail_loss_first_try_ms": 0
+ },
+ "the tall tree is dry": {
+  "after_s": 3.075,
+  "before_s": 3.599,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3075,
+  "file": "db136ff6a9dc3380.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 3025,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 3095,
+  "tail_cut_ms": 524,
+  "tail_loss_first_try_ms": 20
+ },
+ "the tree is blank": {
+  "after_s": 2.73,
+  "before_s": 3.229,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3160,
+  "file": "abe95f3f3f163c2a.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 3110,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 430,
+  "pauses_ms": [
+   [
+    335,
+    150
+   ],
+   [
+    395,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 3115,
+  "tail_cut_ms": 69,
+  "tail_loss_first_try_ms": 0
+ },
+ "the tree is tall": {
+  "after_s": 2.55,
+  "before_s": 2.816,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2550,
+  "file": "3e0bb7f1dddd5e5e.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 2500,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2570,
+  "tail_cut_ms": 266,
+  "tail_loss_first_try_ms": 20
+ },
+ "then": {
+  "after_s": 0.931,
+  "before_s": 0.931,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 931,
+  "file": "d3ec540fdbe367a8.wav",
+  "first_voiced_ms": 10,
+  "last_voiced_ms": 895,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 895,
+  "tail_cut_ms": 0,
+  "tail_loss_first_try_ms": 0
+ },
+ "thirteen": {
+  "after_s": 1.55,
+  "before_s": 1.847,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    25
+   ]
+  ],
+  "cut_at_ms": 1775,
+  "file": "e366fee05b3a075f.wav",
+  "first_voiced_ms": 255,
+  "last_voiced_ms": 1725,
+  "lead_cut_ms": 225,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1745,
+  "tail_cut_ms": 72,
+  "tail_loss_first_try_ms": 0
+ },
+ "thirty": {
+  "after_s": 1.29,
+  "before_s": 1.534,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1455,
+  "file": "036962bf53c12457.wav",
+  "first_voiced_ms": 195,
+  "last_voiced_ms": 1405,
+  "lead_cut_ms": 165,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1465,
+  "tail_cut_ms": 79,
+  "tail_loss_first_try_ms": 10
+ },
+ "this pattern grows": {
+  "after_s": 1.615,
+  "before_s": 2.119,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1615,
+  "file": "f0b11961f37858e1.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 1565,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1570,
+  "tail_cut_ms": 504,
+  "tail_loss_first_try_ms": 0
+ },
+ "three": {
+  "after_s": 1.1,
+  "before_s": 1.233,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1100,
+  "file": "8d300ba177475aad.wav",
+  "first_voiced_ms": 20,
+  "last_voiced_ms": 1050,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1050,
+  "tail_cut_ms": 133,
+  "tail_loss_first_try_ms": 0
+ },
+ "tree": {
+  "after_s": 0.945,
+  "before_s": 0.985,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 950,
+  "file": "785a8601c7acf8b7.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 820,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [
+   "end"
+  ],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 900,
+  "tail_cut_ms": 35,
+  "tail_loss_first_try_ms": 30
+ },
+ "triangle": {
+  "after_s": 1.185,
+  "before_s": 1.424,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1185,
+  "file": "6b93ec12cdcc3209.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 1135,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1170,
+  "tail_cut_ms": 239,
+  "tail_loss_first_try_ms": 0
+ },
+ "twelve": {
+  "after_s": 0.975,
+  "before_s": 1.055,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 975,
+  "file": "c2d29c2cd2d1b8cf.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 925,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 935,
+  "tail_cut_ms": 80,
+  "tail_loss_first_try_ms": 0
+ },
+ "twenty": {
+  "after_s": 0.8,
+  "before_s": 0.882,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 800,
+  "file": "6cfe91a73738cb08.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 750,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 780,
+  "tail_cut_ms": 82,
+  "tail_loss_first_try_ms": 0
+ },
+ "two": {
+  "after_s": 0.65,
+  "before_s": 1.096,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    25
+   ]
+  ],
+  "cut_at_ms": 950,
+  "file": "6a5d8925681ff8e3.wav",
+  "first_voiced_ms": 330,
+  "last_voiced_ms": 900,
+  "lead_cut_ms": 300,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 955,
+  "tail_cut_ms": 146,
+  "tail_loss_first_try_ms": 5
+ },
+ "type the missing word": {
+  "after_s": 2.365,
+  "before_s": 2.877,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2785,
+  "file": "2ccf8bf9213ad072.wav",
+  "first_voiced_ms": 300,
+  "last_voiced_ms": 2735,
+  "lead_cut_ms": 270,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 150,
+  "pauses_ms": [
+   [
+    300,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 2745,
+  "tail_cut_ms": 92,
+  "tail_loss_first_try_ms": 0
+ },
+ "type the number word": {
+  "after_s": 2.105,
+  "before_s": 2.231,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2105,
+  "file": "0a0c8925785ce7b6.wav",
+  "first_voiced_ms": 30,
+  "last_voiced_ms": 2055,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2100,
+  "tail_cut_ms": 126,
+  "tail_loss_first_try_ms": 0
+ },
+ "we did it": {
+  "after_s": 1.01,
+  "before_s": 1.559,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1230,
+  "file": "289746b1de04f253.wav",
+  "first_voiced_ms": 250,
+  "last_voiced_ms": 1180,
+  "lead_cut_ms": 220,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1200,
+  "tail_cut_ms": 329,
+  "tail_loss_first_try_ms": 0
+ },
+ "we said all the feelings": {
+  "after_s": 2.405,
+  "before_s": 2.742,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2645,
+  "file": "26e939897ed57959.wav",
+  "first_voiced_ms": 270,
+  "last_voiced_ms": 2595,
+  "lead_cut_ms": 240,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2600,
+  "tail_cut_ms": 97,
+  "tail_loss_first_try_ms": 0
+ },
+ "well done": {
+  "after_s": 0.95,
+  "before_s": 1.061,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 955,
+  "file": "d4d8a8c330b3cb56.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 905,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 930,
+  "tail_cut_ms": 106,
+  "tail_loss_first_try_ms": 0
+ },
+ "wet": {
+  "after_s": 0.915,
+  "before_s": 1.197,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    40
+   ]
+  ],
+  "cut_at_ms": 1110,
+  "file": "579e69e0a0649916.wav",
+  "first_voiced_ms": 225,
+  "last_voiced_ms": 1060,
+  "lead_cut_ms": 195,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1075,
+  "tail_cut_ms": 87,
+  "tail_loss_first_try_ms": 0
+ },
+ "what a string": {
+  "after_s": 1.355,
+  "before_s": 1.696,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1615,
+  "file": "67cf30d1b1af30b0.wav",
+  "first_voiced_ms": 290,
+  "last_voiced_ms": 1565,
+  "lead_cut_ms": 260,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1585,
+  "tail_cut_ms": 81,
+  "tail_loss_first_try_ms": 0
+ },
+ "what comes next": {
+  "after_s": 1.49,
+  "before_s": 1.562,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1495,
+  "file": "f949f623fd12f469.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 1445,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1450,
+  "tail_cut_ms": 67,
+  "tail_loss_first_try_ms": 0
+ },
+ "what shall we play": {
+  "after_s": 1.445,
+  "before_s": 1.878,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1765,
+  "file": "ad7b76f30715c428.wav",
+  "first_voiced_ms": 350,
+  "last_voiced_ms": 1715,
+  "lead_cut_ms": 320,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1740,
+  "tail_cut_ms": 113,
+  "tail_loss_first_try_ms": 0
+ },
+ "which bead is missing": {
+  "after_s": 1.69,
+  "before_s": 2.126,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    25
+   ]
+  ],
+  "cut_at_ms": 2045,
+  "file": "f1bce46943e4958e.wav",
+  "first_voiced_ms": 385,
+  "last_voiced_ms": 1995,
+  "lead_cut_ms": 355,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2050,
+  "tail_cut_ms": 81,
+  "tail_loss_first_try_ms": 5
+ },
+ "which shape is this": {
+  "after_s": 2.125,
+  "before_s": 2.302,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2235,
+  "file": "2ed5d9f85ac15df1.wav",
+  "first_voiced_ms": 140,
+  "last_voiced_ms": 2185,
+  "lead_cut_ms": 110,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2200,
+  "tail_cut_ms": 67,
+  "tail_loss_first_try_ms": 0
+ },
+ "whoops! have another go": {
+  "after_s": 2.25,
+  "before_s": 2.649,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 2550,
+  "file": "e10f10a9db6f6c3e.wav",
+  "first_voiced_ms": 330,
+  "last_voiced_ms": 2500,
+  "lead_cut_ms": 300,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 2535,
+  "tail_cut_ms": 99,
+  "tail_loss_first_try_ms": 0
+ },
+ "worried": {
+  "after_s": 1.02,
+  "before_s": 1.094,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1020,
+  "file": "3be0c338fb857db8.wav",
+  "first_voiced_ms": 0,
+  "last_voiced_ms": 970,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 995,
+  "tail_cut_ms": 74,
+  "tail_loss_first_try_ms": 0
+ },
+ "yes": {
+  "after_s": 0.75,
+  "before_s": 0.875,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 790,
+  "file": "3cffdb47fd33cb2e.wav",
+  "first_voiced_ms": 70,
+  "last_voiced_ms": 740,
+  "lead_cut_ms": 40,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 760,
+  "tail_cut_ms": 85,
+  "tail_loss_first_try_ms": 0
+ },
+ "you feel angry. thank you for telling me": {
+  "after_s": 3.645,
+  "before_s": 5.134,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 4890,
+  "file": "2d87d56c4cb755fa.wav",
+  "first_voiced_ms": 55,
+  "last_voiced_ms": 4840,
+  "lead_cut_ms": 25,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 1220,
+  "pauses_ms": [
+   [
+    990,
+    300
+   ],
+   [
+    680,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 4850,
+  "tail_cut_ms": 244,
+  "tail_loss_first_try_ms": 0
+ },
+ "you feel calm. thank you for telling me": {
+  "after_s": 2.705,
+  "before_s": 3.441,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3360,
+  "file": "f2f2bea45a8015e2.wav",
+  "first_voiced_ms": 25,
+  "last_voiced_ms": 3310,
+  "lead_cut_ms": 0,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 655,
+  "pauses_ms": [
+   [
+    955,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 3345,
+  "tail_cut_ms": 81,
+  "tail_loss_first_try_ms": 0
+ },
+ "you feel disappointed. thank you for telling me": {
+  "after_s": 4.165,
+  "before_s": 5.488,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 5415,
+  "file": "19ac6e38a1c26b5e.wav",
+  "first_voiced_ms": 85,
+  "last_voiced_ms": 5365,
+  "lead_cut_ms": 55,
+  "lead_loss_first_try_ms": 15,
+  "lowered_at": [],
+  "pause_removed_ms": 1195,
+  "pauses_ms": [
+   [
+    770,
+    150
+   ],
+   [
+    875,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 5370,
+  "tail_cut_ms": 73,
+  "tail_loss_first_try_ms": 0
+ },
+ "you feel excited. thank you for telling me": {
+  "after_s": 2.855,
+  "before_s": 3.651,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3580,
+  "file": "b3a2f8d9a48574f1.wav",
+  "first_voiced_ms": 160,
+  "last_voiced_ms": 3530,
+  "lead_cut_ms": 130,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 595,
+  "pauses_ms": [
+   [
+    895,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 3540,
+  "tail_cut_ms": 71,
+  "tail_loss_first_try_ms": 0
+ },
+ "you feel frustrated. thank you for telling me": {
+  "after_s": 3.805,
+  "before_s": 4.449,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 4360,
+  "file": "65ec5637d47ee20a.wav",
+  "first_voiced_ms": 45,
+  "last_voiced_ms": 4310,
+  "lead_cut_ms": 15,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 540,
+  "pauses_ms": [
+   [
+    840,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 4340,
+  "tail_cut_ms": 89,
+  "tail_loss_first_try_ms": 0
+ },
+ "you feel happy. thank you for telling me": {
+  "after_s": 3.155,
+  "before_s": 3.88,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3805,
+  "file": "bf150cd9e9d11140.wav",
+  "first_voiced_ms": 55,
+  "last_voiced_ms": 3755,
+  "lead_cut_ms": 25,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 625,
+  "pauses_ms": [
+   [
+    925,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 3780,
+  "tail_cut_ms": 75,
+  "tail_loss_first_try_ms": 0
+ },
+ "you feel proud. thank you for telling me": {
+  "after_s": 4.09,
+  "before_s": 4.513,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 4460,
+  "file": "af55fdb73915f266.wav",
+  "first_voiced_ms": 105,
+  "last_voiced_ms": 4410,
+  "lead_cut_ms": 75,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 295,
+  "pauses_ms": [
+   [
+    595,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 4450,
+  "tail_cut_ms": 53,
+  "tail_loss_first_try_ms": 0
+ },
+ "you feel sad. thank you for telling me": {
+  "after_s": 3.11,
+  "before_s": 4.009,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 3935,
+  "file": "6654c4eac532ddf1.wav",
+  "first_voiced_ms": 65,
+  "last_voiced_ms": 3885,
+  "lead_cut_ms": 35,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 790,
+  "pauses_ms": [
+   [
+    1090,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 3905,
+  "tail_cut_ms": 74,
+  "tail_loss_first_try_ms": 0
+ },
+ "you feel surprised. thank you for telling me": {
+  "after_s": 3.9,
+  "before_s": 4.555,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 4480,
+  "file": "fe491b921f3d30a1.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 4430,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 575,
+  "pauses_ms": [
+   [
+    550,
+    300
+   ],
+   [
+    475,
+    150
+   ]
+  ],
+  "quiet_tail_ends_ms": 4445,
+  "tail_cut_ms": 75,
+  "tail_loss_first_try_ms": 0
+ },
+ "you feel worried. thank you for telling me": {
+  "after_s": 3.905,
+  "before_s": 4.771,
+  "clicks_left_out_ms": [
+   [
+    "start",
+    10,
+    35
+   ]
+  ],
+  "cut_at_ms": 4730,
+  "file": "63dfaad5aa610ad7.wav",
+  "first_voiced_ms": 240,
+  "last_voiced_ms": 4680,
+  "lead_cut_ms": 210,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 615,
+  "pauses_ms": [
+   [
+    400,
+    150
+   ],
+   [
+    665,
+    300
+   ]
+  ],
+  "quiet_tail_ends_ms": 4685,
+  "tail_cut_ms": 41,
+  "tail_loss_first_try_ms": 0
+ },
+ "you found it": {
+  "after_s": 1.225,
+  "before_s": 1.443,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1380,
+  "file": "7ca9e4bfbd14709f.wav",
+  "first_voiced_ms": 185,
+  "last_voiced_ms": 1330,
+  "lead_cut_ms": 155,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1335,
+  "tail_cut_ms": 63,
+  "tail_loss_first_try_ms": 0
+ },
+ "zero": {
+  "after_s": 1.01,
+  "before_s": 1.348,
+  "clicks_left_out_ms": [],
+  "cut_at_ms": 1015,
+  "file": "a13a6e5226543771.wav",
+  "first_voiced_ms": 35,
+  "last_voiced_ms": 965,
+  "lead_cut_ms": 5,
+  "lead_loss_first_try_ms": 0,
+  "lowered_at": [],
+  "pause_removed_ms": 0,
+  "pauses_ms": [],
+  "quiet_tail_ends_ms": 1035,
+  "tail_cut_ms": 333,
+  "tail_loss_first_try_ms": 20
+ }
+}
