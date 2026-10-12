@@ -162,4 +162,4 @@ Nook now stays at the top, as on the shelf (lowered only by the sub-menu's bar).
    sub-menus both ways up, one tap at a level, the link and the caption, S24 Back, the back arrow's place, Grown-ups on
    a sub-menu, Blocks).
 
-Commit: COMMIT
+Commit: 86e76e4 (86e76e4a05be25d02e8f455cb89c9802ce1882f7), with this line added in the commit that follows it.
