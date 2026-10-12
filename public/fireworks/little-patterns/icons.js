@@ -1,6 +1,7 @@
 /* Tile and control icons for Nook's shelf and the game frame (round 4). Plain SVG, no emoji, no network.
    window.LPIcons: count, add, words, patterns, shapes, feelings, paint, blocks (tiles); sound (the speaker on a
-   bubble means "hear it again"), soundOff (the shelf badge while sound is off), gear (Grown-ups), shelf, tick, help. */
+   bubble means "hear it again"), soundOff (the shelf badge while sound is off), gear (Grown-ups), back (a sub-menu's
+   arrow to all games, phase 9), shelf (the play screen's link to all games), tick, help. */
 (function (root) {
   'use strict';
   const apple = (x, y, r, outline) => '<g transform="translate(' + x + ' ' + y + ')"><circle r="' + r + '" fill="' + (outline ? 'none' : '#e67b69') + '" stroke="#b65b50" stroke-width="3"' + (outline ? ' stroke-dasharray="5 4"' : '') + '/><path d="M0 -' + r + ' q2 -8 6 -10" stroke="#6b6740" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M2 -' + (r + 4) + ' q8 -6 12 2 q-8 6 -12 -2z" fill="#4d9271"/></g>';
@@ -17,6 +18,8 @@
     sound: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9H7L12 5V19L7 15H3Z" fill="currentColor"/><path d="M16 8Q21 12 16 16M19 5Q26 12 19 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
     soundOff: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9H7L12 5V19L7 15H3Z" fill="currentColor"/><path d="M16 9l6 6M22 9l-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
     gear: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l1.8 2.3 2.8-.8 1 2.8 2.8 1-.8 2.8L22 12l-2.4 1.4.8 2.8-2.8 1-1 2.8-2.8-.8L12 21.5l-1.8-2.3-2.8.8-1-2.8-2.8-1 .8-2.8L2 12l2.4-1.4-.8-2.8 2.8-1 1-2.8 2.8.8z" fill="currentColor"/><circle cx="12" cy="12" r="3.5" fill="#fff"/></svg>',
+    // The sub-menu's back arrow (phase 9): the same button as the shelf button, a chevron pointing back to all games.
+    back: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     shelf: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2" fill="currentColor"/><rect x="13" y="3" width="8" height="8" rx="2" fill="currentColor"/><rect x="3" y="13" width="8" height="8" rx="2" fill="currentColor"/><rect x="13" y="13" width="8" height="8" rx="2" fill="currentColor"/></svg>',
     tick: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 7" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     help: '<svg viewBox="0 0 64 64" aria-hidden="true"><g fill="#fffdf2" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M27 27V12a4.5 4.5 0 0 1 9 0v15"/><rect x="21" y="25" width="25" height="19" rx="7"/><path d="M33 31h13M33 37h13" fill="none"/><path d="M4 51c5-6 16-8 29-8 12 0 22 2 27 8-5 4-15 6-28 6S9 55 4 51z"/></g></svg>'

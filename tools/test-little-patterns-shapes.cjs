@@ -245,9 +245,9 @@ test('success lines: "We did it! A pentagon has five sides." and "We did it! It�
 });
 
 // ---- the page ----
-function app(t, seed = {}, soundOn = true) {
-  const html = fs.readFileSync(path.join(root, 'shapes.html'), 'utf8');
-  const dom = new JSDOM(html, { url: 'https://games.example/little-patterns/shapes.html', runScripts: 'outside-only', pretendToBeVisual: true });
+function app(t, seed = {}, soundOn = true, page = 'shapes.html', carry = null) {
+  const html = fs.readFileSync(path.join(root, page.split('#')[0]), 'utf8');
+  const dom = new JSDOM(html, { url: 'https://games.example/little-patterns/' + page, runScripts: 'outside-only', pretendToBeVisual: true });
   const w = dom.window, errors = [], plays = [], spoken = [];
   w.addEventListener('error', e => errors.push(e.error || e.message));
   w.SpeechSynthesisUtterance = function (text) { this.text = text; };
@@ -256,9 +256,13 @@ function app(t, seed = {}, soundOn = true) {
   w.fetch = () => { throw new Error('A game must not send player data over the network.'); };
   // The page's screen matrix: shape units to CSS pixels at twice the size, offset to (100, 50).
   w.SVGElement.prototype.getScreenCTM = function () { return { a: 2, b: 0, c: 0, d: 2, e: 100, f: 50 }; };
+  if (carry) for (const [kind, entries] of [['localStorage', carry.local], ['sessionStorage', carry.session]]) for (const [k, v] of entries) w[kind].setItem(k, v);
   for (const [k, v] of Object.entries(seed)) w.localStorage.setItem(k, JSON.stringify(v));
   for (const script of w.document.querySelectorAll('script[src]')) w.eval(fs.readFileSync(path.join(root, script.getAttribute('src').split('?')[0]), 'utf8'));
   if (!soundOn) w.LP.audio.mute();
+  const visits = [], reloads = [];
+  if (w.LPShelf) w.LPShelf.navigate = url => visits.push(url);
+  w.LP.reload = () => reloads.push(w.location.href);
   t.after(async () => { await new Promise(r => setTimeout(r, 10)); assert.deepEqual(errors, [], 'no uncaught page errors'); assert.deepEqual(spoken, [], 'no device voice'); dom.window.close(); });
   const query = s => w.document.querySelector(s), all = s => Array.from(w.document.querySelectorAll(s));
   const click = s => { const el = query(s); assert.ok(el, s); el.click(); return el; };
@@ -266,24 +270,29 @@ function app(t, seed = {}, soundOn = true) {
   // a pointer tap at a point in the shape's own units, through the page's matrix
   const tap = (ux, uy) => query('.shape-stage').dispatchEvent(new w.MouseEvent('click', { bubbles: true, cancelable: true, clientX: 2 * ux + 100, clientY: 2 * uy + 50, detail: 1 }));
   const clip = text => w.LPVoiceLibrary.clips[key(text)].file;
-  return { w, query, all, click, store, tap, plays, clip, t };
+  return { w, query, all, click, store, tap, plays, clip, t, visits, reloads };
 }
-// Two audiences (phase 7): the level is the grown-ups', behind the two-second hold (faked with mock timers, as the gate
-// test does) and Levels and puzzles in the Shapes section of Grown-ups.
+// Phase 9 (navigation proposal 2): Sides and Name, and Shapes 1 and Shapes 2, are picked on the Shapes sub-menu of the
+// shelf, reached by the play screen's link to all games and the Shapes tile. The level chooser is the grown-ups', behind
+// the two-second hold on that sub-menu (faked with mock timers, as the gate test does) and Levels and puzzles, which
+// opens the game with it. A page is left (pagehide) and the next one opens with the same storage, as a link does.
+function entries(store) { const out = []; for (let i = 0; i < store.length; i++) { const k = store.key(i); out.push([k, store.getItem(k)]); } return out; }
+function next(a, page) { a.w.dispatchEvent(new a.w.Event('pagehide')); return app(a.t, {}, !a.w.LP.audio.muted, page, { local: entries(a.w.localStorage), session: entries(a.w.sessionStorage) }); }
+function toHub(a) { const link = a.query('#shelf-open'); assert.equal(link.tagName, 'A'); assert.equal(link.getAttribute('href'), './'); const hub = next(a, 'index.html'); hub.click('[data-shelf="shapes"]'); return hub; }
+const arrive = (a, from, url) => Object.assign(a, next(from, url));
 function grownups(a) {
-  a.click('#shelf-open');
-  const gate = a.query('#shelf-overlay [data-grownups]');
+  const hub = toHub(a);
   let mine = false;
   try { a.t.mock.timers.enable({ apis: ['setTimeout'] }); mine = true; } catch (_) { /* the test already runs mock timers */ }
   try {
-    gate.dispatchEvent(new a.w.MouseEvent('pointerdown', { bubbles: true, cancelable: true, clientX: 10, clientY: 10, button: 0 }));
+    hub.query('[data-grownups]').dispatchEvent(new hub.w.MouseEvent('pointerdown', { bubbles: true, cancelable: true, clientX: 10, clientY: 10, button: 0 }));
     a.t.mock.timers.tick(2000);
   } finally { if (mine) a.t.mock.timers.reset(); }
-  assert.equal(a.query('#dialog-title').textContent, 'Grown-ups');
+  assert.equal(hub.query('#dialog-title').textContent, 'Grown-ups');
+  return hub;
 }
-// Phase 8 (Jof's navigation decision): Sides and Name are picked from the Shapes list under the shelf tile: the shelf
-// button, the Shapes tile (which opens its list), then one tile; it plays in place and closes the shelf.
-const shapesMode = (a, mode) => { a.click('#shelf-open'); a.click('#shelf-overlay [data-shelf="shapes"]'); a.click(`#shelf-overlay [data-activity="${mode}"]`); assert.equal(a.query('#shelf-overlay').hidden, true, 'one tap plays it'); };
+const shapesMode = (a, mode) => { const hub = toHub(a); hub.click(`[data-activity="${mode}"]`); assert.deepEqual(hub.visits, ['shapes.html#' + mode], 'one tap plays it'); arrive(a, hub, hub.visits[0]); };
+const caption = a => a.query('#caption .caption-text').textContent;
 const P = 'lp-player-player-1-';
 const place = (level, mode, example, rounds) => {
   const i = L.shapeSequence(level, mode).findIndex(([s, v]) => s + '#' + v === example);
@@ -295,18 +304,18 @@ const tick = () => new Promise(r => setTimeout(r, 0));
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const tags = a => a.all('.big-shape .tag').map(g => [Number(g.dataset.tag), Number(g.textContent)]);
 
-test('the Shapes page is the frame: no chips (phase 8: Sides and Name are in the Shapes list on the shelf), one "Shapes 1" label, a resting Nook with one bubble, the shape and three answers, Help; the stub is gone and the new files ship', t => {
+test('the Shapes page is the frame: the link to all games and the caption "Sides · Shapes 1" (phase 9), no chips, a resting Nook with one bubble, the shape and three answers, Help; the stub is gone and the new files ship', t => {
   const a = app(t);
-  assert.deepEqual(a.all('.nf-top button').map(b => b.id), ['shelf-open'], 'the shelf button only; the level is not a button');
-  assert.equal(a.all('#modes .chip, [data-shapes-mode]').length, 0, 'no chips: the game is picked from the Shapes list on the shelf');
-  assert.equal(a.query('#support').textContent, 'Shapes 1');
-  assert.equal(a.query('#support').tagName, 'SPAN');
-  assert.equal(a.query('#support').getAttribute('role'), 'img');
-  assert.equal(a.query('#support').getAttribute('aria-label'), 'Level: Shapes 1');
-  assert.equal(a.all('#support .pill-art .shape-icon').length, 3, 'drawn as a triangle, a square and a circle');
-  a.click('#support');
-  assert.equal(a.query('.lp-modal'), null, 'a tap on the label opens nothing');
-  assert.ok(a.query('#support').classList.contains('nudged'), 'it only lights for a moment');
+  assert.deepEqual(a.all('.nf-top > *').map(el => el.tagName + '#' + el.id), ['A#shelf-open', 'SPAN#caption'], 'the link to all games and the caption; nothing in the top bar is a button');
+  assert.equal(a.all('.chip, [data-shapes-mode], #support, #modes').length, 0, 'no chips and no pill: the game and the level are picked on the Shapes sub-menu');
+  assert.equal(caption(a), 'Sides · Shapes 1');
+  assert.equal(a.query('#caption').getAttribute('role'), 'img');
+  assert.equal(a.query('#caption').getAttribute('aria-label'), 'Sides, shapes 1');
+  assert.ok(a.query('#caption .caption-art svg'), 'beside the Shapes icon');
+  const before = a.query('#caption').outerHTML;
+  a.click('#caption .caption-text');
+  assert.equal(a.query('.lp-modal'), null, 'a tap on the caption opens nothing');
+  assert.equal(a.query('#caption').outerHTML, before, 'and changes nothing');
   assert.equal(a.query('#nook svg.nook').getAttribute('data-feeling'), 'rest', 'Nook rests: the hello face, arms down');
   assert.equal(a.all('#page .nf-bubble').length, 1);
   assert.equal(a.query('#speech').textContent, 'How many sides? Tap each side.');
@@ -318,17 +327,17 @@ test('the Shapes page is the frame: no chips (phase 8: Sides and Name are in the
   assert.deepEqual(a.all('[data-choice]').map(b => b.textContent), L.shapeRound(0, p, 1, 'sides').choices.map(String), 'three numbers, visible from the start');
   assert.equal(a.query('#help').hidden, false); assert.equal(a.query('#next').hidden, true); assert.equal(a.query('#repeat').hidden, true);
   assert.equal(a.query('.soon'), null, 'no placeholder');
-  assert.equal(a.all('#page a[href]').length, 0, 'no links on the play screen');
-  a.click('#shelf-open');
-  assert.equal(a.query('#shelf-overlay [aria-current="true"]').dataset.shelf, 'shapes');
-  a.click('#shelf-overlay [data-shelf="shapes"]');
-  assert.equal(a.query('#shelf-overlay').hidden, false, 'the current game’s tile opens its list');
-  assert.equal(a.query('#shelf-overlay [data-bubble] .line').textContent, 'Which shape game?');
-  assert.deepEqual(a.all('#shelf-overlay .menu-tile').map(b => b.dataset.activity + ' ' + b.querySelector('.menu-word').textContent + (b.getAttribute('aria-current') ? ' *' : '')), ['sides Sides *', 'name Name']);
-  assert.equal(a.all('#shelf-overlay .menu-tile .menu-art[aria-hidden="true"] svg').length, 2, 'a picture each');
-  a.click('#shelf-overlay [data-activity="name"]');
-  assert.equal(a.query('#shelf-overlay').hidden, true, 'one tap plays it in place');
+  assert.deepEqual(a.all('#page a[href]').map(l => l.getAttribute('href')), ['./'], 'one link on the play screen: to all games');
+  const hub = toHub(a);
+  assert.equal(hub.query('[data-bubble] .line').textContent, 'Which shape game?');
+  assert.deepEqual(hub.all('.menu-tile').map(b => b.dataset.activity + ' ' + b.querySelector('.menu-word').textContent + (b.getAttribute('aria-current') ? ' *' : '')), ['sides Sides *', 'name Name']);
+  assert.equal(hub.all('.menu-tile .menu-art[aria-hidden="true"] svg').length, 2, 'a picture each');
+  assert.deepEqual(hub.all('.levels-row .lvl').map(b => b.querySelector('.lvl-word').textContent + (b.getAttribute('aria-current') ? ' *' : '')), ['Shapes 1 *', 'Shapes 2'], 'and the two levels as rows of shapes');
+  assert.equal(hub.all('.levels-row .lvl[data-level="2"] .lvl-art svg path').length, 2, 'Shapes 2: a pentagon and a hexagon');
+  hub.click('[data-activity="name"]');
+  arrive(a, hub, hub.visits[0]);
   assert.equal(a.query('#speech').textContent, 'Which shape is this?');
+  assert.equal(caption(a), 'Name · Shapes 1');
   assert.equal(a.w.location.hash, '#name');
   shapesMode(a, 'sides');
   assert.equal(a.query('#speech').textContent, 'How many sides? Tap each side.');
@@ -500,7 +509,7 @@ test('Name: word answers only; Help shows a small picture of each shape beside i
   const b = app(t, place(1, 'name', 'oval#tilted'));
   assert.ok(b.query('.big-shape ellipse.outline[transform="rotate(-30 120 120)"]'));
   assert.ok(!b.all('[data-choice]').some(x => x.dataset.choice === 'CIRCLE'), 'never CIRCLE with an oval at level 1');
-  assert.equal(b.query('#support').textContent, 'Shapes 1');
+  assert.equal(caption(b), 'Name · Shapes 1');
 });
 
 test('Again starts the same shape fresh and Next moves on; Nook rests again; each mode keeps its own round', async t => {
@@ -524,21 +533,24 @@ test('Again starts the same shape fresh and Next moves on; Nook rests again; eac
   assert.equal(a.query('#help').hidden, false); assert.equal(a.query('#next').hidden, true);
 });
 
-test('the level is chosen in Grown-ups: the Shapes section shows the level with its pictures, and Levels and puzzles holds Shapes 1 and Shapes 2 with pictures and sentences; a choice changes both modes and the label, and the place, level and rounds are saved and restored by id', t => {
+test('the level in Grown-ups: held on the Shapes sub-menu, the Shapes section shows where the child is, and Levels and puzzles opens the game with Shapes 1 and Shapes 2 (pictures and sentences); a choice changes both modes and the caption, and the place, level and rounds are saved and restored by id', t => {
   const a = app(t);
-  grownups(a);
-  assert.equal(a.query('.gu-game h3').textContent, 'Shapes');
-  assert.equal(a.query('.gu-now-text').textContent, 'Now: Shapes 1: triangles, squares, rectangles, circles and ovals, turned and stretched');
-  assert.equal(a.all('.gu-now-art .shape-icon').length, 3);
-  a.click('#gu-levels');
+  const hub = grownups(a);
+  assert.equal(hub.query('.gu-game h3').textContent, 'Shapes');
+  assert.equal(hub.query('.gu-now-text').textContent, 'Now: Sides · Shapes 1');
+  assert.ok(hub.query('.gu-now-art svg'), 'beside the Shapes icon');
+  hub.click('#gu-levels');
+  assert.deepEqual(hub.visits, ['shapes.html#levels']);
+  arrive(a, hub, hub.visits[0]);
+  assert.equal(a.w.location.hash, '#sides', 'the address keeps the mode only');
   assert.equal(a.query('#dialog-title').textContent, 'Choose the shapes');
   assert.deepEqual(a.all('.shape-levels [data-level]').map(b => [b.dataset.level, b.getAttribute('aria-pressed')]), [['1', 'true'], ['2', 'false']]);
   assert.equal(a.all('.shape-levels [data-level="2"] .shape-icon').length, 2, 'pentagon and hexagon pictures');
   a.click('.shape-levels [data-level="2"]');
-  assert.equal(a.query('.lp-modal'), null, 'the chooser closes');
-  assert.equal(a.query('#shelf-overlay').hidden, true, 'back to the game');
-  assert.equal(a.query('#support').textContent, 'Shapes 2');
-  assert.equal(a.all('#support .pill-art .shape-icon').length, 2, 'the label now shows a pentagon and a hexagon');
+  assert.equal(a.query('.lp-modal'), null, 'the chooser closes, back to the game');
+  assert.equal(caption(a), 'Sides · Shapes 2', 'the caption follows');
+  const again = toHub(a);
+  assert.equal(again.query('.levels-row [aria-current="true"]').dataset.level, '2', 'and the child’s level tiles show the grown-up’s choice');
   assert.equal(a.store('shapes-position').level, 2);
   assert.match(a.store('shapes-rounds').sides.id, /^shapes:v2:L2:sides:/); assert.match(a.store('shapes-rounds').name.id, /^shapes:v2:L2:name:/);
   // restore: a fresh page for the same player comes back to the same place, count and Help step
@@ -563,7 +575,7 @@ test('the level is chosen in Grown-ups: the Shapes section shows the level with 
   // a broken save falls back to the start
   const d = app(t, { [P + 'shapes-position']: { mode: 'paint', level: 7, indices: { sides: -4 } }, [P + 'shapes-rounds']: 'nonsense' });
   assert.equal(d.store('shapes-rounds').sides.id, 'shapes:v2:L1:sides:triangle#up');
-  assert.equal(d.query('#support').textContent, 'Shapes 1');
+  assert.equal(caption(d), 'Sides · Shapes 1');
 });
 
 test('the shape view converts a pointer through its box when there is no screen matrix, using the viewBox fit', t => {

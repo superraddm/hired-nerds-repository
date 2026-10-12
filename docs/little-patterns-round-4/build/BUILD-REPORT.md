@@ -13,9 +13,22 @@ pushed.** The next step is Jof's device test on the S24 and the iPad 5 (`DEVICE-
 | 4 Feelings | Nook feels... with a cancellable full-screen performance, Which feeling?, Friends (unchanged stories), Me (private: one fixed bundle, nothing saved or sent). Pay-offs: munch, held shape, bead string. | 0fbf2bf |
 | 5 Voice | 76 new clips and 3 comparison recordings; the library trimmed; joined speech in `shared.js`; the listening page for J6. | eacd635 |
 | 6 Checks | The fixes below, full verification, final screenshots, `DEVICE-TEST.md`, this report. | 71fa007 |
+| 7 Proofing | Jof's first proofing (`PROOFING-LOG.md` items 1 to 6): Feelings on tall and narrow panes, portrait tablets laid out like phones, two more harness viewports (tall 1380x1600, ipad-portrait 768x1024); "two audiences, two controls": the child's picker and a read-only level pill, every level chooser behind the Grown-ups hold. `phase-7-proofing.md`. | a3fbe41 |
+| 8 Lists | Jof's navigation decision: a list of activities under each game's shelf tile (`menus.js`), a corner badge on those tiles, the chips and picker gone, Blocks with the shelf button and its pace in Grown-ups. `phase-8-submenus.md`. | 996c32e |
+| 9 Navigation | Navigation proposal 2, approved by Jof after his second proofing (items 7 to 11): the six games with choices first with folder previews, a rule, Paint and Blocks; a sub-menu per game with a back arrow, activity tiles and the child's level tiles; the play screens' shelf button a plain link to all games; the pill a caption; the in-game overlay retired; Grown-ups on the shelf. `phase-9-navigation.md`. | see `phase-9-navigation.md` |
 
-Each phase also has a one-line commit recording its hash (e5bcd45, 8932918, 4f09efd, 6470e25, cda5f79); the builder
-notes are 54776b0.
+Each phase also has a one-line commit recording its hash (e5bcd45, 8932918, 4f09efd, 6470e25, cda5f79, f127afb,
+4b3a9e1); the builder notes are 54776b0. Phase 8 had a follow-up (77fee30: Blocks lost its one-tap Sound button).
+Navigation proposal 2 and its mock screens are d5cbbbb and c044787.
+
+**After this report (phases 7 to 9).** The build report below describes phase 6. Since then: phase 7 (Jof's first
+proofing) and phase 8 (the lists under the shelf tiles), then Jof's second proofing rejected phase 8's navigation and
+approved navigation proposal 2, which phase 9 built. What the child sees now: the shelf (six games with choices, each
+with a folder preview, a rule, Paint and Blocks) and one screen per game on the shelf with its activities and its
+levels as pictures; every play screen has a plain link top-left to all games and a caption ("Add · Up to 5"); the
+Grown-ups hold lives on the shelf, and held on a game's screen it starts with that game's levels. Test counts: 203
+after phase 7, 209 after phase 8, 212 after phase 9; the layout harness runs every scenario at eight viewports (see
+`phase-9-navigation.md` for the current figures). The device pass in `DEVICE-TEST.md` has the phase 9 checks.
 
 ## Phase 6 fixes
 

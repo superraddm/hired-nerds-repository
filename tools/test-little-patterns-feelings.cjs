@@ -17,7 +17,7 @@ const flush = () => new Promise(r => setImmediate(r));
 
 // Load a page with its scripts. Audio is recorded (play: 'ok' resolves, 'blocked' rejects as a browser does without a
 // gesture); the device voice is recorded; fetch serves the private Blob bundle (and can be delayed or fail).
-function app(t, { page = 'feelings.html', seed = {}, blocked = false, failed = false, delayed = false, play = 'ok', voices = [] } = {}) {
+function app(t, { page = 'feelings.html', seed = {}, blocked = false, failed = false, delayed = false, play = 'ok', voices = [], carry = null } = {}) {
   const dom = new JSDOM(fs.readFileSync(path.join(root, page.split('#')[0]), 'utf8'), { url: 'https://games.example/little-patterns/' + page, runScripts: 'outside-only', pretendToBeVisual: true });
   const w = dom.window, errors = [], requests = [], plays = [], players = [], urls = [], revoked = [], pending = [], utterances = [];
   w.addEventListener('error', e => errors.push(e.error || e.message));
@@ -28,9 +28,13 @@ function app(t, { page = 'feelings.html', seed = {}, blocked = false, failed = f
   w.URL.createObjectURL = () => { const url = 'blob:local-' + urls.length; urls.push(url); return url; };
   w.URL.revokeObjectURL = url => revoked.push(url);
   w.fetch = async (url, options) => { requests.push({ url, options }); if (delayed) await new Promise(resolve => pending.push(resolve)); if (failed) throw Error('Offline'); return { ok: true, blob: async () => new w.Blob(['voice']) }; };
+  if (carry) for (const [kind, entries] of [['localStorage', carry.local], ['sessionStorage', carry.session]]) for (const [k, v] of entries) w[kind].setItem(k, v);
   for (const [k, v] of Object.entries(seed)) w.localStorage.setItem(k, JSON.stringify(v));
   if (blocked) Object.defineProperty(w, 'localStorage', { value: { getItem() { throw Error('blocked'); }, setItem() { throw Error('blocked'); }, removeItem() { throw Error('blocked'); } } });
   for (const s of w.document.querySelectorAll('script[src]')) w.eval(fs.readFileSync(path.join(root, s.getAttribute('src').split('?')[0]), 'utf8'));
+  const visits = [], reloads = [];
+  if (w.LPShelf) w.LPShelf.navigate = url => visits.push(url);
+  w.LP.reload = () => reloads.push(w.location.href);
   t.after(() => { t.mock.timers.reset(); assert.deepEqual(errors, [], 'no uncaught page errors'); dom.window.close(); });
   const query = s => w.document.querySelector(s), all = s => Array.from(w.document.querySelectorAll(s));
   const click = s => { const el = query(s); assert.ok(el, s); assert.ok(!el.closest('[hidden]'), 'visible ' + s); el.click(); return el; };
@@ -39,24 +43,30 @@ function app(t, { page = 'feelings.html', seed = {}, blocked = false, failed = f
   const perf = () => w.LPFeelings && w.LPFeelings.performance;
   const big = () => { const s = query('.perform svg.nook'); return s && s.getAttribute('data-feeling'); };
   const ended = () => { const p = players[0]; assert.ok(p && p.onended, 'a clip is playing'); p.onended(); };
-  return { w, query, all, click, store, clip, perf, big, ended, requests, plays, players, urls, revoked, pending, utterances, flush, t };
+  return { w, query, all, click, store, clip, perf, big, ended, requests, plays, players, urls, revoked, pending, utterances, flush, t, visits, reloads, options: { blocked, failed, delayed, play, voices } };
 }
-// Two audiences (phase 7, phase 8): the child picks an activity from the Feelings list under its shelf tile; the level
-// and the story are the grown-ups', behind the two-second hold (faked with mock timers, as the gate test does) and
-// Levels and puzzles.
-function grownups(a) {
-  a.click('#shelf-open');
-  const gate = a.query('#shelf-overlay [data-grownups]');
+// Phase 9 (navigation proposal 2): the child picks an activity on the Feelings sub-menu of the shelf, reached by the
+// play screen's link to all games and the Feelings tile; the level and the story are the grown-ups', behind the
+// two-second hold on that sub-menu (faked with mock timers, as the gate test does) and Levels and puzzles, which opens
+// the game with its chooser. A page is left (pagehide) and the next one opens with the same storage, as a link does.
+function entries(store) { const out = []; try { for (let i = 0; i < store.length; i++) { const k = store.key(i); out.push([k, store.getItem(k)]); } } catch (_) { /* blocked */ } return out; }
+function next(a, page) { a.w.dispatchEvent(new a.w.Event('pagehide')); return app(a.t, { ...a.options, page, carry: { local: entries(a.w.localStorage), session: entries(a.w.sessionStorage) } }); }
+function toHub(a) { const link = a.query('#shelf-open'); assert.equal(link.tagName, 'A'); assert.equal(link.getAttribute('href'), './'); return next(a, 'index.html'); }
+const arrive = (a, from, url) => Object.assign(a, next(from, url));
+function hold(a) {
   let mine = false;
   try { a.t.mock.timers.enable({ apis: ['setTimeout'] }); mine = true; } catch (_) { /* the test already runs mock timers */ }
   try {
-    gate.dispatchEvent(new a.w.MouseEvent('pointerdown', { bubbles: true, cancelable: true, clientX: 10, clientY: 10, button: 0 }));
+    a.query('[data-grownups]').dispatchEvent(new a.w.MouseEvent('pointerdown', { bubbles: true, cancelable: true, clientX: 10, clientY: 10, button: 0 }));
     a.t.mock.timers.tick(2000);
   } finally { if (mine) a.t.mock.timers.reset(); }
   assert.equal(a.query('#dialog-title').textContent, 'Grown-ups');
 }
-const parentLevels = a => { grownups(a); a.click('#gu-levels'); };
-const pick = (a, id) => { a.click('#shelf-open'); a.click('#shelf-overlay [data-shelf="feelings"]'); a.click(`#shelf-overlay [data-activity="${id}"]`); assert.equal(a.query('#shelf-overlay').hidden, true, 'one tap plays it'); };
+// Grown-ups held on the Feelings sub-menu; returns the hub page holding the sheet.
+function grownups(a) { const hub = toHub(a); hub.click('[data-shelf="feelings"]'); hold(hub); return hub; }
+function parentLevels(a) { const hub = grownups(a); hub.click('#gu-levels'); arrive(a, hub, hub.visits[0]); }
+function pick(a, id) { const hub = toHub(a); hub.click('[data-shelf="feelings"]'); hub.click(`[data-activity="${id}"]`); assert.deepEqual(hub.visits, ['feelings.html#' + id], 'one tap starts it'); arrive(a, hub, hub.visits[0]); }
+const caption = a => a.query('#caption .caption-text').textContent;
 const feelings = extra => ({ [P + 'feelings-v1']: { version: 2, mode: 'board', index: 0, level: 1, story: 0, seed: 1, ...extra } });
 const timers = t => { t.mock.timers.enable({ apis: ['setTimeout'] }); return ms => t.mock.timers.tick(ms); };
 const SOUND_OFF = { 'lp-sound': 'off' };
@@ -129,14 +139,14 @@ test('the Friends art: every person, feeling and pose drawn locally, and every s
 });
 
 // ---- the page ----
-test('Feelings is a Nook frame page: the shelf button and one read-only label, no Back, no sound button, no Menu, no links; the board of ten neutral cards with Nook resting', t => {
+test('Feelings is a Nook frame page: the link to all games and the caption, no Back, no sound button, no Menu, no other links; the board of ten neutral cards with Nook resting', t => {
   const a = app(t);
-  assert.deepEqual(a.all('.nf-top button').map(b => b.id), ['shelf-open']);
-  assert.equal(a.query('#support').tagName, 'SPAN', 'the label is not a button (phase 8: the activity is picked from the shelf)');
-  for (const old of ['#back', '#menu-open', '#page-sound', '[data-sound]', '#feelings-menu', '[data-player]']) assert.equal(a.query(old), null, old + ' is gone');
-  assert.equal(a.all('#page a[href]').length, 0, 'no links on the play screen');
+  assert.deepEqual(a.all('.nf-top > *').map(el => el.tagName + '#' + el.id), ['A#shelf-open', 'SPAN#caption'], 'the link to all games and the caption (phase 9)');
+  assert.equal(a.all('.nf-top button').length, 0);
+  for (const old of ['#back', '#menu-open', '#page-sound', '[data-sound]', '#feelings-menu', '[data-player]', '#support', '#shelf-overlay']) assert.equal(a.query(old), null, old + ' is gone');
+  assert.deepEqual(a.all('#page a[href]').map(l => l.getAttribute('href')), ['./'], 'one link on the play screen: to all games');
   assert.doesNotMatch(fs.readFileSync(path.join(root, 'feelings.html'), 'utf8'), /garden\.html/);
-  assert.equal(a.query('#support').textContent, 'Nook feels…');
+  assert.equal(caption(a), 'Nook feels…');
   assert.deepEqual(a.all('[data-feel]').map(b => b.dataset.feel), F.BOARD);
   for (const b of a.all('[data-feel]')) {
     assert.ok(b.querySelector('svg.nook-face'), 'a face crop');
@@ -147,43 +157,43 @@ test('Feelings is a Nook frame page: the shelf button and one read-only label, n
   assert.equal(a.query('#nook svg.nook').getAttribute('data-feeling'), 'rest');
   assert.equal(a.query('#speech').textContent, 'Nook feels… Tap one.');
   assert.ok(['#help', '#hear', '#repeat', '#next', '#done'].every(s => a.query(s).hidden), 'the board asks nothing: no actions');
-  a.click('#shelf-open');
-  assert.equal(a.query('#shelf-overlay [aria-current="true"]').dataset.shelf, 'feelings');
   const { files } = require('./stage-little-patterns.cjs');
   for (const f of ['feelings.html', 'feelings.js', 'feelings.css', 'feelings-data.js', 'feelings-art.js', 'frame.js', 'frame.css', 'nook-art.js', 'nook.css', 'shelf.js', 'menus.js', 'icons.js']) assert.ok(files.includes(f), f + ' ships');
 });
 
-test('the Feelings list (phase 8): the Feelings tile on the shelf opens four big tiles (the Feelings picture, Nook’s face, a Friends scene, Nook’s face with the neutral ring), one name each, the activity playing marked; one tap plays it in place; the pill is a read-only label', t => {
+test('the Feelings sub-menu (phase 9): the Feelings tile on the shelf opens four big tiles (the Feelings picture, Nook’s face, a Friends scene, Nook’s face with the neutral ring), one name each, the activity played last marked, no level tiles; one tap starts it; the caption states it', t => {
   const a = app(t);
-  assert.equal(a.query('#support').tagName, 'SPAN');
-  assert.equal(a.query('#support').getAttribute('aria-label'), 'Now: Nook feels…');
-  a.click('#support');
-  assert.equal(a.query('.lp-modal'), null, 'the label opens nothing');
-  a.click('#shelf-open'); a.click('#shelf-overlay [data-shelf="feelings"]');
-  assert.equal(a.query('#shelf-overlay').hidden, false, 'the current game’s tile opens its list, not closes the shelf');
-  assert.equal(a.query('#shelf-overlay [data-bubble] .line').textContent, 'Which feelings game?');
-  assert.deepEqual(a.all('#shelf-overlay .menu-tile').map(b => b.dataset.activity), ['board', 'which', 'friends', 'me']);
-  assert.deepEqual(a.all('#shelf-overlay .menu-word').map(b => b.textContent), ['Nook feels…', 'Which feeling?', 'Friends', 'Me']);
-  const art = id => a.query(`#shelf-overlay [data-activity="${id}"] .menu-art`);
-  assert.equal(art('board').querySelector('svg').outerHTML, a.query('#shelf-overlay [data-shelf="feelings"] svg').outerHTML, 'the Feelings tile’s own picture');
+  const cap = a.query('#caption');
+  assert.equal(cap.tagName, 'SPAN');
+  assert.equal(cap.getAttribute('aria-label'), 'Nook feels…');
+  assert.ok(cap.querySelector('.caption-art svg'), 'beside the Feelings icon');
+  a.click('#caption .caption-text');
+  assert.equal(a.query('.lp-modal'), null, 'the caption opens nothing');
+  let hub = toHub(a); hub.click('[data-shelf="feelings"]');
+  assert.equal(hub.query('[data-bubble] .line').textContent, 'Which feelings game?');
+  assert.deepEqual(hub.all('.menu-tile').map(b => b.dataset.activity), ['board', 'which', 'friends', 'me']);
+  assert.deepEqual(hub.all('.menu-word').map(b => b.textContent), ['Nook feels…', 'Which feeling?', 'Friends', 'Me']);
+  const art = id => hub.query(`[data-activity="${id}"] .menu-art`);
+  const box = hub.w.document.createElement('div'); box.innerHTML = hub.w.LPIcons.feelings;
+  assert.equal(art('board').innerHTML, box.innerHTML, 'the Feelings tile’s own picture');
   assert.ok(art('which').querySelector('svg.nook-face'), 'Nook’s face');
   assert.ok(art('friends').querySelector('svg.menu-scene[aria-hidden="true"]'), 'a Friends scene, hidden from screen readers like every tile picture');
   assert.equal(art('friends').querySelector('[role="img"]'), null);
-  assert.equal(art('me').querySelector('.nook-rim').getAttribute('fill'), a.w.NookArt.COLOURS.ring, 'Me: the neutral ring');
-  assert.equal(a.query('#shelf-overlay').querySelectorAll('[data-close], p, [data-level], [data-stories], [data-story]').length, 0, 'no close button, prose, levels or stories');
-  assert.equal(a.query('#shelf-overlay .menu-tiles [aria-current="true"]').dataset.activity, 'board');
-  a.click('#shelf-overlay [data-activity="board"]');
-  assert.equal(a.query('#shelf-overlay').hidden, true, 'the current one carries on');
-  assert.equal(a.w.LPFeelings.activity, 'board');
+  assert.equal(art('me').querySelector('.nook-rim').getAttribute('fill'), hub.w.NookArt.COLOURS.ring, 'Me: the neutral ring');
+  assert.equal(hub.query('.submenu').querySelectorAll('[data-close], p, [data-stories], [data-story]').length, 0, 'no close button, prose or stories');
+  assert.equal(hub.all('.levels-row .lvl').length, 0, 'no level tiles: the look-alike level and the story stay with the parent');
+  assert.equal(hub.query('.menu-tiles [aria-current="true"]').dataset.activity, 'board');
+  hub.click('[data-activity="board"]'); arrive(a, hub, hub.visits[0]);
+  assert.equal(a.w.LPFeelings.activity, 'board', 'the current one carries on');
   pick(a, 'which');
   assert.equal(a.w.LPFeelings.activity, 'which');
-  assert.equal(a.query('#support').textContent, 'Which feeling?');
-  a.click('#shelf-open'); a.click('#shelf-overlay [data-shelf="feelings"]');
-  assert.equal(a.query('#shelf-overlay .menu-tiles [aria-current="true"]').dataset.activity, 'which', 'the list marks the activity playing now');
-  a.click('#shelf-overlay [data-activity="friends"]');
+  assert.equal(caption(a), 'Which feeling?');
+  hub = toHub(a); hub.click('[data-shelf="feelings"]');
+  assert.equal(hub.query('.menu-tiles [aria-current="true"]').dataset.activity, 'which', 'the sub-menu marks the activity played last');
+  hub.click('[data-activity="friends"]'); arrive(a, hub, hub.visits[0]);
   assert.equal(a.w.LPFeelings.activity, 'friends');
   assert.equal(a.store('feelings-v1').mode, 'friends');
-  // From the hub's list: feelings.html#me starts Me, once; the address then drops it, so a reload keeps the save.
+  // feelings.html#me starts Me, once; the address then drops it, so a reload keeps the save.
   const b = app(t, { page: 'feelings.html#me', seed: feelings({ mode: 'friends', story: 3 }) });
   assert.equal(b.w.LPFeelings.activity, 'me');
   assert.equal(b.store('feelings-v1').mode, 'me');
@@ -191,23 +201,28 @@ test('the Feelings list (phase 8): the Feelings tile on the shelf opens four big
   assert.equal(b.w.location.hash, '');
 });
 
-test('Which feeling?’s level and the choice of a story are the grown-ups’: Grown-ups starts with the Feelings section, and Levels and puzzles holds the four activities, the two levels and any story; the pill follows', t => {
+test('Which feeling?’s level and the choice of a story are the grown-ups’: Grown-ups held on the Feelings sub-menu starts with the Feelings section, and Levels and puzzles opens the game with the four activities, the two levels and any story; the caption follows', t => {
   const a = app(t);
-  grownups(a);
-  assert.equal(a.query('.gu-game h3').textContent, 'Feelings');
-  assert.equal(a.query('.gu-now-text').textContent, 'Now: Nook feels…');
-  a.click('#gu-levels');
+  const hub = grownups(a);
+  assert.equal(hub.query('.gu-game h3').textContent, 'Feelings');
+  assert.equal(hub.query('.gu-now-text').textContent, 'Now: Nook feels…');
+  hub.click('#gu-levels');
+  assert.deepEqual(hub.visits, ['feelings.html#levels']);
+  arrive(a, hub, hub.visits[0]);
+  assert.equal(a.query('#dialog-title').textContent, 'Feelings');
   assert.deepEqual(a.all('[data-activity]').map(b => b.dataset.activity), ['board', 'which', 'friends', 'me']);
   assert.deepEqual(a.all('[data-activity] b').map(b => b.textContent), ['Nook feels…', 'Which feeling?', 'Friends', 'Me']);
   assert.equal(a.query('[data-activity="board"]').getAttribute('aria-pressed'), 'true');
   a.click('[data-level="2"]');
   assert.equal(a.w.LPFeelings.activity, 'which');
   assert.equal(a.store('feelings-v1').level, 2);
-  assert.equal(a.query('#support').textContent, 'Which feeling? 2', 'the pill shows the level a grown-up chose');
-  assert.equal(a.query('#shelf-overlay').hidden, true, 'back in the game');
-  grownups(a);
-  assert.equal(a.query('.gu-now-text').textContent, 'Now: Which feeling?, level 2: all ten');
-  a.click('#gu-levels'); a.click('[data-stories]');
+  assert.equal(caption(a), 'Which feeling? · Level 2', 'the caption shows the level a grown-up chose');
+  assert.equal(a.query('#caption').getAttribute('aria-label'), 'Which feeling, level 2');
+  assert.equal(a.query('.lp-modal'), null, 'back in the game');
+  const again = grownups(a);
+  assert.equal(again.query('.gu-now-text').textContent, 'Now: Which feeling? · Level 2');
+  again.click('#gu-levels'); arrive(a, again, again.visits[0]);
+  a.click('[data-stories]');
   assert.equal(a.all('[data-story]').length, 20);
   a.click('[data-story="11"]');
   assert.equal(a.w.LPFeelings.activity, 'friends');
@@ -228,7 +243,7 @@ test('performance with sound: the word plays from the tap; enter, perform, then 
   tick(160);
   assert.equal(a.w.LPFeelings.view, 'perform');
   assert.ok(a.query('#page').classList.contains('solo'), 'the frame Nook steps aside: one Nook at a time');
-  assert.equal(a.query('#support').hidden, true);
+  assert.equal(a.query('#caption').hidden, true, 'the caption steps aside during a performance');
   assert.equal(a.query('#done').hidden, false, 'Done in the right slot');
   assert.ok(a.query('#done .progress').classList.contains('on'), 'the line shows while a clip is actually playing');
   assert.equal(a.query('.perform-word').textContent, 'HAPPY');
@@ -359,7 +374,7 @@ test('a tap on the big Nook replays the word and the return waits until that rep
   assert.equal(a.perf().phase, 'return');
 });
 
-test('a new card, the shelf, a player change, pagehide and a bfcache restore cancel the whole sequence; ticks last one visit to the board', async t => {
+test('a new card, leaving for the shelf, a player change, pagehide and a bfcache restore cancel the whole sequence; ticks last one visit to the board', async t => {
   const seed = { 'lp-players': [{ id: 'one', name: 'First', avatar: '🌱' }, { id: 'two', name: 'Second', avatar: '🌱' }], 'lp-active-player': 'one' };
   const a = app(t, { seed }), tick = timers(t);
   a.click('[data-feel="happy"]'); await flush();
@@ -370,12 +385,12 @@ test('a new card, the shelf, a player change, pagehide and a bfcache restore can
   assert.ok(a.perf().generation > first);
   tick(160); tick(100);
   assert.equal(a.big(), 'sad');
-  a.click('#shelf-open');
-  assert.equal(a.perf(), null, 'the shelf cancels');
+  // Phase 9: the link top-left leaves the page for the shelf (pagehide).
+  a.w.dispatchEvent(new a.w.Event('pagehide'));
+  assert.equal(a.perf(), null, 'leaving for the shelf cancels');
   assert.equal(a.w.LPFeelings.view, 'board');
   assert.equal(a.all('.feel.done').length, 0, 'a cancelled performance leaves no tick');
   assert.equal(a.players[0].src, '');
-  a.w.LPShelf.close();
   tick(5000);
   assert.equal(a.all('.feel.done').length, 0, 'and nothing finishes later');
   a.click('[data-feel="calm"]'); await flush(); tick(160);
@@ -393,6 +408,7 @@ test('a new card, the shelf, a player change, pagehide and a bfcache restore can
   const show = new a.w.Event('pageshow'); Object.defineProperty(show, 'persisted', { value: true });
   a.w.dispatchEvent(show);
   assert.equal(a.perf(), null, 'a bfcache restore cancels');
+  assert.equal(a.reloads.length, 1, 'and the page reloads what is saved (phase 9)');
   tick(5000);
   // ticks: one visit to the board
   a.click('[data-feel="surprised"]'); await flush(); tick(160); a.click('#done'); tick(300);
@@ -409,7 +425,7 @@ test('the generation token: a late callback from an earlier performance never mo
   a.w.LP.audio.speak = (text, options) => { if (options && options.on) hooks.push(options.on); return speak(text, options); };
   a.click('[data-feel="happy"]'); await flush(); tick(160);
   const old = hooks.at(-1);
-  a.click('#shelf-open'); a.w.LPShelf.close();
+  a.w.dispatchEvent(new a.w.Event('pagehide'));
   a.click('[data-feel="frustrated"]'); await flush(); tick(160); tick(1300);
   old.end(); tick(5000);
   assert.equal(a.perf().feeling, 'frustrated');
@@ -617,7 +633,7 @@ test('Me clears on leaving Me, a player change, pagehide and a bfcache restore (
   assert.ok(!a.query('#activity').textContent.includes('You feel'));
   assert.equal(a.query('#hear-me'), null);
   assert.ok(!a.query('#speech').textContent.includes('You feel'));
-  pick(a, 'me');
+  pick(a, 'me'); await flush();
   a.click('[data-feel="angry"]');
   a.w.dispatchEvent(new a.w.Event('pagehide'));
   assert.equal(a.query('#hear-me'), null, 'pagehide clears it');
@@ -639,13 +655,17 @@ test('Me clears on leaving Me, a player change, pagehide and a bfcache restore (
   assert.ok(!texts.includes('You feel')); assert.ok(!texts.includes('worried'));
 });
 
-test('the shelf and Grown-ups mute stop private playback and make no request; sound off keeps Me silent', async t => {
+test('leaving for the shelf and Grown-ups mute stop private playback and make no request; sound off keeps Me silent', async t => {
+  const b = app(t, { seed: feelings({ mode: 'me' }) }); await flush();
+  b.click('[data-feel="sad"]');
+  assert.match(b.players[0].src, /^blob:/);
+  b.w.dispatchEvent(new b.w.Event('pagehide'));
+  assert.equal(b.players[0].src, '', 'leaving for the shelf (the link top-left) stops it');
+  assert.equal(b.query('#hear-me'), null, 'and clears the card');
   const a = app(t, { seed: feelings({ mode: 'me' }) }); await flush();
   const n = a.requests.length;
   a.click('[data-feel="sad"]');
   const player = a.players[0]; assert.match(player.src, /^blob:/);
-  a.click('#shelf-open'); assert.equal(player.src, '', 'opening the shelf stops it');
-  a.query('#shelf-overlay').dispatchEvent(new a.w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   a.click('#hear-me'); assert.match(player.src, /^blob:/);
   a.w.LP.setSound(false); assert.equal(player.src, '');
   const plays = a.plays.length;

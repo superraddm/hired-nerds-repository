@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const $=id=>document.getElementById(id),L=window.GardenLearning,LP=window.LP,F=window.LPFrame,S=window.LPShelf;
+  const $=id=>document.getElementById(id),L=window.GardenLearning,LP=window.LP,F=window.LPFrame,M=window.LPMenus;
   const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const apples=n=>n+(n===1?' apple':' apples'),apple='<i class="apple" aria-hidden="true"></i>',shape=s=>'<i class="shape '+s+'" aria-hidden="true"></i>';
   const modes=['count','add','words','patterns'],wordTabs=['sentence','letter','order','numbers'];
@@ -47,28 +47,18 @@
   function restoreRound(kind,r,s){if(s&&typeof s==='object'&&sameRound(kind,s,r)){r.done=s.done===true;if(kind==='count'&&Array.isArray(s.seen)){const valid=L.usesTray('count',r.level)?new Set(L.countTokens(r.target)):null;r.seen=[...new Set(s.seen.filter(t=>valid?valid.has(t):Number.isInteger(t)&&t>=0&&t<r.target))];}if(kind==='sentence')r.hint=s.hint===true?1:Number.isInteger(s.hint)?Math.max(0,Math.min(2,s.hint)):0;else if('hint' in r&&Number.isInteger(s.hint))r.hint=Math.max(0,Math.min(2,s.hint));if('draft' in r)r.draft=typeof s.draft==='string'?s.draft.slice(0,500):'';if(kind==='make'){r.beads=Array.isArray(s.beads)?s.beads.filter(b=>L.SHAPES.includes(b)).slice(0,L.MAKE_LIMIT):[];r.done=false;}if(kind==='patterns'){r.filled={};if(s.filled&&typeof s.filled==='object')for(const g of r.gaps)if(String(s.filled[g])===String(r.sequence[g]))r.filled[g]=r.sequence[g];if(r.gaps.includes(s.selected))r.selected=s.selected;if(r.done)for(const g of r.gaps)r.filled[g]=r.sequence[g];r.done=r.gaps.every(g=>g in r.filled);}if(kind==='order'){const used=Array.isArray(s.used)?s.used.filter(i=>Number.isInteger(i)&&i>=0&&i<r.tiles.length):[];r.used=used.every((tile,n)=>r.tiles[tile]===r.words[n])&&new Set(used).size===used.length?used:[];r.done=r.used.length===r.words.length;}}if(kind==='add'&&LP.prefs.addition==='demo')r.done=true;return r;}
   function setLevel(kind,level){levels[kind]=L.clampLevel(kind,level);if(kind==='patterns')patternFamily=0;delete selection[kind];if(kind==='add')delete selection.addSet;rounds[kind]=createRound(kind);}
   function setSumSet(name){if(!L.SUM_SETS[name])return;operation='add';delete selection.add;selection.addSet={set:name,index:0};rounds.add=createRound('add');}
-  // The level pill (phase 7: two audiences): one short name for where the child is, a small read-only label (an apple
-  // for Count and Add, the family's beads for Patterns). Since phase 8 the child picks the activity from the game's list
-  // under its shelf tile; levels, sets and chosen puzzles are set in Grown-ups. Short enough for a 360 px top bar.
-  const PILL={count:['1–5','1–10','11–20','10 20 30','21–50','51–100'],add:['Up to 5','Up to 10','Up to 20','Over ten','Tens','Missing part'],take:['Up to 5','Up to 10','Up to 20','Back over ten','Tens'],numbers:['1–5','1–10','11–20','10–100']};
-  const RULE_SHORT={grow:'Growing',mirror:'Mirror',number:'Numbers'};
-  function pillText(){const key=currentKey(),r=current();
-    if(key==='count')return PILL.count[levelOf('count')-1];
-    if(key==='add'){if(r&&r.set)return L.SUM_SETS[r.set].label;const take=operation==='take';return (take?PILL.take:PILL.add)[Math.min(levelOf('add'),take?5:6)-1];}
-    if(key==='patterns')return patternFamily?patternFamily+' shapes':'Level '+levelOf('patterns')+(r&&RULE_SHORT[r.rule]?' · '+RULE_SHORT[r.rule]:'');
-    if(key==='make')return 'Make your own';
-    if(key==='numbers')return 'Number words · '+PILL.numbers[levelOf('numbers')-1];
-    return (WORD_ACTIVITIES.find(([id])=>id===key)||['','Words'])[1];}
+  // The caption (phase 9): the game's icon and where the child is, "Add · Up to 5", worded by menus.js exactly as the
+  // game's sub-menu on the shelf names the activity and the level. A fact, not a control: the child changes either on
+  // the shelf (the top-left link, then the game's tile); every level, set and chosen puzzle is also in Grown-ups.
   function setPlace(){const r=current();if(currentKey()!=='add'||!r||!r.set||!selection.addSet)return '';const n=L.SUM_SETS[r.set].sums.length;return ', '+(selection.addSet.index%n+1)+' of '+n;}
-  const APPLE_ART='<svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="14.5" r="8" fill="#e67b69" stroke="#b65b50" stroke-width="2"/><path d="M12 6.5q1-3 4-4.5" stroke="#6b6740" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M13.5 5q4-3.5 6.5 0.5q-4 3-6.5-0.5z" fill="#4d9271"/></svg>';
-  function pillArt(){const key=currentKey();if(key==='patterns'&&patternFamily)return '<span class="pill-beads">'+L.SHAPES.slice(0,patternFamily).map(shape).join('')+'</span>';return key==='count'||key==='add'?APPLE_ART:'';}
-  function pill(){const text=pillText();F.pill({text,art:pillArt(),label:(mode==='words'?'Now: ':'Level: ')+text+setPlace()});}
-  // Grown-ups (behind the hold) shows the game's name, the level now and Levels and puzzles, the chooser below.
+  function captionState(){const r=current();
+    if(mode==='count')return {level:levelOf('count')};
+    if(mode==='add')return {activity:operation,level:Math.min(levelOf('add'),operation==='take'?5:6),set:r&&r.set||'',place:setPlace()};
+    if(mode==='words')return {activity:wordTab,level:levelOf('numbers')};
+    return {activity:patternMode,family:patternFamily,level:levelOf('patterns'),rule:patternMode==='finish'&&r&&r.rule||''};}
+  function caption(){const c=M.caption(mode,captionState());F.caption({game:mode,text:c.text,label:c.label});}
+  // The grown-ups' chooser (Levels and puzzles) is titled with the game's name.
   const GAME_NAMES={count:'Count',add:'Add',words:'Words',patterns:'Patterns'};
-  function parentNow(){const key=currentKey(),r=current();
-    if(key==='add'&&!(r&&r.set)){const take=operation==='take',level=Math.min(levelOf('add'),take?5:6);return (take?'Take away':'Add')+', level '+level+': '+levelDescription('add',level);}
-    if(key==='count'||key==='numbers')return (key==='numbers'?'Number words, level ':'Level ')+levelOf(key)+': '+levelDescription(key,levelOf(key));
-    return pillText()+setPlace();}
   // Apples with a small running number on each, the scaffold Count uses; Add reuses it on the first clue tap.
   function tagged(count,offset,tags){return Array.from({length:count},(_,i)=>tags?'<span class="tagged">'+apple+'<b class="count-tag">'+(offset+i+1)+'</b></span>':apple).join('');}
   // Tens-and-ones tray: complete tens as full ten-frames, or, once the level has established a ten, as rows of ten small apples (five, a small space, five; still class "stick"). Left-over ones are loose apples with no empty slots beside them, so nothing but apples is ever counted. Fruits carry an index for tags and "new" outlines.
@@ -86,7 +76,7 @@
   function choiceButtons(values,word=false,answer,done=false){return '<div class="choices'+(word?' word-options':'')+'">'+values.map(v=>{const right=done&&String(v)===String(answer);return '<button type="button" class="choice answer'+(word?' word'+(String(v).length>1?' long':''):String(v).length>=3?' digits-3':String(v).length===2?' digits-2':'')+(done?(right?' chosen':' faded'):'')+'" data-choice="'+esc(v)+'" aria-label="Choose '+esc(v)+'"'+(done?' disabled':'')+'>'+esc(word?letters(v):v)+'</button>';}).join('')+'</div>';}
   function picture(name,label){return '<div class="word-picture" '+(name?'role="img" aria-label="'+esc(label)+'"':'aria-hidden="true"')+'>'+(name?symbol(name,96):'')+'</div>';}
   // Nook's one bubble renders from round state: the success line once a round is done, the kind retry line after a wrong answer, the Help line while Help is showing, otherwise the prompt. The bubble is a button that hears its line again from bundled clips.
-  function header(prompt,title,instruction){promptLine=typeof prompt==='string'?{text:prompt,speech:[prompt]}:prompt;$('activity-title').textContent=title;$('instruction').textContent=instruction||'';bubble();pill();}
+  function header(prompt,title,instruction){promptLine=typeof prompt==='string'?{text:prompt,speech:[prompt]}:prompt;$('activity-title').textContent=title;$('instruction').textContent=instruction||'';bubble();caption();}
   function bubble(){const r=current(),key=currentKey();let text=promptLine.text,speech=promptLine.speech,success=false;
     if(r&&key!=='make'){if(r.done){const line=L.successLine(key,r);text=line.text;speech=line.speech;success=true;}else if(r.feedback==='retry'){text=r.retryLine||L.FEEDBACK.retries[0];speech=[text];}else{const h=helpLine(key,r);if(h){text=h;speech=[h];}}}
     talk.say(text,speech,success);}
@@ -143,7 +133,7 @@
   function bead(r,i,active){const value=r.sequence[i];const isGap=r.gaps.includes(i),filled=isGap&&i in r.filled,open=isGap&&!filled&&!r.done;const inner=r.rule==='number'?'<b>'+esc(value)+'</b>':shape(value);const index=r.sequence.length>=10?'<small class="bead-index" aria-hidden="true">'+(i+1)+'</small>':'';
     if(open)return '<button type="button" class="bead-slot missing'+(i===active?' active':'')+(r.rule==='number'?' number':'')+'" data-gap="'+i+'" aria-label="Missing bead '+(i+1)+(i===active?', chosen':'')+'" aria-pressed="'+(i===active)+'">?'+index+'</button>';
     return '<span class="bead-slot'+(filled?' filled':'')+(r.family&&i<r.unit.length?' model':'')+(r.rule==='number'?' number':'')+'" aria-label="'+(r.rule==='number'?value:value)+'">'+inner+index+'</span>';}
-  // Make your own: an empty string, five shape buttons, remove any bead, delete the last, clear, and Nook reads it back. No right answer, no Help, no Next. Chosen from the pill.
+  // Make your own: an empty string, five shape buttons, remove any bead, delete the last, clear, and Nook reads it back. No right answer, no Help, no Next. Chosen on the Patterns screen of the shelf.
   function makeView(){const r=current();const full=r.beads.length>=L.MAKE_LIMIT;
     header(r.beads.length?'What a string!':'Make a bead string!','Make your own pattern','Tap a shape to add a bead. Tap a bead to take it off.');
     let objects='<div class="pattern-strip long making" aria-label="Your bead string">'+Array.from({length:L.MAKE_LIMIT},(_,i)=>i<r.beads.length?'<button type="button" class="bead-slot" data-bead="'+i+'" aria-label="Bead '+(i+1)+', '+r.beads[i]+'. Take it off">'+shape(r.beads[i])+'<small class="bead-index" aria-hidden="true">'+(i+1)+'</small></button>':'<span class="bead-slot empty" aria-hidden="true"><small class="bead-index">'+(i+1)+'</small></span>').join('')+'</div>';
@@ -152,7 +142,7 @@
     task(objects,'<div class="choices pattern-choices make-choices">'+L.SHAPES.map(sh=>'<button type="button" class="choice answer" data-add="'+sh+'" aria-label="Add a '+sh+'"'+(full?' disabled':'')+'>'+shape(sh)+'</button>').join('')+'</div>');actions('none');
     LP.status(full?'The string is full: '+L.MAKE_LIMIT+' beads. Take one off to add another.':r.beads.length?r.beads.length+' of '+L.MAKE_LIMIT+' beads.':'Tap a shape to start your string.');}
   function editBeads(action,value){const r=current();const result=L.makeEdit(r,action,value);if(!result.changed)return;r.beads=result.beads;makeView();save();}
-  // Patterns: the three families as approved (one row of at most eight beads, the first unit marked as the model); gaps are buttons and the active gap takes the next piece. The numbered levels and Make your own are in the pill.
+  // Patterns: the three families as approved (one row of at most eight beads, the first unit marked as the model); gaps are buttons and the active gap takes the next piece. The families are the child's level tiles on the Patterns screen of the shelf; the numbered levels are the grown-ups' (Levels and puzzles).
   function patternPrompt(r){if(r.rule!=='repeat')return (L.PATTERN_RULES[r.rule]||L.PATTERN_RULES.repeat).prompt;const open=r.gaps.filter(g=>!(g in r.filled));return open.includes(r.sequence.length-1)?'What comes next?':'Which bead is missing?';}
   function patternView(){const r=current();const rule=L.PATTERN_RULES[r.rule]||L.PATTERN_RULES.repeat;const open=r.gaps.filter(g=>!(g in r.filled));const active=r.done?-1:(open.includes(r.selected)?r.selected:open[0]);const two=r.gaps.length>1,three=r.gaps.length>2;
     header(patternPrompt(r),three?'Three beads are missing':two?rule.titleTwo:rule.title,r.rule==='number'?'Help Nook finish the number string.':'Help Nook finish the bead string.');
@@ -209,15 +199,20 @@
     // Neither fits: keep whichever overflows less (the card then scrolls a little).
     const useSide=side.level<9?side.level<=stacked.level+1:stacked.level<9?false:side.over<=stacked.over;
     set(!useSide,Math.min(useSide?side.level:stacked.level,3));}
-  function render(){LP.audio.stopSpeech();const key=currentKey();$('task').dataset.view=key;$('page').classList.toggle('words',mode==='words');S.setCurrent(mode);if(mode==='count')countView();else if(mode==='add')addView();else if(mode==='patterns'&&patternMode==='make')makeView();else if(mode==='patterns')patternView();else wordsView();mood();save();fitTask();}
+  function render(){LP.audio.stopSpeech();const key=currentKey();$('task').dataset.view=key;$('page').classList.toggle('words',mode==='words');if(mode==='count')countView();else if(mode==='add')addView();else if(mode==='patterns'&&patternMode==='make')makeView();else if(mode==='patterns')patternView();else wordsView();mood();save();fitTask();}
   // With the A to Z keys the gap keeps focus so its caret stays visible; the device keyboard is only opened by a tap on the gap.
   function focusTask(){const input=$('word-input');const target=input&&LP.prefs.keyboard==='az'?input:$('task').querySelector('button:not(.bubble-inline):not(:disabled),input,textarea');if(target)target.focus({preventScroll:true});}
   function keepFocus(){if(LP.prefs.keyboard==='az')$('word-input')?.focus({preventScroll:true});}
-  // The shelf overlay switches between the four Garden activities in place; the hash follows so a reload stays put.
-  function setMode(value){if(!modes.includes(value))return;mode=value;try{history.replaceState(history.state,'','#'+mode);}catch(_){}render();}
-  // An activity from the list under a shelf tile (phase 8): Add or Take away, a Words activity, Finish the pattern or Make your own.
+  // An activity from the game's sub-menu on the shelf: Add or Take away, a Words activity, Finish the pattern or Make your own.
   function setActivity(value,activity){if(value==='add'&&L.OPERATIONS.includes(activity))setOperation(activity);if(value==='words'&&wordTabs.includes(activity))wordTab=activity;if(value==='patterns'&&(activity==='finish'||activity==='make'))patternMode=activity;}
-  const activityNow=value=>value==='add'?operation:value==='words'?wordTab:value==='patterns'?patternMode:'';
+  // A level tile on the sub-menu (phase 9): the child's level for the current activity, written to the same saved value
+  // as the grown-ups' chooser. The level playing now carries on where the child was; another level (or leaving a
+  // grown-up's practice set) starts it as the chooser does. Patterns' families belong to Finish the pattern.
+  function childLevel(value,n){
+    if(value==='patterns'){if(![2,3,4].includes(n))return;patternMode='finish';if(patternFamily!==n){patternFamily=n;indices.patterns=0;rounds.patterns=createRound('patterns');}return;}
+    if(value!=='count'&&value!=='add')return;
+    const take=value==='add'&&operation==='take',top=take?5:L.LEVELS[value];if(!(n>=1&&n<=top))return;
+    if(n!==(value==='add'?Math.min(levelOf('add'),take?5:6):levelOf(value))||value==='add'&&selection.addSet)setLevel(value,n);}
   function clearFeedback(){const r=current();if(r)r.feedback='';$('word-input')?.removeAttribute('aria-invalid');bubble();}
   // One kind line in the bubble, the same line Nook says, picked at random but never twice running; the status carries only the hint.
   // A typed answer is kept, marked invalid, and stays editable.
@@ -276,8 +271,8 @@
   // The picker is the activity-local level control plus the item chooser for the current level. Every level is open.
   function levelDescription(kind,level){if(kind==='patterns'){const sample=L.patternRound(0,LP.prefs,level);const rule=L.PATTERN_RULES[sample.rule];const beads=sample.rule==='number'?sample.sequence.filter((_,i)=>!sample.gaps.includes(i)).slice(0,4).map(n=>'<b>'+n+'</b>').join(' '):(sample.rule==='grow'?sample.groups.map(g=>'<span class="mini-group">'+g.map(shape).join('')+'</span>').join(''):sample.unit.map(shape).join(''));return '<span class="level-beads">'+beads+'</span>'+(sample.rule!=='repeat'?' '+rule.name:'')+(sample.gaps.length>1?' · two gaps':'');}if(kind==='add')return ['within 5','within 10','to 20, no crossing ten','to 20, crossing ten','tens to 100','missing part, 2 + ? = 5'][level-1]||'';if(kind==='count')return ['1 to 5','1 to 10','11 to 20','tens to 50','21 to 50','51 to 100'][level-1]||'';if(kind==='numbers')return ['1 to 5','1 to 10','11 to 20','tens to 100'][level-1]||'';return '1 to '+L.levelRange(level,kind);}
   function levelPicker(kind,onchange){const wrap=document.createElement('div');wrap.className='level-picker';wrap.setAttribute('role','group');wrap.setAttribute('aria-label','Level');for(let n=1;n<=L.LEVELS[kind];n++){if(kind==='add'&&operation==='take'&&n===6)continue;const b=document.createElement('button');b.type='button';if(kind==='patterns')b.innerHTML='Level '+n+'  '+levelDescription(kind,n);else b.textContent='Level '+n+'  '+levelDescription(kind,n);b.setAttribute('aria-pressed',String(levelOf(kind)===n));b.setAttribute('aria-label','Level '+n+': '+(kind==='patterns'?(()=>{const p=L.patternRound(0,LP.prefs,n);return L.PATTERN_RULES[p.rule].name+', '+(p.rule==='number'?'counting in '+p.step+'s':p.unit.join(', '))+(p.gaps.length>1?', two gaps':'');})():levelDescription(kind,n)));b.onclick=()=>{setLevel(kind,n);onchange();};wrap.appendChild(b);}return wrap;}
-  // The grown-ups' chooser, reached only from Grown-ups (behind the hold), never from the play screen. For Words it starts with the four activities, then the sentence or word list of the current one; switching inside it re-reads the current key, keeps every draft and place. Closing it closes the shelf too, and focus returns to the task.
-  function choosePuzzle(){const el=LP.openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Levels and puzzles: '+GAME_NAMES[mode]+'</h2><button data-close aria-label="Close levels and puzzles">×</button></div><p>Every level is open. The child sees the level on the pill and cannot change it there.</p><div id="picker-content"></div>',()=>{S.close();focusTask();});const content=el.querySelector('#picker-content');
+  // The grown-ups' chooser, reached only from Grown-ups (behind the hold on the game's sub-menu: Levels and puzzles opens the game with it), never from the play screen. For Words it starts with the four activities, then the sentence or word list of the current one; switching inside it re-reads the current key, keeps every draft and place. Closing it returns focus to the task.
+  function choosePuzzle(){const el=LP.openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Levels and puzzles: '+GAME_NAMES[mode]+'</h2><button data-close aria-label="Close levels and puzzles">×</button></div><p>Every level is open. The child sees where they are at the top of the play screen and picks the main levels by their pictures on the game’s screen on the shelf; everything else is chosen here.</p><div id="picker-content"></div>',focusTask);const content=el.querySelector('#picker-content');
     const pick=(kind,update)=>{update();rounds[kind]=createRound(kind);render();LP.closeModal();};
     function fill(){const key=currentKey();content.innerHTML='';content.className='';
       if(mode==='words'){const tabs=document.createElement('div');tabs.className='word-tabs picker-tabs';tabs.setAttribute('role','group');tabs.setAttribute('aria-label','Word activities');for(const [id,label] of WORD_ACTIVITIES){const b=document.createElement('button');b.type='button';b.textContent=label;b.dataset.wordTab=id;b.setAttribute('aria-pressed',String(wordTab===id));b.onclick=()=>{if(wordTab===id)return;wordTab=id;render();fill();};tabs.appendChild(b);}content.appendChild(tabs);}
@@ -312,17 +307,20 @@
   // A preference change rebuilds only the activities that use it; other activities keep their drafts and place.
   const prefUsers={choices:['count','patterns','letter','numbers'],countAnswer:['count'],addition:['add'],numberWords:['numbers'],customWords:['letter'],customSentences:['sentence','order']};
   let oldPrefs={...LP.prefs};document.addEventListener('lp:preferences',()=>{const affected=new Set();for(const [k,kinds] of Object.entries(prefUsers))if(JSON.stringify(oldPrefs[k])!==JSON.stringify(LP.prefs[k]))kinds.forEach(kind=>affected.add(kind));for(const kind of affected){delete selection[kind];rounds[kind]=createRound(kind);}oldPrefs={...LP.prefs};render();});
-  document.addEventListener('lp:beforeplayerchange',save);document.addEventListener('lp:playerchanged',()=>{mode='count';wordTab='sentence';patternMode='finish';restore();S.setCurrent(mode);spellOnce();oldPrefs={...LP.prefs};render();LP.status('Ready to play. All activities are open.');});window.addEventListener('pagehide',save);
+  document.addEventListener('lp:beforeplayerchange',save);document.addEventListener('lp:playerchanged',()=>{mode='count';wordTab='sentence';patternMode='finish';restore();spellOnce();oldPrefs={...LP.prefs};render();LP.status('Ready to play. All activities are open.');});window.addEventListener('pagehide',save);
   // Hardware keys: digits answer the addition keypad, letters pick a missing-letter choice, and typing feeds the number-word textarea while the A–Z keys are shown.
-  document.addEventListener('keydown',e=>{if(LP.dialogOpen||S.isOpen||e.ctrlKey||e.metaKey||e.altKey||e.isComposing)return;if((mode==='add'&&LP.prefs.addition==='type'||mode==='count'&&LP.prefs.countAnswer==='type')&&$('check-sum')){if(/^[0-9]$/.test(e.key)||e.key==='Backspace'){e.preventDefault();typePad(e.key);}else if(e.key==='Enter'&&e.target.tagName!=='BUTTON'){e.preventDefault();checkSum();}return;}if(mode==='words'&&wordTab==='letter'&&/^[a-z]$/i.test(e.key)){const b=$('task').querySelector('[data-choice="'+e.key.toUpperCase()+'"]');if(b){e.preventDefault();b.click();}return;}if(mode==='words'&&e.key==='Enter'&&$('check-word')&&e.target.tagName!=='BUTTON'){e.preventDefault();checkWord();return;}if(mode!=='words'||LP.prefs.keyboard!=='az'||!$('word-input'))return;if(e.target.tagName==='BUTTON'&&[' ','Enter'].includes(e.key))return;if(e.key==='Backspace'||/^[a-z]$/i.test(e.key)||e.key===' '&&wordTab==='numbers'){e.preventDefault();typeKey(e.key===' '?'Space':e.key);}});
+  document.addEventListener('keydown',e=>{if(LP.dialogOpen||e.ctrlKey||e.metaKey||e.altKey||e.isComposing)return;if((mode==='add'&&LP.prefs.addition==='type'||mode==='count'&&LP.prefs.countAnswer==='type')&&$('check-sum')){if(/^[0-9]$/.test(e.key)||e.key==='Backspace'){e.preventDefault();typePad(e.key);}else if(e.key==='Enter'&&e.target.tagName!=='BUTTON'){e.preventDefault();checkSum();}return;}if(mode==='words'&&wordTab==='letter'&&/^[a-z]$/i.test(e.key)){const b=$('task').querySelector('[data-choice="'+e.key.toUpperCase()+'"]');if(b){e.preventDefault();b.click();}return;}if(mode==='words'&&e.key==='Enter'&&$('check-word')&&e.target.tagName!=='BUTTON'){e.preventDefault();checkWord();return;}if(mode!=='words'||LP.prefs.keyboard!=='az'||!$('word-input'))return;if(e.target.tagName==='BUTTON'&&[' ','Enter'].includes(e.key))return;if(e.key==='Backspace'||/^[a-z]$/i.test(e.key)||e.key===' '&&wordTab==='numbers'){e.preventDefault();typeKey(e.key===' '?'Space':e.key);}});
   // Number words used to open on "show" (look and read). Once per player it moves to typing the word, which is what the activity is for; Grown-ups can still choose show or choose.
   function spellOnce(){if(needSpell&&LP.prefs.numberWords==='show')LP.savePrefs({...LP.prefs,numberWords:'type'});needSpell=false;}
   $('help').innerHTML=HELP_SIGN+'<span>Help!</span>';$('next').innerHTML='Next <span aria-hidden="true">→</span>';$('repeat').textContent='↻ Again';
   const talk=F.bubble($('bubble'),$('speech'));
   const nook=F.nook($('nook'),{feeling:'rest',bubble:talk});
   F.onResize(fitTask);
-  // garden.html#add/take: the hub's list names the activity once; the address then keeps only the activity's game.
-  restore();spellOnce();const [requested,wanted]=window.LPMenus.split(location.hash);if(modes.includes(requested)){mode=requested;if(wanted!==undefined){setActivity(mode,wanted);try{history.replaceState(history.state,'','#'+mode);}catch(_){}}}
-  S.mountOverlay({current:mode,hosts:modes,onMode:(value,activity)=>{setActivity(value,activity);setMode(value);focusTask();},activity:activityNow,levels:{name:()=>GAME_NAMES[mode],now:()=>({text:parentNow(),art:pillArt()}),open:choosePuzzle}});
+  // The address (phase 9): the shelf's sub-menu names the activity and the level once (garden.html#add/take/3,
+  // garden.html#count/2); Grown-ups' Levels and puzzles adds "levels" (garden.html#add/levels), which opens the grown-ups'
+  // chooser. The game applies them, then keeps only itself in the address, so a reload keeps the save.
+  restore();spellOnce();const address=M.parse(location.hash);
+  if(modes.includes(address.words[0])){mode=address.words[0];if(address.words[1])setActivity(mode,address.words[1]);if(address.level)childLevel(mode,address.level);try{history.replaceState(history.state,'','#'+mode);}catch(_){}}
   render();
+  if(address.levels&&modes.includes(address.words[0]))choosePuzzle();
 })();

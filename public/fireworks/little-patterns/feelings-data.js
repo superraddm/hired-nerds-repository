@@ -206,7 +206,7 @@
     return {...target,expressionId:target.person+'-'+target.feeling,choices,index};
   }
   // ---- Round 4 (phase 4): Feelings with Nook ----
-  // The four activities in the level pill: Nook feels... (the board of ten; Nook performs the one tapped), Which
+  // The four activities, picked on the Feelings sub-menu of the shelf: Nook feels... (the board of ten; Nook performs the one tapped), Which
   // feeling? (how does Nook feel?), Friends (the twenty stories) and Me (the child's own board).
   const ACTIVITIES=['board','which','friends','me'];
   const ACTIVITY_NAMES={board:'Nook feels…',which:'Which feeling?',friends:'Friends',me:'Me'};

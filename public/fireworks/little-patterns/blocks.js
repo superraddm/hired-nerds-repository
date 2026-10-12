@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const $=id=>document.getElementById(id),C=window.LittlePatterns,g=new C.Blocks(),LP=window.LP,S=window.LPShelf,ctx=$('board').getContext('2d');
+  const $=id=>document.getElementById(id),C=window.LittlePatterns,g=new C.Blocks(),LP=window.LP,ctx=$('board').getContext('2d');
   const colours=['#e9ce7f','#81b6a9','#bda3d7','#a8c887','#db9ca7','#8eafcf','#e2ac82'],soft=['#d3c398','#adc5bc','#c3b7d1','#bfcba9','#cbb1b6','#b0bfd0','#d3bfae'];
   let paused=false,timer=null,hold=null,heldPlaced=false,suppressClick=false;
   function saveGame(){LP.storage.set('blocks-board',{board:g.board,active:g.active,next:g.next,bag:g.bag,rows:g.rows,full:g.full,lastSum:g.lastSum,previous:g.previous});}
@@ -63,16 +63,10 @@
   $('undo').onclick=()=>{if(g.undo()){nookSay('undo',false);LP.status('Your last piece is back. Try another space.');draw();schedule();saveGame();}};
   document.addEventListener('lp:preferences',()=>{draw();schedule();});
   document.addEventListener('lp:dialogopened',()=>pause(true));document.addEventListener('visibilitychange',()=>{if(document.hidden){pause(true);saveGame();}});window.addEventListener('blur',()=>pause(true));window.addEventListener('pagehide',saveGame);document.addEventListener('lp:beforeplayerchange',saveGame);document.addEventListener('lp:playerchanged',()=>{stopHold();clearTimeout(timer);restoreGame();LP.status('Your board is ready. All games are open.');draw();schedule();});
-  document.addEventListener('keydown',e=>{if(LP.dialogOpen||S.isOpen||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;if(e.key.toLowerCase()==='p'){e.preventDefault();if(!g.full)pause(!paused);return;}const keys={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'turn',ArrowDown:'down',' ':'place'};if(e.key===' '&&e.target.tagName==='BUTTON')return;if(keys[e.key]){e.preventDefault();if(e.repeat&&['turn','place'].includes(keys[e.key]))return;step(keys[e.key]);}});
-  // Round 4, phase 8 (two audiences): the shelf button top-left opens Nook's shelf, as in every game, and the board waits
-  // behind it. The pace is the grown-ups': Grown-ups (the hold on the shelf) starts with a Colour Blocks section, and
-  // Pace there chooses how the blocks move. The play screen has no Player, Grown-ups or pace control of its own.
-  const PACES=[[0,'Wait for me','Blocks move only when tapped.'],[1800,'Very slow','Blocks fall by themselves, very slowly.'],[850,'Steady','Blocks fall by themselves at a steady pace.']];
-  const paceNow=()=>PACES.find(p=>p[0]===LP.prefs.pace)||PACES[0];
-  function choosePace(){const el=LP.openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Pace: Colour Blocks</h2><button data-close aria-label="Close pace">×</button></div><p>How the blocks move. The child cannot change this on the play screen.</p><div class="level-picker pace-picker" role="group" aria-label="Pace"></div>',()=>S.close());
-    const box=el.querySelector('.pace-picker');for(const [value,name,text] of PACES){const b=document.createElement('button');b.type='button';b.dataset.pace=String(value);b.setAttribute('aria-pressed',String(LP.prefs.pace===value));b.innerHTML='<b>'+name+'</b> <span>'+text+'</span>';b.onclick=()=>{LP.savePrefs({...LP.prefs,pace:value});LP.closeModal();};box.appendChild(b);}}
-  S.mountOverlay({current:'blocks',levels:{name:()=>'Colour Blocks',now:()=>({text:paceNow()[1]+'. '+paceNow()[2]}),label:'Pace',open:choosePace}});
-  document.addEventListener('lp:shelfopened',()=>pause(true));
+  document.addEventListener('keydown',e=>{if(LP.dialogOpen||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;if(e.key.toLowerCase()==='p'){e.preventDefault();if(!g.full)pause(!paused);return;}const keys={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'turn',ArrowDown:'down',' ':'place'};if(e.key===' '&&e.target.tagName==='BUTTON')return;if(keys[e.key]){e.preventDefault();if(e.repeat&&['turn','place'].includes(keys[e.key]))return;step(keys[e.key]);}});
+  // Round 4, phase 9 (navigation proposal 2): the shelf button top-left is a plain link to all games (./), as on every
+  // play screen; leaving saves the board (pagehide). The pace is the grown-ups': Settings, in Grown-ups on the shelf
+  // (Colour Blocks move). The play screen has no Player, Grown-ups, pace or Sound control of its own.
   // One event-driven repaint. No frame loop or canvas resizing at device DPR.
   restoreGame();draw();schedule();
 })();

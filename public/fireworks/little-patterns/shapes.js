@@ -1,5 +1,5 @@
-/* Shapes with Nook (round 4, phase 3), in the Nook frame. Two modes, chosen from the Shapes list under the shelf
-   tile (phase 8; shapes.html#sides or #name, and in place from the shelf inside the game):
+/* Shapes with Nook (round 4, phase 3), in the Nook frame. Two modes, chosen on the Shapes screen of the shelf (phase 9:
+   shapes.html#sides or #name, with the level after it when a level tile was tapped, shapes.html#name/2):
 
      Sides   a polygon drawn large. Tap each side: the first tap on a side lights it amber and gives it a number tag
              in tap order (the number is spoken while sound is on); a tap on a side already counted bumps its tag
@@ -18,14 +18,14 @@
    and the shape warms. A
    wrong answer changes only the bubble (a kind retry line). Rounds come from learning.js (shapeRound); the mode,
    the level, each mode's place and each round's counted sides and Help step are saved per player and restored by
-   round id. The level is shared by both modes. Two audiences (phase 7): the child picks Sides or Name from the list
-   (phase 8: the two chips went); the pill is a small read-only label of the level ("Shapes 1" with a triangle, square
-   and circle, "Shapes 2" with a pentagon and hexagon), and the level chooser is the grown-ups', reached only from
-   Grown-ups. */
+   round id. The level is shared by both modes. Two audiences (phases 7 to 9): the child picks Sides or Name, and
+   Shapes 1 or Shapes 2 by their pictures, on the Shapes screen of the shelf; the play screen's caption states both
+   ("Name · Shapes 2"); the grown-ups' level chooser (shapes.html#levels, from Grown-ups held on that screen) writes the
+   same saved level. */
 (function () {
   'use strict';
   const $ = id => document.getElementById(id);
-  const L = window.GardenLearning, LP = window.LP, F = window.LPFrame, S = window.LPShelf, I = window.LPIcons || {};
+  const L = window.GardenLearning, LP = window.LP, F = window.LPFrame, M = window.LPMenus, I = window.LPIcons || {};
   const MODES = ['sides', 'name'];
   const VIEW = [-24, -24, 288, 288];   // the 240 box with room around it for the number tags
   const HIT_PX = 22, TAG_GAP = 31, HELP_GAP = 700;
@@ -120,11 +120,10 @@
     }).join('') + '</div>';
   }
 
-  // ---- the frame: pill, bubble, actions, Nook ----
-  const LEVEL_ICONS = { 1: ['triangle', 'square', 'circle'], 2: ['pentagon', 'hexagon'] };
+  // ---- the frame: caption, bubble, actions, Nook ----
   const LEVEL_TEXT = { 1: 'triangles, squares, rectangles, circles and ovals, turned and stretched', 2: 'adds pentagons and hexagons, some turned or uneven' };
-  const levelArt = n => LEVEL_ICONS[n].map(icon).join('');
-  function pill() { F.pill({ text: 'Shapes ' + level, art: levelArt(level), label: 'Level: Shapes ' + level }); }
+  // The caption (phase 9): the Shapes icon and "Sides · Shapes 1", worded as the Shapes screen names them.
+  function caption() { const c = M.caption('shapes', { activity: mode, level }); F.caption({ game: 'shapes', text: c.text, label: c.label }); }
   // The bubble renders from round state: the success line once done, the kind retry line after a wrong answer,
   // otherwise the mode's prompt. It is a button that hears its line again from bundled clips.
   function bubble() {
@@ -143,7 +142,7 @@
     const stageFocused = document.activeElement && document.activeElement.classList && document.activeElement.classList.contains('shape-stage');
     $('page').dataset.mode = mode;
     task.dataset.view = mode;
-    pill();
+    caption();
     $('activity-title').textContent = mode === 'sides' ? 'How many sides?' : 'Which shape is this?';
     $('instruction').textContent = mode === 'sides' ? 'Tap each side of the shape to count it, then choose how many sides it has.' : 'Look at the shape, then choose its name.';
     task.innerHTML = '<div class="objects">' + stage(r) + '</div><div class="answers">' + answers(r) + '</div>';
@@ -278,13 +277,6 @@
   }
 
   // ---- modes, levels, Next and Again ----
-  function setMode(value) {
-    if (!MODES.includes(value) || value === mode) return;
-    stopHelp();
-    mode = value;
-    try { history.replaceState(history.state, '', '#' + mode); } catch (_) { /* no history API */ }
-    render();
-  }
   function setLevel(n) {
     stopHelp();
     level = L.clampLevel('shapes', n);
@@ -295,9 +287,10 @@
     const target = $('task').querySelector('.shape-stage[tabindex]') || $('task').querySelector('button:not(:disabled)');
     if (target) target.focus({ preventScroll: true });
   }
-  // The grown-ups' level chooser (from Grown-ups only). Closing it closes the shelf too, back to the game.
+  // The grown-ups' level chooser (from Grown-ups only: held on the Shapes screen, Levels and puzzles opens
+  // shapes.html#levels). Closing it returns to the game.
   function chooser() {
-    const el = LP.openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Choose the shapes</h2><button data-close aria-label="Close the shape chooser">×</button></div><p>Every level is open. Sides counts the shapes with straight sides; Name has them all.</p><div class="level-picker shape-levels" role="group" aria-label="Level"></div>', () => { S.close(); focusTask(); });
+    const el = LP.openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Choose the shapes</h2><button data-close aria-label="Close the shape chooser">×</button></div><p>Every level is open. Sides counts the shapes with straight sides; Name has them all.</p><div class="level-picker shape-levels" role="group" aria-label="Level"></div>', focusTask);
     const box = el.querySelector('.shape-levels');
     [[1, LEVEL_TEXT[1]], [2, LEVEL_TEXT[2]]].forEach(([n, text]) => {
       const b = document.createElement('button');
@@ -341,9 +334,13 @@
   const talk = F.bubble($('bubble'), $('speech'));
   const nook = F.nook($('nook'), { feeling: 'rest', bubble: talk });
   restore();
-  const requested = window.LPMenus.split(location.hash)[0];
-  if (MODES.includes(requested)) mode = requested;
-  S.mountOverlay({ current: 'shapes', hosts: ['shapes'], onMode: (id, activity) => { setMode(activity); focusTask(); }, activity: id => (id === 'shapes' ? mode : ''), levels: { name: () => 'Shapes', now: () => ({ text: 'Shapes ' + level + ': ' + LEVEL_TEXT[level], art: levelArt(level) }), open: chooser } });
+  // The address (phase 9): the mode, and the level when a level tile was tapped; "levels" opens the grown-ups' chooser.
+  // The game then keeps only the mode in the address, so a reload keeps the save.
+  const address = M.parse(location.hash);
+  if (MODES.includes(address.words[0])) mode = address.words[0];
+  if (address.level && L.clampLevel('shapes', address.level) === address.level && address.level !== level) { level = address.level; rounds = { sides: create('sides'), name: create('name') }; }
+  if (location.hash) { try { history.replaceState(history.state, '', '#' + mode); } catch (_) { /* no history API */ } }
   render();
+  if (address.levels) chooser();
   window.LPShapes = { toUser, tapAt, nextSide, HIT_PX, VIEW };
 })();

@@ -1,8 +1,8 @@
-/* Feelings with Nook (round 4, phase 4), in the Nook frame. The child picks the activity from the Feelings list under
-   its shelf tile (phase 8): four big tiles, a picture and a name each (Nook feels..., Which feeling?, Friends, Me), one
-   tap (feelings.html#friends from the hub, in place from the shelf inside the game). The pill is a small read-only
-   label. Which feeling?'s level and the choice of a Friends story are the grown-ups', in Grown-ups behind the hold
-   (Levels and puzzles). The activities:
+/* Feelings with Nook (round 4, phase 4), in the Nook frame. The child picks the activity on the Feelings screen of the
+   shelf (phase 9): four big tiles, a picture and a name each (Nook feels..., Which feeling?, Friends, Me), one tap
+   (feelings.html#friends). The play screen's caption states the activity. Which feeling?'s level and the choice of a
+   Friends story are the grown-ups', in Grown-ups held on that screen (Levels and puzzles opens feelings.html#levels).
+   The activities:
 
      Nook feels...   ten neutral cards (Nook's face crop and the word). A tap starts Nook's performance, a cancellable
                      sequence with a generation token (BUILD-BRIEF item 56):
@@ -18,7 +18,7 @@
                      Done (right slot) is always there, with a 6 px line that follows actual playback only. With sound
                      off, a blocked play() or a missing clip, Nook keeps the feeling and waits for Done: there is no
                      invented countdown. A tap on the big Nook replays the word and the return waits for it. A new
-                     card, the shelf, a player change, pagehide or a bfcache restore cancel the whole sequence. Ticks
+                     card, a player change, pagehide (the link to the shelf) or a bfcache restore cancel the whole sequence. Ticks
                      last for one visit to the board; when all ten are ticked Nook says "We said all the feelings."
      Which feeling?  Nook large as the task object, showing one feeling, with three word answers. Help shows Nook's
                      face beside each word, then outlines the answer. Level 1 never offers a look-alike pair. A right
@@ -35,7 +35,7 @@
 (function () {
   'use strict';
   const $ = id => document.getElementById(id);
-  const F = window.NookFeelings, A = window.NookFeelingsArt, N = window.NookArt, LP = window.LP, FR = window.LPFrame, S = window.LPShelf, L = window.GardenLearning, I = window.LPIcons || {};
+  const F = window.NookFeelings, A = window.NookFeelingsArt, N = window.NookArt, LP = window.LP, FR = window.LPFrame, M = window.LPMenus, L = window.GardenLearning, I = window.LPIcons || {};
   const T = { fade: 160, grow: 300, gesture: 1200, hold: 600, breathIn: 1200, breathOut: 1600, calm: 600, shrink: 300, quiet: 150, lock: 300 };
   const SPEAKER = '<svg viewBox="0 0 24 24" aria-hidden="true" class="speaker-icon"><path d="M3 9H7L12 5V19L7 15H3Z" fill="currentColor"/><path d="M16 8Q21 12 16 16M19 5Q26 12 19 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -89,10 +89,11 @@
     }
   };
 
-  // ---- the frame: pill, bubble, actions ----
-  function pill() {
-    const text = F.ACTIVITY_NAMES[activity] + (activity === 'which' && saved.level === 2 ? ' 2' : '');
-    FR.pill({ text, hidden: view === 'perform', label: 'Now: ' + text });
+  // ---- the frame: caption, bubble, actions ----
+  // The caption (phase 9): the Feelings icon and the activity ("Which feeling? · Level 2" when a grown-up chose level 2).
+  function caption() {
+    const c = M.caption('feelings', { activity, level: saved.level });
+    FR.caption({ game: 'feelings', text: c.text, label: c.label, hidden: view === 'perform' });
   }
   // Two fixed slots: Help (or Hear, or small Again) on the left, Next or Done on the right.
   function actions(kind) {
@@ -106,7 +107,7 @@
     page.dataset.view = v;
     page.classList.toggle('solo', v === 'perform' || v === 'which' || v === 'friends');
     task.dataset.view = v;
-    pill();
+    caption();
   }
 
   // ---- Nook feels...: the board ----
@@ -424,11 +425,8 @@
     const target = task.querySelector('button:not(:disabled),textarea');
     if (target) target.focus({ preventScroll: true });
   }
-  // The list under the Feelings tile (phase 8, shelf.js and menus.js) starts an activity in place; the current one
-  // just goes back to it.
-  function pickActivity(id) { if (F.ACTIVITIES.includes(id) && id !== activity) enterActivity(id, { fresh: id === 'which' }); else focusTask(); }
-  // The grown-ups' chooser (from Grown-ups only): the four activities, Which feeling?'s two levels and any story.
-  // Closing it closes the shelf too, back to the game.
+  // The grown-ups' chooser (from Grown-ups only: held on the Feelings screen, Levels and puzzles opens
+  // feelings.html#levels): the four activities, Which feeling?'s two levels and any story. Closing it returns to the game.
   function chooser() {
     const rows = [
       ['board', 'Nook feels…', 'Nook shows each feeling. Tap a face.'],
@@ -436,7 +434,7 @@
       ['friends', 'Friends', 'Twenty short stories. Hear and Next.'],
       ['me', 'Me', 'Say how you feel. Nothing is saved.']
     ];
-    const el = LP.openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Feelings</h2><button data-close aria-label="Close the Feelings chooser">×</button></div><p>Everything is open. The child picks the activity from the Feelings list on the shelf; the level and the story are chosen here.</p><div class="feel-activities" role="group" aria-label="Activities"></div>', () => { S.close(); focusTask(); });
+    const el = LP.openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Feelings</h2><button data-close aria-label="Close the Feelings chooser">×</button></div><p>Everything is open. The child picks the activity on the Feelings screen of the shelf; the level and the story are chosen here.</p><div class="feel-activities" role="group" aria-label="Activities"></div>', focusTask);
     const box = el.querySelector('.feel-activities');
     for (const [id, name, text] of rows) {
       const row = document.createElement('div');
@@ -509,8 +507,7 @@
     e.stopPropagation();
     if (meChoice) speakMe();
   }, true);
-  // The shelf, a player change, leaving the page and a bfcache restore cancel the performance and clear Me.
-  document.addEventListener('lp:shelfopened', () => { if (cancel()) boardView(); });
+  // A player change, leaving the page (the link to the shelf) and a bfcache restore cancel the performance and clear Me.
   document.addEventListener('lp:beforeplayerchange', () => { cancel(); save(); clearMe(); LP.audio.stopSpeech(); LP.status(''); task.innerHTML = ''; });
   document.addEventListener('lp:playerchanged', () => { restore(); ticks = new Set(); which = null; if (activity === 'which') newWhich(); render(); LP.status('Ready to play. Every activity is open.'); });
   document.addEventListener('lp:preferences', () => { if (!perf) render(); });
@@ -536,18 +533,17 @@
   const talk = FR.bubble($('bubble'), $('speech'));
   const nook = FR.nook($('nook'), { feeling: 'rest', bubble: talk });
   restore();
-  // feelings.html#friends: the hub's list names the activity once; the address then drops it, so a reload keeps the save.
-  const asked = window.LPMenus.split(location.hash)[0];
-  if (F.ACTIVITIES.includes(asked)) {
-    activity = asked; save();
-    try { history.replaceState(history.state, '', location.pathname + location.search); } catch (_) { /* no history API */ }
-  }
+  // feelings.html#friends: the Feelings screen on the shelf names the activity once; "levels" (from Grown-ups) opens the
+  // grown-ups' chooser. The address then drops both, so a reload keeps the save.
+  const address = M.parse(location.hash);
+  if (F.ACTIVITIES.includes(address.words[0])) { activity = address.words[0]; save(); }
+  if (location.hash) { try { history.replaceState(history.state, '', location.pathname + location.search); } catch (_) { /* no history API */ } }
   // The private bundle is fetched as Feelings opens, before any choice, whatever the activity.
   prepareMe();
   if (activity === 'which') newWhich();
-  S.mountOverlay({ current: 'feelings', hosts: ['feelings'], onMode: (id, act) => pickActivity(act), activity: id => (id === 'feelings' ? activity : ''), levels: { name: () => 'Feelings', now: () => ({ text: F.ACTIVITY_NAMES[activity] + (activity === 'which' ? ', level ' + saved.level + (saved.level === 2 ? ': all ten' : ': no look-alikes') : activity === 'friends' ? ', story ' + (saved.story + 1) + ' of ' + F.STORIES.length : '') }), open: chooser } });
   render();
   if (activity === 'friends') tellStory();
+  if (address.levels) chooser();
 
   window.LPFeelings = {
     get performance() { return perf ? { feeling: perf.feeling, phase: perf.phase, speaking: perf.speaking, held: perf.held, needDone: perf.needDone, breathed: perf.breathed, generation: perf.g } : null; },

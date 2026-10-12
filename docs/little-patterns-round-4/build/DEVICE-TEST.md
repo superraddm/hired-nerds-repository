@@ -59,23 +59,32 @@ Shelf and Grown-ups
       two seconds. Let go early, or slide your finger off: it cancels.
 - [ ] Grown-ups > Settings > Sound: Off. A crossed speaker appears on the shelf; no game speaks. Turn it back On.
 - [ ] Grown-ups > Privacy, devices and credits: the line about Me (never saved or sent) is there.
-- [ ] In a game, the shelf button opens the shelf over the game with that game marked. **S24:** the Android Back
-      button also opens it; Back again leaves.
-- [ ] (Phase 8) Add, Words, Patterns, Shapes and Feelings carry a small stacked-cards badge in the corner and a dashed
-      inner border; Count, Paint and Blocks have neither. A badge tile opens its list: the shelf button top-left (the
-      same place as in a game), Nook's line ("Add or take away?"), big picture tiles; one tap starts that game. The
-      shelf button, and on the S24 the Back button, come back to the tiles.
-- [ ] (Phase 8) Play Take away, go back to the shelf (shelf button), tap Add: Take away is the marked tile. Inside a
-      game, the shelf button then the game's own tile opens the same list; a tile there switches in place. No play
-      screen has chips or a picker; the label at the top right only lights up when tapped.
-- [ ] (Phase 8) Colour Blocks: the shelf button is top-left; there is no Player, Grown-ups, pace or Sound control on the play
-      screen. Hold Grown-ups on the shelf: the sheet starts with Colour Blocks and **Pace** (Wait for me, Very slow,
-      Steady); the board waits while the shelf is open.
+- [ ] (Phase 9) The shelf: Count, Add, Words, Patterns, Shapes, Feelings first, each with a small grid of pictures
+      of what is inside, a thin line, then Paint and Blocks. On the iPad: three columns, the gear beside Blocks.
+- [ ] (Phase 9) Each of the six opens its own screen: a back arrow top-left, the game's picture and name, Nook's
+      question, big activity pictures (the one played last outlined) and under them the level pictures (the current
+      one lilac). All of them visible without scrolling, both ways up. On a phone held sideways Nook and the question
+      step aside. Count has levels only (six apple pictures).
+- [ ] (Phase 9) One tap on an activity starts it; one tap on a level starts the outlined activity at that level (try
+      Add > Take away, then "Up to 10"; Patterns > "3 shapes"; Shapes > "Shapes 2"). Go back to that screen: the
+      level you chose is the lilac one.
+- [ ] (Phase 9) In every game the top-left button goes straight to all games (no pop-up). The top right says where you
+      are ("Add · Up to 5") in plain text; tapping it does nothing at all.
+- [ ] (Phase 9) **S24 Back button:** from a game, Back returns to the screen you came from (all games, or the game's
+      screen); from a game's screen, Back goes to all games. Change a setting on the shelf (Sound, say), then Back into
+      the game: the game follows the new setting (it reloads).
+- [ ] (Phase 9) The back arrow on a game's screen is in exactly the place of the top-left button in the games.
+- [ ] (Phase 9) Grown-ups on a game's screen (hold the gear there): the sheet starts with that game ("Now: Add · Up to
+      5"); Levels and puzzles opens the game with its full chooser over it. Change the level there: the words at the
+      top right change at once, and the game's screen on the shelf shows the same level.
+- [ ] (Phase 9) Colour Blocks: the top-left button is a plain link to all games; no Player, Grown-ups, pace or Sound
+      control on the play screen. Grown-ups > Settings > Colour Blocks move sets the pace; the board comes back as it
+      was after a visit to the shelf.
 
 Count, Add, Take away, Words, Patterns
 - [ ] Count and Add: answer wrong once (only the bubble changes; Nook does not move), then right (green tick, Nook
       happy, proud or excited with one small hop, Again and Next appear). Help steps through the count. The card never changes height.
-- [ ] Add at level 4 (Grown-ups > Levels and puzzles > level 4): Help says "Fill the ten first." and moves apples
+- [ ] Add at "Over ten" (the Add screen's fourth level picture): Help says "Fill the ten first." and moves apples
       across.
 - [ ] Take away: right answer, Nook munches.
 - [ ] Words > Missing word with the A to Z keys (ABC order, Delete and Enter at the end).

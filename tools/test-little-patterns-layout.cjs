@@ -8,11 +8,12 @@
 //   LP_ONLY=add,words  LP_VIEWPORTS=small,land                  limit a run
 //
 // Fails on: an uncaught exception or unhandled rejection in the page; page overflow; content clipped inside the task card (the card scrolling, or anything outside it);
-// truncated chip, pill, answer, tile, key, card, feeling-card, list-tile, performance-word and action labels; an answer or key over Nook; and any visible
-// tappable control under 44 by 44 CSS pixels; and (phase 8) a list inside a game whose shelf button is not exactly where the game's is. Test state is seeded from the hub page, never the game page (a game
-// saves on pagehide). Skips with a message when Chrome is not installed. Phase 8: the five lists of activities under
-// the shelf's tiles (on the hub and inside a game) and Colour Blocks (a page that scrolls: scroll: true allows a page
-// taller than the window, never wider) run at every size too.
+// truncated caption, answer, tile, key, card, feeling-card, sub-menu tile, level tile, performance-word and action labels; an answer or key over Nook; and any visible
+// tappable control under 44 by 44 CSS pixels. Phase 9 (navigation proposal 2): the six sub-menus on the hub and the caption on every play screen run at
+// every size; a sub-menu's activity tile under 120 px tall, a level tile clipped, off screen or scrolled out of view, the Grown-ups button over any tile,
+// a caption over the shelf link or off screen, and a back arrow that is not exactly where the play screens' shelf link is (compared across pages at each
+// size) are problems too. Test state is seeded from the hub page, never the game page (a game saves on pagehide). Skips with a message when Chrome is not
+// installed. Colour Blocks is a page that scrolls (scroll: true allows a page taller than the window, never wider).
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { spawn } = require('node:child_process');
@@ -43,14 +44,13 @@ const answer = (level, mode, example) => { const i = L.shapeSequence(level, mode
 const FD = require('../public/fireworks/little-patterns/feelings-data.js');
 const feelings = extra => ({ [P + 'feelings-v1']: { version: 2, mode: 'board', index: 0, level: 1, story: 0, seed: 1, ...extra } });
 const whichAnswer = (index, level) => click(`[data-which="${FD.whichRound(index, 1, level).feeling}"]`);
-// Grown-ups inside a game (phase 7): the shelf, then the sheet the two-second hold opens, then (levels) its chooser.
-const grownups = levels => click('#shelf-open') + ';LPShelf.grownups()' + (levels ? ';' + click('#gu-levels') : '');
+// Phase 9: a game's sub-menu on the hub, opened by its tile (the activity and level marked from the seeded save).
+const sub = id => click(`[data-shelf="${id}"]`);
 // shot: part of the evidence set. act: script run in the page after load. until: a selector to wait for. wait: ms before checking.
 const SCENARIOS = [
   { name: 'shelf', page: 'index.html', shot: true },
   { name: 'gate-hold', page: 'index.html', shot: true, act: `(()=>{const b=document.querySelector('[data-grownups]');const r=b.getBoundingClientRect();b.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,cancelable:true,pointerId:7,isPrimary:true,clientX:r.left+20,clientY:r.top+20}));})()`, wait: 1250 },
   { name: 'grownups-sheet', page: 'index.html', act: 'LPShelf.grownups()', wait: 400 },
-  { name: 'shelf-over-count', page: 'garden.html#count', shot: true, act: click('#shelf-open'), wait: 500 },
   { name: 'count', page: 'garden.html#count', shot: true },
   { name: 'count-help', page: 'garden.html#count', seed: position({ mode: 'count', selection: { count: 4 } }), act: click('#help') + ';' + click('#help'), wait: 300 },
   { name: 'add', page: 'garden.html#add', shot: true, seed: position({ mode: 'add', selection: { add: [3, 2] } }) },
@@ -91,9 +91,8 @@ const SCENARIOS = [
   { name: 'shapes-pentagon-wide', page: 'shapes.html', shot: true, seed: shapes(2, 'name', 'pentagon#wide') },
   { name: 'shapes-square-corner', page: 'shapes.html', shot: true, seed: shapes(1, 'sides', 'square#corner'), act: tapSides(1), wait: 500 },
   { name: 'shapes-oval-tilted', page: 'shapes.html', shot: true, seed: shapes(1, 'name', 'oval#tilted'), act: click('#help') + ';' + click('#help'), wait: 400 },
-  { name: 'shapes-label-tap', page: 'shapes.html', act: click('#support'), wait: 200 },
-  { name: 'grownups-shapes', page: 'shapes.html', shot: true, act: grownups(), wait: 400 },
-  { name: 'levels-shapes', page: 'shapes.html', act: grownups(true), wait: 400 },
+  // The grown-ups' chooser, opened by the address Grown-ups' Levels and puzzles names (phase 9).
+  { name: 'levels-shapes', page: 'shapes.html#levels', wait: 400 },
   { name: 'feelings-board', page: 'feelings.html', shot: true, act: click('[data-feel="happy"]'), steps: [[900, click('#done')], [700, click('[data-feel="proud"]')], [900, click('#done')]], wait: 900 },
   { name: 'feelings-perform', page: 'feelings.html', shot: true, act: click('[data-feel="excited"]'), wait: 1250 },
   { name: 'feelings-perform-happy', page: 'feelings.html', shot: true, act: click('[data-feel="happy"]'), wait: 1400 },
@@ -113,33 +112,34 @@ const SCENARIOS = [
   { name: 'feelings-me-chosen', page: 'feelings.html', shot: true, seed: feelings({ mode: 'me' }), act: click('[data-feel="disappointed"]'), wait: 500 },
   { name: 'feelings-me-unsure', page: 'feelings.html', seed: feelings({ mode: 'me' }), act: click('[data-me="unsure"]'), wait: 400 },
   { name: 'feelings-me-other', page: 'feelings.html', seed: feelings({ mode: 'me' }), act: click('[data-me="other"]'), wait: 400 },
-  // Two audiences (phase 7): Grown-ups with the game's levels, and its chooser.
-  { name: 'grownups-feelings', page: 'feelings.html', shot: true, seed: feelings({ mode: 'which', level: 2 }), act: grownups(), wait: 400 },
-  { name: 'levels-feelings', page: 'feelings.html', act: grownups(true), wait: 400 },
-  { name: 'add-label-tap', page: 'garden.html#add', seed: position({ mode: 'add', operation: 'take', levels: { add: 2 } }), act: click('#support'), wait: 200 },
-  { name: 'grownups-add', page: 'garden.html#add', shot: true, seed: position({ mode: 'add', levels: { add: 2 } }), act: grownups(), wait: 400 },
-  { name: 'levels-add', page: 'garden.html#add', act: grownups(true), wait: 400 },
+  // Two audiences (phases 7 and 9): the grown-ups' chooser in each game, opened by the address Grown-ups' Levels and
+  // puzzles names, and Grown-ups held on a sub-menu (the game's section first) and on all games.
+  { name: 'levels-feelings', page: 'feelings.html#levels', seed: feelings({ mode: 'which', level: 2 }), wait: 400 },
+  { name: 'levels-add', page: 'garden.html#add/levels', seed: position({ mode: 'add', levels: { add: 2 } }), wait: 400 },
+  { name: 'levels-count', page: 'garden.html#count/levels', wait: 400 },
   { name: 'grownups-hub', page: 'index.html', act: 'LPShelf.grownups()', wait: 400 },
+  { name: 'grownups-sub-add', page: 'index.html', shot: true, seed: position({ mode: 'add', levels: { add: 2 } }), act: sub('add') + ';LPShelf.grownups()', wait: 400 },
   // Nook's pay-offs on success (item 33), caught mid-way: the munch, the bead string under the bubble, the shape held up
   { name: 'payoff-take', page: 'garden.html#add', shot: true, seed: position({ mode: 'add', operation: 'take', levels: { add: 2 }, selection: { add: [6, 2] } }), act: click('[data-choice="4"]'), wait: 380 },
   { name: 'payoff-patterns', page: 'garden.html#patterns', shot: true, seed: position({ mode: 'patterns' }), act: `(()=>{for(const b of document.querySelectorAll('[data-choice]')){b.click();if(!document.querySelector('#next').hidden)break;}})()`, wait: 450 },
   { name: 'payoff-shapes', page: 'shapes.html', shot: true, seed: shapes(1, 'sides', 'triangle#up'), act: answer(1, 'sides', 'triangle#up'), wait: 640 },
-  // Phase 8 (Jof's navigation decision): a tap on a tile with the corner badge opens the game's list on the shelf, the last
-  // activity marked; inside a game the shelf opens the same list. Colour Blocks has the shelf button and Grown-ups' Pace.
-  { name: 'menu-add', page: 'index.html', shot: true, seed: position({ operation: 'take' }), act: click('[data-shelf="add"]'), wait: 400 },
-  { name: 'menu-words', page: 'index.html', shot: true, seed: position({ wordTab: 'letter' }), act: click('[data-shelf="words"]'), wait: 400 },
-  { name: 'menu-patterns', page: 'index.html', shot: true, act: click('[data-shelf="patterns"]'), wait: 400 },
-  { name: 'menu-shapes', page: 'index.html', shot: true, seed: { [P + 'shapes-position']: { mode: 'name', level: 1, indices: {} } }, act: click('[data-shelf="shapes"]'), wait: 400 },
-  { name: 'menu-feelings', page: 'index.html', shot: true, seed: feelings({ mode: 'friends' }), act: click('[data-shelf="feelings"]'), wait: 400 },
-  { name: 'menu-feelings-link', page: 'index.html#feelings', seed: { ...feelings({ mode: 'me' }), ...prefs({ case: 'lower' }) }, wait: 400 },
-  { name: 'menu-words-lower', page: 'index.html#words', seed: prefs({ case: 'lower' }), wait: 400 },
-  { name: 'menu-over-add', page: 'garden.html#add', seed: position({ mode: 'add', operation: 'take' }), act: click('#shelf-open') + ';' + click('#shelf-overlay [data-shelf="add"]'), wait: 400 },
-  { name: 'menu-over-shapes', page: 'shapes.html', act: click('#shelf-open') + ';' + click('#shelf-overlay [data-shelf="shapes"]'), wait: 400 },
-  { name: 'menu-over-feelings', page: 'feelings.html', seed: feelings({ mode: 'which' }), act: click('#shelf-open') + ';' + click('#shelf-overlay [data-shelf="feelings"]'), wait: 400 },
-  { name: 'blocks', page: 'blocks.html', shot: true, scroll: true },
-  { name: 'blocks-shelf', page: 'blocks.html', scroll: true, act: click('#shelf-open'), wait: 500 },
-  { name: 'grownups-blocks', page: 'blocks.html', scroll: true, act: grownups(), wait: 400 },
-  { name: 'levels-blocks', page: 'blocks.html', scroll: true, act: grownups(true), wait: 400 }
+  // Phase 9 (navigation proposal 2): a tap on one of the six game tiles opens its sub-menu on the hub, the last activity
+  // and the level marked from the save; each game's caption sits in its top bar; Blocks has the plain link top-left.
+  { name: 'sub-count', page: 'index.html', shot: true, seed: position({ levels: { count: 3 } }), act: sub('count'), wait: 400 },
+  { name: 'sub-add', page: 'index.html', shot: true, act: sub('add'), wait: 400 },
+  { name: 'sub-add-take', page: 'index.html', shot: true, seed: position({ operation: 'take', levels: { add: 2 } }), act: sub('add'), wait: 400 },
+  { name: 'sub-words', page: 'index.html', shot: true, seed: position({ wordTab: 'letter' }), act: sub('words'), wait: 400 },
+  { name: 'sub-patterns', page: 'index.html', shot: true, act: sub('patterns'), wait: 400 },
+  { name: 'sub-shapes', page: 'index.html', shot: true, seed: { [P + 'shapes-position']: { mode: 'name', level: 2, indices: {} } }, act: sub('shapes'), wait: 400 },
+  { name: 'sub-feelings', page: 'index.html', shot: true, seed: feelings({ mode: 'friends' }), act: sub('feelings'), wait: 400 },
+  { name: 'sub-feelings-link', page: 'index.html#feelings', seed: { ...feelings({ mode: 'me' }), ...prefs({ case: 'lower' }) }, wait: 400 },
+  { name: 'sub-words-lower', page: 'index.html#words', seed: prefs({ case: 'lower' }), wait: 400 },
+  { name: 'sub-add-softer', page: 'index.html#add', seed: { ...position({ levels: { add: 6 } }), ...prefs({ soft: true }) }, wait: 400 },
+  // The longest captions: a numbered pattern level with its rule, Number words' tens, and a grown-up's practice set.
+  { name: 'caption-pattern-level', page: 'garden.html#patterns', seed: position({ mode: 'patterns', patternFamily: 0, levels: { patterns: 13 } }) },
+  { name: 'caption-number-words', page: 'garden.html#words', seed: position({ mode: 'words', wordTab: 'numbers', levels: { numbers: 4 }, selection: { numbers: 100 } }) },
+  { name: 'caption-take-over-ten', page: 'garden.html#add', seed: position({ mode: 'add', operation: 'take', levels: { add: 4 } }) },
+  { name: 'blocks', page: 'blocks.html', shot: true, scroll: true }
 ];
 // Run in the page: every problem as a line of text.
 const CHECK = `(()=>{const out=[];
@@ -149,13 +149,17 @@ const CHECK = `(()=>{const out=[];
   const task=document.querySelector('.nf-task>.task');
   if(task&&vis(task)){if(task.scrollHeight>task.clientHeight+1)out.push('card scrolls '+task.scrollHeight+' > '+task.clientHeight);if(task.scrollWidth>task.clientWidth+1)out.push('card overflows sideways '+task.scrollWidth+' > '+task.clientWidth);
     const c=task.closest('.nf-task').getBoundingClientRect();for(const el of task.querySelectorAll('*')){if(!vis(el))continue;const q=el.getBoundingClientRect();if(q.left<c.left-1||q.right>c.right+1||q.top<c.top-1||q.bottom>c.bottom+1){out.push('clipped in card: '+desc(el)+' '+[q.left,q.top,q.right,q.bottom].map(Math.round)+' card '+[c.left,c.top,c.right,c.bottom].map(Math.round));break;}}}
-  for(const el of document.querySelectorAll('.chip,.pill,.answer,.choice,.tile,.key,.word-card,.nf-actions>button,.bubble-inline,.sentence-words,.make-tools button,.feel,.me-card,.me-more,.say-other,.menu-tile,.menu-art,.menu-word,.menu-name,.perform-word,.perform-line')){if(!vis(el))continue;if(el.scrollWidth>el.clientWidth+1||el.scrollHeight>el.clientHeight+1)out.push('label clipped: '+desc(el)+' '+el.scrollWidth+'x'+el.scrollHeight+' in '+el.clientWidth+'x'+el.clientHeight);}
+  for(const el of document.querySelectorAll('.caption,.caption-text,.lvl,.lvl-word,.answer,.choice,.tile,.key,.word-card,.nf-actions>button,.bubble-inline,.sentence-words,.make-tools button,.feel,.me-card,.me-more,.say-other,.menu-tile,.menu-art,.menu-word,.menu-name,.perform-word,.perform-line')){if(!vis(el))continue;if(el.scrollWidth>el.clientWidth+1||el.scrollHeight>el.clientHeight+1)out.push('label clipped: '+desc(el)+' '+el.scrollWidth+'x'+el.scrollHeight+' in '+el.clientWidth+'x'+el.clientHeight);}
   for(const b of document.querySelectorAll('.nf-bubble')){if(!vis(b))continue;const q=b.getBoundingClientRect();if(q.bottom>innerHeight+1||q.right>innerWidth+1)out.push('bubble off screen: '+desc(b));}
   const nook=document.querySelector('#nook .nook-pos svg');if(nook&&vis(nook)){const n=nook.getBoundingClientRect();for(const a of document.querySelectorAll('.answers button,.word-card,.nf-bubble,.nf-actions>button')){if(!vis(a))continue;const q=a.getBoundingClientRect();if(q.left<n.right-2&&q.right>n.left+2&&q.top<n.bottom-2&&q.bottom>n.top+2)out.push('over Nook: '+desc(a));}}
-  const back=document.querySelector('.lp-overlay:not([hidden]) .shelf-bar:not([hidden]) [data-back]'),game=document.querySelector('.nf #shelf-open');if(back&&game){const p=back.getBoundingClientRect(),q=game.getBoundingClientRect();if(Math.abs(p.left-q.left)>1||Math.abs(p.top-q.top)>1||Math.abs(p.width-q.width)>1||Math.abs(p.height-q.height)>1)out.push('the list moves the shelf button: '+[p.left,p.top,p.width,p.height].map(Math.round)+' in the game '+[q.left,q.top,q.width,q.height].map(Math.round));}
-  for(const el of document.querySelectorAll('.menu-tile')){if(!vis(el))continue;const r=el.getBoundingClientRect();if(r.height<119.5)out.push('list tile under 120 px tall: '+desc(el)+' '+Math.round(r.height));}
+  const cap=document.querySelector('.nf-top .caption'),link=document.querySelector('#shelf-open');if(cap&&vis(cap)){const q=cap.getBoundingClientRect();if(q.left<0||q.right>innerWidth+1||q.top<0)out.push('caption off screen: '+[q.left,q.top,q.right,q.bottom].map(Math.round));if(link&&vis(link)){const l=link.getBoundingClientRect();if(q.left<l.right+4)out.push('caption over the shelf link: '+Math.round(q.left)+' < '+Math.round(l.right+4));}}
+  const sub=document.querySelector('.submenu');if(sub&&vis(sub)){if(sub.scrollHeight>sub.clientHeight+1)out.push('sub-menu scrolls '+sub.scrollHeight+' > '+sub.clientHeight);for(const el of sub.querySelectorAll('.lvl')){if(!vis(el))continue;const r=el.getBoundingClientRect();if(r.top<0||r.left<0||r.bottom>innerHeight+1||r.right>innerWidth+1)out.push('level tile off screen: '+desc(el)+' '+[r.left,r.top,r.right,r.bottom].map(Math.round));const s=sub.getBoundingClientRect();if(r.bottom>s.bottom+1||r.top<s.top-1)out.push('level tile clipped by the sub-menu: '+desc(el));}}
+  const gear=document.querySelector('.shelf .nf-grown');if(gear&&vis(gear)){const g=gear.getBoundingClientRect();for(const el of document.querySelectorAll('.shelf .tile,.shelf .lvl')){if(!vis(el))continue;const r=el.getBoundingClientRect();if(r.left<g.right&&r.right>g.left&&r.top<g.bottom&&r.bottom>g.top)out.push('Grown-ups over '+desc(el));}}
+  for(const el of document.querySelectorAll('.menu-tile')){if(!vis(el))continue;const r=el.getBoundingClientRect();if(r.height<119.5)out.push('sub-menu tile under 120 px tall: '+desc(el)+' '+Math.round(r.height));}
   for(const el of document.querySelectorAll('button,a[href],input,select,textarea,[role=button]')){if(!vis(el))continue;const r=el.getBoundingClientRect();if(r.width<43.5||r.height<43.5)out.push('target '+Math.round(r.width)+'x'+Math.round(r.height)+': '+desc(el));}
   return JSON.stringify(out);})()`;
+// Where the top-left control sits: the play screens' shelf link and a sub-menu's back arrow must match at each size.
+const CORNER = `(()=>{const el=document.querySelector('.nf #shelf-open')||document.querySelector('.shelf-bar:not([hidden]) [data-back]');if(!el)return null;const r=el.getBoundingClientRect();return [r.left,r.top,r.width,r.height].map(n=>Math.round(n*10)/10);})()`;
 
 const freePort = () => new Promise((resolve, reject) => { const s = net.createServer(); s.on('error', reject); s.listen(0, '127.0.0.1', () => { const { port } = s.address(); s.close(() => resolve(port)); }); });
 const wait = ms => new Promise(r => setTimeout(r, ms));
@@ -205,6 +209,8 @@ async function scenarioRun(b, viewport, scenario, shots) {
   await wait(scenario.wait || 250);
   // A page that scrolls (Blocks) may be taller than the window, never wider.
   const problems = JSON.parse(await b.evaluate(CHECK)).filter(p => !(scenario.scroll && /^page overflow (\d+)x/.test(p) && Number(p.match(/^page overflow (\d+)x/)[1]) <= w + 1));
+  const corner = await b.evaluate(CORNER);
+  if (corner) (corners[viewport] = corners[viewport] || []).push([scenario.name, corner]);
   if (shots && (scenario.shot || process.env.LP_SHOTS_ALL)) {
     const shot = await b.send('Page.captureScreenshot', { format: 'png' });
     fs.writeFileSync(path.join(shots, `${viewport}-${scenario.name}.png`), Buffer.from(shot.data, 'base64'));
@@ -212,6 +218,7 @@ async function scenarioRun(b, viewport, scenario, shots) {
   return problems;
 }
 
+const corners = {};
 const only = (process.env.LP_ONLY || '').split(',').filter(Boolean);
 const views = (process.env.LP_VIEWPORTS || '').split(',').filter(Boolean);
 const scenarios = SCENARIOS.filter(s => !only.length || only.includes(s.name));
@@ -226,12 +233,15 @@ if (!CHROME) {
   test.before(async () => { browser = await start(); });
   test.after(() => { if (browser) browser.stop(); });
   for (const viewport of viewports) {
-    test(`layout at ${viewport} (${VIEWPORTS[viewport].slice(0, 2).join(' x ')}): no overflow, clipping, truncation, answers over Nook or targets under 44 px`, async () => {
+    test(`layout at ${viewport} (${VIEWPORTS[viewport].slice(0, 2).join(' x ')}): no overflow, clipping, truncation, answers over Nook, targets under 44 px, level tiles out of view, or a moved top-left control`, async () => {
       const report = [];
       for (const scenario of scenarios) {
         const problems = await run(browser, viewport, scenario, shots);
         for (const p of problems) report.push(`${viewport} ${scenario.name}: ${p}`);
       }
+      // One top-left corner on every screen: the shelf link in each game and the back arrow on each sub-menu.
+      const seen = corners[viewport] || [], first = seen[0];
+      for (const [name, rect] of seen) if (rect.some((n, i) => Math.abs(n - first[1][i]) > 1)) report.push(`${viewport} ${name}: the top-left control is at ${rect} but at ${first[1]} in ${first[0]}`);
       assert.deepEqual(report, [], '\n' + report.join('\n'));
     });
   }

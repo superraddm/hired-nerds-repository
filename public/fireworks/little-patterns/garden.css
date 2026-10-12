@@ -388,7 +388,7 @@ button.word-card{display:flex;flex-direction:column;align-items:center;justify-c
   .sum-build{gap:6px}
 }
 
-/* ---- the chooser (the pill's sheet) ---- */
+/* ---- the grown-ups' chooser (Levels and puzzles) ---- */
 .level-picker,.set-picker,.family-picker{display:flex;flex-direction:column;gap:8px;margin:12px 0 4px}
 .level-picker button,.set-picker button,.family-picker button{min-height:48px;text-align:left;font-size:15px;padding:10px 14px}
 .level-picker button[aria-pressed=true],.family-picker button[aria-pressed=true]{background:#e1d3f1;border-color:#b09bd0;color:#594777;outline:3px solid #594777;outline-offset:2px}
@@ -405,7 +405,6 @@ button.word-card{display:flex;flex-direction:column;align-items:center;justify-c
 .level-beads .shape.triangle{border-left-width:9px;border-right-width:9px;border-bottom-width:16px}
 .level-beads .mini-group{display:inline-flex;gap:2px;padding:2px 3px;border:1px dashed #b2c393;border-radius:6px;margin-right:3px}
 .level-beads b{font-size:15px}
-.pill-beads{display:inline-flex;align-items:center;gap:3px}
 #pick-sum label{display:block}
 
 /* ---- Softer and reduced motion: the picture is shown at once ---- */
