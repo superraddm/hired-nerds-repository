@@ -139,4 +139,4 @@ guards it.
 6. Device check outstanding: DEVICE-TEST.md has three new lines (the lists, the marked activity and the switch in a
    game, Blocks' shelf button and Pace), for the S24 and the iPad held both ways.
 
-Commit: HASH
+Commit: 996c32e (996c32e1fe5c4a4f42c32bde8ad4eeade1eeed83), with this line added in the commit that follows it.
