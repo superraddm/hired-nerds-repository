@@ -213,3 +213,9 @@ button{font:inherit;color:inherit;appearance:none;border:0;background:none;paddi
 @media (min-width:760px) and (min-height:521px){.tiles.v2{grid-template-columns:repeat(3,minmax(0,1fr))}.peek{width:110px;height:84px}.peek-cell .nook-face-icon{width:34px;height:34px}.acts{grid-template-columns:repeat(2,minmax(0,1fr));max-width:720px;margin:auto}}
 .lvl-beads{display:flex;gap:4px;align-items:center}
 .peek-cell .gap{min-width:0;min-height:0;width:10px;height:10px;padding:0}.peek-cell .gap.small{width:7px}
+
+/* folder preview, simplified: one glyph per cell */
+.peek{gap:6px;padding:6px;background:#ffffff70}
+.peek-cell{background:#fffdf3}
+.peek-cell .glyph{width:26px;height:26px}
+@media (min-width:760px) and (min-height:521px){.peek-cell .glyph{width:34px;height:34px}}

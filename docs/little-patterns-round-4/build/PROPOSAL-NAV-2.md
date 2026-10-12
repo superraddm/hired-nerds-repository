@@ -36,10 +36,12 @@ daily). A badge or a border is a symbol that has to be learned; a preview is the
 ### A. The shelf
 - Order: the six games with choices first (Count, Add, Words, Patterns, Shapes, Feelings), a thin rule, then Paint
   and Blocks. Count joins the first group because its levels are a child choice (how many apples).
-- Folder preview instead of badge and border: each tile in the first group shows a small 2x2 (or 2x1) preview of
-  the pictures the child will find inside: Add shows "2 + 1 apples" and "3 apples with one crossed"; Feelings shows
-  four small Nook faces; Words shows the four word-game pictures; Count and Patterns show their level pictures. The
-  previews are the same pictures as the sub-menu tiles, only small, so the child learns the link by seeing it.
+- Folder preview instead of badge and border: each tile in the first group shows a small 2x2 (or 2x1) grid of
+  simple glyphs, one per activity or level inside, drawn in the tile's own ink and in the same flat style as the
+  Paint and Blocks icons (Jof, 12 October: the first version with tiny copies of the pictures was too busy). Add:
+  a plus and a minus. Count: one, two, three dots and two bars. Words: A, a dashed box, two word blocks, a 3.
+  Patterns: two beads, three beads, a plus. Shapes: a pentagon and a hexagon outline. Feelings: four round faces.
+  The sub-menu tiles then show the full pictures.
 - Paint and Blocks keep their single icon. No dashed borders, no corner badges.
 
 ### B. The sub-menu screen (one per game in the first group)
