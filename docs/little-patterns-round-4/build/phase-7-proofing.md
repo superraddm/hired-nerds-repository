@@ -102,4 +102,4 @@ the bottom of an otherwise empty card (Nook and its word are now centred togethe
 3. Portrait tablets now use the phone arrangement (Nook above the task) in every game. The harness passes everywhere,
    but Jof should see it on the iPad held upright (DEVICE-TEST.md's portrait pass covers it).
 
-Commit: recorded in the commit that follows this one.
+Commit: a3fbe41 (a3fbe412c43c6e1ce3e3590343aaf0e4b6c61f28), with this line added in the commit that follows it.
