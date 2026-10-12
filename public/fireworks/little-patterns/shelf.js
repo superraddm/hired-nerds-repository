@@ -3,10 +3,15 @@
 
    window.LPShelf:
      mountHub(container)            the shelf page: Nook's greeting, eight tile buttons, the Grown-ups hold
-     mountOverlay({current,onMode}) the in-game shelf behind the top bar's shelf button. Tiles for the four Garden
+     mountOverlay({current,onMode,levels})
+                                    the in-game shelf behind the top bar's shelf button. Tiles for the four Garden
                                     activities carry data-mode and switch in place through onMode; the current
                                     tile is marked and closes the overlay; the others navigate. Android back
                                     opens it through ONE history entry, pushed once (at the first touch or key press).
+                                    levels (phase 7): { name(), now() -> { text, art }, open() } puts the game's own
+                                    section at the top of the Grown-ups sheet: its name, the level now and "Levels and
+                                    puzzles", which opens the game's chooser for every difficulty and content choice.
+                                    The child's pill never reaches that chooser; only the hold does.
      open() / close() / setCurrent(id) / isOpen
      gate(button, onOpen)           the hold: 2,000 ms in all, the ring from 300 ms, cancelled by release, a move
                                     over 10 px, pointer cancel or the page hiding; Enter or Space held is the
@@ -77,8 +82,16 @@
   }
 
   // ---- the Grown-ups sheet ----
+  let levels = null;
+  // The game's section (phase 7): set inside a game, first under the heading; on the hub a line under the list says
+  // where each game's levels are.
+  function section() {
+    if (!levels) return '';
+    return '<section class="gu-game" aria-labelledby="gu-game-name"><h3 id="gu-game-name"></h3><p class="gu-now"><span class="gu-now-art" aria-hidden="true"></span><span class="gu-now-text"></span></p>' +
+      '<button type="button" id="gu-levels">Levels and puzzles</button></section>';
+  }
   function grownups(from) {
-    const el = LP.openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Grown-ups</h2><button data-close aria-label="Close Grown-ups">×</button></div>' +
+    const el = LP.openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Grown-ups</h2><button data-close aria-label="Close Grown-ups">×</button></div>' + section() +
       '<p>Children reach this sheet only with a two-second press and hold. Locking the device to one app (Guided Access on iPad, App pinning or Samsung Kids on Android) is a device setting.</p>' +
       '<div class="gu-list">' +
       '<button type="button" id="gu-player"></button>' +
@@ -87,7 +100,7 @@
       '<a href="content.html">All game content and answers</a>' +
       '<a href="feelings-content.html">Feelings: every word and story</a>' +
       '<a id="gu-boom" href="' + boomHref() + '">K-Pop BOOM! fireworks, next door</a>' +
-      '</div><p class="lp-small" id="gu-sound"></p>');
+      '</div>' + (levels ? '' : '<p class="lp-small" id="gu-levels-hint">Levels and puzzles: open a game, tap the shelf button and hold Grown-ups there. The sheet then starts with that game’s levels.</p>') + '<p class="lp-small" id="gu-sound"></p>');
     el.classList.add('lp-rise');
     const player = LP.player;
     el.querySelector('#gu-player').textContent = 'Who is playing: ' + player.avatar + ' ' + player.name;
@@ -95,6 +108,14 @@
     el.querySelector('#gu-player').onclick = () => LP.choosePlayer();
     el.querySelector('#gu-settings').onclick = () => LP.settings();
     el.querySelector('#gu-about').onclick = about;
+    if (levels) {
+      const now = levels.now() || {};
+      el.querySelector('#gu-game-name').textContent = levels.name();
+      el.querySelector('.gu-now-text').textContent = 'Now: ' + now.text;
+      const art = el.querySelector('.gu-now-art');
+      if (now.art) art.innerHTML = now.art; else art.remove();
+      el.querySelector('#gu-levels').onclick = () => levels.open();
+    }
     return el;
   }
   function about() {
@@ -136,6 +157,7 @@
     options = options || {};
     current = options.current || '';
     onMode = options.onMode || null;
+    levels = options.levels || null;
     overlay = doc.createElement('div');
     overlay.className = 'lp-overlay';
     overlay.id = 'shelf-overlay';

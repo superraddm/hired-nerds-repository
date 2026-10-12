@@ -30,9 +30,18 @@ html.lp-frame img,html.lp-frame svg{-webkit-user-drag:none;-webkit-touch-callout
 .chip[aria-pressed=true]{background:var(--lilac);border-color:#7862a4;color:#4d3b73;box-shadow:inset 0 0 0 1px #7862a4}
 .pill{min-height:44px;min-width:44px;padding:0 12px;border-radius:22px;background:#fff1b5;border:2px solid #dcc05a;font-weight:900;font-size:15px;color:#5a4a12;display:flex;align-items:center;gap:6px;flex:none;white-space:nowrap;box-shadow:0 3px 0 #e5d085}
 .pill:after{content:"\25BE";font-size:12px}
-.pill .shape{width:14px;height:14px;flex:none}
-.pill .shape.triangle{border-left-width:8px;border-right-width:8px;border-bottom-width:14px}
-.pill .shape.oval{width:18px;height:11px}.pill .shape.diamond{width:11px;height:11px;margin:0 2px}
+.pill .shape,.gu-now .shape{width:14px;height:14px;flex:none}
+.pill .shape.triangle,.gu-now .shape.triangle{border-left-width:8px;border-right-width:8px;border-bottom-width:14px}
+.pill .shape.oval,.gu-now .shape.oval{width:18px;height:11px}.pill .shape.diamond,.gu-now .shape.diamond{width:11px;height:11px;margin:0 2px}
+/* Two audiences (phase 7): the pill is the child's. A game with more than two activities (and Patterns) makes it a
+   button that opens the child's picker; beside two chips it is a small read-only label of the level a grown-up set
+   in Grown-ups, drawn where a picture says it. A tap on the label only lights it for a moment. */
+.pill-art{display:inline-flex;align-items:center;gap:2px;flex:none}
+.pill-art svg{display:block;width:16px;height:16px;overflow:visible}
+.pill.pill-label{min-height:36px;padding:0 10px;gap:5px;background:#fffbe8;border:1.5px solid #e3d49a;box-shadow:none;font-size:14px;color:#6a5a22;cursor:default;-webkit-user-select:none;user-select:none}
+.pill.pill-label:after{content:none}
+.pill.pill-label.nudged{animation:pill-nudge 600ms linear}
+@keyframes pill-nudge{0%,100%{background-color:#fffbe8;border-color:#e3d49a}25%{background-color:#ffe9a0;border-color:#c9a93a}}
 
 .nf-stage{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);gap:4px;min-height:0;min-width:0;padding:0 12px}
 .nf-nook{display:flex;align-items:flex-end;gap:10px;min-width:0}
@@ -120,6 +129,15 @@ html.lp-frame img,html.lp-frame svg{-webkit-user-drag:none;-webkit-touch-callout
   .answers{min-height:104px}
   .nf-actions{width:100%;max-width:600px;margin:0 auto;padding:12px 20px 20px}
 }
+/* ---- portrait tablets and tall windows (phase 7): Nook and the bubble above the task, as on a phone but larger, so
+   the card keeps the whole width (an iPad held upright, a tall desktop pane) ---- */
+@media (min-width:760px) and (min-height:521px) and (orientation:portrait){
+  .nf-stage{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);gap:8px}
+  .nf-nook{flex-direction:row;align-items:flex-end;justify-content:center;gap:16px}
+  .nook-btn{width:150px;height:180px}
+  .nf-bubble{flex:0 1 560px;width:auto;order:0;margin:0 0 40px;text-align:left;font-size:22px}
+  .nf-bubble:after{left:-9px;bottom:14px;transform:rotate(45deg)}
+}
 
 @media (max-width:389px){.nf-top{gap:6px;padding:6px 8px}.chip,.pill{padding:0 9px;font-size:14px}.nf-modes{gap:4px}}
 
@@ -187,18 +205,47 @@ html.lp-frame img,html.lp-frame svg{-webkit-user-drag:none;-webkit-touch-callout
 
 /* ---- the Grown-ups sheet (inside shared.js's dialog) ---- */
 .gu-list{display:flex;flex-direction:column;gap:8px;margin:16px 0}
+/* the game's own section (phase 7): its name, the level now, and Levels and puzzles (every difficulty and content choice) */
+.gu-game{margin:4px 0 12px;padding:12px 14px;border:2px solid #d8d0a8;border-radius:16px;background:#fff8e4}
+.lp-dialog .gu-game h3{margin:0 0 4px;font-size:19px;line-height:1.25}
+.lp-dialog .gu-now{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;margin:0 0 10px;font-size:15px;font-weight:bold;line-height:1.4}
+.gu-now-art{display:inline-flex;align-items:center;gap:3px;flex:none}
+.gu-now svg{display:block;width:20px;height:20px;overflow:visible}
+.lp-dialog #gu-levels{width:100%;background:#fff1b5;border-color:#dcc05a;color:#5a4a12}
+
+/* ---- the child's picker (phase 7): big tiles, a picture and a short name each, the current one marked; no title,
+   prose or close button. A tap on a tile chooses it; a tap anywhere else, or on the current tile, closes. ---- */
+.lp-modal.lp-kid{background:#24374d73;padding:16px}
+.lp-kid .lp-dialog{width:100%;max-width:720px;padding:14px;background:#fffcdf;border:3px solid #e4d69c;border-radius:28px;box-shadow:0 6px 0 #1a2e4a26}
+.lp-kid.n2 .lp-dialog{max-width:460px}
+.kid-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.lp-kid .kid-tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:0;min-height:140px;padding:12px 8px;border-radius:22px;border:3px solid #d9c98f;background:#fff8e4;box-shadow:0 4px 0 #e6d9a6;font-weight:900;font-size:19px;line-height:1.15;color:#4d3b73;text-align:center;transition:transform 70ms var(--lp-out),box-shadow 70ms var(--lp-out)}
+.lp-kid .kid-tile:active{transform:translateY(3px);box-shadow:0 1px 0 #e6d9a6}
+.lp-kid .kid-tile[aria-current=true]{background:#efe6fa;border-color:#7862a4;box-shadow:0 4px 0 #b09bd0}
+.kid-art{display:flex;align-items:center;justify-content:center;gap:4px;height:76px;max-width:100%;pointer-events:none}
+.kid-art>svg{display:block;height:100%;width:auto;max-width:100%}
+.kid-word{display:block;max-width:100%;overflow-wrap:break-word}
+@media (max-width:389px){.lp-modal.lp-kid{padding:10px}.lp-kid .lp-dialog{padding:10px}.kid-tiles{gap:10px}.lp-kid .kid-tile{padding:10px 4px;font-size:18px}}
+@media (min-width:640px) and (min-height:521px){.kid-tiles.n4{grid-template-columns:repeat(4,minmax(0,1fr))}.lp-kid .kid-tile{min-height:180px;font-size:20px}.kid-art{height:96px}}
+@media (orientation:landscape) and (max-height:520px){
+  .lp-modal.lp-kid{padding:10px}
+  .lp-kid .lp-dialog{padding:12px}
+  .kid-tiles.n4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .lp-kid .kid-tile{min-height:0;height:min(220px,calc(var(--app-h) - 64px));font-size:17px;gap:6px}
+  .kid-art{height:min(76px,24vh)}
+}
 .gu-list button{text-align:left}
 .gu-list a{min-height:48px;display:flex;align-items:center;padding:10px 16px;border:1px solid #a6bba0;border-radius:12px;background:#fff;color:inherit;font-weight:700;text-decoration:none}
 
 /* ---- Softer and reduced motion: no travel, no wiggle; short fades only ---- */
 .softer .nook-wiggle,.softer .lp-overlay>.shelf,.softer .lp-modal.lp-rise .lp-dialog{animation:none}
 .softer .tile,.softer .answer,.softer .nf-actions>button{transition:opacity 120ms linear}
-.softer .tile:active,.softer .answer:active,.softer .nf-actions>button:active{transform:none}
+.softer .tile:active,.softer .answer:active,.softer .nf-actions>button:active,.softer .lp-kid .kid-tile:active{transform:none}
 @media (prefers-reduced-motion:reduce){
   .nook-wiggle,.lp-overlay>.shelf,.lp-modal.lp-rise .lp-dialog{animation:none}
   .lp-overlay{animation-duration:120ms}
   .tile,.answer,.nf-actions>button{transition:opacity 120ms linear}
-  .tile:active,.answer:active,.nf-actions>button:active{transform:none}
+  .tile:active,.answer:active,.nf-actions>button:active,.lp-kid .kid-tile:active{transform:none}
 }
 /* ---- Nook's small pay-offs in the games (round 4, item 33): on success only, each under a second ----
    .nook-munch   Take away: the mouth opens and closes three times (frame.js swaps it), with a 2 px chew

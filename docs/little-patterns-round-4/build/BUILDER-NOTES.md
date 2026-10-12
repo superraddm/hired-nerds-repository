@@ -19,6 +19,11 @@ master `public/fireworks/little-patterns/assets/nook.png` (560x672). Static mock
   to the minified-style one-line-per-function files, and the Edit tool for small unique substrings.
 - No runtime network, no runtime TTS, no analytics. Speech is bundled clips only.
 - Scope rules in BUILD-BRIEF section 2 apply to every line of code.
+- Two audiences, two controls (Jof's rule, PROOFING-LOG item 5, built in phase 7): a child switches the kind of game
+  with one tap and no reading (the two chips, or the pill's picker `LPFrame.picker`: big tiles, a picture and a name);
+  everything that sets difficulty or content is behind the Grown-ups hold, in the game's section of the sheet (Levels
+  and puzzles, passed as `levels` to `LPShelf.mountOverlay`). Beside chips the pill is a read-only label
+  (`LPFrame.pill` without a picker). No tap on a play screen may reach a grown-ups' chooser.
 
 ## File map (current live build)
 - `index.html` + `home.css`: the hub. `shared.css`, `shared.js` (players, prefs, settings dialog, modal, audio: music,
@@ -49,12 +54,14 @@ master `public/fireworks/little-patterns/assets/nook.png` (560x672). Static mock
 ## Tests
 ```
 node --test tools/test-little-patterns.cjs tools/test-little-patterns-ui.cjs tools/test-little-patterns-voice.cjs tools/test-little-patterns-feelings.cjs tools/test-little-patterns-nook.cjs tools/test-little-patterns-shapes.cjs
-node --test tools/test-little-patterns-layout.cjs   # headless Chrome, six viewports, about ten minutes
+node --test tools/test-little-patterns-layout.cjs   # headless Chrome, eight viewports, about twenty minutes
 node tools/stage-little-patterns.cjs --check
 ```
 jsdom is in `.wrangler/test-runtime/node_modules/jsdom`. The UI harness `app(t,page,seed,blocked,soundOn)` evals the
 page's scripts in jsdom with mocked `Audio` (records `plays`), `speechSynthesis`, and `fetch` that throws ("a game
-must not send player data over the network"), so the Me Blob bundle test overrides fetch itself. 198 tests pass after phase 6 (128 before round 4).
+must not send player data over the network"), so the Me Blob bundle test overrides fetch itself. 198 tests pass after phase 6 (128 before round 4), 203 after phase 7.
+Tests that need a grown-ups' chooser open it as a parent would: the shelf, the hold faked with mock timers, then
+`#gu-levels` (`grownups(a)` / `parentLevels(a)` in the UI, Feelings and Shapes suites).
 Rewrite tests that target removed chrome; keep their intent.
 
 ## Browser screenshots and layout checks
@@ -62,7 +69,8 @@ Serve: `node tools/serve-fireworks.cjs 8787` -> http://localhost:8787/little-pat
 for the S24 and iPad). Headless Chrome: `C:/Program Files/Google/Chrome/Application/chrome.exe` with
 `--headless=new --remote-debugging-port=<port> --user-data-dir=<scratch dir>`; drive it over CDP with Node 22's global
 `fetch` + `WebSocket` (see `docs/little-patterns-round-4/mockups/shoot.cjs` for the pattern, the six viewports
-phone 412x860 / small 360x740 / land 915x356 / land2 740x360 / ipad 1024x698 / desk 1280x800, and the checks: page
+phone 412x860 / small 360x740 / land 915x356 / land2 740x360 / ipad 1024x698 / desk 1280x800, and since phase 7 tall
+1380x1600 (a tall desktop pane) and ipad-portrait 768x1024; the checks: page
 overflow, content clipped inside the task card, truncated labels, answers overlapping Nook; add a 44x44 touch-target
 check). Headless Chrome on this PC reports prefers-reduced-motion: reduce; emulate `no-preference` to see motion.
 Seed test state from the hub page, not the game page (pagehide saves overwrite localStorage). Since phase 6 the

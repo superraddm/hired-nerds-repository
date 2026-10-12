@@ -17,7 +17,9 @@
    and the shape warms. A
    wrong answer changes only the bubble (a kind retry line). Rounds come from learning.js (shapeRound); the mode,
    the level, each mode's place and each round's counted sides and Help step are saved per player and restored by
-   round id. The level pill ("Shapes 1", "Shapes 2") opens the chooser; the level is shared by both modes. */
+   round id. The level is shared by both modes. Two audiences (phase 7): the child switches Sides / Name with the two
+   chips; the pill is a small read-only label of the level ("Shapes 1" with a triangle, square and circle, "Shapes 2"
+   with a pentagon and hexagon), and the level chooser is the grown-ups', reached only from Grown-ups. */
 (function () {
   'use strict';
   const $ = id => document.getElementById(id);
@@ -122,10 +124,10 @@
     if (!el.firstChild) el.innerHTML = [['sides', 'Sides'], ['name', 'Name']].map(([m, label]) => '<button type="button" class="chip" data-shapes-mode="' + m + '" aria-pressed="false">' + label + '</button>').join('');
     for (const b of el.querySelectorAll('[data-shapes-mode]')) b.setAttribute('aria-pressed', String(b.dataset.shapesMode === mode));
   }
-  function pill() {
-    $('support').innerHTML = '<span>Shapes ' + level + '</span>';
-    $('support').setAttribute('aria-label', 'Choose the shapes. Now: Shapes ' + level);
-  }
+  const LEVEL_ICONS = { 1: ['triangle', 'square', 'circle'], 2: ['pentagon', 'hexagon'] };
+  const LEVEL_TEXT = { 1: 'triangles, squares, rectangles, circles and ovals, turned and stretched', 2: 'adds pentagons and hexagons, some turned or uneven' };
+  const levelArt = n => LEVEL_ICONS[n].map(icon).join('');
+  function pill() { F.pill({ text: 'Shapes ' + level, art: levelArt(level), label: 'Level: Shapes ' + level }); }
   // The bubble renders from round state: the success line once done, the kind retry line after a wrong answer,
   // otherwise the mode's prompt. It is a button that hears its line again from bundled clips.
   function bubble() {
@@ -296,10 +298,11 @@
     const target = $('task').querySelector('.shape-stage[tabindex]') || $('task').querySelector('button:not(:disabled)');
     if (target) target.focus({ preventScroll: true });
   }
+  // The grown-ups' level chooser (from Grown-ups only). Closing it closes the shelf too, back to the game.
   function chooser() {
-    const el = LP.openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Choose the shapes</h2><button data-close aria-label="Close the shape chooser">×</button></div><p>Every level is open. Sides counts the shapes with straight sides; Name has them all.</p><div class="level-picker shape-levels" role="group" aria-label="Level"></div>', focusTask);
+    const el = LP.openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Choose the shapes</h2><button data-close aria-label="Close the shape chooser">×</button></div><p>Every level is open. Sides counts the shapes with straight sides; Name has them all.</p><div class="level-picker shape-levels" role="group" aria-label="Level"></div>', () => { S.close(); focusTask(); });
     const box = el.querySelector('.shape-levels');
-    [[1, 'triangles, squares, rectangles, circles and ovals, turned and stretched'], [2, 'adds pentagons and hexagons, some turned or uneven']].forEach(([n, text]) => {
+    [[1, LEVEL_TEXT[1]], [2, LEVEL_TEXT[2]]].forEach(([n, text]) => {
       const b = document.createElement('button');
       const shown = n === 1 ? L.SHAPE_LEVELS[0] : L.SHAPE_LEVELS[1].filter(name => !L.SHAPE_LEVELS[0].includes(name));
       b.type = 'button'; b.dataset.level = String(n);
@@ -328,7 +331,6 @@
     if (!e.repeat) countSide(nextSide(current()));
   });
   $('modes').addEventListener('click', e => { const b = e.target.closest('[data-shapes-mode]'); if (b) setMode(b.dataset.shapesMode); });
-  $('support').addEventListener('click', chooser);
   $('help').addEventListener('click', help);
   $('next').addEventListener('click', () => { stopHelp(); indices[mode] = (indices[mode] || 0) + 1; rounds[mode] = create(mode); render(); focusTask(); });
   $('repeat').addEventListener('click', () => { stopHelp(); rounds[mode] = create(mode); render(); focusTask(); });
@@ -345,7 +347,7 @@
   restore();
   const requested = location.hash.slice(1);
   if (MODES.includes(requested)) mode = requested;
-  S.mountOverlay({ current: 'shapes' });
+  S.mountOverlay({ current: 'shapes', levels: { name: () => 'Shapes', now: () => ({ text: 'Shapes ' + level + ': ' + LEVEL_TEXT[level], art: levelArt(level) }), open: chooser } });
   render();
   window.LPShapes = { toUser, tapAt, nextSide, HIT_PX, VIEW };
 })();

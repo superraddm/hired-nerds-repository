@@ -39,8 +39,23 @@ function app(t, { page = 'feelings.html', seed = {}, blocked = false, failed = f
   const perf = () => w.LPFeelings && w.LPFeelings.performance;
   const big = () => { const s = query('.perform svg.nook'); return s && s.getAttribute('data-feeling'); };
   const ended = () => { const p = players[0]; assert.ok(p && p.onended, 'a clip is playing'); p.onended(); };
-  return { w, query, all, click, store, clip, perf, big, ended, requests, plays, players, urls, revoked, pending, utterances, flush };
+  return { w, query, all, click, store, clip, perf, big, ended, requests, plays, players, urls, revoked, pending, utterances, flush, t };
 }
+// Two audiences (phase 7): the child picks an activity from the pill's picker; the level and the story are the
+// grown-ups', behind the two-second hold (faked with mock timers, as the gate test does) and Levels and puzzles.
+function grownups(a) {
+  a.click('#shelf-open');
+  const gate = a.query('#shelf-overlay [data-grownups]');
+  let mine = false;
+  try { a.t.mock.timers.enable({ apis: ['setTimeout'] }); mine = true; } catch (_) { /* the test already runs mock timers */ }
+  try {
+    gate.dispatchEvent(new a.w.MouseEvent('pointerdown', { bubbles: true, cancelable: true, clientX: 10, clientY: 10, button: 0 }));
+    a.t.mock.timers.tick(2000);
+  } finally { if (mine) a.t.mock.timers.reset(); }
+  assert.equal(a.query('#dialog-title').textContent, 'Grown-ups');
+}
+const parentLevels = a => { grownups(a); a.click('#gu-levels'); };
+const pick = (a, id) => { a.click('#support'); a.click(`.lp-modal [data-pick="${id}"]`); };
 const feelings = extra => ({ [P + 'feelings-v1']: { version: 2, mode: 'board', index: 0, level: 1, story: 0, seed: 1, ...extra } });
 const timers = t => { t.mock.timers.enable({ apis: ['setTimeout'] }); return ms => t.mock.timers.tick(ms); };
 const SOUND_OFF = { 'lp-sound': 'off' };
@@ -136,17 +151,54 @@ test('Feelings is a Nook frame page: the shelf button and one pill, no Back, no 
   for (const f of ['feelings.html', 'feelings.js', 'feelings.css', 'feelings-data.js', 'feelings-art.js', 'frame.js', 'frame.css', 'nook-art.js', 'nook.css', 'shelf.js', 'icons.js']) assert.ok(files.includes(f), f + ' ships');
 });
 
-test('the pill opens the chooser: the four activities, the two Which feeling? levels and any story; every activity is open', t => {
+test('the pill opens the child’s picker: four big tiles (the Feelings picture, Nook’s face, a Friends scene, Nook’s face with the neutral ring), one name each, no title, prose or close button; one tap switches', t => {
   const a = app(t);
+  assert.equal(a.query('#support').tagName, 'BUTTON');
+  assert.equal(a.query('#support').getAttribute('aria-label'), 'Choose a Feelings game. Now: Nook feels…');
   a.click('#support');
+  const modal = a.query('.lp-modal');
+  assert.ok(modal.classList.contains('lp-kid'));
+  assert.deepEqual(a.all('.lp-modal [data-pick]').map(b => b.dataset.pick), ['board', 'which', 'friends', 'me']);
+  assert.deepEqual(a.all('.lp-modal .kid-word').map(b => b.textContent), ['Nook feels…', 'Which feeling?', 'Friends', 'Me']);
+  const art = id => a.query(`.lp-modal [data-pick="${id}"] .kid-art`);
+  assert.equal(art('board').querySelector('svg').outerHTML, a.query('#shelf-overlay [data-shelf="feelings"] svg').outerHTML, 'the Feelings tile’s own picture');
+  assert.ok(art('which').querySelector('svg.nook-face'), 'Nook’s face');
+  assert.ok(art('friends').querySelector('svg.story-art[aria-hidden="true"]'), 'a Friends scene, hidden from screen readers like every tile picture');
+  assert.equal(art('friends').querySelector('[role="img"]'), null);
+  assert.equal(art('me').querySelector('.nook-rim').getAttribute('fill'), a.w.NookArt.COLOURS.ring, 'Me: the neutral ring');
+  assert.equal(modal.querySelectorAll('[data-close], p, [data-level], [data-stories], [data-story], [data-activity]').length, 0, 'no close button, prose, levels or stories');
+  assert.ok(a.query('#dialog-title').classList.contains('sr-only'));
+  assert.equal(a.query('.lp-modal [aria-current="true"]').dataset.pick, 'board');
+  a.click('.lp-modal [data-pick="board"]');
+  assert.equal(a.query('.lp-modal'), null, 'the current tile closes it');
+  a.click('#support'); a.click('.lp-modal');
+  assert.equal(a.query('.lp-modal'), null, 'a tap outside the tiles closes it');
+  pick(a, 'which');
+  assert.equal(a.query('.lp-modal'), null);
+  assert.equal(a.w.LPFeelings.activity, 'which');
+  assert.equal(a.query('#support').textContent, 'Which feeling?');
+  pick(a, 'friends');
+  assert.equal(a.w.LPFeelings.activity, 'friends');
+  assert.equal(a.store('feelings-v1').mode, 'friends');
+});
+
+test('Which feeling?’s level and the choice of a story are the grown-ups’: Grown-ups starts with the Feelings section, and Levels and puzzles holds the four activities, the two levels and any story; the pill follows', t => {
+  const a = app(t);
+  grownups(a);
+  assert.equal(a.query('.gu-game h3').textContent, 'Feelings');
+  assert.equal(a.query('.gu-now-text').textContent, 'Now: Nook feels…');
+  a.click('#gu-levels');
   assert.deepEqual(a.all('[data-activity]').map(b => b.dataset.activity), ['board', 'which', 'friends', 'me']);
   assert.deepEqual(a.all('[data-activity] b').map(b => b.textContent), ['Nook feels…', 'Which feeling?', 'Friends', 'Me']);
   assert.equal(a.query('[data-activity="board"]').getAttribute('aria-pressed'), 'true');
   a.click('[data-level="2"]');
   assert.equal(a.w.LPFeelings.activity, 'which');
   assert.equal(a.store('feelings-v1').level, 2);
-  assert.equal(a.query('#support').textContent, 'Which feeling? 2');
-  a.click('#support'); a.click('[data-stories]');
+  assert.equal(a.query('#support').textContent, 'Which feeling? 2', 'the pill shows the level a grown-up chose');
+  assert.equal(a.query('#shelf-overlay').hidden, true, 'back in the game');
+  grownups(a);
+  assert.equal(a.query('.gu-now-text').textContent, 'Now: Which feeling?, level 2: all ten');
+  a.click('#gu-levels'); a.click('[data-stories]');
   assert.equal(a.all('[data-story]').length, 20);
   a.click('[data-story="11"]');
   assert.equal(a.w.LPFeelings.activity, 'friends');
@@ -336,8 +388,8 @@ test('a new card, the shelf, a player change, pagehide and a bfcache restore can
   // ticks: one visit to the board
   a.click('[data-feel="surprised"]'); await flush(); tick(160); a.click('#done'); tick(300);
   assert.deepEqual(a.all('.feel.done').map(b => b.dataset.feel), ['surprised']);
-  a.click('#support'); a.click('[data-activity="me"]');
-  a.click('#support'); a.click('[data-activity="board"]');
+  pick(a, 'me');
+  pick(a, 'board');
   assert.equal(a.all('.feel.done').length, 0, 'opening the board again starts with no ticks');
   assert.doesNotMatch(a.query('#task').textContent, /\d/, 'no counter');
 });
@@ -516,7 +568,7 @@ test('Me privacy: ONE fixed Blob bundle of every name and acknowledgement is fet
   assert.ok(expected.length >= 12);
   assert.deepEqual(a.requests.map(r => r.url).sort(), expected.sort(), 'the fixed set, on the board, before Me is even opened');
   assert.ok(a.requests.every(r => r.options.credentials === 'omit' && r.options.referrerPolicy === 'no-referrer'));
-  a.click('#support'); a.click('[data-activity="me"]');
+  pick(a, 'me');
   const before = JSON.stringify(a.store('feelings-v1'));
   for (const f of [...F.FEELINGS, 'unsure']) { a.click(f === 'unsure' ? '[data-me="unsure"]' : `[data-feel="${f}"]`); a.click('#hear-me'); a.click('#done'); }
   assert.equal(a.requests.length, expected.length, 'no request chosen by an answer');
@@ -547,8 +599,8 @@ test('Me clears on leaving Me, a player change, pagehide and a bfcache restore (
   const a = app(t, { seed }); await flush();
   const bundle = a.requests.length;
   a.click('[data-feel="sad"]');
-  a.click('#support'); a.click('[data-activity="board"]');
-  a.click('#support'); a.click('[data-activity="me"]');
+  pick(a, 'board');
+  pick(a, 'me');
   assert.ok(a.query('.me-board'), 'leaving Me cleared it');
   a.click('[data-feel="sad"]');
   a.w.LP.choosePlayer(); a.all('.saved-text').find(b => b.textContent.includes('Second')).click();
@@ -556,7 +608,7 @@ test('Me clears on leaving Me, a player change, pagehide and a bfcache restore (
   assert.ok(!a.query('#activity').textContent.includes('You feel'));
   assert.equal(a.query('#hear-me'), null);
   assert.ok(!a.query('#speech').textContent.includes('You feel'));
-  a.click('#support'); a.click('[data-activity="me"]');
+  pick(a, 'me');
   a.click('[data-feel="angry"]');
   a.w.dispatchEvent(new a.w.Event('pagehide'));
   assert.equal(a.query('#hear-me'), null, 'pagehide clears it');
@@ -578,12 +630,12 @@ test('Me clears on leaving Me, a player change, pagehide and a bfcache restore (
   assert.ok(!texts.includes('You feel')); assert.ok(!texts.includes('worried'));
 });
 
-test('the chooser and Grown-ups mute stop private playback and make no request; sound off keeps Me silent', async t => {
+test('the picker and Grown-ups mute stop private playback and make no request; sound off keeps Me silent', async t => {
   const a = app(t, { seed: feelings({ mode: 'me' }) }); await flush();
   const n = a.requests.length;
   a.click('[data-feel="sad"]');
   const player = a.players[0]; assert.match(player.src, /^blob:/);
-  a.click('#support'); assert.equal(player.src, '', 'opening the chooser stops it');
+  a.click('#support'); assert.equal(player.src, '', 'opening the picker stops it');
   a.w.LP.closeModal();
   a.click('#hear-me'); assert.match(player.src, /^blob:/);
   a.w.LP.setSound(false); assert.equal(player.src, '');
@@ -651,7 +703,7 @@ test('saved state is an allow-list per player: activity, place, level, story and
   assert.deepEqual(Object.keys(a.store('feelings-v1')).sort(), ['index', 'level', 'mode', 'seed', 'story', 'version']);
   assert.equal(a.store('feelings-v1').mode, 'which');
   const b = app(t, { blocked: true });
-  b.click('#support'); b.click('[data-activity="me"]');
+  pick(b, 'me');
   b.w.LP.savePrefs({ ...b.w.LP.prefs, case: 'lower', soft: true });
   assert.ok(b.w.document.body.classList.contains('softer'));
   assert.equal(b.query('[data-feel="happy"] .feel-word').textContent, 'happy');

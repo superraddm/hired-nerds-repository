@@ -266,7 +266,20 @@ function app(t, seed = {}, soundOn = true) {
   // a pointer tap at a point in the shape's own units, through the page's matrix
   const tap = (ux, uy) => query('.shape-stage').dispatchEvent(new w.MouseEvent('click', { bubbles: true, cancelable: true, clientX: 2 * ux + 100, clientY: 2 * uy + 50, detail: 1 }));
   const clip = text => w.LPVoiceLibrary.clips[key(text)].file;
-  return { w, query, all, click, store, tap, plays, clip };
+  return { w, query, all, click, store, tap, plays, clip, t };
+}
+// Two audiences (phase 7): the level is the grown-ups', behind the two-second hold (faked with mock timers, as the gate
+// test does) and Levels and puzzles in the Shapes section of Grown-ups.
+function grownups(a) {
+  a.click('#shelf-open');
+  const gate = a.query('#shelf-overlay [data-grownups]');
+  let mine = false;
+  try { a.t.mock.timers.enable({ apis: ['setTimeout'] }); mine = true; } catch (_) { /* the test already runs mock timers */ }
+  try {
+    gate.dispatchEvent(new a.w.MouseEvent('pointerdown', { bubbles: true, cancelable: true, clientX: 10, clientY: 10, button: 0 }));
+    a.t.mock.timers.tick(2000);
+  } finally { if (mine) a.t.mock.timers.reset(); }
+  assert.equal(a.query('#dialog-title').textContent, 'Grown-ups');
 }
 const P = 'lp-player-player-1-';
 const place = (level, mode, example, rounds) => {
@@ -279,11 +292,18 @@ const tick = () => new Promise(r => setTimeout(r, 0));
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const tags = a => a.all('.big-shape .tag').map(g => [Number(g.dataset.tag), Number(g.textContent)]);
 
-test('the Shapes page is the frame: Sides and Name chips, one "Shapes 1" pill, a resting Nook with one bubble, the shape and three answers, Help; the stub is gone and the new files ship', t => {
+test('the Shapes page is the frame: Sides and Name chips, one "Shapes 1" label, a resting Nook with one bubble, the shape and three answers, Help; the stub is gone and the new files ship', t => {
   const a = app(t);
-  assert.deepEqual(a.all('.nf-top button').map(b => b.id || b.dataset.shapesMode), ['shelf-open', 'sides', 'name', 'support']);
+  assert.deepEqual(a.all('.nf-top button').map(b => b.id || b.dataset.shapesMode), ['shelf-open', 'sides', 'name'], 'the two chips switch the game; the level is not a button');
   assert.deepEqual(a.all('#modes .chip').map(b => [b.textContent, b.getAttribute('aria-pressed')]), [['Sides', 'true'], ['Name', 'false']]);
   assert.equal(a.query('#support').textContent, 'Shapes 1');
+  assert.equal(a.query('#support').tagName, 'SPAN');
+  assert.equal(a.query('#support').getAttribute('role'), 'img');
+  assert.equal(a.query('#support').getAttribute('aria-label'), 'Level: Shapes 1');
+  assert.equal(a.all('#support .pill-art .shape-icon').length, 3, 'drawn as a triangle, a square and a circle');
+  a.click('#support');
+  assert.equal(a.query('.lp-modal'), null, 'a tap on the label opens nothing');
+  assert.ok(a.query('#support').classList.contains('nudged'), 'it only lights for a moment');
   assert.equal(a.query('#nook svg.nook').getAttribute('data-feeling'), 'rest', 'Nook rests: the hello face, arms down');
   assert.equal(a.all('#page .nf-bubble').length, 1);
   assert.equal(a.query('#speech').textContent, 'How many sides? Tap each side.');
@@ -490,15 +510,21 @@ test('Again starts the same shape fresh and Next moves on; Nook rests again; eac
   assert.equal(a.query('#help').hidden, false); assert.equal(a.query('#next').hidden, true);
 });
 
-test('the pill opens the level chooser: Shapes 1 and Shapes 2, every level open; a choice changes both modes, and the place, level and rounds are saved and restored by id', t => {
+test('the level is chosen in Grown-ups: the Shapes section shows the level with its pictures, and Levels and puzzles holds Shapes 1 and Shapes 2 with pictures and sentences; a choice changes both modes and the label, and the place, level and rounds are saved and restored by id', t => {
   const a = app(t);
-  a.click('#support');
+  grownups(a);
+  assert.equal(a.query('.gu-game h3').textContent, 'Shapes');
+  assert.equal(a.query('.gu-now-text').textContent, 'Now: Shapes 1: triangles, squares, rectangles, circles and ovals, turned and stretched');
+  assert.equal(a.all('.gu-now-art .shape-icon').length, 3);
+  a.click('#gu-levels');
   assert.equal(a.query('#dialog-title').textContent, 'Choose the shapes');
   assert.deepEqual(a.all('.shape-levels [data-level]').map(b => [b.dataset.level, b.getAttribute('aria-pressed')]), [['1', 'true'], ['2', 'false']]);
   assert.equal(a.all('.shape-levels [data-level="2"] .shape-icon').length, 2, 'pentagon and hexagon pictures');
   a.click('.shape-levels [data-level="2"]');
   assert.equal(a.query('.lp-modal'), null, 'the chooser closes');
+  assert.equal(a.query('#shelf-overlay').hidden, true, 'back to the game');
   assert.equal(a.query('#support').textContent, 'Shapes 2');
+  assert.equal(a.all('#support .pill-art .shape-icon').length, 2, 'the label now shows a pentagon and a hexagon');
   assert.equal(a.store('shapes-position').level, 2);
   assert.match(a.store('shapes-rounds').sides.id, /^shapes:v2:L2:sides:/); assert.match(a.store('shapes-rounds').name.id, /^shapes:v2:L2:name:/);
   // restore: a fresh page for the same player comes back to the same place, count and Help step

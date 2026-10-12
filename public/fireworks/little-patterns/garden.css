@@ -419,3 +419,20 @@ button.word-card{display:flex;flex-direction:column;align-items:center;justify-c
 .nf-bubble .bubble-prop .shape.oval{width:22px;height:13px}
 .nf-bubble .bubble-prop .shape.diamond{width:12px;height:12px;margin:0 2px;transform:rotate(45deg)}
 .nf-bubble .bubble-prop b{font-size:14px;line-height:1;font-weight:900;color:#5a4a12}
+/* ---- the child's picker (phase 7): Words' four activities as the old level strip drew them, Patterns as beads ---- */
+.kid-art .mini{display:flex;align-items:center;gap:5px;font-size:20px;font-weight:900;line-height:1;color:#3f4a5c;white-space:nowrap}
+.kid-art .mini i{font-style:normal}
+.kid-art .mini .mw.arrow{color:#6d7a73;font-size:18px}
+.kid-art .mini .mgap{width:36px;height:28px;border:3px dashed #7e9a78;border-radius:8px;background:#fff}
+.kid-art .mini .mgap.small{width:20px}
+.kid-art .mini .mchip{padding:4px 5px;border:2px solid #d8c17a;border-radius:7px;background:#fff1c4;font-size:13px;color:#594777}
+.kid-art .mini .mchip:nth-child(2){transform:translateY(-5px) rotate(-5deg)}
+.kid-art .mini .mchip:nth-child(3){transform:translateY(3px) rotate(4deg)}
+.kid-beads{display:flex;align-items:center;gap:4px}
+.kid-beads .shape{width:23px;height:23px;border-width:2px;margin:0}
+.kid-beads .shape.square{border-radius:5px}
+.kid-beads .shape.triangle{width:0;height:0;border-left-width:13px;border-right-width:13px;border-bottom-width:23px}
+.kid-beads .shape.diamond{width:17px;height:17px;margin:0 3px}
+.kid-beads .shape.oval{width:30px;height:18px}
+.kid-beads .hole{display:block;width:23px;height:23px;border:3px dashed #5b4a7d;border-radius:6px;background:#efe6fb}
+.kid-beads .plus-bead{font-size:30px;line-height:1;color:#376e5a;margin-left:2px}

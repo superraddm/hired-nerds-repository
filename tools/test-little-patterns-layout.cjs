@@ -1,4 +1,4 @@
-// Layout harness for Little Patterns (round 4): the shelf and the Nook frame at six viewports, in headless Chrome
+// Layout harness for Little Patterns (round 4): the shelf and the Nook frame at eight viewports, in headless Chrome
 // over the DevTools protocol (Node 22's global fetch and WebSocket), against `node tools/serve-fireworks.cjs`.
 //
 //   node --test tools/test-little-patterns-layout.cjs           check every scenario at every viewport
@@ -8,7 +8,7 @@
 //   LP_ONLY=add,words  LP_VIEWPORTS=small,land                  limit a run
 //
 // Fails on: an uncaught exception or unhandled rejection in the page; page overflow; content clipped inside the task card (the card scrolling, or anything outside it);
-// truncated chip, pill, answer, tile, key, card, feeling-card and action labels; an answer or key over Nook; and any visible
+// truncated chip, pill, answer, tile, key, card, feeling-card, picker-tile, performance-word and action labels; an answer or key over Nook; and any visible
 // tappable control under 44 by 44 CSS pixels. Test state is seeded from the hub page, never the game page (a game
 // saves on pagehide). Skips with a message when Chrome is not installed.
 const test = require('node:test');
@@ -22,8 +22,9 @@ const net = require('node:net');
 const CHROME = [process.env.CHROME_PATH, 'C:/Program Files/Google/Chrome/Application/chrome.exe', 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe',
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser'].find(p => p && fs.existsSync(p));
 // CSS pixels: S24 Ultra portrait (412 x 860 inside Chrome), a small Android phone, S24 landscape with Chrome's bar,
-// a smaller landscape phone, iPad 5 landscape in Safari, and a desktop window.
-const VIEWPORTS = { phone: [412, 860, 2, true], small: [360, 740, 2, true], land: [915, 356, 2, true], land2: [740, 360, 2, true], ipad: [1024, 698, 1, true], desk: [1280, 800, 1, false] };
+// a smaller landscape phone, iPad 5 landscape in Safari, a desktop window, and (phase 7, from Jof's proofing) a tall
+// desktop pane (a VS Code browser pane taller than wide) and the iPad held upright.
+const VIEWPORTS = { phone: [412, 860, 2, true], small: [360, 740, 2, true], land: [915, 356, 2, true], land2: [740, 360, 2, true], ipad: [1024, 698, 1, true], desk: [1280, 800, 1, false], tall: [1380, 1600, 1, false], 'ipad-portrait': [768, 1024, 2, true] };
 const P = 'lp-player-player-1-';
 const position = extra => ({ [P + 'garden-position']: { mode: 'count', wordTab: 'sentence', indices: {}, selection: {}, levels: {}, operation: 'add', patternMode: 'finish', patternFamily: 2, strip: 1, spell: 1, ...extra } });
 const prefs = p => ({ [P + 'little-patterns-v1']: p });
@@ -40,6 +41,8 @@ const answer = (level, mode, example) => { const i = L.shapeSequence(level, mode
 const FD = require('../public/fireworks/little-patterns/feelings-data.js');
 const feelings = extra => ({ [P + 'feelings-v1']: { version: 2, mode: 'board', index: 0, level: 1, story: 0, seed: 1, ...extra } });
 const whichAnswer = (index, level) => click(`[data-which="${FD.whichRound(index, 1, level).feeling}"]`);
+// Grown-ups inside a game (phase 7): the shelf, then the sheet the two-second hold opens, then (levels) its chooser.
+const grownups = levels => click('#shelf-open') + ';LPShelf.grownups()' + (levels ? ';' + click('#gu-levels') : '');
 // shot: part of the evidence set. act: script run in the page after load. until: a selector to wait for. wait: ms before checking.
 const SCENARIOS = [
   { name: 'shelf', page: 'index.html', shot: true },
@@ -86,15 +89,18 @@ const SCENARIOS = [
   { name: 'shapes-pentagon-wide', page: 'shapes.html', shot: true, seed: shapes(2, 'name', 'pentagon#wide') },
   { name: 'shapes-square-corner', page: 'shapes.html', shot: true, seed: shapes(1, 'sides', 'square#corner'), act: tapSides(1), wait: 500 },
   { name: 'shapes-oval-tilted', page: 'shapes.html', shot: true, seed: shapes(1, 'name', 'oval#tilted'), act: click('#help') + ';' + click('#help'), wait: 400 },
-  { name: 'shapes-chooser', page: 'shapes.html', act: click('#support'), wait: 400 },
+  { name: 'shapes-label-tap', page: 'shapes.html', act: click('#support'), wait: 200 },
+  { name: 'grownups-shapes', page: 'shapes.html', shot: true, act: grownups(), wait: 400 },
+  { name: 'levels-shapes', page: 'shapes.html', act: grownups(true), wait: 400 },
   { name: 'feelings-board', page: 'feelings.html', shot: true, act: click('[data-feel="happy"]'), steps: [[900, click('#done')], [700, click('[data-feel="proud"]')], [900, click('#done')]], wait: 900 },
   { name: 'feelings-perform', page: 'feelings.html', shot: true, act: click('[data-feel="excited"]'), wait: 1250 },
+  { name: 'feelings-perform-happy', page: 'feelings.html', shot: true, act: click('[data-feel="happy"]'), wait: 1400 },
   // Mid-breath: since phase 5 the word is followed by "Nook feels sad.", so wait for the breath itself, then to the top of
   // the in-breath (1.2 s), where Nook is tallest. The surprised rise and the excited hops are checked at their highest too.
   { name: 'feelings-perform-sad', page: 'feelings.html', shot: true, act: click('[data-feel="sad"]'), until: '.perform.breathing', wait: 1100 },
   { name: 'feelings-perform-rise', page: 'feelings.html', act: click('[data-feel="surprised"]'), until: '.perform-move.g-surprised', wait: 150 },
   { name: 'feelings-perform-hop', page: 'feelings.html', act: click('[data-feel="excited"]'), until: '.perform-move.g-excited', wait: 190 },
-  { name: 'feelings-perform-wait', page: 'feelings.html', seed: { 'lp-sound': 'off' }, act: click('[data-feel="disappointed"]'), wait: 2600 },
+  { name: 'feelings-perform-wait', page: 'feelings.html', shot: true, seed: { 'lp-sound': 'off' }, act: click('[data-feel="disappointed"]'), wait: 2600 },
   { name: 'feelings-which', page: 'feelings.html', shot: true, seed: feelings({ mode: 'which' }) },
   { name: 'feelings-which-help', page: 'feelings.html', shot: true, seed: feelings({ mode: 'which', index: 3 }), act: click('#help'), wait: 400 },
   { name: 'feelings-which-done', page: 'feelings.html', shot: true, seed: feelings({ mode: 'which', index: 3 }), act: whichAnswer(3, 1), wait: 1100 },
@@ -105,7 +111,17 @@ const SCENARIOS = [
   { name: 'feelings-me-chosen', page: 'feelings.html', shot: true, seed: feelings({ mode: 'me' }), act: click('[data-feel="disappointed"]'), wait: 500 },
   { name: 'feelings-me-unsure', page: 'feelings.html', seed: feelings({ mode: 'me' }), act: click('[data-me="unsure"]'), wait: 400 },
   { name: 'feelings-me-other', page: 'feelings.html', seed: feelings({ mode: 'me' }), act: click('[data-me="other"]'), wait: 400 },
-  { name: 'feelings-chooser', page: 'feelings.html', act: click('#support'), wait: 400 },
+  // Two audiences (phase 7): the child's pickers from the pill; Grown-ups with the game's levels, and its chooser.
+  { name: 'feelings-picker', page: 'feelings.html', shot: true, act: click('#support'), wait: 400 },
+  { name: 'feelings-picker-me', page: 'feelings.html', seed: feelings({ mode: 'me' }), act: click('#support'), wait: 400 },
+  { name: 'grownups-feelings', page: 'feelings.html', shot: true, seed: feelings({ mode: 'which', level: 2 }), act: grownups(), wait: 400 },
+  { name: 'levels-feelings', page: 'feelings.html', act: grownups(true), wait: 400 },
+  { name: 'words-picker', page: 'garden.html#words', shot: true, seed: position({ mode: 'words', wordTab: 'letter' }), act: click('#support'), wait: 400 },
+  { name: 'patterns-picker', page: 'garden.html#patterns', shot: true, seed: position({ mode: 'patterns', patternFamily: 3 }), act: click('#support'), wait: 400 },
+  { name: 'add-label-tap', page: 'garden.html#add', seed: position({ mode: 'add', operation: 'take', levels: { add: 2 } }), act: click('#support'), wait: 200 },
+  { name: 'grownups-add', page: 'garden.html#add', shot: true, seed: position({ mode: 'add', levels: { add: 2 } }), act: grownups(), wait: 400 },
+  { name: 'levels-add', page: 'garden.html#add', act: grownups(true), wait: 400 },
+  { name: 'grownups-hub', page: 'index.html', act: 'LPShelf.grownups()', wait: 400 },
   // Nook's pay-offs on success (item 33), caught mid-way: the munch, the bead string under the bubble, the shape held up
   { name: 'payoff-take', page: 'garden.html#add', shot: true, seed: position({ mode: 'add', operation: 'take', levels: { add: 2 }, selection: { add: [6, 2] } }), act: click('[data-choice="4"]'), wait: 380 },
   { name: 'payoff-patterns', page: 'garden.html#patterns', shot: true, seed: position({ mode: 'patterns' }), act: `(()=>{for(const b of document.querySelectorAll('[data-choice]')){b.click();if(!document.querySelector('#next').hidden)break;}})()`, wait: 450 },
@@ -119,7 +135,7 @@ const CHECK = `(()=>{const out=[];
   const task=document.querySelector('.nf-task>.task');
   if(task&&vis(task)){if(task.scrollHeight>task.clientHeight+1)out.push('card scrolls '+task.scrollHeight+' > '+task.clientHeight);if(task.scrollWidth>task.clientWidth+1)out.push('card overflows sideways '+task.scrollWidth+' > '+task.clientWidth);
     const c=task.closest('.nf-task').getBoundingClientRect();for(const el of task.querySelectorAll('*')){if(!vis(el))continue;const q=el.getBoundingClientRect();if(q.left<c.left-1||q.right>c.right+1||q.top<c.top-1||q.bottom>c.bottom+1){out.push('clipped in card: '+desc(el)+' '+[q.left,q.top,q.right,q.bottom].map(Math.round)+' card '+[c.left,c.top,c.right,c.bottom].map(Math.round));break;}}}
-  for(const el of document.querySelectorAll('.chip,.pill,.answer,.choice,.tile,.key,.word-card,.nf-actions>button,.bubble-inline,.sentence-words,.make-tools button,.feel,.me-card,.me-more,.say-other')){if(!vis(el))continue;if(el.scrollWidth>el.clientWidth+1||el.scrollHeight>el.clientHeight+1)out.push('label clipped: '+desc(el)+' '+el.scrollWidth+'x'+el.scrollHeight+' in '+el.clientWidth+'x'+el.clientHeight);}
+  for(const el of document.querySelectorAll('.chip,.pill,.answer,.choice,.tile,.key,.word-card,.nf-actions>button,.bubble-inline,.sentence-words,.make-tools button,.feel,.me-card,.me-more,.say-other,.kid-tile,.kid-art,.perform-word,.perform-line')){if(!vis(el))continue;if(el.scrollWidth>el.clientWidth+1||el.scrollHeight>el.clientHeight+1)out.push('label clipped: '+desc(el)+' '+el.scrollWidth+'x'+el.scrollHeight+' in '+el.clientWidth+'x'+el.clientHeight);}
   for(const b of document.querySelectorAll('.nf-bubble')){if(!vis(b))continue;const q=b.getBoundingClientRect();if(q.bottom>innerHeight+1||q.right>innerWidth+1)out.push('bubble off screen: '+desc(b));}
   const nook=document.querySelector('#nook .nook-pos svg');if(nook&&vis(nook)){const n=nook.getBoundingClientRect();for(const a of document.querySelectorAll('.answers button,.word-card,.nf-bubble,.nf-actions>button')){if(!vis(a))continue;const q=a.getBoundingClientRect();if(q.left<n.right-2&&q.right>n.left+2&&q.top<n.bottom-2&&q.bottom>n.top+2)out.push('over Nook: '+desc(a));}}
   for(const el of document.querySelectorAll('button,a[href],input,select,textarea,[role=button]')){if(!vis(el))continue;const r=el.getBoundingClientRect();if(r.width<43.5||r.height<43.5)out.push('target '+Math.round(r.width)+'x'+Math.round(r.height)+': '+desc(el));}

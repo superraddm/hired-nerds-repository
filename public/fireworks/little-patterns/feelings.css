@@ -6,7 +6,12 @@
    Motion (review-opus-pass-1 section 4, items 56, 64, 65): the board fades 160 ms; Nook grows 300 ms (Web
    Animations, set by feelings.js); one gesture per feeling on .perform-move, under 1.2 s, at most 12 px and scale
    1.06, no shake or flash; the difficult feelings settle with one breath (1.2 s in, 1.6 s out); the tick draws in
-   250 ms. Softer and reduced motion: no gesture, no breath movement, no grow; 150 ms fades only. */
+   250 ms. Softer and reduced motion: no gesture, no breath movement, no grow; 150 ms fades only.
+
+   Phase 7 (Jof's proofing on a tall desktop pane and the iPad held upright): the words size themselves to the room
+   they have (container units), so DISAPPOINTED fits on every card and beside or under every Nook; the performing Nook
+   is capped by the card's width as well as its height; the board's rows have a height cap and sit in the middle of a
+   tall card; a card under 600 px wide on a tablet takes the boards two by five. */
 
 /* ---- screens without the frame Nook ---- */
 .nf.solo .nf-nook{display:none}
@@ -29,6 +34,9 @@
 .feel:active{transform:translateY(3px);box-shadow:0 1px 0 #e6d9a6}
 .feel-face{display:block;flex:none;height:calc(100% - 26px);max-height:62px;width:auto;max-width:100%}
 .feel-word{display:block;white-space:nowrap;line-height:1.1}
+/* the word shrinks with its card (about 11.5% of the card's width, never above the card's own size) */
+.feel{container-type:inline-size}
+.feel-word{font-size:clamp(10px,11.5cqi,1em)}
 .feel.done{background:#fffdf3;border-color:#9bbf9f;box-shadow:0 3px 0 #c8dcc9}
 .feel .tick{position:absolute;right:6px;top:6px;width:18px;height:18px;color:#3f8f5c}
 .feel .tick svg{display:block;width:100%;height:100%}
@@ -46,8 +54,10 @@
 .perform-move{display:block;width:100%;height:100%;transform-origin:50% 100%}
 .perform-move svg.nook{display:block;width:100%;height:100%}
 .perform-pos.perform-out{animation:lp-fade-out 150ms linear both}
-.perform-words{text-align:center;align-self:center}
-.perform-word{margin:0;font-size:34px;font-weight:900;letter-spacing:3px;line-height:1.15;color:#4d3b73}
+.perform-words{width:100%;min-width:0;text-align:center;align-self:center;container-type:inline-size}
+/* the word takes about 83% of its column at most (DISAPPOINTED is 7.9 em wide with this spacing) */
+.perform-word{margin:0;font-size:34px;font-size:clamp(18px,10.5cqi,34px);font-weight:900;letter-spacing:.08em;line-height:1.15;color:#4d3b73;overflow-wrap:break-word}
+.perform-line,.perform-caption{overflow-wrap:break-word}
 .perform-line{margin:2px 0 0;font-size:19px;font-weight:bold;color:#536647}
 .perform-caption{margin:6px 0 0;min-height:1.35em;font-size:18px;font-weight:bold;color:#6d5a99;opacity:0;visibility:hidden;transition:opacity 150ms linear,visibility 0s linear 150ms}
 .perform.breathing .perform-caption{opacity:1;visibility:visible;transition:opacity 150ms linear}
@@ -128,7 +138,7 @@
 /* ---- short phones ---- */
 @media (max-height:760px){
   .feel{font-size:14px;letter-spacing:.5px}
-  .perform-word{font-size:30px}
+  .perform-word{font-size:30px;font-size:clamp(18px,10.5cqi,30px)}
   .me-face{width:104px;height:104px}
 }
 @media (max-width:389px){.feel{letter-spacing:.3px}.me-more{font-size:15px}}
@@ -150,7 +160,7 @@
   .perform{grid-template-rows:minmax(0,1fr);grid-template-columns:auto minmax(0,1fr);align-items:center;gap:16px}
   /* headroom inside the card for the hops, the rise and the in-breath (up to about 14 px) */
   .perform-nook{max-height:none;padding-top:16px}
-  .perform-word{font-size:28px}
+  .perform-word{font-size:28px;font-size:clamp(16px,10.5cqi,28px)}
   .perform-line,.perform-caption{font-size:16px}
   .which-objects{grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr) auto;align-items:center}
   .nf-bubble.card-bubble{align-self:center;font-size:18px;padding:10px 40px 10px 14px}
@@ -180,18 +190,33 @@
 /* ---- tablets and desktop ---- */
 @media (min-width:760px) and (min-height:521px){
   .nf.solo .nf-stage{grid-template-columns:minmax(0,1fr)}
-  .board,.me-board{grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:12px;max-height:420px;margin:auto 0}
+  /* the cards never stretch to fill a tall card: rows have a cap and the boards sit in the middle */
+  .feelings .nf-task>.task{container:card / inline-size}
+  .board,.me-board{flex:0 1 auto;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,170px));gap:12px;margin:auto 0}
+  .me-board{margin-bottom:0}
+  .me-board+.me-extra{margin-bottom:auto}
+  @container card (max-width:599px){
+    .board,.me-board{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(5,minmax(0,120px))}
+  }
   .feel{font-size:16px}
   .feel-face{max-height:72px}
   .me-more{min-height:60px;font-size:18px;max-width:none}
-  .perform{grid-template-rows:minmax(0,1fr);grid-template-columns:auto minmax(0,1fr);align-items:center;gap:32px;max-width:860px;margin:0 auto}
-  .perform-nook{max-height:none;padding-top:16px}
-  .perform-word{font-size:40px}
+  /* side by side: Nook is capped by the card's width (62% of it in height, about half in width) as well as its height */
+  .perform{container-type:size;grid-template-rows:minmax(0,1fr);grid-template-columns:auto minmax(0,1fr);align-items:center;gap:32px;max-width:860px;margin:0 auto}
+  .perform-nook{max-height:none;max-height:min(100%,62cqw);padding-top:16px}
+  .perform-word{font-size:40px;font-size:clamp(20px,10.5cqi,40px)}
   .which-objects{grid-template-rows:auto minmax(0,1fr);max-width:640px;margin:0 auto}
   .which-words{flex-direction:row;gap:14px;max-width:640px;margin:0 auto}
   .feelings .answer.word{flex:1 1 0;width:auto;min-height:96px;font-size:22px;flex-direction:column;gap:4px}
   .feelings .task[data-view=which] .answers{min-height:96px}
   .friends-stage .story-art{max-height:min(320px,44vh)}
+}
+/* portrait tablets and tall windows: Nook above its word, as on a phone, never wider than the card and never taller than
+   58% of the screen, the pair in the middle of the card */
+@media (min-width:760px) and (min-height:521px) and (orientation:portrait){
+  .perform{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto auto minmax(0,1fr);justify-items:center;align-items:end;gap:12px}
+  .perform-nook{grid-row:2;max-height:none;height:52vh;height:min(58vh,110cqw,calc(100cqh - 170px))}
+  .perform-words{grid-row:3;align-self:start}
 }
 
 /* ---- Softer and reduced motion: no gesture, no breath movement, no tick draw; short fades only ---- */
