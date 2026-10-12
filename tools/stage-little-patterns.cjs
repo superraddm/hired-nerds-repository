@@ -6,6 +6,8 @@ const files = [
   'index.html', 'hub.js', 'shared.css', 'shared.js', 'learning.js',
   // Round 4: the Nook frame, the shelf, the character rig, the icons and the home-screen manifest.
   'frame.css', 'frame.js', 'shelf.js', 'icons.js', 'nook-art.js', 'nook.css',
+  // Phase 8: the lists of activities under the shelf's tiles.
+  'menus.js',
   'manifest.webmanifest', 'assets/icon-192.png', 'assets/icon-512.png',
   'shapes.html', 'shapes.js', 'shapes.css',
   'blocks.html', 'blocks.css', 'blocks-live.css', 'blocks.js', 'core.js',

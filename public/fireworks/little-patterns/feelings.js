@@ -1,6 +1,8 @@
-/* Feelings with Nook (round 4, phase 4), in the Nook frame. The pill opens the child's picker (phase 7): four big
-   tiles, a picture and a name each (Nook feels..., Which feeling?, Friends, Me), one tap. Which feeling?'s level and the
-   choice of a Friends story are the grown-ups', in Grown-ups behind the hold (Levels and puzzles). The activities:
+/* Feelings with Nook (round 4, phase 4), in the Nook frame. The child picks the activity from the Feelings list under
+   its shelf tile (phase 8): four big tiles, a picture and a name each (Nook feels..., Which feeling?, Friends, Me), one
+   tap (feelings.html#friends from the hub, in place from the shelf inside the game). The pill is a small read-only
+   label. Which feeling?'s level and the choice of a Friends story are the grown-ups', in Grown-ups behind the hold
+   (Levels and puzzles). The activities:
 
      Nook feels...   ten neutral cards (Nook's face crop and the word). A tap starts Nook's performance, a cancellable
                      sequence with a generation token (BUILD-BRIEF item 56):
@@ -89,7 +91,8 @@
 
   // ---- the frame: pill, bubble, actions ----
   function pill() {
-    FR.pill({ text: F.ACTIVITY_NAMES[activity] + (activity === 'which' && saved.level === 2 ? ' 2' : ''), picker: kidPicker, hidden: view === 'perform', label: 'Choose a Feelings game. Now: ' + F.ACTIVITY_NAMES[activity] });
+    const text = F.ACTIVITY_NAMES[activity] + (activity === 'which' && saved.level === 2 ? ' 2' : '');
+    FR.pill({ text, hidden: view === 'perform', label: 'Now: ' + text });
   }
   // Two fixed slots: Help (or Hear, or small Again) on the left, Next or Done on the right.
   function actions(kind) {
@@ -421,17 +424,9 @@
     const target = task.querySelector('button:not(:disabled),textarea');
     if (target) target.focus({ preventScroll: true });
   }
-  // The child's picker: one tap, no reading needed. The Feelings tile's own picture, Nook's face, a Friends scene, and
-  // Nook's face with the neutral ring that Me's cards wear.
-  const friendsArt = () => A.scene(F.STORIES[0]).replace(/ role="img" aria-label="[^"]*"/, ' aria-hidden="true" focusable="false"');
-  function kidPicker() {
-    FR.picker({ title: 'Feelings games', tiles: [
-      { id: 'board', word: F.ACTIVITY_NAMES.board, art: I.feelings || '', current: activity === 'board' },
-      { id: 'which', word: F.ACTIVITY_NAMES.which, art: N.face('surprised', { decorative: true }), current: activity === 'which' },
-      { id: 'friends', word: F.ACTIVITY_NAMES.friends, art: friendsArt(), current: activity === 'friends' },
-      { id: 'me', word: F.ACTIVITY_NAMES.me, art: N.face('happy', { decorative: true, ring: true }), current: activity === 'me' }
-    ], pick: id => enterActivity(id, { fresh: id === 'which' }) });
-  }
+  // The list under the Feelings tile (phase 8, shelf.js and menus.js) starts an activity in place; the current one
+  // just goes back to it.
+  function pickActivity(id) { if (F.ACTIVITIES.includes(id) && id !== activity) enterActivity(id, { fresh: id === 'which' }); else focusTask(); }
   // The grown-ups' chooser (from Grown-ups only): the four activities, Which feeling?'s two levels and any story.
   // Closing it closes the shelf too, back to the game.
   function chooser() {
@@ -441,7 +436,7 @@
       ['friends', 'Friends', 'Twenty short stories. Hear and Next.'],
       ['me', 'Me', 'Say how you feel. Nothing is saved.']
     ];
-    const el = LP.openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Feelings</h2><button data-close aria-label="Close the Feelings chooser">×</button></div><p>Everything is open. The child switches activity from the pill; the level and the story are chosen here.</p><div class="feel-activities" role="group" aria-label="Activities"></div>', () => { S.close(); focusTask(); });
+    const el = LP.openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Feelings</h2><button data-close aria-label="Close the Feelings chooser">×</button></div><p>Everything is open. The child picks the activity from the Feelings list on the shelf; the level and the story are chosen here.</p><div class="feel-activities" role="group" aria-label="Activities"></div>', () => { S.close(); focusTask(); });
     const box = el.querySelector('.feel-activities');
     for (const [id, name, text] of rows) {
       const row = document.createElement('div');
@@ -541,10 +536,16 @@
   const talk = FR.bubble($('bubble'), $('speech'));
   const nook = FR.nook($('nook'), { feeling: 'rest', bubble: talk });
   restore();
+  // feelings.html#friends: the hub's list names the activity once; the address then drops it, so a reload keeps the save.
+  const asked = window.LPMenus.split(location.hash)[0];
+  if (F.ACTIVITIES.includes(asked)) {
+    activity = asked; save();
+    try { history.replaceState(history.state, '', location.pathname + location.search); } catch (_) { /* no history API */ }
+  }
   // The private bundle is fetched as Feelings opens, before any choice, whatever the activity.
   prepareMe();
   if (activity === 'which') newWhich();
-  S.mountOverlay({ current: 'feelings', levels: { name: () => 'Feelings', now: () => ({ text: F.ACTIVITY_NAMES[activity] + (activity === 'which' ? ', level ' + saved.level + (saved.level === 2 ? ': all ten' : ': no look-alikes') : activity === 'friends' ? ', story ' + (saved.story + 1) + ' of ' + F.STORIES.length : '') }), open: chooser } });
+  S.mountOverlay({ current: 'feelings', hosts: ['feelings'], onMode: (id, act) => pickActivity(act), activity: id => (id === 'feelings' ? activity : ''), levels: { name: () => 'Feelings', now: () => ({ text: F.ACTIVITY_NAMES[activity] + (activity === 'which' ? ', level ' + saved.level + (saved.level === 2 ? ': all ten' : ': no look-alikes') : activity === 'friends' ? ', story ' + (saved.story + 1) + ' of ' + F.STORIES.length : '') }), open: chooser } });
   render();
   if (activity === 'friends') tellStory();
 

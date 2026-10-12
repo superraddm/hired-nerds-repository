@@ -47,9 +47,9 @@
   function restoreRound(kind,r,s){if(s&&typeof s==='object'&&sameRound(kind,s,r)){r.done=s.done===true;if(kind==='count'&&Array.isArray(s.seen)){const valid=L.usesTray('count',r.level)?new Set(L.countTokens(r.target)):null;r.seen=[...new Set(s.seen.filter(t=>valid?valid.has(t):Number.isInteger(t)&&t>=0&&t<r.target))];}if(kind==='sentence')r.hint=s.hint===true?1:Number.isInteger(s.hint)?Math.max(0,Math.min(2,s.hint)):0;else if('hint' in r&&Number.isInteger(s.hint))r.hint=Math.max(0,Math.min(2,s.hint));if('draft' in r)r.draft=typeof s.draft==='string'?s.draft.slice(0,500):'';if(kind==='make'){r.beads=Array.isArray(s.beads)?s.beads.filter(b=>L.SHAPES.includes(b)).slice(0,L.MAKE_LIMIT):[];r.done=false;}if(kind==='patterns'){r.filled={};if(s.filled&&typeof s.filled==='object')for(const g of r.gaps)if(String(s.filled[g])===String(r.sequence[g]))r.filled[g]=r.sequence[g];if(r.gaps.includes(s.selected))r.selected=s.selected;if(r.done)for(const g of r.gaps)r.filled[g]=r.sequence[g];r.done=r.gaps.every(g=>g in r.filled);}if(kind==='order'){const used=Array.isArray(s.used)?s.used.filter(i=>Number.isInteger(i)&&i>=0&&i<r.tiles.length):[];r.used=used.every((tile,n)=>r.tiles[tile]===r.words[n])&&new Set(used).size===used.length?used:[];r.done=r.used.length===r.words.length;}}if(kind==='add'&&LP.prefs.addition==='demo')r.done=true;return r;}
   function setLevel(kind,level){levels[kind]=L.clampLevel(kind,level);if(kind==='patterns')patternFamily=0;delete selection[kind];if(kind==='add')delete selection.addSet;rounds[kind]=createRound(kind);}
   function setSumSet(name){if(!L.SUM_SETS[name])return;operation='add';delete selection.add;selection.addSet={set:name,index:0};rounds.add=createRound('add');}
-  // The level pill (phase 7: two audiences): one short name for where the child is. Count and Add (beside the Add / Take
-  // away chips) show it as a small read-only label with an apple; Words and Patterns make it the button that opens the
-  // child's picker. Levels, sets and chosen puzzles are set in Grown-ups. Short enough to sit beside the chips at 360 px.
+  // The level pill (phase 7: two audiences): one short name for where the child is, a small read-only label (an apple
+  // for Count and Add, the family's beads for Patterns). Since phase 8 the child picks the activity from the game's list
+  // under its shelf tile; levels, sets and chosen puzzles are set in Grown-ups. Short enough for a 360 px top bar.
   const PILL={count:['1–5','1–10','11–20','10 20 30','21–50','51–100'],add:['Up to 5','Up to 10','Up to 20','Over ten','Tens','Missing part'],take:['Up to 5','Up to 10','Up to 20','Back over ten','Tens'],numbers:['1–5','1–10','11–20','10–100']};
   const RULE_SHORT={grow:'Growing',mirror:'Mirror',number:'Numbers'};
   function pillText(){const key=currentKey(),r=current();
@@ -62,13 +62,7 @@
   function setPlace(){const r=current();if(currentKey()!=='add'||!r||!r.set||!selection.addSet)return '';const n=L.SUM_SETS[r.set].sums.length;return ', '+(selection.addSet.index%n+1)+' of '+n;}
   const APPLE_ART='<svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="14.5" r="8" fill="#e67b69" stroke="#b65b50" stroke-width="2"/><path d="M12 6.5q1-3 4-4.5" stroke="#6b6740" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M13.5 5q4-3.5 6.5 0.5q-4 3-6.5-0.5z" fill="#4d9271"/></svg>';
   function pillArt(){const key=currentKey();if(key==='patterns'&&patternFamily)return '<span class="pill-beads">'+L.SHAPES.slice(0,patternFamily).map(shape).join('')+'</span>';return key==='count'||key==='add'?APPLE_ART:'';}
-  function pill(){const text=pillText(),kid=mode==='words'||mode==='patterns';F.pill({text,art:pillArt(),picker:kid?kidPicker:null,label:kid?'Choose a game. Now: '+text:'Level: '+text+setPlace()});}
-  // The child's picker: Words' four activities drawn as the old level strip drew them; Patterns' Finish (the family as beads, the last one missing) and Make your own.
-  const WORD_TILES={sentence:'<i class="mw">the</i><i class="mgap"></i><i class="mw">sat</i>',letter:'<i class="mw">c</i><i class="mgap small"></i><i class="mw">t</i>',order:'<i class="mchip">sat</i><i class="mchip">cat</i><i class="mchip">the</i>',numbers:'<i class="mw">3</i><i class="mw arrow">→</i><i class="mw">three</i>'};
-  function kidPicker(){
-    if(mode==='words'){F.picker({title:'Word games',tiles:WORD_ACTIVITIES.map(([id,label])=>({id,word:label,current:wordTab===id,art:'<span class="mini">'+WORD_TILES[id].replace(/>([a-z]+)</g,(m,w)=>'>'+letters(w)+'<')+'</span>'})),pick:id=>{wordTab=id;render();},done:focusTask});return;}
-    const n=patternFamily||2,beads=Array.from({length:Math.min(n+1,4)},(_,i)=>shape(L.SHAPES[i%n])).join('');
-    F.picker({title:'Pattern games',tiles:[{id:'finish',word:'Finish',current:patternMode==='finish',art:'<span class="kid-beads">'+beads+'<i class="hole"></i></span>'},{id:'make',word:'Make your own',current:patternMode==='make',art:'<span class="kid-beads">'+['circle','oval','triangle'].map(shape).join('')+'<b class="plus-bead">+</b></span>'}],pick:id=>{patternMode=id;render();},done:focusTask});}
+  function pill(){const text=pillText();F.pill({text,art:pillArt(),label:(mode==='words'?'Now: ':'Level: ')+text+setPlace()});}
   // Grown-ups (behind the hold) shows the game's name, the level now and Levels and puzzles, the chooser below.
   const GAME_NAMES={count:'Count',add:'Add',words:'Words',patterns:'Patterns'};
   function parentNow(){const key=currentKey(),r=current();
@@ -200,7 +194,6 @@
     task(objects,answers);bindInput();
   }
   // Mode chips: Add and Take away are the only two (Count, Words and Patterns have none).
-  function modeChips(){const el=$('modes');if(mode!=='add'){if(el.firstChild)el.innerHTML='';return;}el.innerHTML=[['add','Add'],['take','Take away']].map(([op,label])=>'<button type="button" class="chip" data-operation="'+op+'" aria-pressed="'+(operation===op)+'">'+label+'</button>').join('');}
   // Nook keeps the expression of a round it has just celebrated; any other round shows its resting look (the hello face, arms down).
   function mood(){const r=current();if(!(r&&r.done&&r.id===celebrated))nook.rest();}
   const FEELS=['happy','proud','excited'];
@@ -216,12 +209,15 @@
     // Neither fits: keep whichever overflows less (the card then scrolls a little).
     const useSide=side.level<9?side.level<=stacked.level+1:stacked.level<9?false:side.over<=stacked.over;
     set(!useSide,Math.min(useSide?side.level:stacked.level,3));}
-  function render(){LP.audio.stopSpeech();const key=currentKey();$('task').dataset.view=key;$('page').classList.toggle('words',mode==='words');S.setCurrent(mode);modeChips();if(mode==='count')countView();else if(mode==='add')addView();else if(mode==='patterns'&&patternMode==='make')makeView();else if(mode==='patterns')patternView();else wordsView();mood();save();fitTask();}
+  function render(){LP.audio.stopSpeech();const key=currentKey();$('task').dataset.view=key;$('page').classList.toggle('words',mode==='words');S.setCurrent(mode);if(mode==='count')countView();else if(mode==='add')addView();else if(mode==='patterns'&&patternMode==='make')makeView();else if(mode==='patterns')patternView();else wordsView();mood();save();fitTask();}
   // With the A to Z keys the gap keeps focus so its caret stays visible; the device keyboard is only opened by a tap on the gap.
   function focusTask(){const input=$('word-input');const target=input&&LP.prefs.keyboard==='az'?input:$('task').querySelector('button:not(.bubble-inline):not(:disabled),input,textarea');if(target)target.focus({preventScroll:true});}
   function keepFocus(){if(LP.prefs.keyboard==='az')$('word-input')?.focus({preventScroll:true});}
   // The shelf overlay switches between the four Garden activities in place; the hash follows so a reload stays put.
   function setMode(value){if(!modes.includes(value))return;mode=value;try{history.replaceState(history.state,'','#'+mode);}catch(_){}render();}
+  // An activity from the list under a shelf tile (phase 8): Add or Take away, a Words activity, Finish the pattern or Make your own.
+  function setActivity(value,activity){if(value==='add'&&L.OPERATIONS.includes(activity))setOperation(activity);if(value==='words'&&wordTabs.includes(activity))wordTab=activity;if(value==='patterns'&&(activity==='finish'||activity==='make'))patternMode=activity;}
+  const activityNow=value=>value==='add'?operation:value==='words'?wordTab:value==='patterns'?patternMode:'';
   function clearFeedback(){const r=current();if(r)r.feedback='';$('word-input')?.removeAttribute('aria-invalid');bubble();}
   // One kind line in the bubble, the same line Nook says, picked at random but never twice running; the status carries only the hint.
   // A typed answer is kept, marked invalid, and stays editable.
@@ -272,7 +268,6 @@
     else{if(r.done||LP.prefs.numberWords==='show')LP.status(r.target+' is written '+letters(r.word)+'.');else if(step()===1)LP.status('It starts with '+letters(r.word[0])+' and has '+r.word.replace(/ /g,'').length+' letters.');else{LP.status(r.target+' is written '+letters(r.word)+'.');hint('[data-choice="'+r.word+'"]');}}save();}
   $('task').addEventListener('pointerdown',e=>{if(e.target.closest('[data-key],[data-word]')){rememberCursor();e.preventDefault();}});
   $('task').addEventListener('click',e=>{const echo=e.target.closest('[data-hear]');if(echo){$('hear-model')?.click();return;}const b=e.target.closest('button');if(!b)return;if(b.dataset.add){editBeads('add',b.dataset.add);$('task').querySelector('[data-add="'+b.dataset.add+'"]:not(:disabled)')?.focus({preventScroll:true});return;}if(b.dataset.bead!==undefined){editBeads('remove',Number(b.dataset.bead));return;}if(b.id==='undo-bead'){editBeads('last');return;}if(b.id==='clear-beads'){editBeads('clear');return;}if(b.id==='read-back'){const r=current();if(r.beads.length){LP.status(L.readBack(r.beads));LP.audio.speak(r.beads);}return;}if(b.dataset.word){hear(b.dataset.word.toLowerCase());keepFocus();return;}if(b.dataset.key){typeKey(b.dataset.key);return;}if(b.dataset.pad){typePad(b.dataset.pad);return;}if(b.dataset.fruit!==undefined){const v=b.dataset.fruit;countFruit(/^\d+$/.test(v)?Number(v):v);return;}if(b.dataset.stick!==undefined){countFruit(b.dataset.stick);return;}if(b.dataset.gap!==undefined){const r=current();r.selected=Number(b.dataset.gap);render();$('task').querySelector('[data-gap].active')?.focus({preventScroll:true});LP.status('Choose the piece for bead '+(r.selected+1)+'.');return;}if(b.dataset.tile!==undefined){placeTile(Number(b.dataset.tile));return;}if(b.dataset.choice!==undefined){choose(b.dataset.choice);return;}switch(b.id){case 'check-sum':checkSum();break;case 'hear-model':speakCurrent();break;case 'check-word':checkWord();break;}});
-  $('modes').addEventListener('click',e=>{const b=e.target.closest('[data-operation]');if(!b)return;setOperation(b.dataset.operation);render();focusTask();});
   $('help').onclick=help;
   // Within a named set, Next moves to the next sum of that set and wraps; otherwise it continues the level's sequence.
   $('next').onclick=()=>{const key=currentKey();if(key==='add'&&selection.addSet)selection.addSet.index=(selection.addSet.index+1)%L.SUM_SETS[selection.addSet.set].sums.length;else{indices[indexKey(key)]=itemIndex(key)+1;delete selection[key];}rounds[key]=createRound(key);render();focusTask();};
@@ -326,7 +321,8 @@
   const talk=F.bubble($('bubble'),$('speech'));
   const nook=F.nook($('nook'),{feeling:'rest',bubble:talk});
   F.onResize(fitTask);
-  restore();spellOnce();const requested=location.hash.slice(1);if(modes.includes(requested))mode=requested;
-  S.mountOverlay({current:mode,onMode:value=>{setMode(value);focusTask();},levels:{name:()=>GAME_NAMES[mode],now:()=>({text:parentNow(),art:pillArt()}),open:choosePuzzle}});
+  // garden.html#add/take: the hub's list names the activity once; the address then keeps only the activity's game.
+  restore();spellOnce();const [requested,wanted]=window.LPMenus.split(location.hash);if(modes.includes(requested)){mode=requested;if(wanted!==undefined){setActivity(mode,wanted);try{history.replaceState(history.state,'','#'+mode);}catch(_){}}}
+  S.mountOverlay({current:mode,hosts:modes,onMode:(value,activity)=>{setActivity(value,activity);setMode(value);focusTask();},activity:activityNow,levels:{name:()=>GAME_NAMES[mode],now:()=>({text:parentNow(),art:pillArt()}),open:choosePuzzle}});
   render();
 })();

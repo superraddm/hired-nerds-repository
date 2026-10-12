@@ -29,3 +29,8 @@ canvas.fx-canvas{position:fixed;inset:0;width:100%;height:100%;aspect-ratio:auto
 .softer .board-frame.glow-big{animation-name:frame-glow}
 @media(max-width:749px){@keyframes rows-pop-big{0%{transform:scale(1);color:inherit}30%{transform:scale(1.6) rotate(-6deg);color:#a36526}55%{transform:scale(1.4) rotate(5deg);color:#a36526}100%{transform:scale(1);color:inherit}}}
 @media(max-width:749px){.board-frame,.nook-row{width:min(100%,calc(var(--board-limit)/2 + 47px))}}
+/* Round 4, phase 8 (two audiences): the shelf button top-left, as in every game, beside the name. Player, Grown-ups
+   and the pace moved behind the Grown-ups hold on the shelf. */
+header{justify-content:flex-start}
+header .nf-shelf{padding:0;flex:none}
+.pace-picker{display:flex;flex-direction:column;gap:8px}.pace-picker button{width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left}

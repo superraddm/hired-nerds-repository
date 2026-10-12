@@ -1,4 +1,5 @@
-/* Shapes with Nook (round 4, phase 3), in the Nook frame. Two modes, chosen from the two chips:
+/* Shapes with Nook (round 4, phase 3), in the Nook frame. Two modes, chosen from the Shapes list under the shelf
+   tile (phase 8; shapes.html#sides or #name, and in place from the shelf inside the game):
 
      Sides   a polygon drawn large. Tap each side: the first tap on a side lights it amber and gives it a number tag
              in tap order (the number is spoken while sound is on); a tap on a side already counted bumps its tag
@@ -17,9 +18,10 @@
    and the shape warms. A
    wrong answer changes only the bubble (a kind retry line). Rounds come from learning.js (shapeRound); the mode,
    the level, each mode's place and each round's counted sides and Help step are saved per player and restored by
-   round id. The level is shared by both modes. Two audiences (phase 7): the child switches Sides / Name with the two
-   chips; the pill is a small read-only label of the level ("Shapes 1" with a triangle, square and circle, "Shapes 2"
-   with a pentagon and hexagon), and the level chooser is the grown-ups', reached only from Grown-ups. */
+   round id. The level is shared by both modes. Two audiences (phase 7): the child picks Sides or Name from the list
+   (phase 8: the two chips went); the pill is a small read-only label of the level ("Shapes 1" with a triangle, square
+   and circle, "Shapes 2" with a pentagon and hexagon), and the level chooser is the grown-ups', reached only from
+   Grown-ups. */
 (function () {
   'use strict';
   const $ = id => document.getElementById(id);
@@ -118,12 +120,7 @@
     }).join('') + '</div>';
   }
 
-  // ---- the frame: chips, pill, bubble, actions, Nook ----
-  function chips() {
-    const el = $('modes');
-    if (!el.firstChild) el.innerHTML = [['sides', 'Sides'], ['name', 'Name']].map(([m, label]) => '<button type="button" class="chip" data-shapes-mode="' + m + '" aria-pressed="false">' + label + '</button>').join('');
-    for (const b of el.querySelectorAll('[data-shapes-mode]')) b.setAttribute('aria-pressed', String(b.dataset.shapesMode === mode));
-  }
+  // ---- the frame: pill, bubble, actions, Nook ----
   const LEVEL_ICONS = { 1: ['triangle', 'square', 'circle'], 2: ['pentagon', 'hexagon'] };
   const LEVEL_TEXT = { 1: 'triangles, squares, rectangles, circles and ovals, turned and stretched', 2: 'adds pentagons and hexagons, some turned or uneven' };
   const levelArt = n => LEVEL_ICONS[n].map(icon).join('');
@@ -146,7 +143,7 @@
     const stageFocused = document.activeElement && document.activeElement.classList && document.activeElement.classList.contains('shape-stage');
     $('page').dataset.mode = mode;
     task.dataset.view = mode;
-    chips(); pill();
+    pill();
     $('activity-title').textContent = mode === 'sides' ? 'How many sides?' : 'Which shape is this?';
     $('instruction').textContent = mode === 'sides' ? 'Tap each side of the shape to count it, then choose how many sides it has.' : 'Look at the shape, then choose its name.';
     task.innerHTML = '<div class="objects">' + stage(r) + '</div><div class="answers">' + answers(r) + '</div>';
@@ -330,7 +327,6 @@
     e.preventDefault();
     if (!e.repeat) countSide(nextSide(current()));
   });
-  $('modes').addEventListener('click', e => { const b = e.target.closest('[data-shapes-mode]'); if (b) setMode(b.dataset.shapesMode); });
   $('help').addEventListener('click', help);
   $('next').addEventListener('click', () => { stopHelp(); indices[mode] = (indices[mode] || 0) + 1; rounds[mode] = create(mode); render(); focusTask(); });
   $('repeat').addEventListener('click', () => { stopHelp(); rounds[mode] = create(mode); render(); focusTask(); });
@@ -345,9 +341,9 @@
   const talk = F.bubble($('bubble'), $('speech'));
   const nook = F.nook($('nook'), { feeling: 'rest', bubble: talk });
   restore();
-  const requested = location.hash.slice(1);
+  const requested = window.LPMenus.split(location.hash)[0];
   if (MODES.includes(requested)) mode = requested;
-  S.mountOverlay({ current: 'shapes', levels: { name: () => 'Shapes', now: () => ({ text: 'Shapes ' + level + ': ' + LEVEL_TEXT[level], art: levelArt(level) }), open: chooser } });
+  S.mountOverlay({ current: 'shapes', hosts: ['shapes'], onMode: (id, activity) => { setMode(activity); focusTask(); }, activity: id => (id === 'shapes' ? mode : ''), levels: { name: () => 'Shapes', now: () => ({ text: 'Shapes ' + level + ': ' + LEVEL_TEXT[level], art: levelArt(level) }), open: chooser } });
   render();
   window.LPShapes = { toUser, tapAt, nextSide, HIT_PX, VIEW };
 })();

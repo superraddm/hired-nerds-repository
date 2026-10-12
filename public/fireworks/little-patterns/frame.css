@@ -33,9 +33,9 @@ html.lp-frame img,html.lp-frame svg{-webkit-user-drag:none;-webkit-touch-callout
 .pill .shape,.gu-now .shape{width:14px;height:14px;flex:none}
 .pill .shape.triangle,.gu-now .shape.triangle{border-left-width:8px;border-right-width:8px;border-bottom-width:14px}
 .pill .shape.oval,.gu-now .shape.oval{width:18px;height:11px}.pill .shape.diamond,.gu-now .shape.diamond{width:11px;height:11px;margin:0 2px}
-/* Two audiences (phase 7): the pill is the child's. A game with more than two activities (and Patterns) makes it a
-   button that opens the child's picker; beside two chips it is a small read-only label of the level a grown-up set
-   in Grown-ups, drawn where a picture says it. A tap on the label only lights it for a moment. */
+/* Two audiences (phase 7): the pill is a small read-only label of the level a grown-up set in Grown-ups, drawn where a
+   picture says it; a tap only lights it for a moment. Since phase 8 the child picks the activity from the game's list
+   under its shelf tile, so no play screen has chips or a picker. */
 .pill-art{display:inline-flex;align-items:center;gap:2px;flex:none}
 .pill-art svg{display:block;width:16px;height:16px;overflow:visible}
 .pill.pill-label{min-height:36px;padding:0 10px;gap:5px;background:#fffbe8;border:1.5px solid #e3d49a;box-shadow:none;font-size:14px;color:#6a5a22;cursor:default;-webkit-user-select:none;user-select:none}
@@ -198,7 +198,8 @@ html.lp-frame img,html.lp-frame svg{-webkit-user-drag:none;-webkit-touch-callout
   .shelf-top{justify-content:center}
   .shelf-top .nook-btn{width:160px;height:192px}
   .shelf-top .nf-bubble{flex:0 1 420px;font-size:22px}
-  .tiles{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+  /* rows no taller than the tiles, centred together (phase 8: an upright iPad left a band between the rows) */
+  .tiles{grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:minmax(0,190px);gap:18px}
   .tile{min-height:140px;max-height:190px;font-size:21px}
   .tile svg{width:76px;height:76px}
 }
@@ -213,39 +214,84 @@ html.lp-frame img,html.lp-frame svg{-webkit-user-drag:none;-webkit-touch-callout
 .gu-now svg{display:block;width:20px;height:20px;overflow:visible}
 .lp-dialog #gu-levels{width:100%;background:#fff1b5;border-color:#dcc05a;color:#5a4a12}
 
-/* ---- the child's picker (phase 7): big tiles, a picture and a short name each, the current one marked; no title,
-   prose or close button. A tap on a tile chooses it; a tap anywhere else, or on the current tile, closes. ---- */
-.lp-modal.lp-kid{background:#24374d73;padding:16px}
-.lp-kid .lp-dialog{width:100%;max-width:720px;padding:14px;background:#fffcdf;border:3px solid #e4d69c;border-radius:28px;box-shadow:0 6px 0 #1a2e4a26}
-.lp-kid.n2 .lp-dialog{max-width:460px}
-.kid-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.lp-kid .kid-tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-width:0;min-height:140px;padding:12px 8px;border-radius:22px;border:3px solid #d9c98f;background:#fff8e4;box-shadow:0 4px 0 #e6d9a6;font-weight:900;font-size:19px;line-height:1.15;color:#4d3b73;text-align:center;transition:transform 70ms var(--lp-out),box-shadow 70ms var(--lp-out)}
-.lp-kid .kid-tile:active{transform:translateY(3px);box-shadow:0 1px 0 #e6d9a6}
-.lp-kid .kid-tile[aria-current=true]{background:#efe6fa;border-color:#7862a4;box-shadow:0 4px 0 #b09bd0}
-.kid-art{display:flex;align-items:center;justify-content:center;gap:4px;height:76px;max-width:100%;pointer-events:none}
-.kid-art>svg{display:block;height:100%;width:auto;max-width:100%}
-.kid-word{display:block;max-width:100%;overflow-wrap:break-word}
-@media (max-width:389px){.lp-modal.lp-kid{padding:10px}.lp-kid .lp-dialog{padding:10px}.kid-tiles{gap:10px}.lp-kid .kid-tile{padding:10px 4px;font-size:18px}}
-@media (min-width:640px) and (min-height:521px){.kid-tiles.n4{grid-template-columns:repeat(4,minmax(0,1fr))}.lp-kid .kid-tile{min-height:180px;font-size:20px}.kid-art{height:96px}}
+/* ---- the "more inside" marker (phase 8): a tile whose game has a list of activities carries a small stacked-cards
+   badge in its top-right corner and a dashed inner border, both in a deep shade of the tile's own colour (the border
+   colours are too pale to read as a sign: 1.5:1; these are 3.6 to 5:1), so it reads with or without the badge ---- */
+.tile.count{--tile-bg:var(--mint);--tile-deep:#2f7a68}.tile.add{--tile-bg:var(--butter);--tile-deep:#8a6a12}.tile.words{--tile-bg:var(--lilac);--tile-deep:#6a54a0}.tile.patterns{--tile-bg:var(--coral);--tile-deep:#a14a3a}.tile.shapes{--tile-bg:#fde9b8;--tile-deep:#94660f}.tile.feelings{--tile-bg:#ece4f6;--tile-deep:#6a54a0}.tile.paint{--tile-bg:#fff4d6;--tile-deep:#8a6a2a}.tile.blocks{--tile-bg:#dbe8dc;--tile-deep:#4f7a54}
+.tile.has-menu{position:relative}
+.tile.has-menu:before{content:"";position:absolute;inset:6px;border:3px dashed var(--tile-deep);border-radius:15px;opacity:.6;pointer-events:none}
+.tile svg.more{position:absolute;top:10px;right:10px;width:24px;height:24px;pointer-events:none;overflow:visible}
+.tile .more .card-back{fill:var(--tile-deep);opacity:.45}
+.tile .more .card-front{fill:var(--tile-deep);stroke:var(--tile-bg);stroke-width:2.2}
+
+/* ---- a game's list of activities (phase 8): a second screen of the shelf, in its look. The shelf button sits
+   top-left exactly where it sits in every game (the bar copies the game frame's top bar), with the game's name beside
+   it; Nook says the game's line; big tiles, a picture and one name each, at least 120 px tall on phones, pressed like
+   the shelf's tiles; the last activity is marked like the shelf's current tile. ---- */
+.shelf-bar{position:absolute;left:0;right:0;top:0;z-index:1}
+.shelf-bar[hidden],.menu-tiles[hidden]{display:none}
+.shelf-bar-in{max-width:1000px;height:56px;margin:0 auto;padding:6px 10px;display:flex;align-items:center;gap:10px;min-width:0}
+.menu-name{margin:0;display:flex;align-items:center;gap:6px;min-width:0;font-size:20px;font-weight:900;line-height:1.1;color:var(--ink);white-space:nowrap}
+.menu-name-art{display:flex;flex:none}
+.menu-name-art svg{display:block;width:34px;height:34px}
+.shelf.in-menu{padding-top:60px}
+.lp-overlay .shelf>.shelf-bar{width:auto;max-width:none;margin:0}
+.menu-tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(120px,230px);gap:14px;align-content:center;min-height:0;padding:6px 0 10px}
+.tile.menu-tile{min-height:120px;max-height:none;height:100%;gap:8px;padding:10px 8px;font-size:19px;line-height:1.15;letter-spacing:.2px;animation:lp-rise 220ms var(--lp-out) backwards}
+.menu-art{display:flex;align-items:center;justify-content:center;gap:4px;height:min(108px,12.5vh);min-height:72px;max-width:100%;pointer-events:none}
+/* Two activities on an upright phone: one above the other, full width, so each picture can be bigger. */
+.menu-tiles.n2{grid-template-columns:minmax(0,1fr);grid-auto-rows:minmax(120px,250px)}
+.tile .menu-art svg{display:block;width:auto;height:100%;max-width:100%;flex:none}
+.tile span.menu-word{display:block;max-width:100%;white-space:normal;overflow-wrap:break-word;text-align:center}
+.menu-art .mini{display:flex;align-items:center;gap:5px;font-size:20px;font-weight:900;line-height:1;color:#3f4a5c;white-space:nowrap}
+.menu-art .mini i{font-style:normal}
+.menu-art .mini .mw.arrow{color:#6d7a73;font-size:18px}
+.menu-art .mini .mgap{width:36px;height:28px;border:3px dashed #7e9a78;border-radius:8px;background:#fff}
+.menu-art .mini .mgap.small{width:20px}
+.menu-art .mini .mchip{padding:4px 5px;border:2px solid #d8c17a;border-radius:7px;background:#fff1c4;font-size:13px;color:#594777}
+.menu-art .mini .mchip:nth-child(2){transform:translateY(-5px) rotate(-5deg)}
+.menu-art .mini .mchip:nth-child(3){transform:translateY(3px) rotate(4deg)}
+.menu-art .menu-scene{border-radius:12px}
+@media (max-width:389px){.shelf-bar-in{gap:8px;padding:6px 8px}.menu-tiles{gap:10px}.tile.menu-tile{padding:10px 4px;font-size:18px}}
 @media (orientation:landscape) and (max-height:520px){
-  .lp-modal.lp-kid{padding:10px}
-  .lp-kid .lp-dialog{padding:12px}
-  .kid-tiles.n4{grid-template-columns:repeat(4,minmax(0,1fr))}
-  .lp-kid .kid-tile{min-height:0;height:min(220px,calc(var(--app-h) - 64px));font-size:17px;gap:6px}
-  .kid-art{height:min(76px,24vh)}
+  .shelf-bar-in{max-width:none;height:52px;padding:4px 8px}
+  .menu-name{font-size:18px}.menu-name-art svg{width:30px;height:30px}
+  .shelf.in-menu{padding-top:54px}
+  .menu-tiles{grid-auto-rows:minmax(120px,1fr);gap:14px;padding:4px 0 6px}
+  .menu-tiles.n4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .menu-tiles.n2{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(120px,1fr);width:min(100%,520px);justify-self:center}
+  .tile.menu-tile{font-size:17px;gap:6px;border-radius:16px}
+  .menu-art{height:min(76px,22vh);min-height:0}
+  .menu-art .mini{font-size:17px;gap:3px}.menu-art .mini .mgap{width:28px;height:24px}.menu-art .mini .mgap.small{width:16px}.menu-art .mini .mchip{padding:3px 4px;font-size:11px}
+}
+@media (min-width:760px) and (min-height:521px){
+  .shelf-bar-in{height:64px;padding:8px 20px}
+  .menu-name{font-size:22px}.menu-name-art svg{width:38px;height:38px}
+  .shelf.in-menu{padding-top:72px}
+  .menu-tiles{grid-auto-rows:minmax(160px,300px);gap:18px}
+  .menu-tiles.n4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .menu-tiles.n2{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(160px,300px);width:min(100%,680px);justify-self:center}
+  .tile.menu-tile{font-size:21px;gap:12px}
+  .menu-art{height:min(124px,15vh);min-height:88px}
+  .menu-art .mini{font-size:24px}
+}
+@media (min-width:760px) and (min-height:521px) and (orientation:portrait){
+  .menu-tiles.n4{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 .gu-list button{text-align:left}
 .gu-list a{min-height:48px;display:flex;align-items:center;padding:10px 16px;border:1px solid #a6bba0;border-radius:12px;background:#fff;color:inherit;font-weight:700;text-decoration:none}
 
 /* ---- Softer and reduced motion: no travel, no wiggle; short fades only ---- */
 .softer .nook-wiggle,.softer .lp-overlay>.shelf,.softer .lp-modal.lp-rise .lp-dialog{animation:none}
+.softer .tile.menu-tile{animation:lp-fade-in 150ms linear backwards}
 .softer .tile,.softer .answer,.softer .nf-actions>button{transition:opacity 120ms linear}
-.softer .tile:active,.softer .answer:active,.softer .nf-actions>button:active,.softer .lp-kid .kid-tile:active{transform:none}
+.softer .tile:active,.softer .answer:active,.softer .nf-actions>button:active{transform:none}
 @media (prefers-reduced-motion:reduce){
   .nook-wiggle,.lp-overlay>.shelf,.lp-modal.lp-rise .lp-dialog{animation:none}
+  .tile.menu-tile{animation:lp-fade-in 150ms linear backwards}
   .lp-overlay{animation-duration:120ms}
   .tile,.answer,.nf-actions>button{transition:opacity 120ms linear}
-  .tile:active,.answer:active,.nf-actions>button:active,.lp-kid .kid-tile:active{transform:none}
+  .tile:active,.answer:active,.nf-actions>button:active{transform:none}
 }
 /* ---- Nook's small pay-offs in the games (round 4, item 33): on success only, each under a second ----
    .nook-munch   Take away: the mouth opens and closes three times (frame.js swaps it), with a 2 px chew

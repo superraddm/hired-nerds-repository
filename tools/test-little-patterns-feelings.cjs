@@ -18,7 +18,7 @@ const flush = () => new Promise(r => setImmediate(r));
 // Load a page with its scripts. Audio is recorded (play: 'ok' resolves, 'blocked' rejects as a browser does without a
 // gesture); the device voice is recorded; fetch serves the private Blob bundle (and can be delayed or fail).
 function app(t, { page = 'feelings.html', seed = {}, blocked = false, failed = false, delayed = false, play = 'ok', voices = [] } = {}) {
-  const dom = new JSDOM(fs.readFileSync(path.join(root, page), 'utf8'), { url: 'https://games.example/little-patterns/' + page, runScripts: 'outside-only', pretendToBeVisual: true });
+  const dom = new JSDOM(fs.readFileSync(path.join(root, page.split('#')[0]), 'utf8'), { url: 'https://games.example/little-patterns/' + page, runScripts: 'outside-only', pretendToBeVisual: true });
   const w = dom.window, errors = [], requests = [], plays = [], players = [], urls = [], revoked = [], pending = [], utterances = [];
   w.addEventListener('error', e => errors.push(e.error || e.message));
   w.HTMLElement.prototype.scrollIntoView = function () {};
@@ -41,8 +41,9 @@ function app(t, { page = 'feelings.html', seed = {}, blocked = false, failed = f
   const ended = () => { const p = players[0]; assert.ok(p && p.onended, 'a clip is playing'); p.onended(); };
   return { w, query, all, click, store, clip, perf, big, ended, requests, plays, players, urls, revoked, pending, utterances, flush, t };
 }
-// Two audiences (phase 7): the child picks an activity from the pill's picker; the level and the story are the
-// grown-ups', behind the two-second hold (faked with mock timers, as the gate test does) and Levels and puzzles.
+// Two audiences (phase 7, phase 8): the child picks an activity from the Feelings list under its shelf tile; the level
+// and the story are the grown-ups', behind the two-second hold (faked with mock timers, as the gate test does) and
+// Levels and puzzles.
 function grownups(a) {
   a.click('#shelf-open');
   const gate = a.query('#shelf-overlay [data-grownups]');
@@ -55,7 +56,7 @@ function grownups(a) {
   assert.equal(a.query('#dialog-title').textContent, 'Grown-ups');
 }
 const parentLevels = a => { grownups(a); a.click('#gu-levels'); };
-const pick = (a, id) => { a.click('#support'); a.click(`.lp-modal [data-pick="${id}"]`); };
+const pick = (a, id) => { a.click('#shelf-open'); a.click('#shelf-overlay [data-shelf="feelings"]'); a.click(`#shelf-overlay [data-activity="${id}"]`); assert.equal(a.query('#shelf-overlay').hidden, true, 'one tap plays it'); };
 const feelings = extra => ({ [P + 'feelings-v1']: { version: 2, mode: 'board', index: 0, level: 1, story: 0, seed: 1, ...extra } });
 const timers = t => { t.mock.timers.enable({ apis: ['setTimeout'] }); return ms => t.mock.timers.tick(ms); };
 const SOUND_OFF = { 'lp-sound': 'off' };
@@ -128,9 +129,10 @@ test('the Friends art: every person, feeling and pose drawn locally, and every s
 });
 
 // ---- the page ----
-test('Feelings is a Nook frame page: the shelf button and one pill, no Back, no sound button, no Menu, no links; the board of ten neutral cards with Nook resting', t => {
+test('Feelings is a Nook frame page: the shelf button and one read-only label, no Back, no sound button, no Menu, no links; the board of ten neutral cards with Nook resting', t => {
   const a = app(t);
-  assert.deepEqual(a.all('.nf-top button').map(b => b.id), ['shelf-open', 'support']);
+  assert.deepEqual(a.all('.nf-top button').map(b => b.id), ['shelf-open']);
+  assert.equal(a.query('#support').tagName, 'SPAN', 'the label is not a button (phase 8: the activity is picked from the shelf)');
   for (const old of ['#back', '#menu-open', '#page-sound', '[data-sound]', '#feelings-menu', '[data-player]']) assert.equal(a.query(old), null, old + ' is gone');
   assert.equal(a.all('#page a[href]').length, 0, 'no links on the play screen');
   assert.doesNotMatch(fs.readFileSync(path.join(root, 'feelings.html'), 'utf8'), /garden\.html/);
@@ -148,38 +150,45 @@ test('Feelings is a Nook frame page: the shelf button and one pill, no Back, no 
   a.click('#shelf-open');
   assert.equal(a.query('#shelf-overlay [aria-current="true"]').dataset.shelf, 'feelings');
   const { files } = require('./stage-little-patterns.cjs');
-  for (const f of ['feelings.html', 'feelings.js', 'feelings.css', 'feelings-data.js', 'feelings-art.js', 'frame.js', 'frame.css', 'nook-art.js', 'nook.css', 'shelf.js', 'icons.js']) assert.ok(files.includes(f), f + ' ships');
+  for (const f of ['feelings.html', 'feelings.js', 'feelings.css', 'feelings-data.js', 'feelings-art.js', 'frame.js', 'frame.css', 'nook-art.js', 'nook.css', 'shelf.js', 'menus.js', 'icons.js']) assert.ok(files.includes(f), f + ' ships');
 });
 
-test('the pill opens the child’s picker: four big tiles (the Feelings picture, Nook’s face, a Friends scene, Nook’s face with the neutral ring), one name each, no title, prose or close button; one tap switches', t => {
+test('the Feelings list (phase 8): the Feelings tile on the shelf opens four big tiles (the Feelings picture, Nook’s face, a Friends scene, Nook’s face with the neutral ring), one name each, the activity playing marked; one tap plays it in place; the pill is a read-only label', t => {
   const a = app(t);
-  assert.equal(a.query('#support').tagName, 'BUTTON');
-  assert.equal(a.query('#support').getAttribute('aria-label'), 'Choose a Feelings game. Now: Nook feels…');
+  assert.equal(a.query('#support').tagName, 'SPAN');
+  assert.equal(a.query('#support').getAttribute('aria-label'), 'Now: Nook feels…');
   a.click('#support');
-  const modal = a.query('.lp-modal');
-  assert.ok(modal.classList.contains('lp-kid'));
-  assert.deepEqual(a.all('.lp-modal [data-pick]').map(b => b.dataset.pick), ['board', 'which', 'friends', 'me']);
-  assert.deepEqual(a.all('.lp-modal .kid-word').map(b => b.textContent), ['Nook feels…', 'Which feeling?', 'Friends', 'Me']);
-  const art = id => a.query(`.lp-modal [data-pick="${id}"] .kid-art`);
+  assert.equal(a.query('.lp-modal'), null, 'the label opens nothing');
+  a.click('#shelf-open'); a.click('#shelf-overlay [data-shelf="feelings"]');
+  assert.equal(a.query('#shelf-overlay').hidden, false, 'the current game’s tile opens its list, not closes the shelf');
+  assert.equal(a.query('#shelf-overlay [data-bubble] .line').textContent, 'Which feelings game?');
+  assert.deepEqual(a.all('#shelf-overlay .menu-tile').map(b => b.dataset.activity), ['board', 'which', 'friends', 'me']);
+  assert.deepEqual(a.all('#shelf-overlay .menu-word').map(b => b.textContent), ['Nook feels…', 'Which feeling?', 'Friends', 'Me']);
+  const art = id => a.query(`#shelf-overlay [data-activity="${id}"] .menu-art`);
   assert.equal(art('board').querySelector('svg').outerHTML, a.query('#shelf-overlay [data-shelf="feelings"] svg').outerHTML, 'the Feelings tile’s own picture');
   assert.ok(art('which').querySelector('svg.nook-face'), 'Nook’s face');
-  assert.ok(art('friends').querySelector('svg.story-art[aria-hidden="true"]'), 'a Friends scene, hidden from screen readers like every tile picture');
+  assert.ok(art('friends').querySelector('svg.menu-scene[aria-hidden="true"]'), 'a Friends scene, hidden from screen readers like every tile picture');
   assert.equal(art('friends').querySelector('[role="img"]'), null);
   assert.equal(art('me').querySelector('.nook-rim').getAttribute('fill'), a.w.NookArt.COLOURS.ring, 'Me: the neutral ring');
-  assert.equal(modal.querySelectorAll('[data-close], p, [data-level], [data-stories], [data-story], [data-activity]').length, 0, 'no close button, prose, levels or stories');
-  assert.ok(a.query('#dialog-title').classList.contains('sr-only'));
-  assert.equal(a.query('.lp-modal [aria-current="true"]').dataset.pick, 'board');
-  a.click('.lp-modal [data-pick="board"]');
-  assert.equal(a.query('.lp-modal'), null, 'the current tile closes it');
-  a.click('#support'); a.click('.lp-modal');
-  assert.equal(a.query('.lp-modal'), null, 'a tap outside the tiles closes it');
+  assert.equal(a.query('#shelf-overlay').querySelectorAll('[data-close], p, [data-level], [data-stories], [data-story]').length, 0, 'no close button, prose, levels or stories');
+  assert.equal(a.query('#shelf-overlay .menu-tiles [aria-current="true"]').dataset.activity, 'board');
+  a.click('#shelf-overlay [data-activity="board"]');
+  assert.equal(a.query('#shelf-overlay').hidden, true, 'the current one carries on');
+  assert.equal(a.w.LPFeelings.activity, 'board');
   pick(a, 'which');
-  assert.equal(a.query('.lp-modal'), null);
   assert.equal(a.w.LPFeelings.activity, 'which');
   assert.equal(a.query('#support').textContent, 'Which feeling?');
-  pick(a, 'friends');
+  a.click('#shelf-open'); a.click('#shelf-overlay [data-shelf="feelings"]');
+  assert.equal(a.query('#shelf-overlay .menu-tiles [aria-current="true"]').dataset.activity, 'which', 'the list marks the activity playing now');
+  a.click('#shelf-overlay [data-activity="friends"]');
   assert.equal(a.w.LPFeelings.activity, 'friends');
   assert.equal(a.store('feelings-v1').mode, 'friends');
+  // From the hub's list: feelings.html#me starts Me, once; the address then drops it, so a reload keeps the save.
+  const b = app(t, { page: 'feelings.html#me', seed: feelings({ mode: 'friends', story: 3 }) });
+  assert.equal(b.w.LPFeelings.activity, 'me');
+  assert.equal(b.store('feelings-v1').mode, 'me');
+  assert.equal(b.store('feelings-v1').story, 3, 'the rest of the save is kept');
+  assert.equal(b.w.location.hash, '');
 });
 
 test('Which feeling?’s level and the choice of a story are the grown-ups’: Grown-ups starts with the Feelings section, and Levels and puzzles holds the four activities, the two levels and any story; the pill follows', t => {
@@ -630,13 +639,13 @@ test('Me clears on leaving Me, a player change, pagehide and a bfcache restore (
   assert.ok(!texts.includes('You feel')); assert.ok(!texts.includes('worried'));
 });
 
-test('the picker and Grown-ups mute stop private playback and make no request; sound off keeps Me silent', async t => {
+test('the shelf and Grown-ups mute stop private playback and make no request; sound off keeps Me silent', async t => {
   const a = app(t, { seed: feelings({ mode: 'me' }) }); await flush();
   const n = a.requests.length;
   a.click('[data-feel="sad"]');
   const player = a.players[0]; assert.match(player.src, /^blob:/);
-  a.click('#support'); assert.equal(player.src, '', 'opening the picker stops it');
-  a.w.LP.closeModal();
+  a.click('#shelf-open'); assert.equal(player.src, '', 'opening the shelf stops it');
+  a.query('#shelf-overlay').dispatchEvent(new a.w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   a.click('#hear-me'); assert.match(player.src, /^blob:/);
   a.w.LP.setSound(false); assert.equal(player.src, '');
   const plays = a.plays.length;

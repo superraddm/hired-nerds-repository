@@ -281,6 +281,9 @@ function grownups(a) {
   } finally { if (mine) a.t.mock.timers.reset(); }
   assert.equal(a.query('#dialog-title').textContent, 'Grown-ups');
 }
+// Phase 8 (Jof's navigation decision): Sides and Name are picked from the Shapes list under the shelf tile: the shelf
+// button, the Shapes tile (which opens its list), then one tile; it plays in place and closes the shelf.
+const shapesMode = (a, mode) => { a.click('#shelf-open'); a.click('#shelf-overlay [data-shelf="shapes"]'); a.click(`#shelf-overlay [data-activity="${mode}"]`); assert.equal(a.query('#shelf-overlay').hidden, true, 'one tap plays it'); };
 const P = 'lp-player-player-1-';
 const place = (level, mode, example, rounds) => {
   const i = L.shapeSequence(level, mode).findIndex(([s, v]) => s + '#' + v === example);
@@ -292,10 +295,10 @@ const tick = () => new Promise(r => setTimeout(r, 0));
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const tags = a => a.all('.big-shape .tag').map(g => [Number(g.dataset.tag), Number(g.textContent)]);
 
-test('the Shapes page is the frame: Sides and Name chips, one "Shapes 1" label, a resting Nook with one bubble, the shape and three answers, Help; the stub is gone and the new files ship', t => {
+test('the Shapes page is the frame: no chips (phase 8: Sides and Name are in the Shapes list on the shelf), one "Shapes 1" label, a resting Nook with one bubble, the shape and three answers, Help; the stub is gone and the new files ship', t => {
   const a = app(t);
-  assert.deepEqual(a.all('.nf-top button').map(b => b.id || b.dataset.shapesMode), ['shelf-open', 'sides', 'name'], 'the two chips switch the game; the level is not a button');
-  assert.deepEqual(a.all('#modes .chip').map(b => [b.textContent, b.getAttribute('aria-pressed')]), [['Sides', 'true'], ['Name', 'false']]);
+  assert.deepEqual(a.all('.nf-top button').map(b => b.id), ['shelf-open'], 'the shelf button only; the level is not a button');
+  assert.equal(a.all('#modes .chip, [data-shapes-mode]').length, 0, 'no chips: the game is picked from the Shapes list on the shelf');
   assert.equal(a.query('#support').textContent, 'Shapes 1');
   assert.equal(a.query('#support').tagName, 'SPAN');
   assert.equal(a.query('#support').getAttribute('role'), 'img');
@@ -318,6 +321,17 @@ test('the Shapes page is the frame: Sides and Name chips, one "Shapes 1" label, 
   assert.equal(a.all('#page a[href]').length, 0, 'no links on the play screen');
   a.click('#shelf-open');
   assert.equal(a.query('#shelf-overlay [aria-current="true"]').dataset.shelf, 'shapes');
+  a.click('#shelf-overlay [data-shelf="shapes"]');
+  assert.equal(a.query('#shelf-overlay').hidden, false, 'the current game’s tile opens its list');
+  assert.equal(a.query('#shelf-overlay [data-bubble] .line').textContent, 'Which shape game?');
+  assert.deepEqual(a.all('#shelf-overlay .menu-tile').map(b => b.dataset.activity + ' ' + b.querySelector('.menu-word').textContent + (b.getAttribute('aria-current') ? ' *' : '')), ['sides Sides *', 'name Name']);
+  assert.equal(a.all('#shelf-overlay .menu-tile .menu-art[aria-hidden="true"] svg').length, 2, 'a picture each');
+  a.click('#shelf-overlay [data-activity="name"]');
+  assert.equal(a.query('#shelf-overlay').hidden, true, 'one tap plays it in place');
+  assert.equal(a.query('#speech').textContent, 'Which shape is this?');
+  assert.equal(a.w.location.hash, '#name');
+  shapesMode(a, 'sides');
+  assert.equal(a.query('#speech').textContent, 'How many sides? Tap each side.');
   const html = fs.readFileSync(path.join(root, 'shapes.html'), 'utf8');
   assert.match(html, /src="shapes\.js\?v=/); assert.match(html, /href="shapes\.css\?v=/); assert.doesNotMatch(html, /shapes-stub/);
   assert.ok(!fs.existsSync(path.join(root, 'shapes-stub.js')), 'the phase-2 stub is deleted');
@@ -459,7 +473,7 @@ test('a wrong number changes only the bubble; the right one locks the round: gre
 test('Name: word answers only; Help shows a small picture of each shape beside its word, then outlines the answer; success locks', async t => {
   const a = app(t, place(2, 'name', 'hexagon#uneven'));
   const r = roundAt(2, 'name', 'hexagon#uneven');
-  assert.deepEqual(a.all('#modes .chip').map(b => b.getAttribute('aria-pressed')), ['false', 'true']);
+  assert.equal(a.query('#page').dataset.mode, 'name');
   assert.equal(a.query('#speech').textContent, 'Which shape is this?');
   assert.equal(a.all('.big-shape .side, .big-shape .hit, .big-shape .tag').length, 0, 'nothing to count in Name');
   assert.ok(a.query('.big-shape .outline'));
@@ -492,10 +506,10 @@ test('Name: word answers only; Help shows a small picture of each shape beside i
 test('Again starts the same shape fresh and Next moves on; Nook rests again; each mode keeps its own round', async t => {
   const a = app(t);
   a.tap(...offSide(L.shapeRound(0, p, 1, 'sides').points, 0, 0));
-  a.click('[data-shapes-mode="name"]');
+  shapesMode(a, 'name');
   assert.equal(a.w.location.hash, '#name');
   assert.equal(a.query('#speech').textContent, 'Which shape is this?');
-  a.click('[data-shapes-mode="sides"]');
+  shapesMode(a, 'sides');
   assert.deepEqual(a.store('shapes-rounds').sides.counted, [0], 'Sides kept its count across the switch');
   a.click('[data-choice="3"]'); await wait(400);
   a.click('#repeat');
@@ -535,7 +549,7 @@ test('the level is chosen in Grown-ups: the Shapes section shows the level with 
   assert.deepEqual(b.store('shapes-rounds').sides.counted, [1, 0], 'counted sides restored, the invalid ones dropped');
   assert.deepEqual(tags(b), [[1, 1], [0, 2]]);
   assert.equal(b.all('.answer.hint').length, 1, 'the Help step is kept');
-  b.click('[data-shapes-mode="name"]');
+  shapesMode(b, 'name');
   assert.equal(b.store('shapes-rounds').name.id, L.shapeRound(5, p, 2, 'name').id);
   assert.equal(b.store('shapes-rounds').name.done, false, 'a saved round with another id starts fresh');
   // a finished Sides round comes back finished, every side tagged, without replaying anything

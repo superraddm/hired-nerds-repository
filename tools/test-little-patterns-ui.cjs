@@ -10,7 +10,7 @@ const root = path.join(__dirname, '../public/fireworks/little-patterns');
 const L = require('../public/fireworks/little-patterns/learning.js');
 
 function app(t, page = 'garden.html', seed = {}, blocked = false, soundOn = false) {
-  const html = fs.readFileSync(path.join(root, page), 'utf8');
+  const html = fs.readFileSync(path.join(root, page.split('#')[0]), 'utf8');
   const dom = new JSDOM(html, { url: `https://games.example/little-patterns/${page}`, runScripts: 'outside-only', pretendToBeVisual: true });
   const w = dom.window, errors = [], spoken = [], utterances = [], plays = [], players = [];
   const voices = [{ name: 'Hazel', lang: 'en-GB', localService: true, default: true }];
@@ -40,8 +40,19 @@ function app(t, page = 'garden.html', seed = {}, blocked = false, soundOn = fals
   return { w, query, click, store, submit, spoken, utterances, voices, plays, players, t };
 }
 
-// Two audiences (phase 7). The child switches the Words activity from the pill's picker: one tap on a tile.
-const wordTab = (a, id) => { a.click('#support'); a.click(`.lp-modal [data-pick="${id}"]`); assert.equal(a.query('.lp-modal'), null, 'one tap picks and closes'); };
+// Phase 8 (Jof's navigation decision): the child picks an activity from the game's list under its shelf tile. In a game
+// that is the shelf button, the game's tile (which opens its list), then one tile of the list: the activity named, or
+// the one marked as last played, so the game carries on as it was. Count has one activity: its tile switches in place.
+const LISTS = ['add', 'words', 'patterns'];
+function goTo(a, game, activity) {
+  if (!LISTS.includes(game)) { a.click(`[data-mode="${game}"]`); return; }
+  a.click('#shelf-open');
+  a.click(`#shelf-overlay [data-shelf="${game}"]`);
+  assert.equal(a.w.LPShelf.menu, game, 'the tile opens its list');
+  a.click(`#shelf-overlay .menu-tile[data-mode="${game}"]` + (activity ? `[data-activity="${activity}"]` : '[aria-current="true"]'));
+  assert.equal(a.query('#shelf-overlay').hidden, true, 'one tap starts it and closes the shelf');
+}
+const wordTab = (a, id) => goTo(a, 'words', id);
 // Levels, sets and chosen puzzles are the grown-ups': the shelf, the two-second Grown-ups hold (faked with mock timers,
 // as the gate test does), then Levels and puzzles in the game's section of the sheet.
 function grownups(a) {
@@ -85,10 +96,10 @@ test('sound starts on in every Garden activity and level; only the Grown-ups set
   const a=app(t,'garden.html',{},false,true);
   assert.equal(a.w.LP.audio.muted,false);
   assert.equal(a.query('[data-sound]'),null,'nothing on a play screen mutes');
-  a.click('[data-mode="words"]');a.click('[data-key="A"]');await tick();
+  goTo(a, 'words');a.click('[data-key="A"]');await tick();
   assert.equal(a.plays.length,1,'first letter speaks without a Sound toggle');
   for(const mode of ['count','add','patterns']){
-    a.click('[data-mode="'+mode+'"]');parentLevels(a);
+    goTo(a,mode);parentLevels(a);
     const count=a.w.document.querySelectorAll('.level-picker button').length;
     assert.ok(count>0);
     for(let i=0;i<count;i++){
@@ -101,12 +112,12 @@ test('sound starts on in every Garden activity and level; only the Grown-ups set
   assert.equal(a.query('#lp-settings [name="sound"]').value,'on');
   a.query('#lp-settings [name="sound"]').value='off';a.submit('#lp-settings');
   assert.equal(a.w.LP.audio.muted,true);assert.equal(a.w.LP.soundOff,true);
-  a.click('[data-mode="words"]');a.click('[data-key="B"]');await tick();
+  goTo(a, 'words');a.click('[data-key="B"]');await tick();
   assert.equal(a.plays.length,1,'the grown-up mute is retained between activities');
   assert.equal(a.w.localStorage.getItem('lp-sound'),'"off"','kept for this device');
   const b=app(t,'garden.html',{'lp-sound':'off'},false,true);
   assert.equal(b.w.LP.audio.muted,true,'the next page starts quiet while a grown-up has sound off');
-  b.click('[data-mode="words"]');b.click('[data-word="APPLE"]');await tick();
+  goTo(b, 'words');b.click('[data-word="APPLE"]');await tick();
   assert.equal(b.plays.length,0);assert.equal(b.w.LP.audio.muted,true,'a tap never turns it back on');
   assert.equal(b.query('#status').textContent,'Sound is off. A grown-up can turn it on in Grown-ups.');
   await b.w.LP.audio.speak('APPLE');
@@ -117,7 +128,7 @@ test('sound starts on in every Garden activity and level; only the Grown-ups set
 
 test('backgrounding stops speech without changing sound choice or replaying it on return', async t => {
   const a=app(t,'garden.html',{},false,true);
-  a.click('[data-mode="words"]');a.click('[data-key="A"]');await tick();
+  goTo(a, 'words');a.click('[data-key="A"]');await tick();
   const before=a.plays.length;
   Object.defineProperty(a.w.document,'hidden',{configurable:true,value:true});
   a.w.document.dispatchEvent(new a.w.Event('visibilitychange'));
@@ -148,13 +159,13 @@ test('Count, immediate addition and every pattern level remain directly availabl
   const a = app(t);
   a.click('[data-choice="1"]');
   assert.equal(a.query('#next').hidden, false);
-  a.click('[data-mode="add"]');
+  goTo(a, 'add');
   assert.equal(a.query('#join'), null);
   assert.equal(a.w.document.querySelectorAll('[data-choice]').length, 3);
   assert.match(a.query('.equation').textContent, /1 \+ 1 = \?/);
   a.click('[data-choice="2"]');
   assert.match(a.query('.equation').textContent, /1 \+ 1 = 2/);
-  a.click('[data-mode="patterns"]');
+  goTo(a, 'patterns');
   parentLevels(a);
   const levels = a.w.document.querySelectorAll('.level-picker button');
   assert.equal(levels.length, 14);
@@ -167,13 +178,13 @@ test('Count, immediate addition and every pattern level remain directly availabl
 
 test('missing-word input is typed, checked and retained separately for each player', t => {
   const a = app(t);
-  a.click('[data-mode="words"]');
+  goTo(a, 'words');
   assert.equal(a.w.document.querySelectorAll('.word-bank button').length, 3);
   a.click('[data-key="A"]');
   a.w.LP.choosePlayer();
   a.query('#player-form [name="name"]').value = 'Second player';
   a.submit('#player-form');
-  a.click('[data-mode="words"]');
+  goTo(a, 'words');
   assert.equal(a.query('#word-input').value, '');
   a.click('[data-key="B"]');
   a.w.LP.choosePlayer();
@@ -188,7 +199,7 @@ test('missing-word input is typed, checked and retained separately for each play
 
 test('Missing word shows its three picture cards from the start; Help outlines the sentence picture, then the fitting card, never filling it; with pictures hidden, Help shows them first; a saved hint:true restores as step one', t => {
   const a = app(t);
-  a.click('[data-mode="words"]');
+  goTo(a, 'words');
   assert.equal(a.w.LP.prefs.wordPictures, 'show', 'word pictures are on by default');
   assert.equal(a.w.document.querySelectorAll('.word-bank button').length, 3);
   assert.equal(a.query('#sentence-picture').hidden, false);
@@ -216,7 +227,7 @@ test('Missing word shows its three picture cards from the start; Help outlines t
   assert.ok(Array.from(a.w.document.querySelectorAll('.card-picture')).every(el => el.classList.contains('revealed')), 'the next sentence shows its pictures too');
   assert.equal(a.query('.sentence-row.clue'), null);
   const h = app(t, 'garden.html', { 'lp-player-player-1-little-patterns-v1': { wordPictures: 'hide' } });
-  h.click('[data-mode="words"]');
+  goTo(h, 'words');
   const hidden = Array.from(h.w.document.querySelectorAll('.card-picture'));
   assert.ok(hidden.every(el => !el.classList.contains('revealed') && el.querySelector('img.symbol')), 'hidden pictures keep their place, so Help never moves the keys');
   h.click('#help');
@@ -242,7 +253,7 @@ test('Missing word shows its three picture cards from the start; Help outlines t
 
 test('tapping a word or the sentence speaks only while sound is on, never turns it on, enters nothing, and keeps blank until the word is checked', async t => {
   const a = app(t);
-  a.click('[data-mode="words"]');
+  goTo(a, 'words');
   a.click('[data-word="APPLE"]');
   await tick();
   assert.equal(a.plays.length, 0, 'sound off stays silent');
@@ -270,7 +281,7 @@ test('tapping a word or the sentence speaks only while sound is on, never turns 
 
 test('a wrong word keeps the draft editable: one neutral line in the bubble, the hint in the status, no separate feedback element, sound respected', t => {
   const a = app(t);
-  a.click('[data-mode="words"]');
+  goTo(a, 'words');
   for (const key of ['C', 'A', 'T']) a.click(`[data-key="${key}"]`);
   a.click('#check-word');
   assert.equal(a.query('#answer-feedback'), null, 'no second feedback element');
@@ -300,13 +311,13 @@ test('wrong counts, sums, patterns, letters and word order all offer another try
     assert.equal(a.store('garden-rounds')[round].done, false);
   }
   wrongChoice('count', 1);
-  a.click('[data-mode="add"]'); wrongChoice('add', 2);
+  goTo(a, 'add'); wrongChoice('add', 2);
   a.w.LP.savePrefs({ ...a.w.LP.prefs, addition: 'type' });
   a.click('[data-pad="1"]'); a.click('#check-sum');
   assertRetry(a);
   assert.equal(a.store('garden-rounds').add.draft, '1');
-  a.click('[data-mode="patterns"]'); wrongChoice('patterns', a.store('garden-rounds').patterns.answer);
-  a.click('[data-mode="words"]'); wordTab(a, 'letter');
+  goTo(a, 'patterns'); wrongChoice('patterns', a.store('garden-rounds').patterns.answer);
+  goTo(a, 'words'); wordTab(a, 'letter');
   wrongChoice('letter', a.store('garden-rounds').letter.letter);
   wordTab(a, 'order');
   const wrongTile = Array.from(a.w.document.querySelectorAll('[data-tile]')).find(b => b.textContent !== 'NOOK');
@@ -364,13 +375,13 @@ test('the bundled voice works without installed voices and reuses one player wit
 test('pause and changing the activity stop a playing clip, and old playback errors stay cancelled', async t => {
   const a = app(t);
   a.w.LP.setSound(true);
-  a.click('[data-mode="words"]'); a.click('[data-word="APPLE"]');
+  goTo(a, 'words'); a.click('[data-word="APPLE"]');
   const error = a.players[0].onerror;
   a.w.LP.audio.pause();
   assert.equal(a.players[0].paused, true);
   a.w.LP.status('Still paused'); error();
   assert.equal(a.query('#status').textContent, 'Still paused');
-  a.click('[data-word="APPLE"]'); a.click('[data-mode="count"]');
+  a.click('[data-word="APPLE"]'); goTo(a, 'count');
   assert.equal(a.players[0].paused, true);
   assert.equal(a.players[0].src, '');
 });
@@ -388,9 +399,9 @@ test('restored writing appends at the caret instead of inserting before the draf
 
 test('switching local players works during a visit even when storage is blocked', t => {
   const a = app(t, 'garden.html', {}, true);
-  a.click('[data-mode="words"]'); a.click('[data-key="A"]');
+  goTo(a, 'words'); a.click('[data-key="A"]');
   a.w.LP.choosePlayer(); a.query('#player-form [name="name"]').value = 'Guest two'; a.submit('#player-form');
-  a.click('[data-mode="words"]'); a.click('[data-key="B"]');
+  goTo(a, 'words'); a.click('[data-key="B"]');
   a.w.LP.choosePlayer(); a.w.document.querySelector('.player-list .saved-text').click();
   assert.equal(a.query('#word-input').value, 'A');
 });
@@ -398,7 +409,7 @@ test('switching local players works during a visit even when storage is blocked'
 test('a typed number-word answer updates its result immediately', t => {
   const a = app(t);
   a.w.LP.savePrefs({ ...a.w.LP.prefs, numberWords: 'type' });
-  a.click('[data-mode="words"]'); wordTab(a, 'numbers');
+  goTo(a, 'words'); wordTab(a, 'numbers');
   for (const key of ['O', 'N', 'E']) a.click(`[data-key="${key}"]`);
   a.click('#check-word');
   assert.equal(a.query('#next').hidden, false);
@@ -409,10 +420,10 @@ test('a typed number-word answer updates its result immediately', t => {
 test('a completed typed answer stays as it is until Again or Next: its keys are disabled and hardware keys change nothing, so no stale success can appear', t => {
   const a = app(t);
   a.w.LP.savePrefs({ ...a.w.LP.prefs, numberWords: 'type' });
-  a.click('[data-mode="words"]'); wordTab(a, 'numbers');
+  goTo(a, 'words'); wordTab(a, 'numbers');
   for (const key of ['O', 'N', 'E']) a.click(`[data-key="${key}"]`);
   a.click('#check-word');
-  a.click('[data-mode="count"]'); a.click('[data-mode="words"]');
+  goTo(a, 'count'); goTo(a, 'words');
   assert.equal(a.query('[data-key="Backspace"]').disabled, true);
   assert.equal(a.query('#word-input').hasAttribute('readonly'), true);
   a.click('[data-key="Backspace"]');
@@ -431,7 +442,7 @@ test('a completed typed answer stays as it is until Again or Next: its keys are 
 
 test('sentence tiles keep their positions as words are placed', t => {
   const a = app(t);
-  a.click('[data-mode="words"]'); wordTab(a, 'order');
+  goTo(a, 'words'); wordTab(a, 'order');
   const before = Array.from(a.w.document.querySelectorAll('[data-tile]'));
   const first = before.find(b => b.textContent === 'NOOK');
   first.click();
@@ -464,7 +475,7 @@ test('an explicitly chosen number continues from that number within its level', 
 
 test('a chosen sum continues to the next sum at the same level instead of jumping back', t => {
   const a = app(t);
-  a.click('[data-mode="add"]'); a.click('#next'); a.click('#next');
+  goTo(a, 'add'); a.click('#next'); a.click('#next');
   parentLevels(a);
   const form = a.query('#pick-sum'); form.elements.a.value = '2'; form.elements.b.value = '2';
   a.submit('#pick-sum');
@@ -476,8 +487,8 @@ test('a chosen sum continues to the next sum at the same level instead of jumpin
 
 test('levels are separate per activity and chosen in Grown-ups; the pill names the level as a read-only label; a level change keeps other drafts', t => {
   const a = app(t);
-  a.click('[data-mode="words"]'); a.click('[data-key="A"]');
-  a.click('[data-mode="count"]');
+  goTo(a, 'words'); a.click('[data-key="A"]');
+  goTo(a, 'count');
   assert.equal(a.query('#level-strip'), null, 'no level strip: the pill is the one level control');
   assert.equal(a.query('#support').textContent, '1–5');
   assert.equal(a.query('#support').getAttribute('aria-haspopup'), null, 'the label opens nothing');
@@ -487,22 +498,22 @@ test('levels are separate per activity and chosen in Grown-ups; the pill names t
   parentLevels(a); a.w.document.querySelectorAll('.level-picker button')[1].click(); a.click('[data-close]');
   assert.equal(a.query('#support').textContent, '1–10');
   assert.equal(a.query('#support').getAttribute('aria-label'), 'Level: 1–10');
-  a.click('[data-mode="patterns"]'); parentLevels(a);
+  goTo(a, 'patterns'); parentLevels(a);
   a.w.document.querySelectorAll('.level-picker button')[13].click(); a.click('[data-close]');
   assert.equal(a.query('#support').textContent, 'Level 14 · Numbers');
   a.click(`[data-choice="${a.store('garden-rounds').patterns.answer}"]`);
   assert.equal(a.query('#next').hidden, false);
-  a.click('[data-mode="count"]');
+  goTo(a, 'count');
   const position = a.store('garden-position');
   assert.deepEqual(position.levels, { count: 2, add: 1, numbers: 1, patterns: 14 });
   assert.equal(position.operation, 'add');
-  a.click('[data-mode="add"]');
+  goTo(a, 'add');
   assert.equal(a.query('#support').textContent, 'Up to 5');
-  a.click('[data-mode="words"]');
+  goTo(a, 'words');
   assert.equal(a.query('#word-input').value, 'A', 'changing the Count level never touches a Words draft');
   a.w.LP.savePrefs({ ...a.w.LP.prefs, choices: 3 });
   assert.equal(a.query('#word-input').value, 'A', 'a choices change rebuilds Count, not Missing word');
-  a.click('[data-mode="count"]');
+  goTo(a, 'count');
   assert.equal(a.w.document.querySelectorAll('[data-choice]').length, 3);
 });
 
@@ -513,7 +524,7 @@ test('an older save with the shared 1 to 10 range and a pattern index restores o
     'lp-player-player-1-garden-rounds': { count: { target: 7, seen: [0, 1], done: false } }
   });
   assert.match(a.query('#support').textContent, /2 shapes/, 'patterns now open on the two-shape family whatever the old index said');
-  a.click('[data-mode="count"]');
+  goTo(a, 'count');
   assert.equal(a.query('#support').textContent, '1–10');
   assert.equal(a.store('garden-rounds').count.target, 7);
   assert.deepEqual(a.store('garden-rounds').count.seen, [0, 1]);
@@ -541,10 +552,11 @@ test('block profiles restore a paused board and preserve undo arithmetic', t => 
   const a = app(t, 'blocks.html');
   a.click('[data-action="place"]');
   assert.equal(a.query('#undo').disabled, false);
-  a.click('[data-player]');
+  // Phase 8: who is playing is chosen in Grown-ups (the shelf button, then the hold), as in every game.
+  grownups(a); a.click('#gu-player');
   a.query('#player-form [name="name"]').value = 'Block builder two'; a.submit('#player-form');
   assert.equal(a.query('#undo').disabled, true);
-  a.click('[data-player]'); a.w.document.querySelector('.player-list .saved-text').click();
+  grownups(a); a.click('#gu-player'); a.w.document.querySelector('.player-list .saved-text').click();
   assert.equal(a.query('#overlay').hidden, false);
   assert.equal(a.query('#undo').disabled, false);
 });
@@ -564,13 +576,13 @@ test('invalid saved block history is discarded without breaking the playable boa
 
 test('removing the active player clears their local drafts and starts another player safely', async t => {
   const a = app(t);
-  a.click('[data-mode="words"]'); a.click('[data-key="A"]');
+  goTo(a, 'words'); a.click('[data-key="A"]');
   a.w.LP.choosePlayer(); a.click('[aria-label="Delete Player 1 from this device"]');
   a.click('#confirm-action');
   await Promise.resolve();
   assert.notEqual(a.w.LP.player.id, 'player-1');
   assert.equal(a.w.localStorage.getItem('lp-player-player-1-garden-rounds'), null);
-  a.click('[data-close]'); a.click('[data-mode="words"]');
+  a.click('[data-close]'); goTo(a, 'words');
   assert.equal(a.query('#word-input').value, '');
 });
 
@@ -586,7 +598,7 @@ test('saved rounds restore by puzzle id: a matching id keeps its state, a mismat
   assert.deepEqual(a.store('garden-rounds').count.seen, [0], 'same id, state kept');
   assert.equal(a.store('garden-rounds').add.draft, '', 'the saved add belonged to level 1; level 2 starts fresh');
   assert.equal(a.store('garden-rounds').add.id, 'add:v2:L2:add:1+1');
-  a.click('[data-mode="words"]');
+  goTo(a, 'words');
   assert.equal(a.query('#word-input').value, 'APP', 'other activities are untouched');
 });
 
@@ -611,7 +623,7 @@ test('every correct answer goes through one path: bubble and announcement come f
   assert.equal(a.plays[0], a.w.LPVoiceLibrary.clips[speech[0].toLowerCase().replace(/[.!?]+$/, '')].file);
   a.players[0].onended();
   assert.equal(a.plays[1], a.w.LPVoiceLibrary.clips[speech[1].toLowerCase().replace(/[.!?]+$/, '')].file);
-  a.click('[data-mode="add"]');
+  goTo(a, 'add');
   const wrong = Array.from(a.w.document.querySelectorAll('[data-choice]')).find(b => b.dataset.choice !== '2');
   wrong.click();
   assertRetry(a);
@@ -620,7 +632,7 @@ test('every correct answer goes through one path: bubble and announcement come f
   assert.equal(a.query('#speech').textContent, line('add', a.store('garden-rounds').add));
   assert.match(a.query('#speech').textContent, /1 \+ 1 = 2\./);
   assert.equal(a.store('garden-rounds').add.feedback, '');
-  a.click('[data-mode="words"]'); wordTab(a, 'order');
+  goTo(a, 'words'); wordTab(a, 'order');
   const words = a.store('garden-rounds').order.words;
   for (const word of words) Array.from(a.w.document.querySelectorAll('[data-tile]')).find(b => b.textContent === word && !b.disabled).click();
   assert.equal(a.query('#speech').textContent, line('order', a.store('garden-rounds').order));
@@ -748,11 +760,11 @@ test('speech rate: 1.0 by default, at most 1.05, the pitch kept', async t => {
 test('every prompt and Help line in the Garden has its clip (phase 5): the bubble shows the speaker in each mode and word tab, Help lines and the shelf question can be heard again', async t => {
   const a = app(t, 'garden.html', {}, false, true);
   const voiced = label => assert.ok(!a.query('#bubble').classList.contains('silent'), label + ': ' + a.query('#speech').textContent);
-  for (const mode of ['count', 'add', 'patterns']) { a.click(`[data-mode="${mode}"]`); voiced(mode); }
-  a.click('[data-mode="add"]'); a.click('#help');
+  for (const mode of ['count', 'add', 'patterns']) { goTo(a, mode); voiced(mode); }
+  goTo(a, 'add'); a.click('#help');
   assert.equal(a.query('#speech').textContent, 'Count them all with me.'); voiced('add Help');
-  a.click('[data-mode="add"]');
-  a.click('[data-mode="words"]');
+  goTo(a, 'add');
+  goTo(a, 'words');
   for (const tab of ['sentence', 'letter', 'order', 'numbers']) { wordTab(a, tab); voiced(tab); }
   const overlay = a.query('#shelf-overlay');
   assert.equal(overlay.querySelector('[data-bubble] .line').textContent, 'What shall we play?');
@@ -769,21 +781,21 @@ test('success is announced once: the completed model stays, no duplicate result 
   assert.equal(a.query('#task .number-total'), null, 'no separate total');
   assert.ok(a.query('[data-choice="1"].chosen'), 'the chosen answer stays marked in its place');
   assert.equal(a.query('#status').textContent, a.query('#speech').textContent, 'one live announcement of the same line');
-  a.click('[data-mode="add"]'); a.click('[data-choice="2"]');
+  goTo(a, 'add'); a.click('[data-choice="2"]');
   assert.equal(a.query('.result-note'), null);
   assert.match(a.query('.equation').textContent, /1 \+ 1 = 2/);
   assert.equal(a.query('.equation .unknown.filled').textContent, '2', 'the chosen digit fills the ?');
   assert.equal(a.query('.sum-result'), null, 'the joined group is not drawn again');
-  a.click('[data-mode="patterns"]');
+  goTo(a, 'patterns');
   a.click(`[data-choice="${a.store('garden-rounds').patterns.answer}"]`);
   assert.equal(a.query('.result-note'), null);
   assert.equal(a.query('.bead-slot.missing'), null, 'the bead fills the gap');
-  a.click('[data-mode="words"]'); wordTab(a, 'letter');
+  goTo(a, 'words'); wordTab(a, 'letter');
   a.click(`[data-choice="${a.store('garden-rounds').letter.letter}"]`);
   assert.equal(a.query('.result-note'), null);
   assert.equal(a.query('.letter-tile.gap'), null);
   assert.ok(a.query('.letter-tile.filled'));
-  a.click('[data-mode="count"]');
+  goTo(a, 'count');
   assert.equal(a.query('#status').textContent, 'Again, or the next picnic.', 'a re-render carries an instruction, not the announcement again');
 });
 
@@ -793,7 +805,7 @@ test('a wrong answer gives one neutral line in the bubble and one hint in the st
   wrong();
   assertRetry(a);
   assert.equal(a.query('#status').textContent, 'Look at the apples and count them.');
-  a.click('[data-mode="words"]');
+  goTo(a, 'words');
   for (const key of ['C', 'A', 'T']) a.click(`[data-key="${key}"]`);
   a.click('#check-word');
   assert.equal(a.query('#answer-feedback'), null);
@@ -804,21 +816,21 @@ test('a wrong answer gives one neutral line in the bubble and one hint in the st
 
 test('Give me a clue scaffolds first and outlines the answer second, silently, in every activity', t => {
   const a = app(t);
-  a.click('[data-mode="add"]');
+  goTo(a, 'add');
   a.click('#help');
   assert.equal(a.w.document.querySelectorAll('#task .count-tag').length, 2, 'first tap numbers every apple in one count');
   assert.equal(a.query('.choice.hint'), null);
   assert.equal(a.store('garden-rounds').add.hint, 1);
   a.click('#help');
   assert.ok(a.query('[data-choice="2"].hint'), 'second tap outlines the answer');
-  a.click('[data-mode="patterns"]');
+  goTo(a, 'patterns');
   const round = a.store('garden-rounds').patterns;
   a.click('#help');
   assert.equal(a.w.document.querySelectorAll('.bead-slot.emphasis').length, round.unit.length);
   assert.equal(a.query('.choice.hint'), null);
   a.click('#help');
   assert.ok(a.query(`[data-choice="${round.answer}"].hint`));
-  a.click('[data-mode="words"]'); wordTab(a, 'letter');
+  goTo(a, 'words'); wordTab(a, 'letter');
   a.click('#help');
   assert.match(a.query('#status').textContent, /The word is APPLE/);
   assert.equal(a.query('.choice.hint'), null);
@@ -842,7 +854,7 @@ test('Give me a clue scaffolds first and outlines the answer second, silently, i
 
 test('the gap is the input: bounded width, readonly with the A to Z keys, the keys end in Delete then Enter (no Clear), and the device keyboard shows those two on their own', t => {
   const a = app(t);
-  a.click('[data-mode="words"]');
+  goTo(a, 'words');
   const input = a.query('#word-input');
   assert.equal(input.tagName, 'INPUT');
   assert.equal(input.closest('.sentence'), a.query('.sentence'), 'the input sits inside the sentence');
@@ -910,7 +922,12 @@ test('Blocks keeps its named Sound control and named block controls; the Garden 
   assert.match(down.getAttribute('aria-label'), /Hold to move faster/);
   const css = fs.readFileSync(path.join(root, 'blocks-live.css'), 'utf8');
   assert.match(css, /\.overlay \.primary\{flex:0 0 auto/, 'Keep playing no longer inherits flex:1 inside the vertical overlay');
-  assert.deepEqual(Array.from(b.w.document.querySelectorAll('header a[href]'), l => l.getAttribute('href')), ['./'], 'Blocks’ header link goes to the shelf');
+  // Phase 8 (two audiences): the shelf button top-left, as in every game; Player, Grown-ups and the pace are behind the hold.
+  assert.deepEqual(Array.from(b.w.document.querySelectorAll('header button'), x => x.id), ['shelf-open']);
+  assert.equal(b.query('#shelf-open').getAttribute('aria-label'), 'Nook’s games');
+  assert.ok(b.query('#shelf-open svg'), 'the shelf icon');
+  assert.equal(b.query('header').firstElementChild, b.query('#shelf-open'), 'top-left');
+  for (const sel of ['[data-player]', '[data-settings]', '#pace', 'header a[href]']) assert.equal(b.query(sel), null, sel + ' is gone from the play screen');
 });
 
 test('the frame stylesheet: phone portrait, phone landscape under 520 px tall and tablet layouts, a fixed two-slot action bar 20 px clear of the bottom, a 96 px answer row, zoom left on, and play-screen guards', t => {
@@ -939,12 +956,12 @@ test('the frame stylesheet: phone portrait, phone landscape under 520 px tall an
 
 test('take away lives inside Add: one group with the eaten apples crossed out, the same answer modes, its own place, and restore by id', t => {
   const a = app(t);
-  a.click('[data-mode="add"]');
-  assert.equal(a.query('[data-operation="add"]').getAttribute('aria-pressed'), 'true');
+  goTo(a, 'add');
+  assert.equal(a.store('garden-position').operation, 'add', 'Add or Take away, as the list started it');
   a.click('#next');
   const L = a.w.GardenLearning, eq = (op, i) => { const [x, y] = L.sumSequence(1, op)[i]; return new RegExp(x + ' ' + (op === 'take' ? '−' : '\\+') + ' ' + y + ' = \\?'); };
   assert.match(a.query('.equation').textContent, eq('add', 1));
-  a.click('[data-operation="take"]');
+  goTo(a, 'add', 'take');
   assert.equal(a.store('garden-position').operation, 'take');
   assert.match(a.query('.equation').textContent, /2 − 1 = \?/, 'take away opens on a plain sum, never on taking everything');
   assert.equal(a.w.document.querySelectorAll('.take-one .fruit').length, 2, 'one group: the apples Nook started with');
@@ -963,9 +980,9 @@ test('take away lives inside Add: one group with the eaten apples crossed out, t
   assert.equal(a.w.document.querySelectorAll('.take-one .fruit.gone').length, second[1], 'eaten apples are crossed from the end');
   a.click('#help');
   assert.equal(a.w.document.querySelectorAll('.take-one .count-tag').length, second[0] - second[1], 'the clue numbers what is left, never the eaten apples');
-  a.click('[data-operation="add"]');
+  goTo(a, 'add', 'add');
   assert.match(a.query('.equation').textContent, eq('add', 1), 'switching back returns to the same sum');
-  a.click('[data-operation="take"]');
+  goTo(a, 'add', 'take');
   assert.match(a.query('.equation').textContent, eq('take', 1), 'take away kept its own place');
   a.w.LP.savePrefs({ ...a.w.LP.prefs, addition: 'type' });
   for (const d of String(second[0] - second[1])) a.click(`[data-pad="${d}"]`);
@@ -990,7 +1007,7 @@ test('take away lives inside Add: one group with the eaten apples crossed out, t
 
 test('Add levels 3 and 4 use two ten-frames (the added part dashed; Help fills the ten first, then counts on), level 5 keeps rows of ten, take away keeps its rows, and the keypad takes three digits', t => {
   const a = app(t);
-  a.click('[data-mode="add"]'); parentLevels(a);
+  goTo(a, 'add'); parentLevels(a);
   const levels = a.w.document.querySelectorAll('.level-picker button');
   assert.equal(levels.length, 6);
   assert.match(levels[2].textContent, /no crossing ten/);
@@ -1035,7 +1052,7 @@ test('Add levels 3 and 4 use two ten-frames (the added part dashed; Help fills t
   assert.ok(Array.from(a.w.document.querySelectorAll('[data-choice]')).every(b => Number(b.dataset.choice) % 10 === 0));
   a.click('#help');
   assert.deepEqual(Array.from(a.w.document.querySelectorAll('.group.rows .count-tag'), el => el.textContent), ['10', '20'], 'Help counts in tens across both groups');
-  a.click('[data-operation="take"]');
+  goTo(a, 'add', 'take');
   assert.match(a.query('.equation').textContent, /20 − 10 = \?/);
   assert.equal(a.w.document.querySelectorAll('.take-one .stick').length, 2, 'two rows of ten');
   assert.equal(a.w.document.querySelectorAll('.take-one .stick i.apple.gone').length, 10, 'every apple in the last row crossed out');
@@ -1061,7 +1078,7 @@ test('Add levels 3 and 4 use two ten-frames (the added part dashed; Help fills t
 
 test('the Add picker offers Doubles and Make ten; Next cycles inside the set and a level choice leaves it', t => {
   const a = app(t);
-  a.click('[data-mode="add"]'); a.click('[data-operation="take"]'); parentLevels(a);
+  goTo(a, 'add'); goTo(a, 'add', 'take'); parentLevels(a);
   const sets = a.w.document.querySelectorAll('.set-picker button');
   assert.equal(sets.length, 2);
   assert.match(sets[0].textContent, /Doubles/); assert.match(sets[1].textContent, /Make ten/);
@@ -1139,7 +1156,7 @@ test('Count levels 3 to 6: a full ten-frame first, then sticks; Count with me co
   assert.equal(a.query('.count-answer .typed').textContent, '73');
   a.click('#check-sum');
   assert.match(a.query('#speech').textContent, /73 apples\./);
-  a.click('[data-mode="add"]'); a.click('[data-mode="count"]');
+  goTo(a, 'add'); goTo(a, 'count');
   assert.match(a.query('#speech').textContent, /73 apples\./);
   const b = app(t, 'garden.html', {
     'lp-player-player-1-little-patterns-v1': { countAnswer: 'type' },
@@ -1151,7 +1168,7 @@ test('Count levels 3 to 6: a full ten-frame first, then sticks; Count with me co
   assert.equal(b.query('.count-answer .typed').textContent, '10');
   b.click('[data-pad="0"]'); b.click('#check-sum');
   assert.match(b.query('#speech').textContent, /100 apples\./);
-  b.click('[data-mode="count"]');
+  goTo(b, 'count');
   assert.equal(b.query('#next').hidden, false);
 });
 
@@ -1178,7 +1195,7 @@ test('later passes through a small level arrange the same quantity differently a
 test('Number words to one hundred reuse the tray and can be chosen or typed', t => {
   const a = app(t);
   a.w.LP.savePrefs({ ...a.w.LP.prefs, numberWords: 'choose', choices: 3 });
-  a.click('[data-mode="words"]'); wordTab(a, 'numbers'); parentLevels(a);
+  goTo(a, 'words'); wordTab(a, 'numbers'); parentLevels(a);
   const levels = a.w.document.querySelectorAll('.level-picker button');
   assert.equal(levels.length, 4);
   levels[3].click();
@@ -1212,7 +1229,7 @@ test('Number words to one hundred reuse the tray and can be chosen or typed', t 
 
 test('two-gap patterns: gaps are buttons, the chosen gap takes the piece, partial fills are kept, and the last piece finishes', t => {
   const a = app(t);
-  a.click('[data-mode="patterns"]'); parentLevels(a);
+  goTo(a, 'patterns'); parentLevels(a);
   a.w.document.querySelectorAll('.level-picker button')[7].click(); a.click('[data-close]');
   assert.equal(a.query('#support').textContent, 'Level 8');
   assert.equal(a.query('.repeat-label'), null, 'from level 8 the unit is not spelt out');
@@ -1250,7 +1267,7 @@ test('two-gap patterns: gaps are buttons, the chosen gap takes the piece, partia
 test('growing, mirror and number patterns are named rules with their own hints, clues and answers; ten beads keep reading order', t => {
   const a = app(t);
   a.w.LP.savePrefs({ ...a.w.LP.prefs, choices: 3 });
-  a.click('[data-mode="patterns"]'); parentLevels(a);
+  goTo(a, 'patterns'); parentLevels(a);
   const levels = a.w.document.querySelectorAll('.level-picker button');
   assert.match(levels[11].getAttribute('aria-label'), /Growing pattern/);
   assert.match(levels[12].getAttribute('aria-label'), /Mirror pattern/);
@@ -1296,7 +1313,7 @@ test('growing, mirror and number patterns are named rules with their own hints, 
 
 test('the missing part level shows the joined group with the hidden part outlined and asks how many joined', t => {
   const a = app(t);
-  a.click('[data-mode="add"]'); parentLevels(a);
+  goTo(a, 'add'); parentLevels(a);
   const levels = a.w.document.querySelectorAll('.level-picker button');
   assert.equal(levels.length, 6);
   assert.match(levels[5].textContent, /missing part/);
@@ -1316,9 +1333,9 @@ test('the missing part level shows the joined group with the hidden part outline
   a.click(`[data-choice="${r.b}"]`);
   assert.match(a.query('.equation').textContent, new RegExp(`${r.a} \\+ ${r.b} = ${r.total}`), 'the completed equation stays');
   assert.match(a.query('#speech').textContent, new RegExp(`${r.a} \\+ ${r.b} = ${r.total}\\.`));
-    a.click('[data-operation="take"]');
+    goTo(a, 'add', 'take');
   assert.equal(a.query('#support').textContent, 'Tens', 'take away has no missing-part level');
-  assert.equal(a.query('[data-operation="take"]').getAttribute('aria-pressed'), 'true');
+  assert.equal(a.store('garden-position').operation, 'take', 'Add or Take away, as the list started it');
   parentLevels(a);
   assert.equal(a.w.document.querySelectorAll('.level-picker button').length, 5);
 });
@@ -1326,7 +1343,7 @@ test('the missing part level shows the joined group with the hidden part outline
 test('grown-up sentences join Missing word and Word order with a chosen gap, distractors, no picture and the local voice', async t => {
   const a = app(t);
   a.w.LP.savePrefs({ ...a.w.LP.prefs, customSentences: ['Arthur likes TRAINS.', 'We go to the PARK.'] });
-  a.click('[data-mode="words"]'); parentLevels(a);
+  goTo(a, 'words'); parentLevels(a);
   const buttons = Array.from(a.w.document.querySelectorAll('.puzzle-picker button'));
   assert.equal(buttons.length, L.SENTENCES.length + 2);
   buttons.find(b => b.textContent === 'ARTHUR LIKES TRAINS.').click();
@@ -1362,7 +1379,7 @@ test('grown-up sentences join Missing word and Word order with a chosen gap, dis
 
 test('the bath-time bank offers five-word sentences for Word order and keeps stable tile positions', t => {
   const a = app(t);
-  a.click('[data-mode="words"]'); wordTab(a, 'order'); parentLevels(a);
+  goTo(a, 'words'); wordTab(a, 'order'); parentLevels(a);
   Array.from(a.w.document.querySelectorAll('.puzzle-picker button')).find(b => b.textContent === 'THE BIG DOG CAN RUN.').click();
   const tiles = Array.from(a.w.document.querySelectorAll('[data-tile]'));
   assert.equal(tiles.length, 5);
@@ -1372,17 +1389,18 @@ test('the bath-time bank offers five-word sentences for Word order and keeps sta
   a.click('#hear-model');
 });
 
-test('Make your own pattern (from the child’s picker on the pill): beads are added, removed and read back, the string is saved, and there is no right answer, Help or Next', async t => {
+test('Make your own pattern (from the Patterns list under the shelf tile): beads are added, removed and read back, the string is saved, and there is no right answer, Help or Next', async t => {
   const a = app(t);
-  a.click('[data-mode="patterns"]');
+  goTo(a, 'patterns');
   assert.equal(a.query('[data-pattern-mode]'), null, 'no tab row on the play screen');
-  a.click('#support');
-  assert.deepEqual(Array.from(a.w.document.querySelectorAll('.lp-modal [data-pick]'), b => b.dataset.pick + ' ' + b.querySelector('.kid-word').textContent), ['finish Finish', 'make Make your own']);
-  assert.equal(a.query('.lp-modal [data-pick="finish"]').getAttribute('aria-current'), 'true');
-  assert.equal(a.w.document.querySelectorAll('.lp-modal [data-pick="finish"] .kid-beads .shape').length, 3, 'Finish shows the two-shape family as beads, the last one missing');
-  assert.ok(a.query('.lp-modal [data-pick="finish"] .kid-beads .hole'));
-  assert.equal(a.query('.lp-modal [data-pick="make"]').getAttribute('aria-current'), null);
-  a.click('.lp-modal [data-pick="make"]');
+  a.click('#shelf-open'); a.click('#shelf-overlay [data-shelf="patterns"]');
+  assert.deepEqual(Array.from(a.w.document.querySelectorAll('#shelf-overlay .menu-tile'), b => b.dataset.activity + ' ' + b.querySelector('.menu-word').textContent), ['finish Finish the pattern', 'make Make your own']);
+  assert.equal(a.query('#shelf-overlay [data-activity="finish"]').getAttribute('aria-current'), 'true');
+  assert.equal(a.w.document.querySelectorAll('#shelf-overlay [data-activity="finish"] .menu-art svg circle').length, 2, 'Finish the pattern: beads on a string, the last one missing');
+  assert.ok(a.query('#shelf-overlay [data-activity="finish"] .menu-art svg rect[stroke-dasharray]'));
+  assert.equal(a.query('#shelf-overlay [data-activity="make"]').getAttribute('aria-current'), null);
+  a.click('#shelf-overlay [data-activity="make"]');
+  assert.equal(a.query('#shelf-overlay').hidden, true);
   assert.equal(a.query('.lp-modal'), null);
   assert.equal(a.store('garden-position').patternMode, 'make');
   assert.equal(a.query('#support').textContent, 'Make your own');
@@ -1408,11 +1426,11 @@ test('Make your own pattern (from the child’s picker on the pill): beads are a
   assert.ok(a.query('[data-add="oval"]').disabled);
   assert.match(a.query('#status').textContent, /full/);
   assert.equal(a.query('#speech').textContent, 'What a string!');
-  a.click('#support');
-  assert.equal(a.query('.lp-modal [data-pick="make"]').getAttribute('aria-current'), 'true');
-  a.click('.lp-modal [data-pick="finish"]');
+  a.click('#shelf-open'); a.click('#shelf-overlay [data-shelf="patterns"]');
+  assert.equal(a.query('#shelf-overlay [data-activity="make"]').getAttribute('aria-current'), 'true', 'the list marks the activity playing now');
+  a.click('#shelf-overlay [data-activity="finish"]');
   assert.ok(a.query('button[data-gap], .bead-slot.missing'), 'finishing a pattern is unchanged');
-  a.click('#support'); a.click('.lp-modal [data-pick="make"]');
+  goTo(a, 'patterns', 'make');
   assert.equal(a.store('garden-rounds').make.beads.length, 10, 'the string is kept');
   a.click('#clear-beads');
   assert.deepEqual(a.store('garden-rounds').make.beads, []);
@@ -1424,7 +1442,7 @@ test('Make your own pattern (from the child’s picker on the pill): beads are a
 
 test('numeral answer buttons are sized by digit count so 18 and 100 fit the same button as 3', t => {
   const a = app(t);
-  a.click('[data-mode="add"]'); parentLevels(a);
+  goTo(a, 'add'); parentLevels(a);
   a.w.document.querySelectorAll('.level-picker button')[2].click(); a.click('[data-close]');
   const classes = Array.from(a.w.document.querySelectorAll('[data-choice]')).map(b => [b.dataset.choice, b.className]);
   for (const [value, cls] of classes) assert.equal(/digits-2/.test(cls), value.length === 2, value);
@@ -1432,7 +1450,7 @@ test('numeral answer buttons are sized by digit count so 18 and 100 fit the same
   parentLevels(a);
   const form = a.query('#pick-sum'); form.elements.a.value = '50'; form.elements.b.value = '50'; a.submit('#pick-sum');
   assert.ok(a.query('[data-choice="100"].digits-3'));
-  a.click('[data-mode="count"]');
+  goTo(a, 'count');
   assert.ok(Array.from(a.w.document.querySelectorAll('[data-choice]')).every(b => !/digits/.test(b.className)), 'single digits keep the approved size');
   const frame = fs.readFileSync(path.join(root, 'frame.css'), 'utf8'), css = fs.readFileSync(path.join(root, 'garden.css'), 'utf8');
   assert.match(frame, /\.answer\{[^}]*display:inline-flex[^}]*white-space:nowrap/, 'numerals lay out with flex, never grid, inside a button');
@@ -1442,7 +1460,7 @@ test('numeral answer buttons are sized by digit count so 18 and 100 fit the same
 
 test('the typing keyboard sounds each letter phonetically, only while sound is on, without touching the draft', async t => {
   const a = app(t);
-  a.click('[data-mode="words"]');
+  goTo(a, 'words');
   a.click('[data-key="A"]');
   assert.equal(a.plays.length, 0, 'sound off stays silent');
   a.w.LP.setSound(true);
@@ -1461,11 +1479,11 @@ test('the typing keyboard sounds each letter phonetically, only while sound is o
 test('the task names the current view, and the Words keyboard is seven to a row on a narrow portrait phone and ten to a row in landscape', t => {
   const a = app(t);
   assert.equal(a.query('#task').dataset.view, 'count');
-  a.click('[data-mode="add"]'); assert.equal(a.query('#task').dataset.view, 'add');
-  a.click('[data-mode="words"]'); assert.equal(a.query('#task').dataset.view, 'sentence');
+  goTo(a, 'add'); assert.equal(a.query('#task').dataset.view, 'add');
+  goTo(a, 'words'); assert.equal(a.query('#task').dataset.view, 'sentence');
   assert.ok(a.query('#page').classList.contains('words'), 'the frame knows it is showing Words, so landscape can fold the bubble');
   wordTab(a, 'numbers'); assert.equal(a.query('#task').dataset.view, 'numbers');
-  a.click('[data-mode="patterns"]'); a.click('#support'); a.click('.lp-modal [data-pick="make"]'); assert.equal(a.query('#task').dataset.view, 'make');
+  goTo(a, 'patterns', 'make'); assert.equal(a.query('#task').dataset.view, 'make');
   assert.ok(!a.query('#page').classList.contains('words'));
   const css = fs.readFileSync(path.join(root, 'garden.css'), 'utf8');
   assert.match(css, /\.keyboard\{display:grid;grid-template-columns:repeat\(7,minmax\(0,1fr\)\)/, 'seven to a row: 7, 7, 7, then V to Z with Delete and Enter');
@@ -1478,17 +1496,17 @@ test('the task names the current view, and the Words keyboard is seven to a row 
   assert.doesNotMatch(css, /caret-color:transparent/, 'the caret is visible in the gap');
 });
 
-test('caret and selection survive a clue, the picker closing and a settings change; Delete removes the selection; physical letters, Backspace and Enter work', t => {
+test('caret and selection survive a clue, the shelf’s list and a settings change; Delete removes the selection; physical letters, Backspace and Enter work', t => {
   const a = app(t);
-  a.click('[data-mode="words"]');
+  goTo(a, 'words');
   for (const key of ['A', 'P', 'L', 'E']) a.click(`[data-key="${key}"]`);
   const input = () => a.query('#word-input');
   input().setSelectionRange(2, 2); input().dispatchEvent(new a.w.Event('select', { bubbles: true }));
   a.click('#help');
   assert.equal(input().selectionStart, 2, 'a clue does not move the caret');
-  a.click('#support'); a.click('.lp-modal');
-  assert.equal(a.query('.lp-modal'), null, 'a tap outside the tiles closes the picker');
-  assert.deepEqual([input().selectionStart, input().selectionEnd], [2, 2], 'closing the picker keeps the caret');
+  wordTab(a, 'sentence');
+  assert.equal(a.query('.lp-modal'), null);
+  assert.deepEqual([input().selectionStart, input().selectionEnd], [2, 2], 'carrying on from the shelf’s list keeps the caret');
   assert.equal(a.w.document.activeElement, input(), 'focus returns to the gap');
   a.w.LP.savePrefs({ ...a.w.LP.prefs, case: 'lower' });
   assert.deepEqual([input().selectionStart, input().selectionEnd], [2, 2], 'a settings change re-renders without jumping to the end');
@@ -1518,7 +1536,7 @@ test('caret and selection survive a clue, the picker closing and a settings chan
 
 test('Levels and puzzles (in Grown-ups) lists the four Word activities first, switches between them without losing drafts, and returns focus to the task', async t => {
   const a = app(t);
-  a.click('[data-mode="words"]');
+  goTo(a, 'words');
   for (const key of ['A', 'P']) a.click(`[data-key="${key}"]`);
   parentLevels(a);
   const tabs = Array.from(a.w.document.querySelectorAll('.lp-modal .picker-tabs button'));
@@ -1558,7 +1576,7 @@ test('Levels and puzzles (in Grown-ups) lists the four Word activities first, sw
 test('a familiar sentence without pictures: the first clue reads the sentence with blank, and a wrong word says to read it once more', t => {
   const a = app(t);
   a.w.LP.savePrefs({ ...a.w.LP.prefs, customSentences: ['Arthur likes TRAINS.', 'We go to the PARK.', 'Nana has a KITE.'] });
-  a.click('[data-mode="words"]'); parentLevels(a);
+  goTo(a, 'words'); parentLevels(a);
   Array.from(a.w.document.querySelectorAll('.puzzle-picker button')).find(b => b.textContent === 'ARTHUR LIKES TRAINS.').click();
   assert.ok(Array.from(a.w.document.querySelectorAll('.card-picture')).every(el => !el.querySelector('img')), 'no candidate has a symbol');
   assert.equal(a.w.document.querySelectorAll('.card-picture').length, 3, 'the blank picture areas are still reserved');
@@ -1574,7 +1592,7 @@ test('a familiar sentence without pictures: the first clue reads the sentence wi
 
 test('Missing letter, Word order and Number words follow the same discipline: small heading, one prompt in the bubble, the word or sentence is the Hear control, sound-gated', async t => {
   const a = app(t);
-  a.click('[data-mode="words"]'); wordTab(a, 'letter');
+  goTo(a, 'words'); wordTab(a, 'letter');
   assert.equal(a.query('#activity-title').textContent, 'Missing letter');
   assert.equal(a.query('#speech').textContent, 'Tap the missing letter.');
   assert.equal(a.query('#instruction').textContent, '');
@@ -1643,9 +1661,9 @@ test('the action bar has two fixed slots in every activity: Help on the left unt
   assert.equal(a.query('#task .go-row'), null, 'Next never moves into the card');
   a.click('#next');
   assert.deepEqual(slots(), PLAY);
-  a.click('[data-mode="add"]'); assert.deepEqual(slots(), PLAY); a.click('[data-choice="2"]'); assert.deepEqual(slots(), DONE);
-  a.click('[data-mode="patterns"]'); assert.deepEqual(slots(), PLAY); a.click(`[data-choice="${a.store('garden-rounds').patterns.answer}"]`); assert.deepEqual(slots(), DONE);
-  a.click('[data-mode="words"]'); assert.deepEqual(slots(), PLAY);
+  goTo(a, 'add'); assert.deepEqual(slots(), PLAY); a.click('[data-choice="2"]'); assert.deepEqual(slots(), DONE);
+  goTo(a, 'patterns'); assert.deepEqual(slots(), PLAY); a.click(`[data-choice="${a.store('garden-rounds').patterns.answer}"]`); assert.deepEqual(slots(), DONE);
+  goTo(a, 'words'); assert.deepEqual(slots(), PLAY);
   for (const key of ['A', 'P', 'P', 'L', 'E']) a.click(`[data-key="${key}"]`);
   a.click('#check-word'); assert.deepEqual(slots(), DONE);
   assert.ok(a.query('.keyboard'), 'the keys keep their place under a finished sentence');
@@ -1658,13 +1676,13 @@ test('the action bar has two fixed slots in every activity: Help on the left unt
   assert.deepEqual(slots(), PLAY, 'Number words asks for the spelling first, so there is no Next before an answer');
   a.w.LP.savePrefs({ ...a.w.LP.prefs, numberWords: 'show' });
   assert.deepEqual(slots(), { help: true, again: false, next: true }, 'Number words in show mode is a reading page: Help and Next');
-  a.click('[data-mode="patterns"]'); a.click('#support'); a.click('.lp-modal [data-pick="make"]');
+  goTo(a, 'patterns', 'make');
   assert.deepEqual(slots(), { help: false, again: false, next: false }, 'Make your own has neither');
   assert.deepEqual(ids(), ['help', 'repeat', 'next'], 'nothing ever moves out of the bar');
 });
 
 test('tapping a word entry reads its draft, keeps the caret, and never reads on typing focus or while muted',async t=>{
- const a=app(t);a.click('[data-mode="words"]');const input=a.query('#word-input');
+ const a=app(t);goTo(a, 'words');const input=a.query('#word-input');
  input.value='BUS';input.dispatchEvent(new a.w.Event('input',{bubbles:true}));input.setSelectionRange(1,1);input.focus();await tick();assert.equal(a.plays.length,0);
  a.click('#word-input');await tick();assert.equal(a.plays.length,0);
  a.w.LP.setSound(true);a.click('#word-input');await tick();assert.equal(a.plays.at(-1),a.w.LPVoiceLibrary.clips.bus.file);assert.equal(input.value,'BUS');assert.equal(input.selectionStart,1);
@@ -1688,14 +1706,14 @@ test('round 3 saves: a first visit after the strip arrived puts Add and Patterns
   assert.equal(a.w.document.querySelectorAll('[data-choice]').length, 4, 'a four-shape family offers its four shapes');
   assert.ok(a.query('.pattern-strip.one-row'), 'a family string is one row');
   assert.ok(a.w.document.querySelectorAll('.bead-slot').length <= 8, 'never more than eight beads');
-  a.click('[data-mode="words"]'); parentLevels(a);
+  goTo(a, 'words'); parentLevels(a);
   assert.equal(a.w.document.querySelectorAll('.lp-modal [data-word-tab]').length, 4);
   assert.equal(a.query('.lp-modal .level-picker'), null, 'Missing word has no levels');
   a.click('.lp-modal [data-word-tab="numbers"]');
   assert.equal(a.store('garden-position').wordTab, 'numbers');
   assert.equal(a.w.document.querySelectorAll('.lp-modal .level-picker button').length, 4, 'Number words adds its four ranges');
   a.click('[data-close]');
-  a.click('[data-mode="add"]'); a.click('[data-operation="take"]'); parentLevels(a);
+  goTo(a, 'add'); goTo(a, 'add', 'take'); parentLevels(a);
   assert.equal(a.w.document.querySelectorAll('.lp-modal .level-picker button').length, 5, 'Take away has five levels');
 });
 
@@ -1703,21 +1721,22 @@ test('round 3 saves: a first visit after the strip arrived puts Add and Patterns
 const P1 = 'lp-player-player-1-';
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-test('the play screen is the frame: a shelf button, at most two mode chips and one level pill, Nook with one bubble, the task card and the action bar; the old chrome is gone and the text regions stay for screen readers', t => {
+test('the play screen is the frame: a shelf button, no chips and one read-only level label (phase 8), Nook with one bubble, the task card and the action bar; the old chrome is gone and the text regions stay for screen readers', t => {
   const a = app(t);
   const top = a.query('.nf-top');
-  assert.deepEqual(Array.from(top.querySelectorAll('button'), b => b.id), ['shelf-open'], 'Count: the shelf button; the level is a label, not a button');
-  assert.equal(a.query('.nf-top #support').tagName, 'SPAN');
+  // Phase 8: the activity is chosen from the list under the game's shelf tile, so every top bar has the shelf button and the label only.
+  for (const [game, activity] of [['count'], ['add', 'add'], ['add', 'take'], ['words', 'sentence'], ['words', 'letter'], ['words', 'order'], ['words', 'numbers'], ['patterns', 'finish'], ['patterns', 'make']]) {
+    goTo(a, game, activity);
+    const where = game + (activity ? ' ' + activity : '');
+    assert.deepEqual(Array.from(top.querySelectorAll('button'), b => b.id), ['shelf-open'], where + ': the shelf button is the only button in the top bar');
+    assert.equal(a.query('.nf-top #support').tagName, 'SPAN', where + ': the level is a label, not a button');
+    assert.equal(a.query('#modes').children.length, 0, where + ': no chips');
+    assert.equal(a.w.document.querySelectorAll('#page .chip, #page [data-operation], #page [data-pick], .lp-modal').length, 0, where + ': no chip or picker anywhere on the play screen');
+  }
+  assert.equal(a.query('#modes').getAttribute('role'), null, 'the empty spacer is not announced as a group');
   assert.equal(a.query('#shelf-open').getAttribute('aria-label'), 'Nook’s games');
   assert.ok(a.query('#shelf-open svg'), 'the shelf button carries the shelf icon');
-  a.click('[data-mode="add"]');
-  assert.deepEqual(Array.from(top.querySelectorAll('button'), b => b.id || b.dataset.operation), ['shelf-open', 'add', 'take'], 'Add and Take away are the two chips');
-  assert.equal(a.query('.nf-top #support').tagName, 'SPAN', 'beside two chips the pill is the level label');
-  for (const mode of ['words', 'patterns']) { a.click(`[data-mode="${mode}"]`); assert.deepEqual(Array.from(top.querySelectorAll('button'), b => b.id), ['shelf-open', 'support'], mode + ': the pill opens the child’s picker'); }
-  a.click('[data-mode="add"]');
-  assert.equal(a.query('[data-operation="add"]').getAttribute('aria-pressed'), 'true');
-  for (const mode of ['count', 'words', 'patterns']) { a.click(`[data-mode="${mode}"]`); assert.equal(a.query('#modes').children.length, 0, mode + ' has no chips'); }
-  a.click('[data-mode="count"]');
+  goTo(a, 'count');
   assert.equal(a.w.document.querySelectorAll('.nf-bubble').length, 2, 'one bubble on the play screen, one on the hidden shelf');
   assert.equal(a.w.document.querySelectorAll('#page .nf-bubble').length, 1);
   for (const sel of ['[data-sound]', '[data-settings]', '[data-player]', '#next-level', '#level-strip', '.tabs', '.hero', 'footer.footer', '#scene-label', '.brand', '.name-tag', '.skip-link']) assert.equal(a.query(sel), null, sel + ' is gone');
@@ -1737,7 +1756,7 @@ test('the bubble is a button that hears its line again from bundled clips while 
   assert.deepEqual(a.plays, [a.w.LPVoiceLibrary.clips['how many apples'].file], 'a tap hears the prompt again');
   // A line without a clip: no speaker, nothing to replay and no device voice.
   delete a.w.LPVoiceLibrary.clips['how many apples'];
-  a.click('[data-mode="add"]'); a.click('[data-mode="count"]');
+  goTo(a, 'add'); goTo(a, 'count');
   assert.equal(a.query('#speech').textContent, 'How many apples?');
   assert.ok(a.query('#bubble').classList.contains('silent'), 'without its clip the prompt shows no speaker');
   a.plays.length = 0;
@@ -1820,7 +1839,7 @@ test('Grown-ups opens only after a two-second hold: the ring from 300 ms; releas
   } finally { t.mock.timers.reset(); }
 });
 
-test('in a game the shelf button opens the same shelf as a full-height overlay with the current tile marked; Garden tiles switch in place, the others navigate, and Android back opens it through one history entry', t => {
+test('in a game the shelf button opens the same shelf as a full-height overlay with the current tile marked; a tile with a list opens it there (the current game’s too), Count switches in place, the others navigate, and Android back opens it through one history entry', t => {
   const a = app(t);
   const visits = []; a.w.LPShelf.navigate = url => visits.push(url);
   const overlay = a.query('#shelf-overlay');
@@ -1832,17 +1851,29 @@ test('in a game the shelf button opens the same shelf as a full-height overlay w
   assert.equal(overlay.hidden, false);
   assert.equal(overlay.getAttribute('role'), 'dialog');
   assert.ok(a.query('#page').hasAttribute('inert'), 'the play screen waits behind it');
-  assert.deepEqual(Array.from(overlay.querySelectorAll('.tile'), b => b.tagName + ' ' + b.querySelector('span').textContent), ['BUTTON Count', 'BUTTON Add', 'BUTTON Words', 'BUTTON Patterns', 'BUTTON Shapes', 'BUTTON Feelings', 'BUTTON Paint', 'BUTTON Blocks']);
-  assert.equal(overlay.querySelector('[aria-current="true"]').dataset.shelf, 'count');
-  assert.equal(a.w.document.activeElement, overlay.querySelector('[aria-current="true"]'));
+  assert.deepEqual(Array.from(overlay.querySelectorAll('.tiles .tile'), b => b.tagName + ' ' + b.querySelector('span').textContent), ['BUTTON Count', 'BUTTON Add', 'BUTTON Words', 'BUTTON Patterns', 'BUTTON Shapes', 'BUTTON Feelings', 'BUTTON Paint', 'BUTTON Blocks']);
+  assert.equal(overlay.querySelector('.tiles [aria-current="true"]').dataset.shelf, 'count');
+  assert.equal(a.w.document.activeElement, overlay.querySelector('.tiles [aria-current="true"]'));
   assert.deepEqual(Array.from(overlay.querySelectorAll('.shelf-foot button'), b => b.dataset.grownups !== undefined), [true], 'the foot holds only Grown-ups');
   assert.equal(overlay.querySelector('.sound-badge').hidden, true);
+  assert.deepEqual(Array.from(overlay.querySelectorAll('.tiles [data-mode]'), b => b.dataset.mode), ['count'], 'only Count, with one activity, plays in place from its tile');
+  // Words has a list: its tile opens the list in the overlay, the last activity marked; a list tile starts it in place.
   a.click('#shelf-overlay [data-shelf="words"]');
+  assert.equal(overlay.hidden, false, 'the list opens inside the shelf');
+  assert.equal(a.w.LPShelf.menu, 'words');
+  assert.equal(overlay.querySelector('.tiles').hidden, true);
+  assert.equal(overlay.querySelector('.shelf-bar').hidden, false);
+  assert.equal(overlay.querySelector('[data-bubble] .line').textContent, 'Which word game?');
+  assert.equal(overlay.querySelector('.menu-tiles [aria-current="true"]').dataset.activity, 'sentence');
+  assert.equal(a.w.document.activeElement, overlay.querySelector('.menu-tiles [aria-current="true"]'), 'focus starts on the last activity');
+  a.click('#shelf-overlay [data-activity="sentence"]');
   assert.equal(overlay.hidden, true);
   a.click('#shelf-open');
+  assert.equal(a.w.LPShelf.menu, '', 'the shelf opens on its tiles again');
+  assert.equal(overlay.querySelector('[data-bubble] .line').textContent, 'What shall we play?');
   a.w.document.dispatchEvent(new a.w.KeyboardEvent('keydown', { key: 'q', bubbles: true }));
   assert.equal(a.query('#word-input').value, '', 'keys do not reach the game behind the shelf');
-  a.click('#shelf-overlay [data-shelf="words"]');
+  a.click('#shelf-overlay [data-shelf="words"]'); a.click('#shelf-overlay [data-activity="sentence"]');
   a.w.document.dispatchEvent(new a.w.KeyboardEvent('keydown', { key: 'q', bubbles: true }));
   assert.equal(a.query('#word-input').value, 'Q', 'and do again once it closes');
   a.click('[data-key="Backspace"]');
@@ -1850,17 +1881,33 @@ test('in a game the shelf button opens the same shelf as a full-height overlay w
   assert.equal(a.store('garden-position').mode, 'words');
   assert.ok(a.query('#word-input'), 'switched in place');
   assert.equal(a.w.location.hash, '#words', 'a reload stays on Words');
-  for (let i = 0; i < 4; i++) { a.click('[data-mode="count"]'); a.click('[data-mode="add"]'); }
+  for (let i = 0; i < 4; i++) { goTo(a, 'count'); goTo(a, 'add'); }
   assert.equal(a.w.history.length, 2, 'never one entry per render');
   a.w.dispatchEvent(new a.w.PopStateEvent('popstate', { state: null }));
   assert.equal(overlay.hidden, false, 'Android back opens the shelf');
-  assert.equal(overlay.querySelector('[aria-current="true"]').dataset.shelf, 'add', 'with the current game marked');
+  assert.equal(overlay.querySelector('.tiles [aria-current="true"]').dataset.shelf, 'add', 'with the current game marked');
   a.click('#shelf-overlay [data-shelf="add"]');
-  assert.equal(overlay.hidden, true, 'the current tile closes it');
-  assert.equal(a.store('garden-position').mode, 'add');
+  assert.equal(overlay.hidden, false, 'the current game’s tile opens its list, not closes the shelf');
+  assert.equal(a.w.LPShelf.menu, 'add');
+  assert.deepEqual(Array.from(overlay.querySelectorAll('.menu-tile'), b => b.dataset.activity + (b.getAttribute('aria-current') ? '*' : '')), ['add*', 'take']);
+  a.w.dispatchEvent(new a.w.PopStateEvent('popstate', { state: null }));
+  assert.equal(a.w.LPShelf.menu, '', 'inside a list, Android back comes up to the tiles');
+  assert.equal(overlay.hidden, false);
+  a.click('#shelf-overlay [data-shelf="add"]');
+  a.click('#shelf-overlay [data-back]');
+  assert.equal(a.w.LPShelf.menu, '', 'the list’s shelf button comes back to the tiles');
+  assert.equal(a.w.document.activeElement, overlay.querySelector('.tiles [data-shelf="add"]'), 'focus goes back to the tile');
+  a.click('#shelf-overlay [data-shelf="count"]');
+  assert.equal(overlay.hidden, true, 'Count switches in place and closes it');
+  assert.equal(a.store('garden-position').mode, 'count');
   a.click('#shelf-open');
-  for (const id of ['shapes', 'feelings', 'paint', 'blocks']) a.click(`#shelf-overlay [data-shelf="${id}"]`);
-  assert.deepEqual(visits, ['shapes.html', 'feelings.html', 'studio-lab.html', 'blocks.html']);
+  a.click('#shelf-overlay [data-shelf="count"]');
+  assert.equal(overlay.hidden, true, 'the current tile without a list closes it');
+  a.click('#shelf-open');
+  // Another game's list tile goes to that game with the activity; tiles without a list navigate as before.
+  for (const [id, activity] of [['shapes', 'name'], ['feelings', 'friends']]) { a.click(`#shelf-overlay [data-shelf="${id}"]`); a.click(`#shelf-overlay [data-activity="${activity}"]`); a.click('#shelf-overlay [data-back]'); }
+  for (const id of ['paint', 'blocks']) a.click(`#shelf-overlay [data-shelf="${id}"]`);
+  assert.deepEqual(visits, ['shapes.html#name', 'feelings.html#friends', 'studio-lab.html', 'blocks.html']);
   overlay.dispatchEvent(new a.w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   assert.equal(overlay.hidden, true, 'Escape closes it');
   assert.equal(a.w.document.activeElement, a.query('#shelf-open'), 'focus returns to the shelf button');
@@ -1871,7 +1918,7 @@ test('in a game the shelf button opens the same shelf as a full-height overlay w
 test('the hub is Nook’s shelf: a greeting that can be heard again, eight tile buttons, no links, and a foot with only the Grown-ups hold; a crossed speaker shows only while sound is off', async t => {
   const a = app(t, 'index.html', {}, false, true);
   const visits = []; a.w.LPShelf.navigate = url => visits.push(url);
-  const tiles = Array.from(a.w.document.querySelectorAll('.tile'));
+  const tiles = Array.from(a.w.document.querySelectorAll('.tiles .tile'));
   assert.deepEqual(tiles.map(b => b.querySelector('span').textContent), ['Count', 'Add', 'Words', 'Patterns', 'Shapes', 'Feelings', 'Paint', 'Blocks']);
   assert.ok(tiles.every(b => b.tagName === 'BUTTON' && b.type === 'button' && b.querySelector('svg[aria-hidden="true"]')), 'tiles are buttons with their icons, which screen readers skip');
   assert.equal(a.w.document.querySelectorAll('a[href]').length, 0, 'no links on the shelf');
@@ -1882,8 +1929,9 @@ test('the hub is Nook’s shelf: a greeting that can be heard again, eight tile 
   assert.ok(a.query('[data-nook] svg.nook[data-feeling="greet"]'), 'Nook greets on the shelf');
   a.click('[data-bubble]'); await tick();
   assert.equal(a.plays.at(-1), a.w.LPVoiceLibrary.clips["hello! i'm nook. let's play"].file);
-  for (const tile of tiles) tile.click();
-  assert.deepEqual(visits, ['garden.html#count', 'garden.html#add', 'garden.html#words', 'garden.html#patterns', 'shapes.html', 'feelings.html', 'studio-lab.html', 'blocks.html']);
+  // Count, Paint and Blocks have one activity and go straight in; the other five open their lists (the phase 8 tests).
+  for (const id of ['count', 'paint', 'blocks']) a.click(`[data-shelf="${id}"]`);
+  assert.deepEqual(visits, ['garden.html#count', 'studio-lab.html', 'blocks.html']);
   a.w.LP.setSound(false);
   assert.equal(a.query('.sound-badge').hidden, false, 'the badge appears while a grown-up has sound off');
   assert.equal(a.query('.sound-badge').getAttribute('aria-label'), 'Sound is off');
@@ -1899,7 +1947,7 @@ test('word pictures are a Grown-ups setting (show by default, or hide until Help
   assert.equal(L.normalisePrefs({ wordPictures: 'hide' }).wordPictures, 'hide');
   assert.equal(L.normalisePrefs({ wordPictures: 'sometimes' }).wordPictures, 'show');
   const a = app(t);
-  a.click('[data-mode="words"]'); a.click('[data-key="A"]');
+  goTo(a, 'words'); a.click('[data-key="A"]');
   a.w.LP.settings();
   const select = a.query('#lp-settings [name="wordPictures"]');
   assert.equal(select.value, 'show');
@@ -1938,7 +1986,7 @@ test('Add is one augmentation picture: the first group, a plus, the apples that 
   assert.equal(a.query('.equation .unknown.filled').textContent, '5', 'the chosen digit fills the ?');
   assert.ok(a.query('.equation .unknown.arrive'), 'and fades in once');
   assert.equal(a.query('#task .count-tag'), null, 'the finished picture is plain again');
-  a.click('[data-mode="count"]'); a.click('[data-mode="add"]');
+  goTo(a, 'count'); goTo(a, 'add');
   assert.equal(a.query('#task .arrive'), null, 'a re-render shows it still');
   const b = app(t, 'garden.html', { [P1 + 'garden-position']: { mode: 'add', levels: { add: 2 }, selection: { add: [6, 4] }, strip: 1, spell: 1 } });
   assert.equal(b.query('.join-row > .group').style.getPropertyValue('--cols'), '5', 'groups over five lay out in rows of five');
@@ -1989,22 +2037,22 @@ test('a save from before the frame (the round-3 shape) restores every level, pla
     numbers: { id: L.numberWordRound(1, L.defaults, 2).id, draft: 'SE', hint: 0, done: false }
   };
   const a = app(t, 'garden.html', { [P1 + 'garden-position']: position, [P1 + 'garden-rounds']: rounds });
-  assert.equal(a.query('[data-operation="take"]').getAttribute('aria-pressed'), 'true');
+  assert.equal(a.store('garden-position').operation, 'take', 'Add or Take away, as the list started it');
   assert.equal(a.query('#support').textContent, 'Up to 10');
   assert.equal(a.store('garden-rounds').add.id, takeRound.id);
   assert.equal(a.query('.equation').textContent, `${takeRound.a} − ${takeRound.b} = ?`);
   assert.equal(a.w.document.querySelectorAll('.take-one .count-tag').length, takeRound.answer, 'the Help step came back with the round');
   const saved = a.store('garden-position');
   for (const key of ['indices', 'selection', 'levels', 'operation', 'patternMode', 'patternFamily', 'strip', 'spell', 'wordTab']) assert.deepEqual(saved[key], position[key], key);
-  a.click('[data-mode="patterns"]');
+  goTo(a, 'patterns');
   assert.equal(a.query('#support').textContent, 'Make your own');
   assert.deepEqual(a.store('garden-rounds').make.beads, ['circle', 'oval']);
-  a.click('[data-mode="words"]');
+  goTo(a, 'words');
   assert.equal(a.query('#task').dataset.view, 'numbers');
   assert.equal(a.query('#word-input').value, 'SE');
   wordTab(a, 'sentence');
   assert.equal(a.query('#word-input').value, 'AP');
-  a.click('[data-mode="count"]');
+  goTo(a, 'count');
   assert.equal(a.query('#support').textContent, '1–10');
   assert.equal(a.store('garden-rounds').count.target, 7);
   assert.deepEqual(a.store('garden-rounds').count.seen, [0, 1, 2]);
@@ -2012,7 +2060,7 @@ test('a save from before the frame (the round-3 shape) restores every level, pla
 
 test('the A to Z keys are in ABC order and end in Delete then Enter, exactly four rows of seven on a narrow portrait phone; Number words puts Space before them', t => {
   const a = app(t);
-  a.click('[data-mode="words"]');
+  goTo(a, 'words');
   const keys = Array.from(a.query('.keyboard').querySelectorAll('button'), b => b.dataset.key || b.id);
   assert.deepEqual(keys, [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'Backspace', 'check-word']);
   assert.equal(keys.length, 28, 'rows of 7, 7, 7, then V to Z with Delete and Enter');
@@ -2033,11 +2081,11 @@ test('the Shapes tile lands on the Shapes game in the frame (tools/test-little-p
   assert.ok(a.query('#nook svg.nook') && a.query('.shape-stage svg.big-shape'));
   a.click('#shelf-open');
   assert.equal(a.query('#shelf-overlay [aria-current="true"]').dataset.shelf, 'shapes');
-  assert.equal(a.query('#shelf-overlay [data-mode]'), null, 'outside the Garden every tile navigates');
+  assert.equal(a.query('#shelf-overlay .tiles [data-mode]'), null, 'outside the Garden no tile plays in place: Shapes opens its list, the others navigate');
   const studio = fs.readFileSync(path.join(root, 'studio-lab.html'), 'utf8');
   assert.match(studio, /<a id="home" href="\.\/" data-icon="back" aria-label="Back to Nook's games">/);
   const { files } = require('./stage-little-patterns.cjs');
-  for (const f of ['frame.css', 'frame.js', 'shelf.js', 'hub.js', 'icons.js', 'nook-art.js', 'nook.css', 'garden.css', 'manifest.webmanifest', 'assets/icon-192.png', 'assets/icon-512.png', 'shapes.html', 'shapes.js', 'shapes.css']) assert.ok(files.includes(f), f + ' ships');
+  for (const f of ['frame.css', 'frame.js', 'shelf.js', 'menus.js', 'hub.js', 'icons.js', 'nook-art.js', 'nook.css', 'garden.css', 'manifest.webmanifest', 'assets/icon-192.png', 'assets/icon-512.png', 'shapes.html', 'shapes.js', 'shapes.css']) assert.ok(files.includes(f), f + ' ships');
   for (const old of ['home.css', 'garden-live.css', 'garden-preview.css', 'shapes-stub.js']) assert.ok(!files.includes(old), old + ' no longer ships');
   const manifest = JSON.parse(fs.readFileSync(path.join(root, 'manifest.webmanifest'), 'utf8'));
   assert.equal(manifest.start_url, './'); assert.equal(manifest.scope, './'); assert.equal(manifest.display, 'standalone');
@@ -2067,83 +2115,9 @@ test('the Grown-ups content pages describe round 4 (Shapes, the Add picture, the
 });
 
 // ---- Phase 7: two audiences, two controls (Jof's proofing, items 4 to 6) ----
-test('the child’s picker (Words): the pill opens four big tiles, a drawing and one name each, no title, prose or close button; one tap switches and keeps drafts; the current tile, a tap outside or Escape closes', t => {
-  const a = app(t);
-  a.click('[data-mode="words"]');
-  for (const key of ['A', 'P']) a.click(`[data-key="${key}"]`);
-  assert.equal(a.query('#support').tagName, 'BUTTON');
-  assert.equal(a.query('#support').getAttribute('aria-haspopup'), 'dialog');
-  assert.equal(a.query('#support').getAttribute('aria-label'), 'Choose a game. Now: Missing word');
-  a.click('#support');
-  const modal = a.query('.lp-modal');
-  assert.ok(modal.classList.contains('lp-kid'), 'the child’s picker, not the grown-ups’ chooser');
-  const tiles = Array.from(modal.querySelectorAll('.kid-tile'));
-  assert.deepEqual(tiles.map(b => b.dataset.pick), ['sentence', 'letter', 'order', 'numbers']);
-  assert.deepEqual(tiles.map(b => b.querySelector('.kid-word').textContent), ['Missing word', 'Missing letter', 'Word order', 'Number words']);
-  assert.ok(tiles.every(b => b.tagName === 'BUTTON' && b.querySelector('.kid-art[aria-hidden="true"] .mini')), 'each tile carries the small drawing from the old level strip');
-  assert.equal(tiles[0].querySelector('.mini').textContent, 'THESAT', 'drawn in the player’s letter case');
-  assert.equal(modal.querySelectorAll('[data-close], p, select, input, .level-picker, .puzzle-picker, #picker-content').length, 0, 'no close button, prose, levels or lists');
-  assert.ok(a.query('#dialog-title').classList.contains('sr-only'), 'the title is for screen readers only');
-  assert.equal(modal.querySelector('[aria-current="true"]').dataset.pick, 'sentence');
-  assert.equal(a.w.document.activeElement, modal.querySelector('[aria-current="true"]'), 'focus starts on the current tile');
-  a.click('.lp-modal [data-pick="sentence"]');
-  assert.equal(a.query('.lp-modal'), null, 'the current tile closes it');
-  assert.equal(a.query('#task').dataset.view, 'sentence');
-  a.click('#support'); a.click('.lp-modal .kid-tiles');
-  assert.equal(a.query('.lp-modal'), null, 'a tap that is not on a tile closes it');
-  a.click('#support'); a.w.document.dispatchEvent(new a.w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
-  assert.equal(a.query('.lp-modal'), null, 'Escape closes it');
-  assert.equal(a.query('#word-input').value, 'AP');
-  a.click('#support'); a.click('.lp-modal [data-pick="letter"]');
-  assert.equal(a.query('.lp-modal'), null, 'one tap picks and closes');
-  assert.equal(a.query('#task').dataset.view, 'letter');
-  assert.equal(a.query('#support').textContent, 'Missing letter');
-  assert.equal(a.store('garden-position').wordTab, 'letter');
-  wordTab(a, 'sentence');
-  assert.equal(a.query('#word-input').value, 'AP', 'the Missing word draft survived');
-  assert.equal(a.w.document.activeElement, a.query('#word-input'), 'focus returns to the gap');
-});
-
-test('beside two chips the pill is a small read-only label of the level (an apple for Count and Add): a tap only lights it for a moment; no tap on any play screen reaches the grown-ups’ chooser', t => {
-  const a = app(t);
-  for (const mode of ['count', 'add']) {
-    a.click(`[data-mode="${mode}"]`);
-    const label = a.query('#support');
-    assert.equal(label.tagName, 'SPAN', mode);
-    assert.ok(label.classList.contains('pill-label'));
-    assert.equal(label.getAttribute('role'), 'img');
-    assert.equal(label.getAttribute('aria-label'), 'Level: ' + (mode === 'count' ? '1–5' : 'Up to 5'));
-    assert.ok(label.querySelector('.pill-art svg circle'), 'an apple');
-  }
-  a.click('[data-operation="take"]');
-  assert.equal(a.query('#support').textContent, 'Up to 5');
-  t.mock.timers.enable({ apis: ['setTimeout'] });
-  try {
-    a.click('#support');
-    assert.equal(a.query('.lp-modal'), null, 'nothing opens');
-    assert.ok(a.query('#support').classList.contains('nudged'), 'a brief highlight');
-    t.mock.timers.tick(650);
-    assert.ok(!a.query('#support').classList.contains('nudged'), 'gone again');
-  } finally { t.mock.timers.reset(); }
-  // Every play screen: a tap on the pill, and on every tile of the child's picker where there is one, never shows a level, set or puzzle list.
-  for (const mode of ['count', 'add', 'words', 'patterns']) {
-    a.click(`[data-mode="${mode}"]`);
-    a.click('#support');
-    assert.equal(a.w.document.querySelectorAll('.level-picker, .set-picker, .family-picker, .puzzle-picker, #pick-sum, #picker-content').length, 0, mode);
-    for (const tile of Array.from(a.w.document.querySelectorAll('.lp-modal [data-pick]')).map(b => b.dataset.pick)) {
-      if (!a.query('.lp-modal')) a.click('#support');
-      a.click(`.lp-modal [data-pick="${tile}"]`);
-      assert.equal(a.w.document.querySelectorAll('.lp-modal').length, 0, mode + ' ' + tile + ': a tile closes the picker and opens nothing else');
-    }
-    if (a.query('.lp-modal')) a.w.LP.closeModal();
-  }
-  const js = fs.readFileSync(path.join(root, 'garden.js'), 'utf8');
-  assert.doesNotMatch(js, /\$\('support'\)\.onclick|\$\('support'\)\.addEventListener/, 'the pill has no handler of its own; frame.js routes it');
-});
-
 test('Grown-ups inside a game starts with that game’s section: its name, the level now with its picture, and Levels and puzzles; a level chosen there updates the child’s label and closes back to the game; the hub says where levels live', t => {
   const a = app(t);
-  a.click('[data-mode="add"]');
+  goTo(a, 'add');
   grownups(a);
   const section = a.query('.gu-game');
   assert.equal(section.querySelector('h3').textContent, 'Add');
@@ -2169,7 +2143,7 @@ test('Grown-ups inside a game starts with that game’s section: its name, the l
   a.w.document.querySelectorAll('.lp-modal .set-picker button')[0].click();
   assert.equal(a.query('#support').textContent, 'Doubles');
   assert.equal(a.query('#shelf-overlay').hidden, true);
-  a.click('[data-mode="patterns"]');
+  goTo(a, 'patterns');
   grownups(a);
   assert.equal(a.query('.gu-game h3').textContent, 'Patterns');
   assert.equal(a.query('.gu-now-text').textContent, 'Now: 2 shapes');
@@ -2179,7 +2153,7 @@ test('Grown-ups inside a game starts with that game’s section: its name, the l
   assert.equal(a.w.document.querySelectorAll('.lp-modal .level-picker button').length, 14, 'and the fourteen numbered levels');
   a.w.document.querySelectorAll('.lp-modal .level-picker button')[11].click(); a.click('[data-close]');
   assert.equal(a.query('#support').textContent, 'Level 12 · Growing');
-  a.click('[data-mode="words"]'); wordTab(a, 'numbers');
+  goTo(a, 'words'); wordTab(a, 'numbers');
   grownups(a);
   assert.equal(a.query('.gu-now-text').textContent, 'Now: Number words, level 1: 1 to 5');
   a.w.LP.closeModal();
@@ -2190,13 +2164,294 @@ test('Grown-ups inside a game starts with that game’s section: its name, the l
   assert.match(hub.query('#gu-levels-hint').textContent, /open a game, tap the shelf button and hold Grown-ups there/);
 });
 
-test('saved positions and levels survive phase 7 untouched: the pill only reads them', t => {
+test('saved positions and levels survive phases 7 and 8 untouched: the pill and the lists only read them', async t => {
   const position = { mode: 'patterns', wordTab: 'order', indices: { count: 2, add: 1, take: 3, patterns: 4, make: 0, sentence: 5, letter: 1, order: 2, numbers: 0 }, selection: {}, levels: { count: 4, add: 5, numbers: 3, patterns: 9 }, operation: 'take', patternMode: 'finish', patternFamily: 0, strip: 1, spell: 1 };
   const a = app(t, 'garden.html', { [P1 + 'garden-position']: position });
   assert.equal(a.query('#support').textContent, 'Level 9');
-  a.click('[data-mode="add"]'); assert.equal(a.query('#support').textContent, 'Tens');
-  a.click('[data-mode="count"]'); assert.equal(a.query('#support').textContent, '10 20 30');
-  a.click('[data-mode="words"]'); assert.equal(a.query('#support').textContent, 'Word order');
+  goTo(a, 'add'); assert.equal(a.query('#support').textContent, 'Tens');
+  goTo(a, 'count'); assert.equal(a.query('#support').textContent, '10 20 30');
+  goTo(a, 'words'); assert.equal(a.query('#support').textContent, 'Word order');
+  // Phase 8: opening every list (in the game and on the hub) and closing it again changes nothing that was saved.
+  for (const id of ['add', 'words', 'patterns', 'shapes', 'feelings']) { a.click('#shelf-open'); a.click(`#shelf-overlay [data-shelf="${id}"]`); a.click('#shelf-overlay [data-back]'); a.query('#shelf-overlay').dispatchEvent(new a.w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); }
   const saved = a.store('garden-position');
   for (const key of ['indices', 'levels', 'operation', 'patternMode', 'patternFamily', 'wordTab']) assert.deepEqual(saved[key], position[key], key);
+  const shapes = { mode: 'name', level: 2, indices: { sides: 7, name: 3 } }, feelings = { version: 2, mode: 'friends', index: 5, level: 2, story: 4, seed: 9 };
+  const hub = app(t, 'index.html', { [P1 + 'garden-position']: position, [P1 + 'shapes-position']: shapes, [P1 + 'feelings-v1']: feelings });
+  for (const id of ['add', 'words', 'patterns', 'shapes', 'feelings']) { hub.click(`[data-shelf="${id}"]`); assert.equal(hub.w.LPShelf.menu, id); hub.click('[data-back]'); await wait(40); }
+  assert.deepEqual(hub.store('garden-position'), position);
+  assert.deepEqual(hub.store('shapes-position'), shapes);
+  assert.deepEqual(hub.store('feelings-v1'), feelings);
+});
+
+// ---- Phase 8: Jof's navigation decision (12 October): a list of activities under each tile with more than one ----
+const read = file => fs.readFileSync(path.join(root, file), 'utf8');
+const LIST_WORDS = { add: ['Add', 'Take away'], words: ['Missing word', 'Missing letter', 'Word order', 'Number words'], patterns: ['Finish the pattern', 'Make your own'], shapes: ['Sides', 'Name'], feelings: ['Nook feels…', 'Which feeling?', 'Friends', 'Me'] };
+
+test('the shelf marks the five games with a list, and only them: a stacked-cards badge in the tile’s top-right corner and a dashed inner border, in a deep shade of the tile’s colour; Grown-ups’ credits say so in one line', t => {
+  for (const page of ['index.html', 'garden.html', 'shapes.html', 'feelings.html', 'blocks.html']) {
+    const a = app(t, page);
+    const tiles = Array.from(a.w.document.querySelectorAll('.tiles .tile'));
+    assert.deepEqual(tiles.filter(b => b.classList.contains('has-menu')).map(b => b.dataset.shelf), ['add', 'words', 'patterns', 'shapes', 'feelings'], page);
+    for (const b of tiles) {
+      const badge = b.querySelector('svg.more');
+      if (b.classList.contains('has-menu')) {
+        assert.ok(badge && badge.getAttribute('aria-hidden') === 'true', b.dataset.shelf + ': the badge, which screen readers skip');
+        assert.equal(badge.querySelectorAll('rect').length, 2, 'two offset rounded squares');
+        assert.match(b.querySelector('.sr-only').textContent, /opens a list/, 'and a screen reader hears it');
+        assert.equal(b.querySelector('span').textContent, a.w.LPShelf.TILES.find(x => x[0] === b.dataset.shelf)[1], 'the name is still the first label');
+      } else {
+        assert.equal(badge, null, b.dataset.shelf + ': no badge');
+        assert.equal(b.querySelector('.sr-only'), null);
+      }
+    }
+  }
+  const css = read('frame.css');
+  assert.match(css, /\.tile\.has-menu:before\{[^}]*border:3px dashed var\(--tile-deep\)/, 'the dashed inner border reads without the badge');
+  assert.match(css, /\.tile svg\.more\{position:absolute;top:\d+px;right:\d+px/, 'the badge sits in the top-right corner');
+  assert.match(css, /\.tile \.more \.card-back\{fill:var\(--tile-deep\)/);
+  for (const id of ['add', 'words', 'patterns', 'shapes', 'feelings']) assert.match(css, new RegExp('\\.tile\\.' + id + '\\{--tile-bg:[^;]+;--tile-deep:#[0-9a-f]{6}\\}'), id + ' has its own deep shade');
+  const hub = app(t, 'index.html');
+  hub.w.LPShelf.grownups(); hub.click('#gu-about');
+  assert.equal(hub.query('#gu-marker').textContent, 'Tiles with a corner badge open a list of activities.');
+});
+
+test('each list on the hub: the shelf button top-left, the game’s name, Nook’s line for that game (text only, no clip), big tiles with a picture and one name each; the last activity is marked; one tap starts it', async t => {
+  const seed = {
+    [P1 + 'garden-position']: { mode: 'count', wordTab: 'order', operation: 'take', patternMode: 'make', patternFamily: 2, strip: 1, spell: 1 },
+    [P1 + 'shapes-position']: { mode: 'name', level: 2, indices: { sides: 3, name: 4 } },
+    [P1 + 'feelings-v1']: { version: 2, mode: 'me', index: 0, level: 1, story: 0, seed: 1 }
+  };
+  const marked = { add: 'take', words: 'order', patterns: 'make', shapes: 'name', feelings: 'me' };
+  const greetings = { add: 'Add or take away?', words: 'Which word game?', patterns: 'Which pattern game?', shapes: 'Which shape game?', feelings: 'Which feelings game?' };
+  const hrefs = { add: ['garden.html#add/add', 'garden.html#add/take'], words: ['garden.html#words/sentence', 'garden.html#words/letter', 'garden.html#words/order', 'garden.html#words/numbers'], patterns: ['garden.html#patterns/finish', 'garden.html#patterns/make'], shapes: ['shapes.html#sides', 'shapes.html#name'], feelings: ['feelings.html#board', 'feelings.html#which', 'feelings.html#friends', 'feelings.html#me'] };
+  const a = app(t, 'index.html', seed, false, true);
+  const visits = []; a.w.LPShelf.navigate = url => visits.push(url);
+  for (const id of Object.keys(LIST_WORDS)) {
+    a.click(`[data-shelf="${id}"]`);
+    assert.equal(a.w.LPShelf.menu, id);
+    assert.equal(a.query('.tiles').hidden, true, id + ': the list replaces the tiles');
+    const bar = a.query('.shelf-bar');
+    assert.equal(bar.hidden, false);
+    assert.equal(bar.querySelector('.nf-shelf').getAttribute('aria-label'), 'Nook’s games', 'the shelf button, as in every game');
+    assert.equal(bar.querySelector('.nf-shelf'), bar.querySelector('button'), 'first in the bar: top-left');
+    const name = bar.querySelector('h2.menu-name > span:last-child').textContent;
+    assert.equal(name, a.query(`.tiles [data-shelf="${id}"] span`).textContent, 'the game’s name, beside its tile’s picture');
+    assert.equal(bar.querySelector('h2 .menu-name-art').getAttribute('aria-hidden'), 'true');
+    assert.equal(a.query('[data-bubble] .line').textContent, greetings[id]);
+    assert.ok(a.query('[data-bubble]').classList.contains('silent'), id + ': text only, so no speaker');
+    a.plays.length = 0; a.click('[data-bubble]'); await tick();
+    assert.deepEqual(a.plays, [], 'and nothing plays');
+    const tiles = Array.from(a.w.document.querySelectorAll('.menu-tiles .menu-tile'));
+    assert.deepEqual(tiles.map(b => b.querySelector('.menu-word').textContent), LIST_WORDS[id], id + ': one name per tile');
+    for (const b of tiles) {
+      assert.equal(b.tagName, 'BUTTON'); assert.equal(b.type, 'button');
+      assert.ok(b.classList.contains('tile') && b.classList.contains(id), 'pressed like the shelf’s tiles, in the game’s colour');
+      assert.equal(b.querySelectorAll('.menu-word').length, 1);
+      const art = b.querySelector('.menu-art');
+      assert.equal(art.getAttribute('aria-hidden'), 'true');
+      assert.ok(art.querySelector('svg, .mini'), id + ' ' + b.dataset.activity + ': a picture');
+      assert.equal(b.dataset.mode, id);
+    }
+    assert.deepEqual(tiles.filter(b => b.getAttribute('aria-current') === 'true').map(b => b.dataset.activity), [marked[id]], id + ': the last activity is marked');
+    assert.equal(a.w.document.activeElement, a.query('.menu-tiles [aria-current="true"]'), 'focus starts there');
+    assert.equal(a.query('.menu-tiles').getAttribute('aria-label'), name + ': choose a game');
+    for (const b of tiles) b.click();
+    assert.deepEqual(visits.splice(0), hrefs[id], id + ': each tile starts its activity');
+    a.click('[data-back]'); await wait(40);
+  }
+  const css = read('frame.css');
+  assert.match(css, /\.tile\.menu-tile\{min-height:120px/, 'at least 120 px tall on phones (the layout harness measures it at every size)');
+  assert.match(css, /\.tile:active\{transform:translateY\(3px\)/, 'pressed like the shelf’s tiles');
+  assert.doesNotMatch(css, /\.tile\.menu-tile\{[^}]*animation:[^;}]*(both|forwards)/, 'the entry animation never holds a transform, so a press still moves the tile');
+  // Never more than two levels: no list tile opens another list.
+  assert.equal(a.w.document.querySelectorAll('.menu-tile.has-menu, .menu-tile svg.more').length, 0);
+  // A player who has never played a game sees its first activity marked.
+  const b = app(t, 'index.html', {}, true);
+  b.click('[data-shelf="feelings"]');
+  assert.equal(b.query('.menu-tiles [aria-current="true"]').dataset.activity, 'board', 'with storage blocked too');
+});
+
+test('the lists are the same everywhere: menus.js draws every picture (the Friends scene matches feelings-art.js), names match the games’ own, and the address carries the activity', () => {
+  require('../public/fireworks/little-patterns/menus.js');
+  const LPM = globalThis.LPMenus;
+  const F = require('../public/fireworks/little-patterns/feelings-data.js');
+  const A = require('../public/fireworks/little-patterns/feelings-art.js');
+  assert.deepEqual(Object.keys(LPM.MENUS), ['add', 'words', 'patterns', 'shapes', 'feelings']);
+  for (const [id, words] of Object.entries(LIST_WORDS)) assert.deepEqual(LPM.MENUS[id].tiles.map(x => x[1]), words, id);
+  assert.deepEqual(LPM.MENUS.feelings.tiles.map(([id, name]) => [id, name]), F.ACTIVITIES.map(id => [id, F.ACTIVITY_NAMES[id]]), 'Feelings’ names are the game’s own');
+  assert.deepEqual(LPM.MENUS.words.tiles.map(x => x[0]), ['sentence', 'letter', 'order', 'numbers']);
+  assert.equal(LPM.FRIENDS, A.scene(F.STORIES[0]).replace(/ role="img" aria-label="[^"]*"/, ' aria-hidden="true" focusable="false"').replace('class="story-art"', 'class="menu-scene"'), 'the Friends picture is the first story’s scene');
+  assert.equal(LPM.href('add', 'take'), 'garden.html#add/take');
+  assert.equal(LPM.href('words', 'nonsense'), 'garden.html#words/sentence', 'an unknown activity starts the first');
+  assert.equal(LPM.href('count', 'x'), '', 'Count has no list');
+  assert.deepEqual(LPM.split('#patterns/make'), ['patterns', 'make']);
+  assert.ok(!LPM.has('count') && !LPM.has('paint') && !LPM.has('blocks'));
+});
+
+test('on the hub a list is one history entry: Android back and the list’s shelf button come back to the tiles; ./#feelings opens it directly; a page restored from the cache marks the activity played since', async t => {
+  const a = app(t, 'index.html');
+  const visits = []; a.w.LPShelf.navigate = url => visits.push(url);
+  const length = a.w.history.length;
+  a.click('[data-shelf="feelings"]');
+  assert.equal(a.w.location.hash, '#feelings');
+  assert.equal(a.w.history.length, length + 1, 'one entry');
+  assert.equal(a.w.history.state.lpMenu, 'feelings');
+  a.w.history.back(); await wait(40);
+  assert.equal(a.w.LPShelf.menu, '', 'Android back comes back to the tiles');
+  assert.equal(a.query('.tiles').hidden, false);
+  assert.equal(a.query('.shelf-bar').hidden, true);
+  assert.equal(a.query('[data-bubble] .line').textContent, 'Hello! I’m Nook. Let’s play.', 'and Nook’s greeting');
+  a.click('[data-shelf="words"]');
+  a.click('[data-back]');
+  assert.equal(a.w.LPShelf.menu, '', 'the shelf button comes back at once');
+  assert.equal(a.w.document.activeElement, a.query('[data-shelf="words"]'), 'focus goes back to the tile');
+  await wait(40);
+  assert.equal(a.w.location.hash, '', 'and its entry is gone');
+  assert.equal(a.w.LPShelf.menu, '');
+  a.click('[data-shelf="add"]'); a.click('[data-activity="take"]');
+  assert.deepEqual(visits, ['garden.html#add/take']);
+  // A link straight to a list (a grown-up's bookmark, a reload): the list shows; its shelf button drops it from the address.
+  const b = app(t, 'index.html#feelings', { [P1 + 'feelings-v1']: { version: 2, mode: 'match' } });
+  assert.equal(b.w.LPShelf.menu, 'feelings');
+  assert.equal(b.query('.menu-tiles [aria-current="true"]').dataset.activity, 'which', 'a round-3 save (Match) marks Which feeling?');
+  b.click('[data-back]');
+  assert.equal(b.w.LPShelf.menu, '');
+  assert.equal(b.w.location.hash, '');
+  // Back from a game restores the hub from the page cache: the list marks what was played since.
+  const c = app(t, 'index.html#shapes');
+  assert.equal(c.query('.menu-tiles [aria-current="true"]').dataset.activity, 'sides');
+  c.w.localStorage.setItem(P1 + 'shapes-position', JSON.stringify({ mode: 'name', level: 1, indices: {} }));
+  const show = new c.w.Event('pageshow'); Object.defineProperty(show, 'persisted', { value: true });
+  c.w.dispatchEvent(show);
+  assert.equal(c.query('.menu-tiles [aria-current="true"]').dataset.activity, 'name');
+  c.query('.menu-tiles [aria-current="true"]').dispatchEvent(new c.w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+  assert.equal(c.w.LPShelf.menu, '', 'Escape does what the list’s shelf button does');
+});
+
+test('a game reads its activity from the address once (garden.html#add/take, #words/letter, #patterns/make); the address then keeps the game only, so a reload keeps the save; every saved place and level is untouched', t => {
+  const position = { mode: 'count', wordTab: 'order', indices: { count: 2, add: 1, take: 3, patterns: 4, make: 0, sentence: 5, letter: 1, order: 2, numbers: 0 }, selection: {}, levels: { count: 4, add: 2, numbers: 3, patterns: 9 }, operation: 'add', patternMode: 'finish', patternFamily: 0, strip: 1, spell: 1 };
+  for (const [hash, check] of [
+    ['add/take', a => { assert.equal(a.query('#task').dataset.view, 'add'); assert.equal(a.store('garden-position').operation, 'take'); assert.ok(a.query('.take-one'), 'the take-away picture'); }],
+    ['words/letter', a => assert.equal(a.query('#task').dataset.view, 'letter')],
+    ['patterns/make', a => assert.equal(a.query('#task').dataset.view, 'make')],
+    ['patterns/finish', a => assert.equal(a.query('#task').dataset.view, 'patterns')],
+    ['words', a => assert.equal(a.query('#task').dataset.view, 'order', 'without an activity the game carries on as saved')]
+  ]) {
+    const a = app(t, 'garden.html#' + hash, { [P1 + 'garden-position']: position });
+    check(a);
+    assert.equal(a.w.location.hash, '#' + hash.split('/')[0], hash + ': the address keeps the game only');
+    const saved = a.store('garden-position');
+    for (const key of ['indices', 'levels', 'patternFamily']) assert.deepEqual(saved[key], position[key], hash + ' ' + key);
+  }
+});
+
+test('in Count, Add, Words and Patterns the pill is a small read-only label (an apple for Count and Add): a tap only lights it for a moment; no tap on any play screen opens a picker or the grown-ups’ chooser', t => {
+  const a = app(t);
+  for (const game of ['count', 'add']) {
+    goTo(a, game);
+    const label = a.query('#support');
+    assert.equal(label.tagName, 'SPAN', game);
+    assert.ok(label.classList.contains('pill-label'));
+    assert.equal(label.getAttribute('role'), 'img');
+    assert.equal(label.getAttribute('aria-label'), 'Level: ' + (game === 'count' ? '1–5' : 'Up to 5'));
+    assert.ok(label.querySelector('.pill-art svg circle'), 'an apple');
+  }
+  goTo(a, 'add', 'take');
+  assert.equal(a.query('#support').textContent, 'Up to 5');
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  try {
+    a.click('#support');
+    assert.equal(a.query('.lp-modal'), null, 'nothing opens');
+    assert.ok(a.query('#support').classList.contains('nudged'), 'a brief highlight');
+    t.mock.timers.tick(650);
+    assert.ok(!a.query('#support').classList.contains('nudged'), 'gone again');
+  } finally { t.mock.timers.reset(); }
+  for (const [game, activity] of [['count'], ['add', 'add'], ['add', 'take'], ['words', 'sentence'], ['words', 'letter'], ['words', 'order'], ['words', 'numbers'], ['patterns', 'finish'], ['patterns', 'make']]) {
+    goTo(a, game, activity);
+    const where = game + ' ' + (activity || '');
+    assert.equal(a.query('#support').tagName, 'SPAN', where + ': a label, not a button');
+    a.click('#support');
+    for (const b of a.w.document.querySelectorAll('.nf-top button')) if (b.id !== 'shelf-open') b.click();
+    assert.equal(a.w.document.querySelectorAll('.lp-modal, .level-picker, .set-picker, .family-picker, .puzzle-picker, #pick-sum, #picker-content').length, 0, where + ': nothing opens');
+    assert.equal(a.query('#shelf-overlay').hidden, true);
+  }
+  assert.equal(a.w.LPFrame.picker, undefined, 'the phase-7 picker is gone');
+  for (const file of ['garden.js', 'shapes.js', 'feelings.js', 'frame.js']) assert.doesNotMatch(read(file), /\.picker\(|kidPicker|data-operation|data-shapes-mode|class="chip"|data-pick/, file + ': no chips or picker');
+  assert.doesNotMatch(read('garden.js'), /\$\('support'\)\.onclick|\$\('support'\)\.addEventListener/, 'the pill has no handler of its own; frame.js routes it');
+  assert.doesNotMatch(read('frame.css'), /lp-kid|kid-tile/, 'and its styles went with it');
+});
+
+test('the Words list in a game: the Words tile opens four big tiles on the shelf, a drawing and one name each, in the player’s letter case; the activity playing is marked; one tap plays it in place and keeps drafts', t => {
+  const a = app(t);
+  goTo(a, 'words');
+  for (const key of ['A', 'P']) a.click(`[data-key="${key}"]`);
+  assert.equal(a.query('#support').getAttribute('aria-label'), 'Now: Missing word');
+  a.click('#shelf-open'); a.click('#shelf-overlay [data-shelf="words"]');
+  const list = a.query('#shelf-overlay .menu-tiles');
+  const tiles = Array.from(list.querySelectorAll('.menu-tile'));
+  assert.deepEqual(tiles.map(b => b.dataset.activity), ['sentence', 'letter', 'order', 'numbers']);
+  assert.ok(tiles.every(b => b.querySelector('.menu-art[aria-hidden="true"] .mini')), 'each tile carries the small drawing from the old level strip');
+  assert.equal(tiles[0].querySelector('.mini').textContent, 'THESAT', 'drawn in the player’s letter case');
+  assert.equal(list.querySelector('[aria-current="true"]').dataset.activity, 'sentence');
+  assert.equal(a.query('#shelf-overlay').querySelectorAll('p, select, input, .level-picker, .puzzle-picker, [data-close]').length, 0, 'no prose, levels, lists or close button');
+  a.click('#shelf-overlay [data-activity="letter"]');
+  assert.equal(a.query('#shelf-overlay').hidden, true, 'one tap plays it and closes the shelf');
+  assert.equal(a.query('#task').dataset.view, 'letter');
+  assert.equal(a.query('#support').textContent, 'Missing letter');
+  assert.equal(a.store('garden-position').wordTab, 'letter');
+  a.click('#shelf-open'); a.click('#shelf-overlay [data-shelf="words"]');
+  assert.equal(a.query('#shelf-overlay .menu-tiles [aria-current="true"]').dataset.activity, 'letter', 'the list marks the activity playing now');
+  a.click('#shelf-overlay [data-activity="sentence"]');
+  assert.equal(a.query('#word-input').value, 'AP', 'the Missing word draft survived');
+  assert.equal(a.w.document.activeElement, a.query('#word-input'), 'focus returns to the gap');
+  a.w.LP.savePrefs({ ...a.w.LP.prefs, case: 'lower' });
+  a.click('#shelf-open'); a.click('#shelf-overlay [data-shelf="words"]');
+  assert.equal(a.query('#shelf-overlay [data-activity="sentence"] .mini').textContent, 'thesat');
+});
+
+test('Colour Blocks (phase 8, two audiences): the shelf button top-left opens Nook’s shelf over the board, which waits; Grown-ups starts with a Colour Blocks section whose Pace sets how blocks move; nothing else on the play screen changed', t => {
+  const a = app(t, 'blocks.html');
+  const header = a.query('header');
+  assert.equal(header.firstElementChild, a.query('#shelf-open'));
+  assert.ok(a.query('#shelf-open').classList.contains('nf-shelf'), 'the same shelf button as the frame games');
+  for (const sel of ['[data-player]', '[data-settings]', '#pace', '.panel.pace']) assert.equal(a.query(sel), null, sel);
+  for (const sel of ['[data-sound]', '#pause', '#undo', '#restart', '[data-action="left"]', '[data-action="place"]', '#board', '.nook-row', '.foot a.home-link']) assert.ok(a.query(sel), sel + ' stays');
+  a.click('#shelf-open');
+  const overlay = a.query('#shelf-overlay');
+  assert.equal(overlay.hidden, false);
+  assert.ok(overlay.classList.contains('lp-frame'), 'the frame’s button look holds on a page that is not a frame');
+  assert.ok(a.query('#page').hasAttribute('inert'));
+  assert.equal(a.w.document.body.style.overflow, 'hidden', 'Blocks’ page does not scroll behind the shelf');
+  assert.equal(overlay.querySelector('.tiles [aria-current="true"]').dataset.shelf, 'blocks');
+  assert.equal(a.query('#overlay').hidden, false, 'the board waits: Taking a break');
+  const x = JSON.stringify(a.store('blocks-board').active);
+  a.w.document.dispatchEvent(new a.w.KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
+  a.w.document.dispatchEvent(new a.w.KeyboardEvent('keydown', { key: 'p', bubbles: true }));
+  assert.equal(a.query('#overlay').hidden, false, 'keys do not reach the board behind the shelf');
+  assert.equal(JSON.stringify(a.store('blocks-board').active), x);
+  a.click('#shelf-overlay [data-shelf="blocks"]');
+  assert.equal(overlay.hidden, true, 'its own tile closes the shelf');
+  assert.equal(a.w.document.body.style.overflow, '');
+  grownups(a);
+  assert.equal(a.query('.gu-game h3').textContent, 'Colour Blocks');
+  assert.equal(a.query('.gu-now-text').textContent, 'Now: Wait for me. Blocks move only when tapped.');
+  assert.equal(a.query('#gu-levels').textContent, 'Pace');
+  a.click('#gu-levels');
+  assert.match(a.query('#dialog-title').textContent, /^Pace/);
+  assert.deepEqual(Array.from(a.w.document.querySelectorAll('.lp-modal [data-pace]'), b => b.dataset.pace + (b.getAttribute('aria-pressed') === 'true' ? '*' : '')), ['0*', '1800', '850']);
+  a.click('.lp-modal [data-pace="850"]');
+  assert.equal(a.query('.lp-modal'), null);
+  assert.equal(overlay.hidden, true, 'back to the board');
+  assert.equal(a.w.LP.prefs.pace, 850);
+  assert.equal(a.store('little-patterns-v1').pace, 850, 'saved for this player');
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  try {
+    a.click('#resume');
+    const y = a.store('blocks-board').active.y;
+    t.mock.timers.tick(860);
+    a.w.dispatchEvent(new a.w.Event('pagehide'));
+    assert.equal(a.store('blocks-board').active.y, y + 1, 'the piece falls at the steady pace');
+  } finally { t.mock.timers.reset(); }
+  grownups(a); a.click('#gu-settings');
+  assert.ok(a.query('#lp-settings [name="pace"]'), 'Settings keeps its Blocks move choice too');
 });

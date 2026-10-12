@@ -20,14 +20,11 @@
                               { beads: html } the hop plus the bead string under the bubble (Patterns). Softer and
                               reduced motion keep only short fades: no chewing, no hop.
      fit(task)                Adds fit-1, fit-2, fit-3 to the task until its content fits (games style these).
-     pill(options)            The top bar's pill (#support), the child's (phase 7: two audiences, two controls).
-                              { text, art, picker } makes it a button that opens the child's picker; { text, art }
-                              without a picker makes it a small read-only label of the level a grown-up set (a tap
-                              only lights it for a moment). It never opens a grown-up's chooser. hidden hides it.
-     picker(options)          The child's picker: { tiles: [{ id, word, art, current }], pick(id), done(), title }.
-                              Big tiles, a picture and a short name each, the current one marked; no title, prose or
-                              close button (the title is for screen readers only). A tap on another tile picks it; a
-                              tap on the current tile or anywhere else, or Escape, closes. done() runs after either.
+     pill(options)            The top bar's pill (#support): { text, art, label, hidden }, a small read-only label of
+                              where the child is (the level a grown-up set, drawn where a picture says it). It is not
+                              a button: a tap only lights it for a moment, and it never opens a chooser. Since phase 8
+                              the child picks the activity from the game's list under its shelf tile (shelf.js), and
+                              every level and puzzle is set in Grown-ups, behind the hold.
      onResize(fn)             Runs fn after the frame height follows a viewport change.
 
    The frame height follows the visual viewport (--app-h), so a device keyboard shrinks the frame and the task card
@@ -190,67 +187,35 @@
   }
   function unfit(task) { if (task) task.classList.remove(...FITS); }
 
-  // ---- the pill and the child's picker (phase 7) ----
+  // ---- the pill: a read-only label (phase 7; the child's picker went in phase 8) ----
   const esc = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  let pillPicker = null, nudgeTimer = 0;
+  let nudgeTimer = 0;
   function pill(options) {
     options = options || {};
     let el = doc.getElementById('support');
     if (!el) return null;
-    const kind = options.picker ? 'BUTTON' : 'SPAN';
     // A read-only label is not a button: swap the element, keeping its id, rather than leave a control that does nothing.
-    if (el.tagName !== kind) {
-      const next = doc.createElement(kind.toLowerCase());
+    if (el.tagName !== 'SPAN') {
+      const next = doc.createElement('span');
       next.id = 'support';
       el.replaceWith(next);
       el = next;
     }
-    pillPicker = options.picker || null;
-    el.className = options.picker ? 'pill' : 'pill pill-label';
+    el.className = 'pill pill-label';
     el.innerHTML = (options.art ? '<span class="pill-art" aria-hidden="true">' + options.art + '</span>' : '') + '<span class="pill-text">' + esc(options.text) + '</span>';
-    if (options.picker) {
-      el.type = 'button';
-      el.removeAttribute('role');
-      el.setAttribute('aria-haspopup', 'dialog');
-      el.setAttribute('aria-label', options.label || 'Choose a game. Now: ' + options.text);
-    } else {
-      el.removeAttribute('aria-haspopup');
-      el.setAttribute('role', 'img');
-      el.setAttribute('aria-label', options.label || 'Level: ' + options.text);
-    }
+    el.setAttribute('role', 'img');
+    el.setAttribute('aria-label', options.label || 'Level: ' + options.text);
     el.hidden = !!options.hidden;
     return el;
   }
+  // A tap on the label: a brief highlight, nothing else.
   doc.addEventListener('click', e => {
     const el = e.target && e.target.closest ? e.target.closest('#support') : null;
     if (!el || el.closest('.lp-modal,.lp-overlay')) return;
-    if (el.tagName === 'BUTTON' && pillPicker) { pillPicker(); return; }
-    // The label: a brief highlight, nothing else.
     el.classList.remove('nudged'); void el.offsetWidth; el.classList.add('nudged');
     window.clearTimeout(nudgeTimer);
     nudgeTimer = window.setTimeout(() => el.classList.remove('nudged'), 650);
   });
-  function picker(options) {
-    const tiles = options.tiles || [];
-    let picked = null;
-    const html = '<h2 id="dialog-title" class="sr-only">' + esc(options.title || 'Choose') + '</h2><div class="kid-tiles n' + tiles.length + '" role="group">' +
-      tiles.map(t => '<button type="button" class="kid-tile" data-pick="' + esc(t.id) + '"' + (t.current ? ' aria-current="true"' : '') + '><span class="kid-art" aria-hidden="true">' + (t.art || '') + '</span><span class="kid-word">' + esc(t.word) + '</span></button>').join('') + '</div>';
-    const el = LP.openModal(html, () => {
-      if (picked && options.pick) options.pick(picked);
-      if (options.done) options.done(picked);
-    });
-    el.classList.add('lp-kid', 'lp-rise', 'n' + tiles.length);
-    // One tap: a tile picks (the current one just closes); anywhere else closes.
-    el.addEventListener('click', e => {
-      const tile = e.target.closest && e.target.closest('[data-pick]');
-      const t = tile && tiles.find(x => String(x.id) === tile.dataset.pick);
-      if (t && !t.current) picked = t.id;
-      LP.closeModal();
-    });
-    const first = el.querySelector('[aria-current="true"]') || el.querySelector('.kid-tile');
-    if (first) first.focus({ preventScroll: true });
-    return el;
-  }
 
-  window.LPFrame = { bubble, nook, fit, unfit, onResize: fn => resizers.push(fn), quiet, pill, picker };
+  window.LPFrame = { bubble, nook, fit, unfit, onResize: fn => resizers.push(fn), quiet, pill };
 })();

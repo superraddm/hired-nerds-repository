@@ -61,11 +61,22 @@ Shelf and Grown-ups
 - [ ] Grown-ups > Privacy, devices and credits: the line about Me (never saved or sent) is there.
 - [ ] In a game, the shelf button opens the shelf over the game with that game marked. **S24:** the Android Back
       button also opens it; Back again leaves.
+- [ ] (Phase 8) Add, Words, Patterns, Shapes and Feelings carry a small stacked-cards badge in the corner and a dashed
+      inner border; Count, Paint and Blocks have neither. A badge tile opens its list: the shelf button top-left (the
+      same place as in a game), Nook's line ("Add or take away?"), big picture tiles; one tap starts that game. The
+      shelf button, and on the S24 the Back button, come back to the tiles.
+- [ ] (Phase 8) Play Take away, go back to the shelf (shelf button), tap Add: Take away is the marked tile. Inside a
+      game, the shelf button then the game's own tile opens the same list; a tile there switches in place. No play
+      screen has chips or a picker; the label at the top right only lights up when tapped.
+- [ ] (Phase 8) Colour Blocks: the shelf button is top-left; there is no Player, Grown-ups or pace control on the play
+      screen. Hold Grown-ups on the shelf: the sheet starts with Colour Blocks and **Pace** (Wait for me, Very slow,
+      Steady); the board waits while the shelf is open.
 
 Count, Add, Take away, Words, Patterns
 - [ ] Count and Add: answer wrong once (only the bubble changes; Nook does not move), then right (green tick, Nook
       happy, proud or excited with one small hop, Again and Next appear). Help steps through the count. The card never changes height.
-- [ ] Add at level 4 (pill > Over ten): Help says "Fill the ten first." and moves apples across.
+- [ ] Add at level 4 (Grown-ups > Levels and puzzles > level 4): Help says "Fill the ten first." and moves apples
+      across.
 - [ ] Take away: right answer, Nook munches.
 - [ ] Words > Missing word with the A to Z keys (ABC order, Delete and Enter at the end).
 - [ ] **The device keyboard:** Grown-ups > Settings > Typing keyboard > Device keyboard. In Missing word and in

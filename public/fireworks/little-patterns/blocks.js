@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const $=id=>document.getElementById(id),C=window.LittlePatterns,g=new C.Blocks(),LP=window.LP,ctx=$('board').getContext('2d');
+  const $=id=>document.getElementById(id),C=window.LittlePatterns,g=new C.Blocks(),LP=window.LP,S=window.LPShelf,ctx=$('board').getContext('2d');
   const colours=['#e9ce7f','#81b6a9','#bda3d7','#a8c887','#db9ca7','#8eafcf','#e2ac82'],soft=['#d3c398','#adc5bc','#c3b7d1','#bfcba9','#cbb1b6','#b0bfd0','#d3bfae'];
   let paused=false,timer=null,hold=null,heldPlaced=false,suppressClick=false;
   function saveGame(){LP.storage.set('blocks-board',{board:g.board,active:g.active,next:g.next,bag:g.bag,rows:g.rows,full:g.full,lastSum:g.lastSum,previous:g.previous});}
@@ -14,7 +14,7 @@
   }
   function validSum(s){return s&&Number.isInteger(s.before)&&Number.isInteger(s.added)&&s.before>=0&&s.added>0&&s.before+s.added===10&&s.total===10;}
   function restoreGame(){g.reset();const s=LP.storage.get('blocks-board',null);if(validSnapshot(s)){for(const key of ['board','active','next','bag','rows'])g[key]=s[key];g.full=!C.fits(g.board,g.active);g.lastSum=validSum(s.lastSum)?s.lastSum:null;g.previous=validSnapshot(s.previous)&&C.fits(s.previous.board,s.previous.active)?{board:s.previous.board,active:s.previous.active,next:s.previous.next,bag:s.previous.bag,rows:s.previous.rows,lastSum:validSum(s.previous.lastSum)?s.previous.lastSum:null}:null;paused=true;}else paused=false;if(paused||g.full)LP.audio.pause();else LP.audio.resume();}
-  LP.audio.setMusic(true);$('pace').value=String(LP.prefs.pace);
+  LP.audio.setMusic(true);
   function palette(){return LP.prefs.soft?soft:colours;}
   function cell(x,y,id,ghost){const px=x*30,py=y*30;ctx.fillStyle=palette()[id];if(ghost){ctx.strokeStyle=palette()[id];ctx.lineWidth=1.5;ctx.strokeRect(px+3,py+3,24,24);}else{ctx.fillRect(px+1.5,py+1.5,27,27);ctx.fillStyle='#ffffff30';ctx.fillRect(px+3,py+3,24,2);ctx.fillStyle='#243e43';}ctx.font='bold 15px Trebuchet MS,Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('1',px+15,py+16);}
   function sumElement(s,dots){const box=document.createElement('div');box.className='row-sum';box.innerHTML='<div class="sum" aria-label="'+s.before+' plus '+s.added+' equals '+s.total+'"><span>'+s.before+'</span><b>+</b><span>'+s.added+'</span><b>=</b><span>'+s.total+'</span></div>';if(dots){const tray=document.createElement('div');tray.className='sum-dots';tray.setAttribute('aria-hidden','true');for(let i=0;i<s.total;i++){const dot=document.createElement('i');if(i>=s.before)dot.className='new';tray.appendChild(dot);}box.appendChild(tray);}return box;}
@@ -24,7 +24,7 @@
     $('next').textContent='';const shape=C.SHAPES[g.next];$('next').style.gridTemplateColumns='repeat('+shape[0].length+',20px)';$('next').style.gridTemplateRows='repeat('+shape.length+',20px)';shape.forEach((r,y)=>r.forEach((v,x)=>{if(v){const tile=document.createElement('i');tile.style.gridColumn=String(x+1);tile.style.gridRow=String(y+1);tile.style.background=palette()[g.next];tile.textContent='1';$('next').appendChild(tile);}}));
     $('undo').disabled=!g.previous;$('pause').textContent=paused?'▶ Continue':'Ⅱ Pause';$('overlay').hidden=!paused&&!g.full;$('overlay-title').textContent=g.full?'A board full of colour':'Taking a break';$('overlay-copy').textContent=g.full?'Undo a piece or start a fresh board.':'Your blocks will wait.';$('resume').textContent=g.full?'Fresh board':'Keep playing';document.querySelectorAll('[data-action]').forEach(b=>b.disabled=paused||g.full);
   }
-  function schedule(){clearTimeout(timer);timer=null;const delay=Number($('pace').value);if(delay&&!paused&&!g.full&&!LP.dialogOpen&&!document.hidden)timer=setTimeout(()=>{step('down');},delay);}
+  function schedule(){clearTimeout(timer);timer=null;const delay=Number(LP.prefs.pace);if(delay&&!paused&&!g.full&&!LP.dialogOpen&&!document.hidden)timer=setTimeout(()=>{step('down');},delay);}
   function stopHold(){clearTimeout(hold);hold=null;}
   // Nook's bubble is picture-and-word encouragement only. It is aria-hidden: the status line already tells assistive technology what happened.
   const SAY={hello:['Hello! 👋','Hi! 🙂'],placed:['Nice!','Good!','Yes!','OK! 👍','🙂','Ooh!'],row:['Yes!','Great!','Ten! ⭐','Wow!','😀','You did it!'],many:['WOW! 😎','Super! 🤩','Amazing! 🎉','So many! 😎'],full:['Oh no! 🙈','Uh oh!'],undo:['Try again! 🙂','OK!'],rest:['Zzz 😴','Rest. 😌'],go:['Go! 🙂','Ready!']};
@@ -61,10 +61,18 @@
   function fresh(){g.reset();nookSay('hello',true);LP.status('A fresh space to build. Every square is one.');pause(false);saveGame();}
   $('restart').onclick=async()=>{const approved=await LP.confirm('Start a fresh board?','Your current blocks will be cleared.','Fresh board');if(approved)fresh();};
   $('undo').onclick=()=>{if(g.undo()){nookSay('undo',false);LP.status('Your last piece is back. Try another space.');draw();schedule();saveGame();}};
-  $('pace').onchange=()=>LP.savePrefs({...LP.prefs,pace:Number($('pace').value)});
-  document.addEventListener('lp:preferences',()=>{$('pace').value=String(LP.prefs.pace);draw();schedule();});
-  document.addEventListener('lp:dialogopened',()=>pause(true));document.addEventListener('visibilitychange',()=>{if(document.hidden){pause(true);saveGame();}});window.addEventListener('blur',()=>pause(true));window.addEventListener('pagehide',saveGame);document.addEventListener('lp:beforeplayerchange',saveGame);document.addEventListener('lp:playerchanged',()=>{stopHold();clearTimeout(timer);restoreGame();$('pace').value=String(LP.prefs.pace);LP.status('Your board is ready. All games are open.');draw();schedule();});
-  document.addEventListener('keydown',e=>{if(LP.dialogOpen||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;if(e.key.toLowerCase()==='p'){e.preventDefault();if(!g.full)pause(!paused);return;}const keys={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'turn',ArrowDown:'down',' ':'place'};if(e.key===' '&&e.target.tagName==='BUTTON')return;if(keys[e.key]){e.preventDefault();if(e.repeat&&['turn','place'].includes(keys[e.key]))return;step(keys[e.key]);}});
+  document.addEventListener('lp:preferences',()=>{draw();schedule();});
+  document.addEventListener('lp:dialogopened',()=>pause(true));document.addEventListener('visibilitychange',()=>{if(document.hidden){pause(true);saveGame();}});window.addEventListener('blur',()=>pause(true));window.addEventListener('pagehide',saveGame);document.addEventListener('lp:beforeplayerchange',saveGame);document.addEventListener('lp:playerchanged',()=>{stopHold();clearTimeout(timer);restoreGame();LP.status('Your board is ready. All games are open.');draw();schedule();});
+  document.addEventListener('keydown',e=>{if(LP.dialogOpen||S.isOpen||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;if(e.key.toLowerCase()==='p'){e.preventDefault();if(!g.full)pause(!paused);return;}const keys={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'turn',ArrowDown:'down',' ':'place'};if(e.key===' '&&e.target.tagName==='BUTTON')return;if(keys[e.key]){e.preventDefault();if(e.repeat&&['turn','place'].includes(keys[e.key]))return;step(keys[e.key]);}});
+  // Round 4, phase 8 (two audiences): the shelf button top-left opens Nook's shelf, as in every game, and the board waits
+  // behind it. The pace is the grown-ups': Grown-ups (the hold on the shelf) starts with a Colour Blocks section, and
+  // Pace there chooses how the blocks move. The play screen has no Player, Grown-ups or pace control of its own.
+  const PACES=[[0,'Wait for me','Blocks move only when tapped.'],[1800,'Very slow','Blocks fall by themselves, very slowly.'],[850,'Steady','Blocks fall by themselves at a steady pace.']];
+  const paceNow=()=>PACES.find(p=>p[0]===LP.prefs.pace)||PACES[0];
+  function choosePace(){const el=LP.openModal('<div class="lp-dialog-heading"><h2 id="dialog-title">Pace: Colour Blocks</h2><button data-close aria-label="Close pace">×</button></div><p>How the blocks move. The child cannot change this on the play screen.</p><div class="level-picker pace-picker" role="group" aria-label="Pace"></div>',()=>S.close());
+    const box=el.querySelector('.pace-picker');for(const [value,name,text] of PACES){const b=document.createElement('button');b.type='button';b.dataset.pace=String(value);b.setAttribute('aria-pressed',String(LP.prefs.pace===value));b.innerHTML='<b>'+name+'</b> <span>'+text+'</span>';b.onclick=()=>{LP.savePrefs({...LP.prefs,pace:value});LP.closeModal();};box.appendChild(b);}}
+  S.mountOverlay({current:'blocks',levels:{name:()=>'Colour Blocks',now:()=>({text:paceNow()[1]+'. '+paceNow()[2]}),label:'Pace',open:choosePace}});
+  document.addEventListener('lp:shelfopened',()=>pause(true));
   // One event-driven repaint. No frame loop or canvas resizing at device DPR.
   restoreGame();draw();schedule();
 })();
