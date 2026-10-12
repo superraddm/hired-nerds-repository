@@ -68,7 +68,7 @@ Shelf and Grown-ups
 - [ ] (Phase 8) Play Take away, go back to the shelf (shelf button), tap Add: Take away is the marked tile. Inside a
       game, the shelf button then the game's own tile opens the same list; a tile there switches in place. No play
       screen has chips or a picker; the label at the top right only lights up when tapped.
-- [ ] (Phase 8) Colour Blocks: the shelf button is top-left; there is no Player, Grown-ups or pace control on the play
+- [ ] (Phase 8) Colour Blocks: the shelf button is top-left; there is no Player, Grown-ups, pace or Sound control on the play
       screen. Hold Grown-ups on the shelf: the sheet starts with Colour Blocks and **Pace** (Wait for me, Very slow,
       Steady); the board waits while the shelf is open.
 

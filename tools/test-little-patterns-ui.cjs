@@ -67,6 +67,14 @@ function grownups(a) {
   assert.equal(a.query('#dialog-title').textContent, 'Grown-ups');
 }
 const parentLevels = a => { grownups(a); a.click('#gu-levels'); };
+// Sound is one device-wide Grown-ups setting on every page, Blocks included since phase 8: the hold, Settings, Sound.
+// The shelf is closed again afterwards, as a grown-up would leave it.
+function soundSetting(a, value) {
+  grownups(a); a.click('#gu-settings');
+  a.query('#lp-settings [name="sound"]').value = value; a.submit('#lp-settings');
+  a.query('#shelf-overlay').dispatchEvent(new a.w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+  assert.equal(a.query('#shelf-overlay').hidden, true);
+}
 const tick = () => new Promise(resolve => setTimeout(resolve, 0));
 const assertRetry = a => assert.ok(L.FEEDBACK.retries.includes(a.query('#speech').textContent), 'a kind retry line: ' + a.query('#speech').textContent);
 
@@ -141,18 +149,20 @@ test('backgrounding stops speech without changing sound choice or replaying it o
   assert.equal(a.w.LP.audio.muted,false,'changing players does not silently mute');
 });
 
-test('Blocks starts music on the first control tap, and muting prevents further starts', async t => {
+test('Blocks starts music on the first control tap, and muting in Grown-ups prevents further starts', async t => {
   const a=app(t,'blocks.html',{},false,true);let starts=0,contexts=0;
   assert.equal(a.w.LP.audio.muted,false);
-  assert.equal(a.query('[data-sound]').getAttribute('aria-pressed'),'true');
+  assert.equal(a.query('[data-sound]'),null,'no one-tap mute on the play screen (phase 8)');
   const param={setValueAtTime(){},linearRampToValueAtTime(){},exponentialRampToValueAtTime(){}};
   const node=()=>({connect(){},disconnect(){},start(){starts++;},stop(){},frequency:{},gain:param});
   a.w.AudioContext=function(){contexts++;this.state='running';this.currentTime=0;this.destination={};this.createOscillator=node;this.createGain=node;this.sampleRate=22050;this.createBuffer=()=>({getChannelData:()=>new Float32Array(4)});this.createBufferSource=()=>({...node(),start(){}});this.createBiquadFilter=()=>({...node(),Q:{}});this.suspend=async()=>{};};
   assert.equal(contexts,0,'no autoplay context before interaction');
   a.click('[data-action="left"]');await tick();assert.equal(starts,1);
   a.click('[data-action="right"]');await tick();assert.equal(starts,1,'no duplicate melody loop');
-  a.click('[data-sound]');a.click('[data-action="left"]');await tick();
-  assert.equal(a.w.LP.audio.muted,true);assert.equal(starts,1);
+  soundSetting(a,'off');a.click('#resume');
+  assert.equal(a.query('[data-action="left"]').disabled,false,'the board plays on after Grown-ups');
+  a.click('[data-action="left"]');await tick();
+  assert.equal(a.w.LP.audio.muted,true);assert.equal(a.w.LP.soundOff,true);assert.equal(starts,1);
 });
 
 test('Count, immediate addition and every pattern level remain directly available', t => {
@@ -903,7 +913,7 @@ test('the gap is the input: bounded width, readonly with the A to Z keys, the ke
   assert.deepEqual(Array.from(a.query('.key-actions').children).map(b => b.dataset.key || b.id), ['Space', 'Backspace', 'check-word'], 'Number words adds Space before Delete and Enter');
 });
 
-test('Blocks keeps its named Sound control and named block controls; the Garden frame has no Sound control, and Nook itself is a button holding the round-4 rig', t => {
+test('Blocks keeps its named block controls and, like the Garden frame, has no Sound control of its own (phase 8: sound is the Grown-ups setting); Nook itself is a button holding the round-4 rig', t => {
   const a = app(t);
   assert.equal(a.query('[data-sound]'), null);
   assert.equal(a.query('.name-tag'), null, 'no name tag: Nook itself is the button');
@@ -911,11 +921,14 @@ test('Blocks keeps its named Sound control and named block controls; the Garden 
   assert.equal(a.query('#nook').getAttribute('aria-label'), 'Nook');
   assert.ok(a.query('#nook > .nook-pos > svg.nook[aria-hidden="true"]'), 'the phase-1 rig inside its position wrapper, decorative');
   assert.equal(a.query('#nook svg.nook').getAttribute('data-feeling'), 'rest', 'the resting look: the hello face with both arms down');
-  const b = app(t, 'blocks.html');
-  assert.equal(b.query('[data-sound]').textContent, '♪ Sound: off');
-  b.click('[data-sound]');
-  assert.equal(b.query('[data-sound]').textContent, '♪ Sound: on');
-  assert.equal(b.query('[data-sound]').getAttribute('aria-pressed'), 'true');
+  const b = app(t, 'blocks.html', {}, false, true);
+  assert.equal(b.query('[data-sound]'), null, 'no one-tap mute on the Blocks play screen');
+  soundSetting(b, 'off');
+  assert.equal(b.w.LP.soundOff, true); assert.equal(b.w.LP.audio.muted, true);
+  assert.equal(b.query('#shelf-overlay .sound-badge').hidden, false, 'the crossed speaker on the shelf, as on every page');
+  soundSetting(b, 'on');
+  assert.equal(b.w.LP.soundOff, false); assert.equal(b.w.LP.audio.muted, false);
+  assert.equal(b.query('#shelf-overlay .sound-badge').hidden, true);
   const down = b.query('[data-action="down"]');
   assert.equal(down.childNodes[1].textContent, 'Down');
   assert.equal(down.querySelector('small').textContent, 'hold');
@@ -2409,13 +2422,13 @@ test('the Words list in a game: the Words tile opens four big tiles on the shelf
   assert.equal(a.query('#shelf-overlay [data-activity="sentence"] .mini').textContent, 'thesat');
 });
 
-test('Colour Blocks (phase 8, two audiences): the shelf button top-left opens Nook’s shelf over the board, which waits; Grown-ups starts with a Colour Blocks section whose Pace sets how blocks move; nothing else on the play screen changed', t => {
+test('Colour Blocks (phase 8, two audiences): the shelf button top-left opens Nook’s shelf over the board, which waits; Grown-ups starts with a Colour Blocks section whose Pace sets how blocks move; no Player, Grown-ups, pace or Sound control on the play screen, and nothing else changed', t => {
   const a = app(t, 'blocks.html');
   const header = a.query('header');
   assert.equal(header.firstElementChild, a.query('#shelf-open'));
   assert.ok(a.query('#shelf-open').classList.contains('nf-shelf'), 'the same shelf button as the frame games');
-  for (const sel of ['[data-player]', '[data-settings]', '#pace', '.panel.pace']) assert.equal(a.query(sel), null, sel);
-  for (const sel of ['[data-sound]', '#pause', '#undo', '#restart', '[data-action="left"]', '[data-action="place"]', '#board', '.nook-row', '.foot a.home-link']) assert.ok(a.query(sel), sel + ' stays');
+  for (const sel of ['[data-player]', '[data-settings]', '[data-sound]', '#pace', '.panel.pace']) assert.equal(a.query(sel), null, sel);
+  for (const sel of ['#pause', '#undo', '#restart', '[data-action="left"]', '[data-action="place"]', '#board', '.nook-row', '.foot a.home-link']) assert.ok(a.query(sel), sel + ' stays');
   a.click('#shelf-open');
   const overlay = a.query('#shelf-overlay');
   assert.equal(overlay.hidden, false);

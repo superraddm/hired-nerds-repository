@@ -62,7 +62,7 @@ gone; the shelf button sits top-left (the same button, opening the same shelf ov
 The board pauses ("Taking a break") while the shelf is open and keys wait. Grown-ups now starts with a Colour Blocks
 section: "Now: Wait for me. Blocks move only when tapped." and **Pace**, which opens Wait for me / Very slow / Steady
 (Settings keeps its own Blocks move choice too). Everything else is unchanged: the board, controls, celebration,
-Nook's row, the Sound button, the foot. blocks.html now loads frame.css, nook.css, voice-library.js, nook-art.js,
+Nook's row, the foot (its Sound button went too, in the follow-up at the end). blocks.html now loads frame.css, nook.css, voice-library.js, nook-art.js,
 icons.js, menus.js, frame.js and shelf.js; the overlay carries `lp-frame` so the frame's button reset holds there
 while the page itself still scrolls as before (compared side by side with the old page at 915x356).
 
@@ -140,3 +140,5 @@ guards it.
    game, Blocks' shelf button and Pace), for the S24 and the iPad held both ways.
 
 Commit: 996c32e (996c32e1fe5c4a4f42c32bde8ad4eeade1eeed83), with this line added in the commit that follows it.
+
+Follow-up (left-open item 1, at Fable's request): Blocks' one-tap "Sound: on" button is gone from its play screen too; sound for Blocks is the same device-wide Grown-ups setting as every page (the crossed-speaker badge on the shelf when off), and the two Blocks tests that clicked it now set sound through Grown-ups (209 node tests pass; layout harness 9 of 9).
