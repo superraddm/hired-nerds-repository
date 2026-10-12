@@ -175,3 +175,41 @@ button{font:inherit;color:inherit;appearance:none;border:0;background:none;paddi
 .nf .perform .nook{width:auto;height:auto;max-width:100%;max-height:50vh}
 @media (orientation:landscape) and (max-height:520px){.nf .perform .nook{max-height:58vh}}
 @media (min-width:760px) and (min-height:521px){.nf .match-nook{max-height:42vh}.nf .perform .nook{max-height:52vh}}
+
+/* ---- navigation proposal 2 (12 Oct) ---- */
+.tiles.v2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.tiles-break{grid-column:1/-1;height:2px;background:#e4d69c;border-radius:2px;margin:4px 10%;opacity:.8}
+.tile.folder{padding:8px 10px 10px}
+.peek{display:grid;grid-template-columns:1fr 1fr;gap:5px;width:84px;height:64px;padding:5px;border-radius:12px;background:#ffffff8c}
+.peek-cell{display:flex;align-items:center;justify-content:center;gap:1px;border-radius:7px;background:#fffdf3;overflow:hidden;font-size:9px;font-weight:900;color:#3f4a5c;min-width:0}
+.peek-cell .apple{width:9px;height:9px;margin-top:2px;border-width:1px}.peek-cell .apple:before,.peek-cell .apple:after{display:none}
+.lvl-apples{display:grid;grid-template-columns:repeat(var(--c,5),auto);gap:2px;justify-content:center}
+.peek-cell .shape{width:8px;height:8px;border-width:1px}.peek-cell .shape.triangle{border-left-width:5px;border-right-width:5px;border-bottom-width:8px}.peek-cell .shape.oval{width:11px;height:7px}
+.peek-cell .nook-face-icon{width:26px;height:26px}
+.peek-cell .w{font-size:8px;padding:1px 2px;background:#f4edc4;border:1px solid #c4bb89;border-radius:3px}.peek-cell .gap{display:inline-block;width:10px;height:10px;border:1.5px dashed #839979;border-radius:3px}.peek-cell .gap.small{width:7px}.peek-cell .chip{font-size:7px;padding:1px 2px;background:#fff4c9;border:1px solid #d4bd71;border-radius:3px;transform:rotate(-6deg)}
+.mini-rows{display:grid;gap:2px}.mini-rows i{display:block;width:26px;height:4px;background:#e67b69;border-radius:2px}
+.mini-add,.mini-take,.mini-make{display:flex;align-items:center;gap:1px}.mini-add b,.mini-make b{font-size:10px;color:#3b6a5c}
+.mini-take .apple:last-child{opacity:.4}
+.mini-n,.mini-w{font-size:9px;color:#5a4a12;margin-left:1px}.peek-cell svg{width:18px;height:18px}
+.mini-friend{display:block;width:22px;height:22px;border-radius:50%;background:#d99770;box-shadow:0 10px 0 -2px #8770a7}
+.tile.folder>span:last-child{margin-top:2px}
+.submenu{grid-template-rows:auto auto auto auto minmax(0,1fr)}
+.sub-top{display:flex;align-items:center;gap:10px;padding:2px 0}
+.nf-shelf.back{color:#4d3b73}.sub-title{display:flex;align-items:center;gap:8px;font:800 20px/1 "Trebuchet MS",Arial,sans-serif;color:#3d2f5e}.sub-title svg{width:34px;height:34px}
+.acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-content:start}
+.acts .tile{min-height:132px;gap:8px}.acts .tile .nook-face-icon{width:64px;height:64px}
+.big-pic{display:flex;align-items:center;gap:6px}.big-pic .apple{width:22px;height:22px;margin-top:4px}.big-pic .apple:before{left:9px;top:-7px;height:6px;width:3px}.big-pic .apple:after{left:11px;top:-7px;width:9px;height:5px}.big-pic .plus{font-size:24px}.big-pic .bead{width:30px;height:34px;font-size:16px}.big-pic .shape{width:20px;height:20px}
+.big-friend{display:block;width:52px;height:52px;border-radius:50%;background:#d99770;box-shadow:0 26px 0 -6px #8770a7}
+.levels-row{display:flex;flex-wrap:wrap;gap:8px;padding:10px 2px 6px;justify-content:center}.levels-row::-webkit-scrollbar{display:none}
+.lvl{flex:1 1 calc(33% - 8px);max-width:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-width:74px;min-height:74px;padding:6px 8px;border-radius:14px;background:#fffdf3;border:2px solid #d8d0a8;font-weight:900;color:#5a5236}
+.lvl small{font-size:12px}.lvl.on{background:var(--lilac);border-color:#7862a4;color:#4d3b73;box-shadow:inset 0 0 0 1px #7862a4}
+.lvl .lvl-apples .apple{width:10px;height:10px;margin-top:2px;border-width:1px}.lvl .apple:before,.lvl .apple:after{display:none}
+.lvl .shape{width:12px;height:12px}.lvl .shape.triangle{border-left-width:7px;border-right-width:7px;border-bottom-width:12px}.lvl .shape.oval{width:16px;height:10px}
+.lvl-frames{display:block;width:40px;height:18px;border:2px solid #cba65b;border-radius:5px;background:repeating-linear-gradient(90deg,#e67b69 0 6px,#fff1cb 6px 8px)}.lvl-frames.two{box-shadow:0 8px 0 -2px #cba65b}
+.lvl-rows{display:grid;gap:3px}.lvl-rows i{display:block;width:34px;height:5px;background:#e67b69;border-radius:3px}
+.lvl-q{font-size:13px;color:#3b4a6b}
+.caption{display:flex;align-items:center;gap:8px;margin-left:auto;font:800 15px "Trebuchet MS",Arial,sans-serif;color:#6b6350;padding:0 6px}.caption svg{width:26px;height:26px}
+@media (orientation:landscape) and (max-height:520px){.submenu{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto}.submenu .shelf-top{display:none}.acts{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.acts .tile{min-height:96px}.tiles.v2{grid-template-columns:repeat(4,minmax(0,1fr))}.tiles-break{display:none}.peek{width:70px;height:52px}.levels-row{padding:4px 2px}.lvl{min-height:60px;min-width:66px}}
+@media (min-width:760px) and (min-height:521px){.tiles.v2{grid-template-columns:repeat(3,minmax(0,1fr))}.peek{width:110px;height:84px}.peek-cell .nook-face-icon{width:34px;height:34px}.acts{grid-template-columns:repeat(2,minmax(0,1fr));max-width:720px;margin:auto}}
+.lvl-beads{display:flex;gap:4px;align-items:center}
+.peek-cell .gap{min-width:0;min-height:0;width:10px;height:10px;padding:0}.peek-cell .gap.small{width:7px}
