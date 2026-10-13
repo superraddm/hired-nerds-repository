@@ -267,4 +267,4 @@ inside the card), `s24-land-words-numbers-help1.png`, and at phone size `phone-w
 speaker; recording them would be a short voice job. The 36 px keys on a short landscape screen are below the 44 px
 target the harness keeps everywhere else, by the coordinator's instruction; they stay at least 44 px wide.
 
-Commit (9c): COMMIT9C
+Commit (9c): f4d7cbb (f4d7cbb5afdbf2ea971e5b82d90f4c8aa81d7c86), with this line added in the commit that follows it.
