@@ -276,4 +276,4 @@ landscape now keeps 8 px between the prompt, the sentence and the cards (keys st
 activities (Missing word also with pictures hidden) and a check that no two labelled or emphasised elements overlap,
 outlines included, at all ten sizes; it caught the same collision at 915x356, 740x360 and 360x740. Re-shot:
 `s24-land-words-help1.png`, `s24-land-words-letter-help1.png`, `s24-land-words-order-help1.png`,
-`s24-land-words-numbers-help1.png`. 218 node tests pass; harness 11 of 11 at ten viewports (93 scenarios); cache key 20261013r4p9d. Commit (9d): COMMIT9D
+`s24-land-words-numbers-help1.png`. 218 node tests pass; harness 11 of 11 at ten viewports (93 scenarios); cache key 20261013r4p9d. Commit (9d): 022852f (022852fa6c223d45aa94d3af5bc4c03cf399ad5c), with this line added in the commit that follows it.
