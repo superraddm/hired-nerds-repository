@@ -268,3 +268,12 @@ speaker; recording them would be a short voice job. The 36 px keys on a short la
 target the harness keeps everywhere else, by the coordinator's instruction; they stay at least 44 px wide.
 
 Commit (9c): f4d7cbb (f4d7cbb5afdbf2ea971e5b82d90f4c8aa81d7c86), with this line added in the commit that follows it.
+
+**9d (PROOFING-LOG item 14, Jof's S24):** the 9c tightening left Missing word's rows touching after Help step 1. Short
+landscape now keeps 8 px between the prompt, the sentence and the cards (keys still 3 px); on every tight Words layout
+(phones sideways, phones under 390 px wide) Help's emphasis and the gap rings are inset rings with a tint instead of
+4 px outset outlines; Word order rings only the next slot. The harness adds Help step 1 and 2 of all four Words
+activities (Missing word also with pictures hidden) and a check that no two labelled or emphasised elements overlap,
+outlines included, at all ten sizes; it caught the same collision at 915x356, 740x360 and 360x740. Re-shot:
+`s24-land-words-help1.png`, `s24-land-words-letter-help1.png`, `s24-land-words-order-help1.png`,
+`s24-land-words-numbers-help1.png`. 218 node tests pass; harness 11 of 11 at ten viewports (93 scenarios); cache key 20261013r4p9d. Commit (9d): COMMIT9D

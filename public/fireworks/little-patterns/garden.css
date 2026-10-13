@@ -206,6 +206,8 @@ button.sentence-words:active{background:#f4edc4}
 .sentence input.gap-input[aria-invalid=true],.word-line[aria-invalid=true]{border-color:#b28e51;background:#fff6e8}
 .word-tile{min-height:48px;padding:6px 12px;border:2px solid #c4bb89;background:#f4edc4;border-radius:14px;font-size:22px;font-weight:900;color:#3f4a5c;display:grid;place-items:center;min-width:0;max-width:100%;overflow-wrap:anywhere}
 .word-tile.gap{border:3px dashed #839979;background:#fffdf0;color:#667d57;min-width:62px;outline:3px solid #b2c393;outline-offset:3px}
+/* only the next empty slot is ringed (phase 9d): the rings of the slots after it touched each other */
+.word-tile.gap[aria-hidden]{outline:0}
 .word-tile.filled{background:#e1d3f1;border-color:#b09bd0;color:#594777}
 .word-tile.stop{border:0;background:transparent;padding:0;min-width:0;min-height:0;font-size:28px;outline:0}
 .sentence.drop-ready .word-tile.gap:not([aria-hidden]){background:#e9f5dd;outline-color:#477b59}
@@ -464,3 +466,17 @@ button.word-card{display:flex;flex-direction:column;align-items:center;justify-c
 .lp-short .letter-boxes.long i{width:15px;height:20px;font-size:12px}
 .lp-short .word-model{font-size:18px}
 .lp-short .sentence-model{font-size:15px}
+
+/* ---- tight Words layouts (phase 9d, PROOFING-LOG item 14): on phones held sideways and narrow phones every Help or
+   gap emphasis is drawn inside the element (an inset ring with a tint), so nothing reaches into its neighbour; upright
+   phones and tablets keep the outset rings, which have room. On a short landscape screen (lp-short) the prompt, the
+   sentence and the cards also keep fixed 8 px gaps (the keys keep 3 px). ---- */
+@media (orientation:landscape) and (max-height:520px),(max-width:389px){
+  .nf.words .choices .hint,.word-card.hint{outline:0;box-shadow:inset 0 0 0 3px #477b59;background-color:#d6ecdb}
+  .sentence-row.clue #sentence-picture{outline:0;border-radius:10px;box-shadow:inset 0 0 0 3px #477b59;background:#e3f1e5}
+  .sentence input.gap-input,.word-tile.gap,.letter-tile.gap{outline:0;box-shadow:inset 0 0 0 3px #dbe6c6}
+  .sentence input.gap-input:focus,.sentence input.gap-input:focus-visible{outline:0;border-color:#594777;box-shadow:inset 0 0 0 3px #c9b8e0}
+  .sentence.drop-ready .word-tile.gap:not([aria-hidden]){box-shadow:inset 0 0 0 3px #477b59}
+}
+.lp-short .nf.words .objects{gap:8px}
+.lp-short .nf.words .letter-tiles,.lp-short .nf.words .sentence{gap:6px}

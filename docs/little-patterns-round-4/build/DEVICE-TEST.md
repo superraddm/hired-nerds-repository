@@ -78,7 +78,9 @@ Shelf and Grown-ups
 - [ ] (Phase 9) The back arrow on a game's screen is in exactly the place of the back arrow in the games.
 - [ ] (Phase 9c) **S24 held sideways with Chrome's address bar and the gesture bar showing:** Missing word, Missing
       letter, Word order and Number words. Every key row, Delete and Enter (and Number words' Space) is fully on screen;
-      the keys are a little shorter than upright. Scroll up so the address bar shows and check again.
+      the keys are a little shorter than upright. Scroll up so the address bar shows and check again. Press Help once in
+      each: the prompt, the sentence and the cards keep a gap, and the outlined picture or card never touches its
+      neighbour (phase 9d).
 - [ ] (Phase 9c) **Help shows something every time:** Number words (typing): the first Help shows letter boxes with the
       first letter and Nook says how many letters; the second shows the whole word faintly in the box to copy. Missing
       letter shows the word above the tiles; Word order the sentence above them. In every game Nook's bubble says what

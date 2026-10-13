@@ -2763,4 +2763,11 @@ test('a short landscape phone (Jof’s S24 in Chrome: about 340 px of visible he
   assert.match(css, /\.lp-short \.keyboard \.key,\.lp-short \.keyboard\.keypad \.key\{min-height:36px/);
   assert.match(frame, /\.lp-short \.nf\.garden \.nf-task>\.task\{padding:3px 6px;gap:3px\}/, 'the card tightens its paddings');
   assert.match(frame, /\.nf-task>\.task\{[^}]*overflow-y:auto/, 'and if it still does not fit, the card scrolls inside the frame, never the page');
+  // Phase 9d (PROOFING-LOG item 14): fixed 8 px gaps between the Words rows, and Help's emphasis drawn inside, not outside.
+  assert.match(css, /\.lp-short \.nf\.words \.objects\{gap:8px\}/);
+  const tight = css.match(/@media \(orientation:landscape\) and \(max-height:520px\),\(max-width:389px\)\{([\s\S]*?)\n\}/);
+  assert.ok(tight, 'one block for the tight Words layouts');
+  for (const sel of ['.word-card.hint', '.sentence-row.clue #sentence-picture', '.sentence input.gap-input', '.letter-tile.gap']) assert.ok(tight[1].includes(sel), sel + ' has an inset emphasis there');
+  assert.doesNotMatch(tight[1], /outline:[1-9]/, 'no outset outline in that block');
+  assert.match(css, /\.word-tile\.gap\[aria-hidden\]\{outline:0\}/, 'only the next word slot is ringed');
 });
