@@ -892,7 +892,7 @@ test('a wrong answer gives one neutral line in the bubble and one hint in the st
   assert.ok(!/try/i.test(a.query('#status').textContent));
 });
 
-test('Give me a clue scaffolds first and outlines the answer second, silently, in every activity', t => {
+test('Give me a clue scaffolds first and outlines the answer second, silently, in every activity (the words in Nook’s bubble since phase 9c)', t => {
   const a = app(t);
   goTo(a, 'add');
   a.click('#help');
@@ -923,7 +923,8 @@ test('Give me a clue scaffolds first and outlines the answer second, silently, i
   a.w.LP.savePrefs({ ...a.w.LP.prefs, numberWords: 'choose' });
   wordTab(a, 'numbers');
   a.click('#help');
-  assert.match(a.query('#status').textContent, /starts with O and has 3 letters/);
+  assert.equal(a.query('#status').textContent, 'It starts with O and has three letters.');
+  assert.equal(a.query('#speech').textContent, 'It starts with O and has three letters.', 'and in Nook’s bubble (phase 9c)');
   assert.equal(a.query('.choice.hint'), null);
   a.click('#help');
   assert.ok(a.query('[data-choice="ONE"].hint'));
@@ -2635,4 +2636,131 @@ test('Colour Blocks (phase 9): the shelf link top-left goes to all games and lea
     a.w.dispatchEvent(new a.w.Event('pagehide'));
     assert.equal(a.store('blocks-board').active.y, y + 1, 'the piece falls at the steady pace');
   } finally { t.mock.timers.reset(); }
+});
+
+// ---- Phase 9c (Jof's S24 test, PROOFING-LOG items 12 and 13) ----
+const garden = extra => ({ [P1 + 'garden-position']: { mode: 'count', wordTab: 'sentence', indices: {}, selection: {}, levels: {}, operation: 'add', patternMode: 'finish', patternFamily: 2, strip: 1, spell: 1, ...extra } });
+const seen = a => a.query('#task').innerHTML + '|' + a.query('#speech').textContent;
+
+test('every Help step changes what the child sees (Jof’s rule): in every Garden activity each press changes the task or Nook’s bubble, and Help’s words are in the bubble, not only in the hidden live region', t => {
+  const cases = [
+    ['count', 'garden.html#count', garden({ mode: 'count' }), {}],
+    ['count, keypad, all counted', 'garden.html#count', garden({ mode: 'count', selection: { count: 1 } }), { countAnswer: 'type' }],
+    ['add', 'garden.html#add', garden({ mode: 'add' }), {}],
+    ['add, keypad', 'garden.html#add', garden({ mode: 'add' }), { addition: 'type' }],
+    ['take away', 'garden.html#add', garden({ mode: 'add', operation: 'take', levels: { add: 2 } }), {}],
+    ['missing word', 'garden.html#words', garden({ mode: 'words', indices: { sentence: 1 } }), {}],
+    ['missing word, pictures hidden', 'garden.html#words', garden({ mode: 'words', indices: { sentence: 1 } }), { wordPictures: 'hide' }],
+    ['missing letter', 'garden.html#words', garden({ mode: 'words', wordTab: 'letter' }), {}],
+    ['word order', 'garden.html#words', garden({ mode: 'words', wordTab: 'order' }), {}],
+    ['number words, typing', 'garden.html#words', garden({ mode: 'words', wordTab: 'numbers' }), { numberWords: 'type' }],
+    ['number words, choosing', 'garden.html#words', garden({ mode: 'words', wordTab: 'numbers' }), { numberWords: 'choose' }],
+    ['patterns, two shapes', 'garden.html#patterns', garden({ mode: 'patterns' }), {}],
+    ['patterns, growing', 'garden.html#patterns', garden({ mode: 'patterns', patternFamily: 0, levels: { patterns: 12 } }), {}],
+    ['patterns, mirror', 'garden.html#patterns', garden({ mode: 'patterns', patternFamily: 0, levels: { patterns: 13 } }), {}],
+    ['patterns, numbers', 'garden.html#patterns', garden({ mode: 'patterns', patternFamily: 0, levels: { patterns: 14 } }), {}]
+  ];
+  for (const [name, page, seed, prefs] of cases) {
+    const a = app(t, page, { ...seed, [P1 + 'little-patterns-v1']: { ...L.defaults, ...prefs } });
+    for (let i = 1; i <= 2; i++) {
+      const before = seen(a), status = a.query('#status').textContent;
+      a.click('#help');
+      assert.notEqual(seen(a), before, name + ': Help step ' + i + ' changes the task or the bubble');
+      const said = a.query('#status').textContent, bubble = a.query('#speech').textContent;
+      if (said && said !== status) assert.ok(bubble === said || a.w.LP.audio.has([bubble]), name + ' step ' + i + ': Help’s words in the bubble, or its voiced Help line: “' + bubble + '” for “' + said + '”');
+    }
+  }
+});
+
+test('Number words Help: first the word as letter boxes with its first letter (“It starts with O and has three letters.”), then the whole word faintly in the box to copy (“1 is written ONE.”); choosing outlines it; reading, Help reads it aloud', async t => {
+  const a = app(t, 'garden.html#words', { ...garden({ mode: 'words', wordTab: 'numbers' }), [P1 + 'little-patterns-v1']: { ...L.defaults, numberWords: 'type' } });
+  assert.equal(a.query('.letter-boxes'), null); assert.equal(a.query('.word-ghost'), null);
+  a.click('#help');
+  const boxes = Array.from(a.w.document.querySelectorAll('.number-line .letter-boxes i'));
+  assert.deepEqual(boxes.map(b => b.textContent), ['O', '', ''], 'three boxes, the first letter filled');
+  assert.equal(a.query('.letter-boxes').getAttribute('aria-hidden'), 'true', 'a picture of the word; the words are in the bubble and the live region');
+  assert.equal(a.query('#speech').textContent, 'It starts with O and has three letters.');
+  assert.equal(a.query('#status').textContent, 'It starts with O and has three letters.');
+  a.click('[data-key="O"]');
+  a.click('#help');
+  assert.equal(a.query('.letter-boxes'), null, 'step two replaces the boxes');
+  const ghost = a.query('.typing-row .word-box .word-ghost');
+  assert.ok(ghost, 'the whole word, faintly, inside the typing box');
+  assert.equal(ghost.getAttribute('aria-hidden'), 'true');
+  assert.equal(ghost.querySelector('.typed').textContent, 'O', 'what is typed keeps its place');
+  assert.equal(ghost.textContent, 'ONE', 'and the rest of the word follows it');
+  assert.equal(a.query('#word-input').value, 'O', 'the draft is untouched');
+  assert.equal(a.query('#speech').textContent, '1 is written ONE.');
+  for (const k of ['N', 'E']) a.click(`[data-key="${k}"]`);
+  a.click('#check-word');
+  assert.equal(a.store('garden-rounds').numbers.done, true, 'copying the model finishes it');
+  // Choosing: the boxes, then the word outlined. Lower case follows the setting.
+  const b = app(t, 'garden.html#words', { ...garden({ mode: 'words', wordTab: 'numbers' }), [P1 + 'little-patterns-v1']: { ...L.defaults, numberWords: 'choose', case: 'lower' } });
+  b.click('#help');
+  assert.deepEqual(Array.from(b.w.document.querySelectorAll('.letter-boxes i'), x => x.textContent), ['o', '', '']);
+  assert.equal(b.query('#speech').textContent, 'It starts with o and has three letters.');
+  b.click('#help');
+  assert.ok(b.query('[data-choice="ONE"].hint'));
+  assert.equal(b.query('#speech').textContent, '1 is written one.');
+  // A long word: compact boxes with a space between the words.
+  const c = app(t, 'garden.html#words', { ...garden({ mode: 'words', wordTab: 'numbers', levels: { numbers: 4 }, selection: { numbers: 100 } }), [P1 + 'little-patterns-v1']: { ...L.defaults, numberWords: 'type' } });
+  c.click('#help');
+  assert.ok(c.query('.letter-boxes.long'));
+  assert.equal(c.w.document.querySelectorAll('.letter-boxes i.space').length, 1);
+  assert.equal(c.query('#speech').textContent, 'It starts with O and has ten letters.');
+  // Reading the word (show): Help reads it, with sound on.
+  const d = app(t, 'garden.html#words', { ...garden({ mode: 'words', wordTab: 'numbers' }), [P1 + 'little-patterns-v1']: { ...L.defaults, numberWords: 'show' } }, false, true);
+  d.plays.length = 0;
+  d.click('#help'); await tick();
+  assert.equal(d.query('#speech').textContent, '1 is written ONE.');
+  assert.equal(d.plays.at(-1), d.w.LPVoiceLibrary.clips.one.file, 'and reads the word');
+});
+
+test('Missing letter and Word order Help: step one shows the whole word above the tiles, or the sentence in order faintly above them, with the words in the bubble; step two outlines the letter or the next word', t => {
+  const a = app(t, 'garden.html#words', garden({ mode: 'words', wordTab: 'letter' }));
+  const r = a.store('garden-rounds').letter;
+  assert.equal(a.query('.word-model'), null);
+  a.click('#help');
+  assert.equal(a.query('.word-model').textContent, r.word, 'the whole word above the tiles');
+  assert.ok(a.query('.word-model').compareDocumentPosition(a.query('.letter-tiles')) & a.w.Node.DOCUMENT_POSITION_FOLLOWING, 'above them');
+  assert.equal(a.query('#speech').textContent, 'The word is ' + r.word + '. Which letter is hiding?');
+  a.click('#help');
+  assert.ok(a.query(`[data-choice="${r.letter}"].hint`));
+  assert.equal(a.query('#speech').textContent, 'The hidden letter is ' + r.letter + '.');
+  a.click(`[data-choice="${r.letter}"]`);
+  assert.equal(a.query('.word-model'), null, 'the model goes once the word is complete');
+  const b = app(t, 'garden.html#words', garden({ mode: 'words', wordTab: 'order' }));
+  const o = b.store('garden-rounds').order;
+  b.click('#help');
+  assert.equal(b.query('.sentence-model').textContent, o.words.join(' ') + '.', 'the sentence in order, faintly');
+  assert.equal(b.query('#speech').textContent, 'The sentence is: ' + o.words.map(w => w.toLowerCase()).join(' ') + '.');
+  b.click('#help');
+  assert.ok(b.query('.choice.hint'));
+  assert.equal(b.query('#speech').textContent, 'The first word is ' + o.words[0] + '.');
+  b.click('.choice.hint');
+  assert.ok(b.query('.sentence-model'), 'the model stays while the sentence is built');
+  assert.equal(b.query('#speech').textContent, 'Drag the words, first to last.', 'a word placed: the bubble asks again');
+  const css = read('garden.css');
+  assert.match(css, /\.word-model,\.sentence-model\{/);
+  assert.match(css, /\.word-ghost \.typed\{visibility:hidden\}/);
+});
+
+test('a short landscape phone (Jof’s S24 in Chrome: about 340 px of visible height): frame.js marks it lp-short from the visual viewport, and the keys drop to 36 px with 3 px gaps so the last row stays on screen', async t => {
+  const a = app(t, 'garden.html#words');
+  const size = (w, h) => { Object.defineProperty(a.w, 'innerWidth', { configurable: true, value: w }); Object.defineProperty(a.w, 'innerHeight', { configurable: true, value: h }); a.w.dispatchEvent(new a.w.Event('resize')); };
+  const short = () => a.w.document.documentElement.classList.contains('lp-short');
+  size(891, 340); await wait(90);
+  assert.equal(short(), true, '891 x 340');
+  assert.equal(a.w.document.documentElement.style.getPropertyValue('--app-h'), '340px');
+  size(915, 356); await wait(90);
+  assert.equal(short(), false, '356 px is the harness’s old landscape: not short');
+  size(891, 320); await wait(90);
+  assert.equal(short(), true);
+  size(412, 860); await wait(90);
+  assert.equal(short(), false, 'never upright');
+  const css = read('garden.css'), frame = read('frame.css');
+  assert.match(css, /\.lp-short \.keyboard\{gap:3px\}/);
+  assert.match(css, /\.lp-short \.keyboard \.key,\.lp-short \.keyboard\.keypad \.key\{min-height:36px/);
+  assert.match(frame, /\.lp-short \.nf\.garden \.nf-task>\.task\{padding:3px 6px;gap:3px\}/, 'the card tightens its paddings');
+  assert.match(frame, /\.nf-task>\.task\{[^}]*overflow-y:auto/, 'and if it still does not fit, the card scrolls inside the frame, never the page');
 });

@@ -212,3 +212,59 @@ history, so Android Back leaves it as before, while the on-screen arrow opens th
 DEVICE-TEST.md covers the normal path (shelf, sub-menu, game, Back, Back).
 
 Commit (9b): 6d66ba9 (6d66ba9d5f7b688d2ff364f92888f4e041a3d7dc), with this line added in the commit that follows it.
+
+## 9c. Two fixes from Jof's S24 test (13 October 2026; PROOFING-LOG items 12 and 13)
+
+**12. The landscape keyboard was cut off on the S24.** With Chrome's address bar and the Android gesture bar showing,
+the S24 held sideways leaves about 891x340 CSS px or less, not the 915x356 the harness used, and Missing word's third
+key row (U to Z, Delete, Enter) fell below the screen.
+- frame.js now marks the page `lp-short` when the visible height (`visualViewport`, the same measure as `--app-h`) is
+  under 350 px in landscape. The Garden card then tightens (2 px border, 3 px by 6 px padding, 3 px gaps), the keys are
+  36 px tall with 3 px gaps (still at least 44 px wide), the answers 64 px, the typing box and the word models smaller.
+  If something still did not fit, the card would scroll inside the frame, never the page (brief item 62); at both new
+  sizes nothing needs to.
+- Harness: two more viewports, `s24-land` 891x340 and `s24-land-short` 891x320 (mobile, DPR 2), every scenario at
+  both; a new check fails on any key, answer, word card, word tile or Enter below the card's bottom or the screen; on a
+  short landscape screen a key may be 36 px tall (the coordinator's size), every other target stays 44 by 44.
+- What the new sizes caught, all fixed: Missing word (keys below the card at both sizes); at 891x320 Add's tens level,
+  Make your own, Number words and the device-keyboard Words screen (5 to 21 px over); and, once Help's models were in,
+  the letter boxes for "ONE HUNDRED" at 360x740 and 740x360 (long words now get compact boxes, and the number line
+  tightens while they show). Feelings' sound-off performance went 2 px over while Nook breathed when the tighter padding
+  applied to every game, so the tightening is now the Garden's only (the keys live there).
+
+**13. Help did nothing visible in Number words** (and step one of Missing letter and Word order only wrote to the hidden
+live region). Jof's rule, applied in every game: each Help step changes something visible in the task or in Nook's
+bubble.
+- Help's words now go into Nook's bubble as well as the live region (`tell` in garden.js, the same in Shapes and
+  Feelings' card bubble), for that round only; where a voiced Help line exists ("Count them all with me.", "Look for
+  the part that repeats.") the bubble keeps it.
+- Number words: step one shows the word as letter boxes with the first letter filled under the typing box, and the
+  bubble says "It starts with O and has three letters."; step two shows the whole word faintly inside the typing box
+  after what is typed, to copy, and the bubble says "1 is written ONE."; choosing outlines the word; reading (or a
+  finished round), Help reads the word.
+- Missing letter: step one shows the whole word above the tiles ("The word is CAT. Which letter is hiding?"); step two
+  outlines the letter. Word order: step one shows the sentence in order, faintly, above the tiles; step two outlines
+  the next tile; placing a word gives the bubble back to the question.
+- The audit: Count, Add, Patterns, Shapes and Feelings already changed the task at each step, except Count and Add with
+  the keypad, whose last step outlined a choice button that the keypad does not have: their words ("5 apples
+  altogether. Type 5.") are now in the bubble. Shapes' last Sides step and both Name steps, and Which feeling?'s two
+  steps, now say their words in the bubble too.
+
+**Tests: 218 pass, 0 fail** (212 before). New: Help in fifteen Garden cases (Count, Count with the keypad, Add, Add with
+the keypad, Take away, Missing word with pictures shown and hidden, Missing letter, Word order, Number words typing and
+choosing, Patterns' families, growing, mirror and number levels) fails if a press changes neither the task nor the
+bubble, and checks the bubble carries Help's words or its voiced line; Number words' boxes, ghost, choosing, a long
+word and reading aloud; Missing letter's and Word order's models; Shapes' and Which feeling?'s bubbles; the `lp-short`
+class from the viewport and its CSS. One existing assertion changed ("has 3 letters" to "has three letters", and the
+bubble). Layout harness: **11 of 11 pass** (ten viewports and joined speech, 89 scenarios, about 21 minutes). `stage --check` passes, 398 files. Cache key `20261013r4p9c`.
+
+**Screenshots (`phase-9/`):** `s24-land-words.png` (Missing word at 891x340, all three key rows and Delete and Enter
+inside the card), `s24-land-words-numbers-help1.png`, and at phone size `phone-words-numbers-help1.png` (letter boxes),
+`phone-words-numbers-help2.png` (the faint word after "TH"), `phone-words-letter-help1.png` and
+`phone-words-order-help1.png`. Looked at: the ghost letters sit exactly after the typed ones.
+
+**Left open.** The new Help sentences have no voice clips (no voice changes), so the bubble shows them without the
+speaker; recording them would be a short voice job. The 36 px keys on a short landscape screen are below the 44 px
+target the harness keeps everywhere else, by the coordinator's instruction; they stay at least 44 px wide.
+
+Commit (9c): COMMIT9C

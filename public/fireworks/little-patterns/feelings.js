@@ -287,6 +287,7 @@
   function whichLine() {
     if (which.done) { const s = F.whichSuccess(which.round); cardTalk.say(s.text, s.speech, true); return; }
     if (which.feedback === 'retry') { cardTalk.say(which.retry, [which.retry]); return; }
+    if (which.help) { cardTalk.say(which.help, [which.help]); return; }
     cardTalk.say(F.LINES.which, [F.LINES.which]);
   }
   function whichView() {
@@ -326,7 +327,10 @@
     if (!which || which.done) return;
     which.hint = Math.min(2, which.hint + 1);
     task.querySelector('.answers').innerHTML = whichAnswers();
-    LP.status(which.hint === 1 ? 'Each word has Nook’s face beside it now.' : 'The word that fits is outlined.');
+    // Phase 9c: Help's words go into the card's bubble as well as the live region.
+    which.help = which.hint === 1 ? 'Each word has Nook’s face beside it now.' : 'The word that fits is outlined.';
+    LP.status(which.help);
+    whichLine();
   }
 
   // ---- Friends: the twenty stories, as in round 3 ----

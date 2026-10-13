@@ -418,3 +418,49 @@ button.word-card{display:flex;flex-direction:column;align-items:center;justify-c
 .nf-bubble .bubble-prop .shape.oval{width:22px;height:13px}
 .nf-bubble .bubble-prop .shape.diamond{width:12px;height:12px;margin:0 2px;transform:rotate(45deg)}
 .nf-bubble .bubble-prop b{font-size:14px;line-height:1;font-weight:900;color:#5a4a12}
+
+/* ---- Help's visible models (phase 9c, Jof's rule: every Help step changes what the child sees) ----
+   Missing letter: the whole word above the tiles. Word order: the sentence, faintly, above the tiles. Number words:
+   the word as letter boxes with the first letter filled, then the whole word faintly inside the typing box. */
+.word-model,.sentence-model{margin:0;font-weight:900;color:#7a6e98;text-align:center;line-height:1.15}
+.word-model{font-size:26px;letter-spacing:3px}
+.sentence-model{font-size:20px;letter-spacing:.5px;opacity:.8}
+.letter-boxes{display:flex;flex-wrap:wrap;gap:4px;justify-content:center}
+.number-line .letter-boxes{flex-basis:100%}
+.number-line.with-boxes{row-gap:6px}
+.letter-boxes.long{gap:2px}
+.letter-boxes.long i{width:18px;height:24px;font-size:14px;border-radius:5px}
+.letter-boxes.long i.space{width:8px}
+.letter-boxes i{font-style:normal;width:26px;height:32px;display:inline-flex;align-items:center;justify-content:center;border:2px solid #b29acb;border-radius:7px;background:#fffef7;font-weight:900;font-size:20px;line-height:1;color:#293d60}
+.letter-boxes i.space{width:10px;border:0;background:none}
+.word-box{position:relative;display:inline-flex;max-width:100%}
+.word-ghost{position:absolute;left:0;top:0;bottom:0;display:flex;align-items:center;padding:0 15px;font:900 24px/1.2 "Trebuchet MS",Arial,sans-serif;letter-spacing:1px;color:#5a4680;opacity:.32;pointer-events:none;white-space:pre;overflow:hidden}
+.word-ghost .typed{visibility:hidden}
+@media (orientation:landscape) and (max-height:520px){
+  .fit-2 .word-ghost{font-size:20px}
+  .word-model{font-size:20px;letter-spacing:2px}
+  .sentence-model{font-size:16px}
+  .letter-boxes i{width:22px;height:26px;font-size:16px}
+  .letter-boxes.long i{width:15px;height:20px;font-size:12px;border-width:1.5px}
+  .number-line{gap:6px 14px}
+  .number-line.with-boxes{gap:3px 10px}
+  .number-line.with-boxes .number-total{font-size:24px;line-height:1}
+}
+
+/* ---- a short landscape phone (phase 9c, frame.js lp-short): 36 px keys with 3 px gaps, a tighter card ---- */
+.lp-short .objects{gap:3px}
+.lp-short .keyboard{gap:3px}
+.lp-short .keyboard .key,.lp-short .keyboard.keypad .key{min-height:36px;font-size:17px;border-bottom-width:3px}
+.lp-short .key .key-word{font-size:13px}
+.lp-short .nf.words .bubble-inline{padding:0 10px;font-size:14px;border-width:1.5px}
+.lp-short .sentence-words{min-height:44px;font-size:19px}
+.lp-short .word-line{min-height:44px;font-size:20px;padding:4px 10px}
+.lp-short .word-ghost{font-size:20px;padding:0 13px}
+.lp-short .number-total{font-size:30px}
+.lp-short .letter-tile{height:42px}
+.lp-short .choice.word-choice{min-height:46px}
+.lp-short .bead-slot{height:44px}
+.lp-short .letter-boxes i{width:20px;height:22px;font-size:14px;border-width:1.5px;border-radius:5px}
+.lp-short .letter-boxes.long i{width:15px;height:20px;font-size:12px}
+.lp-short .word-model{font-size:18px}
+.lp-short .sentence-model{font-size:15px}

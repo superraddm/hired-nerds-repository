@@ -338,3 +338,14 @@ a.nf-shelf{text-decoration:none;-webkit-touch-callout:none;-webkit-user-select:n
 .softer .nook-munch{animation:none}
 .softer .nook-prop{animation-name:lp-prop-fade}
 @media (prefers-reduced-motion:reduce){.nook-munch{animation:none}.nook-prop{animation-name:lp-prop-fade}}
+
+/* ---- a short landscape phone (phase 9c, Jof's S24: Chrome's address bar and the Android gesture bar leave about
+   340 px or less). frame.js adds lp-short below 350 px of visible height; the card's paddings and the answer row
+   tighten so the last row stays on screen. If it still does not fit, the task card scrolls inside the frame. ---- */
+.lp-short .nf{padding-bottom:4px}
+.lp-short .nf.garden .nf-task{border-width:2px;border-radius:16px}
+.lp-short .nf.garden .nf-task>.task{padding:3px 6px;gap:3px}
+.lp-short .answers{min-height:64px;gap:8px}
+.lp-short .answer{min-height:64px;font-size:30px;border-bottom-width:5px}
+.lp-short .nf-actions{padding-bottom:6px}
+.lp-short .nf-actions>button{min-height:52px}

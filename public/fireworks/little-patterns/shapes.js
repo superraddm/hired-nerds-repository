@@ -38,6 +38,8 @@
 
   let mode = 'sides', level = 1, indices = { sides: 0, name: 0 }, rounds = {}, celebrated = null, motion = null, lastRetry = '';
   let helpTimer = 0, helpQueue = 0;
+  // Phase 9c (Jof's rule): what Help last said for a round, shown in Nook's bubble as well as the live region.
+  let helpNote = null;
   const current = () => rounds[mode];
   const create = m => L.shapeRound(indices[m] || 0, LP.prefs, level, m);
 
@@ -130,6 +132,7 @@
     const r = current();
     if (r.done) { const line = L.successLine('shapes', r); talk.say(line.text, line.speech, true); return; }
     if (r.feedback === 'retry' && r.retryLine) { talk.say(r.retryLine, [r.retryLine]); return; }
+    if (helpNote && helpNote.round === r) { talk.say(helpNote.text, [helpNote.text]); return; }
     talk.say(PROMPTS[r.mode].text, PROMPTS[r.mode].speech);
   }
   // Two fixed slots: Help on the left while a puzzle is open, Again (small) there after success; Next on the right only after success.
@@ -248,7 +251,7 @@
   function sidesHelp(r) {
     if (nextSide(r) >= 0) { countSide(nextSide(r)); return; }
     r.hint = 2; outline(r);
-    LP.status('A ' + r.shape + ' has ' + r.sides + ' sides. Choose ' + r.sides + '.');
+    tell(r, 'A ' + r.shape + ' has ' + r.sides + ' sides. Choose ' + r.sides + '.');
     save();
   }
   // Help! Sides: each press taps the next uncounted side, like Count's Help counting one more; presses that come
@@ -272,9 +275,10 @@
     }
     r.hint = Math.min(2, (Number(r.hint) || 0) + 1);
     $('task').querySelector('.answers').innerHTML = answers(r);
-    LP.status(r.hint === 1 ? 'Each name has its picture now. Which picture matches the shape?' : 'The name that fits is outlined.');
+    tell(r, r.hint === 1 ? 'Each name has its picture now. Which picture matches the shape?' : 'The name that fits is outlined.');
     save();
   }
+  function tell(r, text) { LP.status(text); helpNote = { round: r, text }; bubble(); }
 
   // ---- modes, levels, Next and Again ----
   function setLevel(n) {

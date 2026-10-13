@@ -112,8 +112,10 @@ Serve: `node tools/serve-fireworks.cjs 8787` -> http://localhost:8787/little-pat
 for the S24 and iPad). Headless Chrome: `C:/Program Files/Google/Chrome/Application/chrome.exe` with
 `--headless=new --remote-debugging-port=<port> --user-data-dir=<scratch dir>`; drive it over CDP with Node 22's global
 `fetch` + `WebSocket` (see `docs/little-patterns-round-4/mockups/shoot.cjs` for the pattern, the six viewports
-phone 412x860 / small 360x740 / land 915x356 / land2 740x360 / ipad 1024x698 / desk 1280x800, and since phase 7 tall
-1380x1600 (a tall desktop pane) and ipad-portrait 768x1024; the checks: page
+phone 412x860 / small 360x740 / land 915x356 / land2 740x360 / ipad 1024x698 / desk 1280x800, since phase 7 tall
+1380x1600 (a tall desktop pane) and ipad-portrait 768x1024, and since phase 9c s24-land 891x340 and s24-land-short
+891x320 (the S24 sideways with Chrome's bar and the gesture bar; frame.js marks such a page `lp-short`, keys 36 px);
+the checks: page
 overflow, content clipped inside the task card, truncated labels, answers overlapping Nook; add a 44x44 touch-target
 check; since phase 8 also sub-menu tiles under 120 px tall; since phase 9 a sub-menu that scrolls or a level tile off
 screen or clipped, the Grown-ups button over any tile, a caption over the shelf link or off screen, and the top-left
@@ -128,3 +130,10 @@ chrome you started (Jof's own Chrome is running). Put profile dirs in a scratch 
 ## Reporting
 Each phase writes `docs/little-patterns-round-4/build/phase-N-<name>.md` with what was built, test counts, screenshots
 (PNG files beside it) and anything left open, and ends with the commit hash. Fable reviews between phases.
+
+## Help (phase 9c, Jof's rule)
+Every Help step changes something visible in the task or in Nook's bubble; a status-only hint is not help. In
+garden.js `tell(r, text, voiced)` writes the live region and Nook's bubble (the voiced Help line where one exists, else
+Help's own words) for that round object only (`helpNote`); Shapes and Feelings do the same. Number words: letter boxes
+(`letterBoxes`), then the whole word as a ghost in the typing box (`typing(draft, done, ghost)`); Missing letter
+`.word-model`; Word order `.sentence-model`. The UI suite presses Help in every activity and fails if nothing changes.

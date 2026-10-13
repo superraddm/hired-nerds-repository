@@ -809,3 +809,23 @@ test('feelings.css keeps the motion limits: gestures under 1.2 s, travel at most
   assert.match(css, /@media \(prefers-reduced-motion:reduce\)\{\s*\.perform-move[^{]*\{animation:none!important\}/);
   assert.match(css, /\.perform-move\.breath\{animation:pf-breath 2800ms/, 'the breath is 1.2 s in and 1.6 s out');
 });
+
+// ---- Phase 9c (Jof's rule, PROOFING-LOG item 13): every Help step changes what the child sees ----
+test('Which feeling? Help: each step changes the answers and the card’s bubble says Help’s words; a new round asks again', t => {
+  const a = app(t, { seed: feelings({ mode: 'which' }) });
+  const seen = () => a.query('#task').innerHTML;
+  let before = seen();
+  a.click('#help');
+  assert.notEqual(seen(), before);
+  assert.equal(a.all('.answers .pic').length, 3, 'Nook’s face beside each word');
+  assert.equal(a.query('#which-bubble .line').textContent, 'Each word has Nook’s face beside it now.');
+  assert.equal(a.query('#status').textContent, 'Each word has Nook’s face beside it now.');
+  before = seen();
+  a.click('#help');
+  assert.notEqual(seen(), before);
+  assert.ok(a.query('.answers .hint'));
+  assert.equal(a.query('#which-bubble .line').textContent, 'The word that fits is outlined.');
+  a.click('.answers .hint');
+  a.click('#next');
+  assert.equal(a.query('#which-bubble .line').textContent, F.LINES.which, 'the next round asks again');
+});

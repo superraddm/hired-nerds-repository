@@ -613,3 +613,30 @@ test('shapes.css keeps the motion limits: scale at most 1.06, no travel, and Sof
   for (const block of [reduced, css.slice(css.indexOf('/* Softer'))]) for (const sel of ['.side.lit.fresh', '.tag.fresh', '.tag.bump', '.fill.warming']) assert.ok(block.includes(sel) && /animation:none/.test(block), sel);
   assert.match(css, /\.big-shape \.hit\{[^}]*stroke-width:44px;vector-effect:non-scaling-stroke/, 'each side carries a 44 CSS-pixel hit stroke');
 });
+
+// ---- Phase 9c (Jof's rule, PROOFING-LOG item 13): every Help step changes what the child sees ----
+test('every Help step changes the task or Nook’s bubble, and Help’s words go into the bubble: Sides counts a side per press, then outlines the answer with “A triangle has 3 sides. Choose 3.”; Name shows the pictures, then outlines the name', async t => {
+  const seen = a => a.query('#task').innerHTML + '|' + a.query('#speech').textContent;
+  const a = app(t, place(1, 'sides', 'triangle#up'), false);
+  for (let i = 0; i < 4; i++) {
+    const before = seen(a);
+    a.click('#help'); await wait(750);
+    assert.notEqual(seen(a), before, 'Sides, Help press ' + (i + 1));
+  }
+  assert.ok(a.query('[data-choice="3"].hint'));
+  assert.equal(a.query('#speech').textContent, 'A triangle has 3 sides. Choose 3.');
+  assert.equal(a.query('#status').textContent, 'A triangle has 3 sides. Choose 3.');
+  const b = app(t, place(2, 'name', 'hexagon#uneven'), false);
+  let before = seen(b);
+  b.click('#help');
+  assert.notEqual(seen(b), before);
+  assert.ok(b.all('[data-choice] .pic').length === 3, 'a picture beside each name');
+  assert.equal(b.query('#speech').textContent, 'Each name has its picture now. Which picture matches the shape?');
+  before = seen(b);
+  b.click('#help');
+  assert.notEqual(seen(b), before);
+  assert.ok(b.query('[data-choice="HEXAGON"].hint'));
+  assert.equal(b.query('#speech').textContent, 'The name that fits is outlined.');
+  b.click('[data-choice="HEXAGON"]');
+  assert.match(b.query('#speech').textContent, /^We did it!/, 'success takes the bubble back');
+});

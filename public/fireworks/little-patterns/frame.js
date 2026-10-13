@@ -29,7 +29,7 @@
      onResize(fn)             Runs fn after the frame height follows a viewport change.
 
    The frame height follows the visual viewport (--app-h), so a device keyboard shrinks the frame and the task card
-   scrolls inside it instead of the page. Play screens turn off the context menu outside inputs and dialogs. */
+   scrolls inside it instead of the page. Under 350 px of visible height in landscape, <html> carries lp-short. Play screens turn off the context menu outside inputs and dialogs. */
 (function () {
   'use strict';
   const LP = window.LP, N = window.NookArt, I = window.LPIcons || {};
@@ -39,9 +39,14 @@
   // ---- the frame height follows the visual viewport ----
   const resizers = [];
   let pending = 0;
+  // Phase 9c (Jof's S24): a phone held sideways in Chrome, with the address bar and the gesture bar showing, leaves
+  // about 340 px or less. Below 350 px of visible height in landscape the frame is "short" (lp-short): the card tightens
+  // and the keys shrink (frame.css, garden.css) so the last row of keys stays on screen.
   function measure() {
     const vv = window.visualViewport, h = Math.round((vv && vv.height) || window.innerHeight || 0);
     if (h > 0) root.style.setProperty('--app-h', h + 'px');
+    const w = Math.round((vv && vv.width) || window.innerWidth || 0);
+    root.classList.toggle('lp-short', h > 0 && h < 350 && w > h);
   }
   function resized() {
     if (pending) return;

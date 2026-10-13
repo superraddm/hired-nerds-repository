@@ -26,8 +26,10 @@ const CHROME = [process.env.CHROME_PATH, 'C:/Program Files/Google/Chrome/Applica
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser'].find(p => p && fs.existsSync(p));
 // CSS pixels: S24 Ultra portrait (412 x 860 inside Chrome), a small Android phone, S24 landscape with Chrome's bar,
 // a smaller landscape phone, iPad 5 landscape in Safari, a desktop window, and (phase 7, from Jof's proofing) a tall
-// desktop pane (a VS Code browser pane taller than wide) and the iPad held upright.
-const VIEWPORTS = { phone: [412, 860, 2, true], small: [360, 740, 2, true], land: [915, 356, 2, true], land2: [740, 360, 2, true], ipad: [1024, 698, 1, true], desk: [1280, 800, 1, false], tall: [1380, 1600, 1, false], 'ipad-portrait': [768, 1024, 2, true] };
+// desktop pane (a VS Code browser pane taller than wide) and the iPad held upright; since phase 9c (Jof's S24 test,
+// PROOFING-LOG item 12) the S24 held sideways in Chrome with the address bar and the Android gesture bar showing
+// (891 x 340) and a little shorter still (891 x 320).
+const VIEWPORTS = { phone: [412, 860, 2, true], small: [360, 740, 2, true], land: [915, 356, 2, true], land2: [740, 360, 2, true], 's24-land': [891, 340, 2, true], 's24-land-short': [891, 320, 2, true], ipad: [1024, 698, 1, true], desk: [1280, 800, 1, false], tall: [1380, 1600, 1, false], 'ipad-portrait': [768, 1024, 2, true] };
 const P = 'lp-player-player-1-';
 const position = extra => ({ [P + 'garden-position']: { mode: 'count', wordTab: 'sentence', indices: {}, selection: {}, levels: {}, operation: 'add', patternMode: 'finish', patternFamily: 2, strip: 1, spell: 1, ...extra } });
 const prefs = p => ({ [P + 'little-patterns-v1']: p });
@@ -71,6 +73,13 @@ const SCENARIOS = [
   { name: 'words-letter', page: 'garden.html#words', seed: position({ mode: 'words', wordTab: 'letter', indices: { letter: 9 } }) },
   { name: 'words-order', page: 'garden.html#words', seed: position({ mode: 'words', wordTab: 'order', indices: { order: 24 } }) },
   { name: 'words-numbers', page: 'garden.html#words', seed: position({ mode: 'words', wordTab: 'numbers', levels: { numbers: 4 }, selection: { numbers: 100 } }), act: keys('ONE') },
+  // Phase 9c (Jof, PROOFING-LOG item 13): every Help step shows something; the models must fit at every size.
+  { name: 'words-help1', page: 'garden.html#words', seed: position({ mode: 'words', indices: { sentence: 1 } }), act: click('#help'), wait: 300 },
+  { name: 'words-letter-help1', page: 'garden.html#words', shot: true, seed: position({ mode: 'words', wordTab: 'letter', indices: { letter: 9 } }), act: click('#help'), wait: 300 },
+  { name: 'words-order-help1', page: 'garden.html#words', shot: true, seed: position({ mode: 'words', wordTab: 'order', indices: { order: 24 } }), act: click('#help'), wait: 300 },
+  { name: 'words-numbers-help1', page: 'garden.html#words', shot: true, seed: { ...position({ mode: 'words', wordTab: 'numbers', levels: { numbers: 2 }, selection: { numbers: 3 } }), ...prefs({ numberWords: 'type' }) }, act: click('#help'), wait: 300 },
+  { name: 'words-numbers-help2', page: 'garden.html#words', shot: true, seed: { ...position({ mode: 'words', wordTab: 'numbers', levels: { numbers: 2 }, selection: { numbers: 3 } }), ...prefs({ numberWords: 'type' }) }, act: keys('TH') + ';' + click('#help') + ';' + click('#help'), wait: 300 },
+  { name: 'words-numbers-help-long', page: 'garden.html#words', seed: { ...position({ mode: 'words', wordTab: 'numbers', levels: { numbers: 4 }, selection: { numbers: 100 } }), ...prefs({ numberWords: 'type' }) }, act: click('#help'), wait: 300 },
   { name: 'words-device', page: 'garden.html#words', seed: { ...position({ mode: 'words', indices: { sentence: 0 } }), ...prefs({ keyboard: 'device' }) } },
   { name: 'patterns', page: 'garden.html#patterns', shot: true, seed: position({ mode: 'patterns' }) },
   { name: 'patterns-4', page: 'garden.html#patterns', seed: position({ mode: 'patterns', patternFamily: 4, indices: { patterns: 3 } }) },
@@ -147,6 +156,7 @@ const CHECK = `(()=>{const out=[];
   const desc=el=>(el.id?'#'+el.id:el.tagName.toLowerCase()+(el.className&&typeof el.className==='string'?'.'+el.className.trim().split(/\\s+/).join('.'):''))+' "'+(el.getAttribute('aria-label')||el.textContent||'').trim().replace(/\\s+/g,' ').slice(0,24)+'"';
   const d=document.documentElement;if(d.scrollHeight>innerHeight+1||d.scrollWidth>innerWidth+1)out.push('page overflow '+d.scrollWidth+'x'+d.scrollHeight);
   const task=document.querySelector('.nf-task>.task');
+  const card=document.querySelector('.nf-task');if(card&&vis(card)){const c=card.getBoundingClientRect();for(const el of document.querySelectorAll('.nf-task .key,.nf-task .answer,.nf-task .choice,.nf-task .word-card,.nf-task [data-tile],.nf-task #check-sum,.nf-task #check-word')){if(!vis(el))continue;const q=el.getBoundingClientRect();if(q.bottom>c.bottom+1||q.bottom>innerHeight+1){out.push('below the card: '+desc(el)+' bottom '+Math.round(q.bottom)+' card '+Math.round(c.bottom));break;}}}
   if(task&&vis(task)){if(task.scrollHeight>task.clientHeight+1)out.push('card scrolls '+task.scrollHeight+' > '+task.clientHeight);if(task.scrollWidth>task.clientWidth+1)out.push('card overflows sideways '+task.scrollWidth+' > '+task.clientWidth);
     const c=task.closest('.nf-task').getBoundingClientRect();for(const el of task.querySelectorAll('*')){if(!vis(el))continue;const q=el.getBoundingClientRect();if(q.left<c.left-1||q.right>c.right+1||q.top<c.top-1||q.bottom>c.bottom+1){out.push('clipped in card: '+desc(el)+' '+[q.left,q.top,q.right,q.bottom].map(Math.round)+' card '+[c.left,c.top,c.right,c.bottom].map(Math.round));break;}}}
   for(const el of document.querySelectorAll('.caption,.caption-text,.lvl,.lvl-word,.answer,.choice,.tile,.key,.word-card,.nf-actions>button,.bubble-inline,.sentence-words,.make-tools button,.feel,.me-card,.me-more,.say-other,.menu-tile,.menu-art,.menu-word,.menu-name,.perform-word,.perform-line')){if(!vis(el))continue;if(el.scrollWidth>el.clientWidth+1||el.scrollHeight>el.clientHeight+1)out.push('label clipped: '+desc(el)+' '+el.scrollWidth+'x'+el.scrollHeight+' in '+el.clientWidth+'x'+el.clientHeight);}
@@ -156,7 +166,9 @@ const CHECK = `(()=>{const out=[];
   const sub=document.querySelector('.submenu');if(sub&&vis(sub)){if(sub.scrollHeight>sub.clientHeight+1)out.push('sub-menu scrolls '+sub.scrollHeight+' > '+sub.clientHeight);for(const el of sub.querySelectorAll('.lvl')){if(!vis(el))continue;const r=el.getBoundingClientRect();if(r.top<0||r.left<0||r.bottom>innerHeight+1||r.right>innerWidth+1)out.push('level tile off screen: '+desc(el)+' '+[r.left,r.top,r.right,r.bottom].map(Math.round));const s=sub.getBoundingClientRect();if(r.bottom>s.bottom+1||r.top<s.top-1)out.push('level tile clipped by the sub-menu: '+desc(el));}}
   const gear=document.querySelector('.shelf .nf-grown');if(gear&&vis(gear)){const g=gear.getBoundingClientRect();for(const el of document.querySelectorAll('.shelf .tile,.shelf .lvl')){if(!vis(el))continue;const r=el.getBoundingClientRect();if(r.left<g.right&&r.right>g.left&&r.top<g.bottom&&r.bottom>g.top)out.push('Grown-ups over '+desc(el));}}
   for(const el of document.querySelectorAll('.menu-tile')){if(!vis(el))continue;const r=el.getBoundingClientRect();if(r.height<119.5)out.push('sub-menu tile under 120 px tall: '+desc(el)+' '+Math.round(r.height));}
-  for(const el of document.querySelectorAll('button,a[href],input,select,textarea,[role=button]')){if(!vis(el))continue;const r=el.getBoundingClientRect();if(r.width<43.5||r.height<43.5)out.push('target '+Math.round(r.width)+'x'+Math.round(r.height)+': '+desc(el));}
+  // Phase 9c (Jof's S24): on a short landscape screen (lp-short) the keyboard's keys are 36 px tall, still at least 44 px wide.
+  const short=document.documentElement.classList.contains('lp-short');
+  for(const el of document.querySelectorAll('button,a[href],input,select,textarea,[role=button]')){if(!vis(el))continue;const r=el.getBoundingClientRect(),minH=short&&el.classList.contains('key')?35.5:43.5;if(r.width<43.5||r.height<minH)out.push('target '+Math.round(r.width)+'x'+Math.round(r.height)+': '+desc(el));}
   return JSON.stringify(out);})()`;
 // The top-left control: the play screens' back arrow (phase 9b: back to the game's sub-menu) and a sub-menu's back arrow
 // (to all games) must be the same arrow in the same place at each size.

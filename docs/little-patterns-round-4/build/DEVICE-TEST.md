@@ -76,6 +76,13 @@ Shelf and Grown-ups
       again: all games. Do the same with the on-screen arrows: the game's arrow, then the Add screen's arrow. Change a
       setting on the shelf (Sound, say), then go back into the game: the game follows the new setting (it reloads).
 - [ ] (Phase 9) The back arrow on a game's screen is in exactly the place of the back arrow in the games.
+- [ ] (Phase 9c) **S24 held sideways with Chrome's address bar and the gesture bar showing:** Missing word, Missing
+      letter, Word order and Number words. Every key row, Delete and Enter (and Number words' Space) is fully on screen;
+      the keys are a little shorter than upright. Scroll up so the address bar shows and check again.
+- [ ] (Phase 9c) **Help shows something every time:** Number words (typing): the first Help shows letter boxes with the
+      first letter and Nook says how many letters; the second shows the whole word faintly in the box to copy. Missing
+      letter shows the word above the tiles; Word order the sentence above them. In every game Nook's bubble says what
+      Help said.
 - [ ] (Phase 9) Grown-ups on a game's screen (hold the gear there): the sheet starts with that game ("Now: Add · Up to
       5"); Levels and puzzles opens the game with its full chooser over it. Change the level there: the words at the
       top right change at once, and the game's screen on the shelf shows the same level.
