@@ -18,7 +18,7 @@ const flush = () => new Promise(r => setImmediate(r));
 // Load a page with its scripts. Audio is recorded (play: 'ok' resolves, 'blocked' rejects as a browser does without a
 // gesture); the device voice is recorded; fetch serves the private Blob bundle (and can be delayed or fail).
 function app(t, { page = 'feelings.html', seed = {}, blocked = false, failed = false, delayed = false, play = 'ok', voices = [], carry = null } = {}) {
-  const dom = new JSDOM(fs.readFileSync(path.join(root, page.split('#')[0]), 'utf8'), { url: 'https://games.example/little-patterns/' + page, runScripts: 'outside-only', pretendToBeVisual: true });
+  const dom = new JSDOM(fs.readFileSync(path.join(root, page.split('#')[0]), 'utf8'), { url: 'https://games.example/little-patterns/' + page, referrer: carry && carry.referrer ? carry.referrer : undefined, runScripts: 'outside-only', pretendToBeVisual: true });
   const w = dom.window, errors = [], requests = [], plays = [], players = [], urls = [], revoked = [], pending = [], utterances = [];
   w.addEventListener('error', e => errors.push(e.error || e.message));
   w.HTMLElement.prototype.scrollIntoView = function () {};
@@ -50,8 +50,15 @@ function app(t, { page = 'feelings.html', seed = {}, blocked = false, failed = f
 // two-second hold on that sub-menu (faked with mock timers, as the gate test does) and Levels and puzzles, which opens
 // the game with its chooser. A page is left (pagehide) and the next one opens with the same storage, as a link does.
 function entries(store) { const out = []; try { for (let i = 0; i < store.length; i++) { const k = store.key(i); out.push([k, store.getItem(k)]); } } catch (_) { /* blocked */ } return out; }
-function next(a, page) { a.w.dispatchEvent(new a.w.Event('pagehide')); return app(a.t, { ...a.options, page, carry: { local: entries(a.w.localStorage), session: entries(a.w.sessionStorage) } }); }
-function toHub(a) { const link = a.query('#shelf-open'); assert.equal(link.tagName, 'A'); assert.equal(link.getAttribute('href'), './'); return next(a, 'index.html'); }
+function next(a, page) { a.w.dispatchEvent(new a.w.Event('pagehide')); return app(a.t, { ...a.options, page, carry: { local: entries(a.w.localStorage), session: entries(a.w.sessionStorage), referrer: a.w.location.href.split('#')[0] } }); }
+// Phase 9b (Jof): the play screen's back arrow goes back to the Feelings sub-menu on the shelf.
+function toMenu(a) {
+  const link = a.query('#shelf-open');
+  assert.equal(link.tagName, 'A'); assert.equal(link.getAttribute('href'), './#feelings'); assert.equal(link.getAttribute('aria-label'), 'Back to Feelings');
+  const hub = next(a, 'index.html#feelings');
+  assert.equal(hub.w.LPShelf.menu, 'feelings');
+  return hub;
+}
 const arrive = (a, from, url) => Object.assign(a, next(from, url));
 function hold(a) {
   let mine = false;
@@ -63,9 +70,9 @@ function hold(a) {
   assert.equal(a.query('#dialog-title').textContent, 'Grown-ups');
 }
 // Grown-ups held on the Feelings sub-menu; returns the hub page holding the sheet.
-function grownups(a) { const hub = toHub(a); hub.click('[data-shelf="feelings"]'); hold(hub); return hub; }
+function grownups(a) { const hub = toMenu(a); hold(hub); return hub; }
 function parentLevels(a) { const hub = grownups(a); hub.click('#gu-levels'); arrive(a, hub, hub.visits[0]); }
-function pick(a, id) { const hub = toHub(a); hub.click('[data-shelf="feelings"]'); hub.click(`[data-activity="${id}"]`); assert.deepEqual(hub.visits, ['feelings.html#' + id], 'one tap starts it'); arrive(a, hub, hub.visits[0]); }
+function pick(a, id) { const hub = toMenu(a); hub.click(`[data-activity="${id}"]`); assert.deepEqual(hub.visits, ['feelings.html#' + id], 'one tap starts it'); arrive(a, hub, hub.visits[0]); }
 const caption = a => a.query('#caption .caption-text').textContent;
 const feelings = extra => ({ [P + 'feelings-v1']: { version: 2, mode: 'board', index: 0, level: 1, story: 0, seed: 1, ...extra } });
 const timers = t => { t.mock.timers.enable({ apis: ['setTimeout'] }); return ms => t.mock.timers.tick(ms); };
@@ -141,10 +148,10 @@ test('the Friends art: every person, feeling and pose drawn locally, and every s
 // ---- the page ----
 test('Feelings is a Nook frame page: the link to all games and the caption, no Back, no sound button, no Menu, no other links; the board of ten neutral cards with Nook resting', t => {
   const a = app(t);
-  assert.deepEqual(a.all('.nf-top > *').map(el => el.tagName + '#' + el.id), ['A#shelf-open', 'SPAN#caption'], 'the link to all games and the caption (phase 9)');
+  assert.deepEqual(a.all('.nf-top > *').map(el => el.tagName + '#' + el.id), ['A#shelf-open', 'SPAN#caption'], 'the back arrow and the caption (phases 9 and 9b)');
   assert.equal(a.all('.nf-top button').length, 0);
   for (const old of ['#back', '#menu-open', '#page-sound', '[data-sound]', '#feelings-menu', '[data-player]', '#support', '#shelf-overlay']) assert.equal(a.query(old), null, old + ' is gone');
-  assert.deepEqual(a.all('#page a[href]').map(l => l.getAttribute('href')), ['./'], 'one link on the play screen: to all games');
+  assert.deepEqual(a.all('#page a[href]').map(l => l.getAttribute('href')), ['./#feelings'], 'one link on the play screen: back to the Feelings sub-menu (phase 9b)');
   assert.doesNotMatch(fs.readFileSync(path.join(root, 'feelings.html'), 'utf8'), /garden\.html/);
   assert.equal(caption(a), 'Nook feels…');
   assert.deepEqual(a.all('[data-feel]').map(b => b.dataset.feel), F.BOARD);
@@ -169,7 +176,7 @@ test('the Feelings sub-menu (phase 9): the Feelings tile on the shelf opens four
   assert.ok(cap.querySelector('.caption-art svg'), 'beside the Feelings icon');
   a.click('#caption .caption-text');
   assert.equal(a.query('.lp-modal'), null, 'the caption opens nothing');
-  let hub = toHub(a); hub.click('[data-shelf="feelings"]');
+  let hub = toMenu(a);
   assert.equal(hub.query('[data-bubble] .line').textContent, 'Which feelings game?');
   assert.deepEqual(hub.all('.menu-tile').map(b => b.dataset.activity), ['board', 'which', 'friends', 'me']);
   assert.deepEqual(hub.all('.menu-word').map(b => b.textContent), ['Nook feels…', 'Which feeling?', 'Friends', 'Me']);
@@ -188,7 +195,7 @@ test('the Feelings sub-menu (phase 9): the Feelings tile on the shelf opens four
   pick(a, 'which');
   assert.equal(a.w.LPFeelings.activity, 'which');
   assert.equal(caption(a), 'Which feeling?');
-  hub = toHub(a); hub.click('[data-shelf="feelings"]');
+  hub = toMenu(a);
   assert.equal(hub.query('.menu-tiles [aria-current="true"]').dataset.activity, 'which', 'the sub-menu marks the activity played last');
   hub.click('[data-activity="friends"]'); arrive(a, hub, hub.visits[0]);
   assert.equal(a.w.LPFeelings.activity, 'friends');

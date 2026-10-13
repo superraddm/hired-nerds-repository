@@ -30,8 +30,11 @@ master `public/fireworks/little-patterns/assets/nook.png` (560x672). Static mock
   Shapes 2; Words and Feelings none), the current level marked. One tap starts the game at an address that names the
   activity and the level once (`garden.html#add/take/3`, `garden.html#count/2`, `shapes.html#name/2`); the game applies
   it with the same save the grown-ups' chooser writes and keeps only itself in the address. Never more than two levels.
-  **Play screens** have a plain link top-left (`<a class="nf-shelf" id="shelf-open" href="./">`, icon inline, Blocks
-  too) and the **caption** (`#caption`, `LPFrame.caption`: the game's icon and "Add · Up to 5", a span with role img and
+  **Play screens** have the sub-menus' back arrow top-left (phase 9b, Jof: `<a class="nf-shelf nf-back"
+  id="shelf-open" href="./#add" data-menu="add" aria-label="Back to Add">`, icon inline; Blocks `href="./"`, "Back to
+  all games"; Garden sets it for the game playing). When the shelf opened the game from that menu (`lp-trail` in session
+  storage, the hub as referrer) the arrow is the browser's own Back (shared.js), so it and Android Back are one step;
+  otherwise it is the link. The **caption** (`#caption`, `LPFrame.caption`: the game's icon and "Add · Up to 5", a span with role img and
   label "Add, up to 5", no border, background or press feedback, never focusable, taps pass through). No play screen
   has chips, a picker, a pill or a Grown-ups control. **Grown-ups** is held on the hub; held on a sub-menu the sheet
   starts with that game's section (name, "Now:" in the caption's words, Levels and puzzles), and Levels and puzzles
@@ -93,11 +96,12 @@ page's scripts in jsdom with mocked `Audio` (records `plays`), `speechSynthesis`
 must not send player data over the network"), so the Me Blob bundle test overrides fetch itself. 198 tests pass after phase 6 (128 before round 4), 203 after phase 7, 209 after phase 8, 212 after phase 9.
 Since phase 9 the tests follow the real paths between pages: a page is left (`pagehide`, so the game saves), and the
 next page opens in a new jsdom window with the same localStorage and sessionStorage (`app(..., carry)`); `arrive(a,
-from, url)` makes `a` drive the new page. `toHub(a)` checks the play screen's link (an `A` to `./`) and opens the hub.
-Tests that switch activity or level do it as a child would: `goTo(a, game, activity, level)` in the UI suite (the link,
-the game's tile, then an activity tile, a level tile, or without either the marked one; with both, the activity then
-the level), `pick(a, id)` in Feelings, `shapesMode(a, mode)` in Shapes. Tests that need a grown-ups' chooser do it as a
-parent would: the link, the game's tile, the hold on its sub-menu (mock timers), Levels and puzzles, then the game at
+from, url)` makes `a` drive the new page. `toMenu(a)` checks the play screen's back arrow (an `A` to `./#add`, or `./` for Blocks, "Back to Add") and opens
+the menu it names; `toHub(a)` goes on to all games.
+Tests that switch activity or level do it as a child would: `goTo(a, game, activity, level)` in the UI suite (the back
+arrow to the game's sub-menu, another game's through all games, then an activity tile, a level tile, or without either
+the marked one; with both, the activity then the level), `pick(a, id)` in Feelings, `shapesMode(a, mode)` in Shapes. Tests that need a grown-ups' chooser do it as a
+parent would: the back arrow to the game's sub-menu, the hold there (mock timers), Levels and puzzles, then the game at
 its `#levels` address (`parentLevels(a)`); `grownups(a, game)` returns the hub holding the sheet; `soundSetting(a,
 value)` sets sound in Settings on the hub and comes back to the game. Each window records navigation instead of
 following it: `visits` (`LPShelf.navigate`) and `reloads` (`LP.reload`). Rewrite tests that target removed chrome;

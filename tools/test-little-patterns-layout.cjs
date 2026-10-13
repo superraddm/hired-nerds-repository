@@ -11,8 +11,8 @@
 // truncated caption, answer, tile, key, card, feeling-card, sub-menu tile, level tile, performance-word and action labels; an answer or key over Nook; and any visible
 // tappable control under 44 by 44 CSS pixels. Phase 9 (navigation proposal 2): the six sub-menus on the hub and the caption on every play screen run at
 // every size; a sub-menu's activity tile under 120 px tall, a level tile clipped, off screen or scrolled out of view, the Grown-ups button over any tile,
-// a caption over the shelf link or off screen, and a back arrow that is not exactly where the play screens' shelf link is (compared across pages at each
-// size) are problems too. Test state is seeded from the hub page, never the game page (a game saves on pagehide). Skips with a message when Chrome is not
+// a caption over the shelf link or off screen, and a top-left control that is not the same back arrow in exactly the same place on the play screens
+// and the sub-menus (phase 9b; compared across pages at each size) are problems too. Test state is seeded from the hub page, never the game page (a game saves on pagehide). Skips with a message when Chrome is not
 // installed. Colour Blocks is a page that scrolls (scroll: true allows a page taller than the window, never wider).
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -158,8 +158,9 @@ const CHECK = `(()=>{const out=[];
   for(const el of document.querySelectorAll('.menu-tile')){if(!vis(el))continue;const r=el.getBoundingClientRect();if(r.height<119.5)out.push('sub-menu tile under 120 px tall: '+desc(el)+' '+Math.round(r.height));}
   for(const el of document.querySelectorAll('button,a[href],input,select,textarea,[role=button]')){if(!vis(el))continue;const r=el.getBoundingClientRect();if(r.width<43.5||r.height<43.5)out.push('target '+Math.round(r.width)+'x'+Math.round(r.height)+': '+desc(el));}
   return JSON.stringify(out);})()`;
-// Where the top-left control sits: the play screens' shelf link and a sub-menu's back arrow must match at each size.
-const CORNER = `(()=>{const el=document.querySelector('.nf #shelf-open')||document.querySelector('.shelf-bar:not([hidden]) [data-back]');if(!el)return null;const r=el.getBoundingClientRect();return [r.left,r.top,r.width,r.height].map(n=>Math.round(n*10)/10);})()`;
+// The top-left control: the play screens' back arrow (phase 9b: back to the game's sub-menu) and a sub-menu's back arrow
+// (to all games) must be the same arrow in the same place at each size.
+const CORNER = `(()=>{const el=document.querySelector('.nf #shelf-open')||document.querySelector('.shelf-bar:not([hidden]) [data-back]');if(!el)return null;const r=el.getBoundingClientRect(),p=el.querySelector('svg path');return [r.left,r.top,r.width,r.height].map(n=>Math.round(n*10)/10).concat(p?p.getAttribute('d'):'no arrow');})()`;
 
 const freePort = () => new Promise((resolve, reject) => { const s = net.createServer(); s.on('error', reject); s.listen(0, '127.0.0.1', () => { const { port } = s.address(); s.close(() => resolve(port)); }); });
 const wait = ms => new Promise(r => setTimeout(r, ms));
@@ -241,7 +242,7 @@ if (!CHROME) {
       }
       // One top-left corner on every screen: the shelf link in each game and the back arrow on each sub-menu.
       const seen = corners[viewport] || [], first = seen[0];
-      for (const [name, rect] of seen) if (rect.some((n, i) => Math.abs(n - first[1][i]) > 1)) report.push(`${viewport} ${name}: the top-left control is at ${rect} but at ${first[1]} in ${first[0]}`);
+      for (const [name, rect] of seen) if (rect.some((n, i) => (typeof n === 'number' ? Math.abs(n - first[1][i]) > 1 : n !== first[1][i]))) report.push(`${viewport} ${name}: the top-left control is ${rect} but ${first[1]} in ${first[0]}`);
       assert.deepEqual(report, [], '\n' + report.join('\n'));
     });
   }

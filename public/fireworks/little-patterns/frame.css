@@ -29,7 +29,7 @@ html.lp-frame img,html.lp-frame svg{-webkit-user-drag:none;-webkit-touch-callout
 a.nf-shelf{text-decoration:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
 /* The caption (phase 9, navigation proposal 2): the game's small icon and where the child is, "Add · Up to 5". Plain
    text that states a fact: no border, no background, no press feedback, not focusable, and a tap passes through it.
-   The child changes activity or level on the shelf (the top-left link, then the game's tile). */
+   The child changes activity or level on the game's sub-menu: the back arrow top-left goes there (phase 9b). */
 .caption{margin-left:auto;display:flex;align-items:center;gap:8px;min-width:0;padding:0 4px;font-size:15px;font-weight:900;line-height:1.2;color:#6b6350;text-align:right;pointer-events:none;-webkit-user-select:none;user-select:none}
 .caption-art{display:flex;flex:none}
 .caption-art svg{display:block;width:28px;height:28px}

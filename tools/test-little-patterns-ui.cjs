@@ -11,7 +11,7 @@ const L = require('../public/fireworks/little-patterns/learning.js');
 
 function app(t, page = 'garden.html', seed = {}, blocked = false, soundOn = false, carry = null) {
   const html = fs.readFileSync(path.join(root, page.split('#')[0]), 'utf8');
-  const dom = new JSDOM(html, { url: `https://games.example/little-patterns/${page}`, runScripts: 'outside-only', pretendToBeVisual: true });
+  const dom = new JSDOM(html, { url: `https://games.example/little-patterns/${page}`, referrer: carry && carry.referrer ? carry.referrer : undefined, runScripts: 'outside-only', pretendToBeVisual: true });
   // carry (phase 9): another page of the same visit. Storage comes across as it is and the logs keep growing.
   const w = dom.window, errors = [], log = carry ? carry.log : { spoken: [], utterances: [], plays: [], players: [] };
   const { spoken, utterances, plays, players } = log;
@@ -52,25 +52,43 @@ function app(t, page = 'garden.html', seed = {}, blocked = false, soundOn = fals
 function entries(store) { const out = []; try { for (let i = 0; i < store.length; i++) { const key = store.key(i); out.push([key, store.getItem(key)]); } } catch (_) { /* blocked: nothing carries over */ } return out; }
 function next(a, page) {
   a.w.dispatchEvent(new a.w.Event('pagehide'));
-  return app(a.t, page, {}, a.blocked, !a.w.LP.audio.muted, { local: entries(a.w.localStorage), session: entries(a.w.sessionStorage), log: a.log });
+  return app(a.t, page, {}, a.blocked, !a.w.LP.audio.muted, { local: entries(a.w.localStorage), session: entries(a.w.sessionStorage), log: a.log, referrer: a.w.location.href.split('#')[0] });
 }
-// The play screen's top-left link goes to all games (./, the hub).
-function toHub(a, hash = '') {
+// Phase 9b (Jof): the play screen's back arrow goes back to the game's own sub-menu (./#add), or to all games (Blocks).
+// The test opens the page it names; when the shelf opened this game from that menu the arrow is the browser's own Back
+// (shared.js), which lands on the same screen.
+const MENU_NAMES = { count: 'Count', add: 'Add', words: 'Words', patterns: 'Patterns', shapes: 'Shapes', feelings: 'Feelings', '': 'all games' };
+function toMenu(a) {
   const link = a.query('#shelf-open');
-  assert.equal(link.tagName, 'A', 'the shelf button is a plain link');
-  assert.equal(link.getAttribute('href'), './', 'to all games');
-  return next(a, 'index.html' + hash);
+  assert.equal(link.tagName, 'A', 'the back arrow is a plain link');
+  const menu = link.dataset.menu;
+  assert.equal(link.getAttribute('href'), './' + (menu ? '#' + menu : ''), 'back to the menu the game came from');
+  assert.equal(link.getAttribute('aria-label'), 'Back to ' + MENU_NAMES[menu]);
+  const hub = next(a, 'index.html' + (menu ? '#' + menu : ''));
+  assert.equal(hub.w.LPShelf.menu, menu, 'the menu it names is showing');
+  return hub;
+}
+// All games: the back arrow, then (from a game's sub-menu) the sub-menu's own back arrow.
+function toHub(a) {
+  const hub = toMenu(a);
+  if (hub.w.LPShelf.menu) hub.click('[data-back]');
+  assert.equal(hub.w.LPShelf.menu, '');
+  return hub;
 }
 // Arriving at an address replaces the page the test holds: a now drives the new page.
 const arrive = (a, from, url) => Object.assign(a, next(from, url));
 const gameOf = a => (a.w.document.body.dataset.game === 'garden' ? (a.w.location.hash.slice(1) || a.store('garden-position').mode) : a.w.document.body.dataset.game);
-// A child changes activity or level as a child would: the link to all games, the game's tile (its sub-menu), then an
-// activity tile, a level tile, or (neither named) the marked one, so the game carries on as it was.
+// A child changes activity or level as a child would: the back arrow to the game's sub-menu (for another game, that
+// sub-menu's back arrow and the other game's tile), then an activity tile, a level tile, or (neither named) the marked
+// one, so the game carries on as it was.
 function goTo(a, game, activity, level) {
   if (activity && level) { goTo(a, game, activity); goTo(a, game, null, level); return; }
-  const hub = toHub(a);
-  hub.click(`[data-shelf="${game}"]`);
-  assert.equal(hub.w.LPShelf.menu, game, 'the tile opens its sub-menu');
+  const hub = toMenu(a);
+  if (hub.w.LPShelf.menu !== game) {
+    if (hub.w.LPShelf.menu) hub.click('[data-back]');
+    hub.click(`[data-shelf="${game}"]`);
+  }
+  assert.equal(hub.w.LPShelf.menu, game, 'the game’s sub-menu');
   hub.click(level ? `.levels-row [data-level="${level}"]` : activity ? `.menu-tiles [data-activity="${activity}"]` : game === 'count' ? '.levels-row [aria-current="true"]' : '.menu-tiles [aria-current="true"]');
   assert.equal(hub.visits.length, 1, 'one tap starts it');
   arrive(a, hub, hub.visits[0]);
@@ -89,8 +107,8 @@ function hold(a, button) {
 // Grown-ups lives on the shelf: held on all games (game omitted) or on a game's sub-menu, where the sheet starts with
 // that game's section. Returns the hub page holding the sheet.
 function grownups(a, game) {
-  const hub = toHub(a);
-  if (game) hub.click(`[data-shelf="${game}"]`);
+  const hub = game ? toMenu(a) : toHub(a);
+  if (game && hub.w.LPShelf.menu !== game) { if (hub.w.LPShelf.menu) hub.click('[data-back]'); hub.click(`[data-shelf="${game}"]`); }
   hold(hub, hub.query('[data-grownups]'));
   return hub;
 }
@@ -985,11 +1003,12 @@ test('Blocks keeps its named block controls and, like the Garden frame, has no S
   assert.match(down.getAttribute('aria-label'), /Hold to move faster/);
   const css = fs.readFileSync(path.join(root, 'blocks-live.css'), 'utf8');
   assert.match(css, /\.overlay \.primary\{flex:0 0 auto/, 'Keep playing no longer inherits flex:1 inside the vertical overlay');
-  // Phase 9 (two audiences): the shelf link top-left, as in every game; Player, Grown-ups and the pace are on the shelf, behind the hold.
+  // Phases 9 and 9b (two audiences): the back arrow top-left, as in every game (Blocks has no sub-menu, so it goes back to
+  // all games); Player, Grown-ups and the pace are on the shelf, behind the hold.
   assert.equal(b.w.document.querySelectorAll('header button').length, 0, 'no buttons in the header');
-  assert.deepEqual(Array.from(b.w.document.querySelectorAll('header a[href]'), x => x.id + ' ' + x.getAttribute('href')), ['shelf-open ./'], 'one plain link, to all games');
-  assert.equal(b.query('#shelf-open').getAttribute('aria-label'), 'All games');
-  assert.ok(b.query('#shelf-open svg'), 'the shelf icon');
+  assert.deepEqual(Array.from(b.w.document.querySelectorAll('header a[href]'), x => x.id + ' ' + x.getAttribute('href')), ['shelf-open ./'], 'one plain link, back to all games');
+  assert.equal(b.query('#shelf-open').getAttribute('aria-label'), 'Back to all games');
+  assert.equal(b.query('#shelf-open').innerHTML, html(b, ICONS.back), 'the back arrow');
   assert.equal(b.query('header').firstElementChild, b.query('#shelf-open'), 'top-left');
   for (const sel of ['[data-player]', '[data-settings]', '#pace']) assert.equal(b.query(sel), null, sel + ' is gone from the play screen');
 });
@@ -1785,22 +1804,22 @@ test('round 3 saves: a first visit after the strip arrived puts Add and Patterns
 
 // ---- Round 4: the Nook frame, the shelf and the Grown-ups hold ----
 
-test('the play screen is the frame: the link to all games and the caption (phase 9), no chips, Nook with one bubble, the task card and the action bar; the old chrome is gone and the text regions stay for screen readers', t => {
+test('the play screen is the frame: the back arrow and the caption (phases 9 and 9b), no chips, Nook with one bubble, the task card and the action bar; the old chrome is gone and the text regions stay for screen readers', t => {
   const a = app(t);
   // Phase 9: the activity and the level are chosen on the game's sub-menu, so every top bar has the link and the caption only.
   for (const [game, activity] of [['count'], ['add', 'add'], ['add', 'take'], ['words', 'sentence'], ['words', 'letter'], ['words', 'order'], ['words', 'numbers'], ['patterns', 'finish'], ['patterns', 'make']]) {
     goTo(a, game, activity);
     const where = game + (activity ? ' ' + activity : '');
-    assert.deepEqual(Array.from(a.query('.nf-top').children, el => el.tagName + '#' + el.id), ['A#shelf-open', 'SPAN#caption'], where + ': the link to all games and the caption, nothing else');
+    assert.deepEqual(Array.from(a.query('.nf-top').children, el => el.tagName + '#' + el.id), ['A#shelf-open', 'SPAN#caption'], where + ': the back arrow and the caption, nothing else');
+    assert.equal(a.query('#shelf-open').getAttribute('aria-label'), 'Back to ' + MENU_NAMES[game], where + ': back to the game’s own menu');
     assert.equal(a.w.document.querySelectorAll('.nf-top button').length, 0, where + ': no button in the top bar');
     assert.equal(a.w.document.querySelectorAll('#page .chip, #page [data-operation], #page [data-pick], .lp-modal').length, 0, where + ': no chip or picker anywhere on the play screen');
   }
-  assert.equal(a.query('#shelf-open').getAttribute('aria-label'), 'All games');
-  assert.ok(a.query('#shelf-open svg'), 'the link carries the shelf icon');
+  assert.equal(a.query('#shelf-open').innerHTML, html(a, ICONS.back), 'the link is the sub-menus’ back arrow');
   goTo(a, 'count');
   assert.equal(a.w.document.querySelectorAll('.nf-bubble').length, 1, 'one bubble');
   for (const sel of ['[data-sound]', '[data-settings]', '[data-player]', '#next-level', '#level-strip', '.tabs', '.hero', 'footer.footer', '#scene-label', '.brand', '.name-tag', '.skip-link']) assert.equal(a.query(sel), null, sel + ' is gone');
-  assert.deepEqual(Array.from(a.w.document.querySelectorAll('#page a[href]'), l => l.id), ['shelf-open'], 'one link on the play screen: to all games');
+  assert.deepEqual(Array.from(a.w.document.querySelectorAll('#page a[href]'), l => l.id), ['shelf-open'], 'one link on the play screen: back to the game’s menu');
   for (const id of ['activity-title', 'instruction', 'status']) assert.ok(a.query('#' + id).classList.contains('sr-only'), id + ' stays for screen readers, out of sight');
   assert.equal(a.query('#status').getAttribute('role'), 'status');
   assert.equal(a.query('#activity').getAttribute('aria-labelledby'), 'activity-title');
@@ -2104,7 +2123,7 @@ test('the A to Z keys are in ABC order and end in Delete then Enter, exactly fou
   assert.match(css, /\.key\.space\{[^}]*grid-column:1\/-1;order:9\}/, 'on a narrow phone Space is a bar under the letters');
 });
 
-test('the Shapes tile lands on the Shapes game in the frame (tools/test-little-patterns-shapes.cjs tests it in full); Paint’s home goes to the shelf; the manifest and every new runtime file are on the deploy list', t => {
+test('the Shapes tile lands on the Shapes game in the frame (tools/test-little-patterns-shapes.cjs tests it in full); Paint’s back link goes to all games; the manifest and every new runtime file are on the deploy list', t => {
   const a = app(t, 'shapes.html');
   assert.equal(a.query('#speech').textContent, 'How many sides? Tap each side.');
   assert.equal(a.query('.soon'), null, 'the phase-2 placeholder is gone');
@@ -2113,7 +2132,7 @@ test('the Shapes tile lands on the Shapes game in the frame (tools/test-little-p
   hub.click('[data-shelf="shapes"]');
   assert.equal(hub.w.LPShelf.menu, 'shapes', 'the Shapes tile opens its sub-menu; its tiles go to shapes.html');
   const studio = fs.readFileSync(path.join(root, 'studio-lab.html'), 'utf8');
-  assert.match(studio, /<a id="home" href="\.\/" data-icon="back" aria-label="Back to Nook's games">/);
+  assert.match(studio, /<a id="home" href="\.\/" data-icon="back" aria-label="Back to all games">/, 'Paint has no sub-menu: back to all games, in the same words as Blocks');
   const { files } = require('./stage-little-patterns.cjs');
   for (const f of ['frame.css', 'frame.js', 'shelf.js', 'menus.js', 'hub.js', 'icons.js', 'nook-art.js', 'nook.css', 'garden.css', 'manifest.webmanifest', 'assets/icon-192.png', 'assets/icon-512.png', 'shapes.html', 'shapes.js', 'shapes.css']) assert.ok(files.includes(f), f + ' ships');
   for (const old of ['home.css', 'garden-live.css', 'garden-preview.css', 'shapes-stub.js']) assert.ok(!files.includes(old), old + ' no longer ships');
@@ -2358,32 +2377,55 @@ test('the caption updates as soon as the level changes in Grown-ups, and shows t
   assert.equal(caption(a), 'Number words · Tens to 100');
 });
 
-test('every play screen’s shelf button is a plain link to all games (./), Blocks’ too; the in-game shelf overlay is retired; a game pushes no history entry, so Android back is the browser’s; a game page restored from the page cache reloads what is saved', t => {
-  for (const page of ['garden.html', 'shapes.html', 'feelings.html', 'blocks.html']) {
+test('every play screen’s top-left button is the sub-menus’ back arrow, back to the menu the game came from (phase 9b, Jof): the game’s own sub-menu for the six, all games for Blocks; when the shelf opened the game from that menu it is the browser’s own Back, as Android Back is; the overlay is retired; a game page restored from the page cache reloads what is saved', t => {
+  const where = [['garden.html', 'count', 'Count'], ['garden.html#add', 'add', 'Add'], ['garden.html#words', 'words', 'Words'], ['garden.html#patterns', 'patterns', 'Patterns'], ['shapes.html', 'shapes', 'Shapes'], ['feelings.html', 'feelings', 'Feelings'], ['blocks.html', '', 'all games']];
+  for (const [page, menu, name] of where) {
     const a = app(t, page);
     const link = a.query('#shelf-open');
     assert.equal(link.tagName, 'A', page);
-    assert.equal(link.getAttribute('href'), './', page + ': to all games');
-    assert.equal(link.getAttribute('aria-label'), 'All games');
+    assert.equal(link.getAttribute('href'), './' + (menu ? '#' + menu : ''), page + ': back to ' + name);
+    assert.equal(link.dataset.menu, menu);
+    assert.equal(link.getAttribute('aria-label'), 'Back to ' + name, page + ': named for the menu it returns to');
     assert.equal(link.getAttribute('aria-haspopup'), null, page + ': it opens nothing');
-    assert.ok(link.classList.contains('nf-shelf'));
-    assert.equal(link.innerHTML, html(a, ICONS.shelf), page + ': the shelf icon, in the page itself');
+    assert.ok(link.classList.contains('nf-shelf') && link.classList.contains('nf-back'), page + ': the same button as the sub-menus’ back arrow');
+    assert.equal(link.innerHTML, html(a, ICONS.back), page + ': the same back arrow, in the page itself');
     assert.equal(a.query('#shelf-overlay, .lp-overlay'), null, page + ': no overlay');
     assert.equal(a.w.LPShelf, undefined, page + ': shelf.js is the hub’s alone');
-    assert.doesNotMatch(read(page), /shelf\.js/, page);
+    assert.doesNotMatch(read(page.split('#')[0]), /shelf\.js/, page);
     a.w.document.dispatchEvent(new a.w.MouseEvent('pointerdown', { bubbles: true }));
     a.w.document.dispatchEvent(new a.w.KeyboardEvent('keydown', { key: 'x', bubbles: true }));
     a.w.document.body.click();
-    assert.equal(a.w.history.length, 1, page + ': no history entry: Back leaves for the page before, the hub');
+    assert.equal(a.w.history.length, 1, page + ': a game adds no history entry: Android Back goes to the page before, the menu it came from');
     assert.deepEqual(a.reloads, []);
     const show = new a.w.Event('pageshow'); Object.defineProperty(show, 'persisted', { value: true });
     a.w.dispatchEvent(show);
     assert.equal(a.reloads.length, 1, page + ': brought back from the page cache, it reloads (Settings or another visit may have changed what is saved)');
   }
+  // When the shelf opened the game from that very menu, the arrow is the browser's Back: the same screen, one step of
+  // history, and Android Back the same. Otherwise (a bookmark, another menu) it is the link.
+  const press = a => { const back = []; a.w.history.back = () => back.push(1); let prevented = null; a.w.addEventListener('click', e => { prevented = e.defaultPrevented; e.preventDefault(); }, { once: true }); a.query('#shelf-open').dispatchEvent(new a.w.MouseEvent('click', { bubbles: true, cancelable: true, button: 0 })); return { back: back.length, link: !prevented }; };
   const hub = app(t, 'index.html#add');
-  const show = new hub.w.Event('pageshow'); Object.defineProperty(show, 'persisted', { value: true });
-  hub.w.dispatchEvent(show);
-  assert.deepEqual(hub.reloads, [], 'the hub keeps its own restore: it marks what was played since');
+  hub.click('[data-activity="take"]');
+  assert.equal(hub.w.sessionStorage.getItem('lp-trail'), 'add', 'opening a game, the shelf leaves the menu it came from');
+  const game = next(hub, hub.visits[0]);
+  Object.defineProperty(game.w.history, 'length', { value: 2 });
+  assert.equal(game.w.document.referrer, 'https://games.example/little-patterns/index.html', 'the page before: the shelf');
+  assert.deepEqual(press(game), { back: 1, link: false }, 'from the Add sub-menu: Back');
+  const bookmark = app(t, 'garden.html#add');
+  assert.deepEqual(press(bookmark), { back: 0, link: true }, 'opened directly: the link to ./#add');
+  const other = next(hub, 'garden.html#count');
+  Object.defineProperty(other.w.history, 'length', { value: 2 });
+  assert.deepEqual(press(other), { back: 0, link: true }, 'from another menu: the link to its own');
+  const all = app(t, 'index.html');
+  all.click('[data-shelf="blocks"]');
+  assert.equal(all.w.sessionStorage.getItem('lp-trail'), '', 'Blocks opened from all games');
+  const blocks = next(all, 'blocks.html');
+  Object.defineProperty(blocks.w.history, 'length', { value: 2 });
+  assert.deepEqual(press(blocks), { back: 1, link: false }, 'Blocks: Back to all games');
+  const shelf = app(t, 'index.html#add');
+  const show = new shelf.w.Event('pageshow'); Object.defineProperty(show, 'persisted', { value: true });
+  shelf.w.dispatchEvent(show);
+  assert.deepEqual(shelf.reloads, [], 'the hub keeps its own restore: it marks what was played since');
   assert.doesNotMatch(read('shelf.js'), /mountOverlay|lp-overlay|shelfopened|lpShelf:/, 'the overlay and its history entry are gone from the code');
   assert.doesNotMatch(read('blocks.js') + read('feelings.js'), /shelfopened|LPShelf/);
   const { files } = require('./stage-little-patterns.cjs');

@@ -163,3 +163,52 @@ Nook now stays at the top, as on the shelf (lowered only by the sub-menu's bar).
    a sub-menu, Blocks).
 
 Commit: 86e76e4 (86e76e4a05be25d02e8f455cb89c9802ce1882f7), with this line added in the commit that follows it.
+
+## 9b. Jof's correction (13 October 2026): back to the previous menu
+
+**What Jof asked.** Inside a game, the top-left button goes back to the previous menu, not to all games: for Count,
+Add, Words, Patterns, Shapes and Feelings that is the game's own sub-menu on the hub, with the current activity
+marked; for Paint and Blocks, which have no sub-menu, all games. The same in every game, the same back-arrow icon and
+size as the sub-menu's arrow, named for the menu it returns to ("Back to Add"); Android Back from a game to match. The
+sub-menu's own back arrow still goes to all games.
+
+**What changed.**
+- Every play screen's top-left is now the sub-menus' back arrow: the same `nf-shelf nf-back` button, the same chevron
+  (`LPIcons.back`, inline in each page), the same size and place (the grid icon is gone from play screens). It is a link
+  to `./#count`, `./#add`, `./#words` or `./#patterns` (Garden sets it for the game playing), `./#shapes`,
+  `./#feelings`, or `./` for Blocks, labelled "Back to Add" and so on, "Back to all games" for Blocks. Paint's own back
+  link already went to all games; its label now reads "Back to all games" too. The hub opens `./#add` on Add's
+  sub-menu with the activity played last and the level marked, as a direct link always did.
+- **Back and Android Back are the same step.** When the shelf opens a game it leaves a trail in this tab's session
+  storage (`lp-trail`: the sub-menu it was opened from, or "" for all games). When the page before the game is that
+  menu (the trail matches and the referrer is the hub), the arrow is the browser's own Back (`history.back()`, in
+  shared.js), so the history stays one step deep: game, Back, the sub-menu (re-marked by the page-cache restore),
+  Back, all games, exactly as Android Back walks it. Otherwise (a bookmark, a reload in a new tab) the arrow is simply
+  the link to the game's sub-menu. A game still adds no history entry of its own.
+- Grown-ups' Levels and puzzles leaves the same trail, so after a parent's change the arrow returns to the sub-menu
+  the parent came from.
+
+**Tests (212 pass, 0 fail; the count is unchanged, the tests changed).**
+- The link test is now the back-arrow test: for Count, Add, Words and Patterns (Garden), Shapes, Feelings and Blocks,
+  the address, `data-menu`, the label, the class and the icon (the sub-menus' own arrow); no overlay; no history entry
+  from a game; the page-cache reload. New: the shelf leaves the trail when it opens a game (Add's Take away, and Blocks
+  from all games); a game opened from that menu goes Back (the click is the browser's Back, not a navigation); a game
+  opened directly, or from another game's menu, follows the link instead.
+- The helpers follow the arrow: `toMenu(a)` checks the arrow and opens the menu it names (the game's sub-menu, or all
+  games for Blocks), `toHub(a)` goes on to all games with the sub-menu's arrow, `goTo` changes activity or level from
+  the game's own sub-menu (another game through all games), and `grownups(a, game)` holds Grown-ups there. Feelings'
+  and Shapes' suites open their own sub-menu the same way. The frame, Blocks, Paint, Feelings and Shapes page tests
+  check the arrow and its label.
+- Layout harness: the top-left check now compares the icon as well as the place, so every play screen and every
+  sub-menu must show the same back arrow in exactly the same spot at each size. Full run: **9 of 9 pass** (8 viewports
+  and joined speech, 83 scenarios, about 16 minutes).
+
+**Screenshots.** `phone-add.png` and `phone-blocks.png` re-shot in `phase-9/` (also `land-` and `ipad-portrait-` for
+both, so no picture there still shows the grid icon). Looked at: the back arrow sits where the grid icon was, in the
+lilac button, on Add and on Blocks.
+
+**Left open.** A game opened directly (a bookmark, a home-screen shortcut to a game) has no menu before it in the
+history, so Android Back leaves it as before, while the on-screen arrow opens the game's sub-menu. The device check in
+DEVICE-TEST.md covers the normal path (shelf, sub-menu, game, Back, Back).
+
+Commit (9b): COMMIT9B

@@ -247,7 +247,7 @@ test('success lines: "We did it! A pentagon has five sides." and "We did it! It�
 // ---- the page ----
 function app(t, seed = {}, soundOn = true, page = 'shapes.html', carry = null) {
   const html = fs.readFileSync(path.join(root, page.split('#')[0]), 'utf8');
-  const dom = new JSDOM(html, { url: 'https://games.example/little-patterns/' + page, runScripts: 'outside-only', pretendToBeVisual: true });
+  const dom = new JSDOM(html, { url: 'https://games.example/little-patterns/' + page, referrer: carry && carry.referrer ? carry.referrer : undefined, runScripts: 'outside-only', pretendToBeVisual: true });
   const w = dom.window, errors = [], plays = [], spoken = [];
   w.addEventListener('error', e => errors.push(e.error || e.message));
   w.SpeechSynthesisUtterance = function (text) { this.text = text; };
@@ -277,8 +277,15 @@ function app(t, seed = {}, soundOn = true, page = 'shapes.html', carry = null) {
 // the two-second hold on that sub-menu (faked with mock timers, as the gate test does) and Levels and puzzles, which
 // opens the game with it. A page is left (pagehide) and the next one opens with the same storage, as a link does.
 function entries(store) { const out = []; for (let i = 0; i < store.length; i++) { const k = store.key(i); out.push([k, store.getItem(k)]); } return out; }
-function next(a, page) { a.w.dispatchEvent(new a.w.Event('pagehide')); return app(a.t, {}, !a.w.LP.audio.muted, page, { local: entries(a.w.localStorage), session: entries(a.w.sessionStorage) }); }
-function toHub(a) { const link = a.query('#shelf-open'); assert.equal(link.tagName, 'A'); assert.equal(link.getAttribute('href'), './'); const hub = next(a, 'index.html'); hub.click('[data-shelf="shapes"]'); return hub; }
+function next(a, page) { a.w.dispatchEvent(new a.w.Event('pagehide')); return app(a.t, {}, !a.w.LP.audio.muted, page, { local: entries(a.w.localStorage), session: entries(a.w.sessionStorage), referrer: a.w.location.href.split('#')[0] }); }
+// Phase 9b (Jof): the play screen's back arrow goes back to the Shapes sub-menu on the shelf.
+function toHub(a) {
+  const link = a.query('#shelf-open');
+  assert.equal(link.tagName, 'A'); assert.equal(link.getAttribute('href'), './#shapes'); assert.equal(link.getAttribute('aria-label'), 'Back to Shapes');
+  const hub = next(a, 'index.html#shapes');
+  assert.equal(hub.w.LPShelf.menu, 'shapes');
+  return hub;
+}
 const arrive = (a, from, url) => Object.assign(a, next(from, url));
 function grownups(a) {
   const hub = toHub(a);
@@ -306,7 +313,7 @@ const tags = a => a.all('.big-shape .tag').map(g => [Number(g.dataset.tag), Numb
 
 test('the Shapes page is the frame: the link to all games and the caption "Sides · Shapes 1" (phase 9), no chips, a resting Nook with one bubble, the shape and three answers, Help; the stub is gone and the new files ship', t => {
   const a = app(t);
-  assert.deepEqual(a.all('.nf-top > *').map(el => el.tagName + '#' + el.id), ['A#shelf-open', 'SPAN#caption'], 'the link to all games and the caption; nothing in the top bar is a button');
+  assert.deepEqual(a.all('.nf-top > *').map(el => el.tagName + '#' + el.id), ['A#shelf-open', 'SPAN#caption'], 'the back arrow and the caption; nothing in the top bar is a button');
   assert.equal(a.all('.chip, [data-shapes-mode], #support, #modes').length, 0, 'no chips and no pill: the game and the level are picked on the Shapes sub-menu');
   assert.equal(caption(a), 'Sides · Shapes 1');
   assert.equal(a.query('#caption').getAttribute('role'), 'img');
@@ -327,7 +334,7 @@ test('the Shapes page is the frame: the link to all games and the caption "Sides
   assert.deepEqual(a.all('[data-choice]').map(b => b.textContent), L.shapeRound(0, p, 1, 'sides').choices.map(String), 'three numbers, visible from the start');
   assert.equal(a.query('#help').hidden, false); assert.equal(a.query('#next').hidden, true); assert.equal(a.query('#repeat').hidden, true);
   assert.equal(a.query('.soon'), null, 'no placeholder');
-  assert.deepEqual(a.all('#page a[href]').map(l => l.getAttribute('href')), ['./'], 'one link on the play screen: to all games');
+  assert.deepEqual(a.all('#page a[href]').map(l => l.getAttribute('href')), ['./#shapes'], 'one link on the play screen: back to the Shapes sub-menu (phase 9b)');
   const hub = toHub(a);
   assert.equal(hub.query('[data-bubble] .line').textContent, 'Which shape game?');
   assert.deepEqual(hub.all('.menu-tile').map(b => b.dataset.activity + ' ' + b.querySelector('.menu-word').textContent + (b.getAttribute('aria-current') ? ' *' : '')), ['sides Sides *', 'name Name']);

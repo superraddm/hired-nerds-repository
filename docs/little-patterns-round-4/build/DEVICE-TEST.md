@@ -68,12 +68,14 @@ Shelf and Grown-ups
 - [ ] (Phase 9) One tap on an activity starts it; one tap on a level starts the outlined activity at that level (try
       Add > Take away, then "Up to 10"; Patterns > "3 shapes"; Shapes > "Shapes 2"). Go back to that screen: the
       level you chose is the lilac one.
-- [ ] (Phase 9) In every game the top-left button goes straight to all games (no pop-up). The top right says where you
-      are ("Add · Up to 5") in plain text; tapping it does nothing at all.
-- [ ] (Phase 9) **S24 Back button:** from a game, Back returns to the screen you came from (all games, or the game's
-      screen); from a game's screen, Back goes to all games. Change a setting on the shelf (Sound, say), then Back into
-      the game: the game follows the new setting (it reloads).
-- [ ] (Phase 9) The back arrow on a game's screen is in exactly the place of the top-left button in the games.
+- [ ] (Phase 9b) In every game the top-left button is the same back arrow as on the games' screens. In Count, Add,
+      Words, Patterns, Shapes and Feelings it goes back to that game's own screen (the activity you were playing
+      outlined); in Blocks and Paint it goes back to all games. No pop-up. The top right says where you are ("Add · Up
+      to 5") in plain text; tapping it does nothing at all.
+- [ ] (Phase 9b) **S24 Back button:** shelf, Add, Take away, then Back: the Add screen (the same as the arrow); Back
+      again: all games. Do the same with the on-screen arrows: the game's arrow, then the Add screen's arrow. Change a
+      setting on the shelf (Sound, say), then go back into the game: the game follows the new setting (it reloads).
+- [ ] (Phase 9) The back arrow on a game's screen is in exactly the place of the back arrow in the games.
 - [ ] (Phase 9) Grown-ups on a game's screen (hold the gear there): the sheet starts with that game ("Now: Add · Up to
       5"); Levels and puzzles opens the game with its full chooser over it. Change the level there: the words at the
       top right change at once, and the game's screen on the shelf shows the same level.

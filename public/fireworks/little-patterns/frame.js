@@ -24,8 +24,8 @@
                               icon and "Add · Up to 5", plain text that states where the child is (the activity and
                               the level, the two taps on the game's sub-menu). It is a span, not a control: no border,
                               no background, no press feedback, never focusable; label is what a screen reader hears
-                              ("Add, up to 5"). The child changes activity or level on the shelf: the top-left link
-                              goes to all games, then the game's tile opens its sub-menu (shelf.js, menus.js).
+                              ("Add, up to 5"). The child changes activity or level on the game's sub-menu on the
+                              shelf: the back arrow top-left goes there (phase 9b; shelf.js, menus.js).
      onResize(fn)             Runs fn after the frame height follows a viewport change.
 
    The frame height follows the visual viewport (--app-h), so a device keyboard shrinks the frame and the task card

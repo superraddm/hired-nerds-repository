@@ -291,6 +291,13 @@
   // cache after Settings, a player change or the same game in another visit has changed what is saved. A game page
   // restored that way reloads, so it always plays (and later saves) what is saved now. The shelf keeps its own restore.
   window.addEventListener('pageshow',e=>{if(e.persisted&&['garden','shapes','feelings','blocks'].includes(document.body&&document.body.dataset.game))window.LP.reload();});
+  // Phase 9b (Jof): a play screen's back arrow (#shelf-open, data-menu) returns to the menu the game was started from:
+  // the game's own sub-menu on the shelf (./#add), or all games for Blocks. The shelf leaves a trail (lp-trail, this
+  // tab's session storage) when it opens a game; when the page before this one is that menu, the arrow is the browser's
+  // own Back, so Android Back does the same and the history stays one step deep. Otherwise the link opens the menu.
+  function cameFromMenu(menu){let trail=null,ref=null;try{trail=sessionStorage.getItem('lp-trail');}catch(_){return false;}try{ref=new URL(document.referrer);}catch(_){return false;}
+    const hub=new URL('./',location.href).pathname;return trail!==null&&trail===menu&&ref.origin===location.origin&&(ref.pathname===hub||ref.pathname===hub+'index.html')&&history.length>1;}
+  document.addEventListener('click',e=>{const a=e.target&&e.target.closest?e.target.closest('a#shelf-open[data-menu]'):null;if(!a||e.defaultPrevented||e.button>0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;if(!cameFromMenu(a.dataset.menu))return;e.preventDefault();history.back();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden)stopBackgroundAudio();});window.addEventListener('pagehide',stopBackgroundAudio);
   let modal=null,previousFocus=null,closed=null;
   function closeModal(result=false){if(!modal)return;modal.remove();modal=null;const page=document.getElementById('page');if(page)page.removeAttribute('inert');document.body.style.overflow='';if(previousFocus&&document.contains(previousFocus))previousFocus.focus({preventScroll:true});const callback=closed;closed=null;if(callback)callback(result);document.dispatchEvent(new Event('lp:dialogclosed'));}

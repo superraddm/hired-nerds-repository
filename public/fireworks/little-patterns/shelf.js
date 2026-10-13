@@ -2,9 +2,10 @@
    Load after shared.js, nook-art.js, icons.js, frame.js and menus.js.
 
    Phase 9 (navigation proposal 2, approved by Jof on 12 October 2026): the shelf is the only place a child changes
-   game, activity or level, and the only place the Grown-ups hold lives. The play screens have a plain link back here
-   (top-left, to all games) and a caption that states where the child is; the in-game shelf overlay of phases 2 to 8 is
-   retired.
+   game, activity or level, and the only place the Grown-ups hold lives. The play screens have a back arrow top-left
+   (phase 9b, Jof: back to the game's own sub-menu, ./#add; Blocks to all games) and a caption that states where the
+   child is; the in-game shelf overlay of phases 2 to 8 is retired. Opening a game leaves a trail (lp-trail) so the
+   game's arrow can be the browser's own Back.
 
    window.LPShelf:
      mountHub(container)  the shelf: Nook's greeting; the six games with choices first (Count, Add, Words, Patterns,
@@ -12,8 +13,8 @@
                           and Blocks with their single icon; the Grown-ups hold at the foot. A tap on one of the six
                           opens its sub-menu on the same page through one history entry (#add, #feelings...), so
                           Android back and the sub-menu's back arrow come back to all games; a link to ./#feelings
-                          opens it directly. A sub-menu (menus.js): the back arrow top-left, where the shelf button
-                          sits on every play screen; the game's icon and name; Nook's one-line question; the activity
+                          opens it directly (a game's back arrow links there). A sub-menu (menus.js): the back arrow
+                          top-left, the same arrow in the same place as on every play screen; the game's icon and name; Nook's one-line question; the activity
                           tiles, the last one marked; the level tiles under them, the current one marked. An activity
                           tile goes to the game at the current level (garden.html#add/take); a level tile starts the
                           current activity at that level (garden.html#add/take/3). Paint and Blocks go straight in.
@@ -42,6 +43,9 @@
   const boomHref = () => (window.location.pathname.startsWith('/fireworks/') ? '../' : '../boom/');
   const esc = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const focus = el => { if (el) el.focus({ preventScroll: true }); };
+  // Phase 9b: the menu a game is opened from (a game's sub-menu, or '' for all games), so the game's back arrow can be the
+  // browser's own Back (shared.js). Session storage only: this tab, this visit.
+  const go = (url, menu) => { try { window.sessionStorage.setItem('lp-trail', menu); } catch (_) { /* the back arrow then opens the menu as a link */ } api.navigate(url); };
 
   function tile([id, label]) {
     const cells = M.has(id) ? M.folder(id) : null;
@@ -171,7 +175,7 @@
     el.querySelector('#gu-player').onclick = () => LP.choosePlayer();
     el.querySelector('#gu-settings').onclick = () => LP.settings();
     el.querySelector('#gu-about').onclick = about;
-    if (game) el.querySelector('#gu-levels').onclick = () => { LP.closeModal(); api.navigate(M.levelsHref(game)); };
+    if (game) el.querySelector('#gu-levels').onclick = () => { LP.closeModal(); go(M.levelsHref(game), game); };
     return el;
   }
   function about() {
@@ -219,12 +223,12 @@
         return;
       }
       const act = e.target.closest('[data-activity]');
-      if (act) { api.navigate(M.href(act.dataset.mode, act.dataset.activity)); return; }
+      if (act) { go(M.href(act.dataset.mode, act.dataset.activity), act.dataset.mode); return; }
       const lvl = e.target.closest('[data-level]');
       if (lvl) {
         // A level starts the current activity at that level; Patterns' families belong to Finish the pattern.
         const id = lvl.dataset.mode;
-        api.navigate(M.href(id, id === 'patterns' ? 'finish' : M.last(id), Number(lvl.dataset.level)));
+        go(M.href(id, id === 'patterns' ? 'finish' : M.last(id), Number(lvl.dataset.level)), id);
         return;
       }
       const tile = e.target.closest('[data-shelf]');
@@ -235,7 +239,7 @@
         view.show(id);
         return;
       }
-      if (entry) api.navigate(entry[2]);
+      if (entry) go(entry[2], '');
     });
     // Escape in a sub-menu does what its back arrow does.
     shelf.addEventListener('keydown', e => { if (e.key === 'Escape' && view.menu && !LP.dialogOpen) { e.preventDefault(); const back = shelf.querySelector('[data-back]'); if (back) back.click(); } });

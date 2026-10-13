@@ -59,6 +59,8 @@
   function caption(){const c=M.caption(mode,captionState());F.caption({game:mode,text:c.text,label:c.label});}
   // The grown-ups' chooser (Levels and puzzles) is titled with the game's name.
   const GAME_NAMES={count:'Count',add:'Add',words:'Words',patterns:'Patterns'};
+  // The back arrow top-left (phase 9b, Jof): back to this game's own sub-menu on the shelf, the one it was started from.
+  function backArrow(){const b=$('shelf-open');if(!b)return;b.setAttribute('href','./#'+mode);b.dataset.menu=mode;b.setAttribute('aria-label','Back to '+GAME_NAMES[mode]);}
   // Apples with a small running number on each, the scaffold Count uses; Add reuses it on the first clue tap.
   function tagged(count,offset,tags){return Array.from({length:count},(_,i)=>tags?'<span class="tagged">'+apple+'<b class="count-tag">'+(offset+i+1)+'</b></span>':apple).join('');}
   // Tens-and-ones tray: complete tens as full ten-frames, or, once the level has established a ten, as rows of ten small apples (five, a small space, five; still class "stick"). Left-over ones are loose apples with no empty slots beside them, so nothing but apples is ever counted. Fruits carry an index for tags and "new" outlines.
@@ -199,7 +201,7 @@
     // Neither fits: keep whichever overflows less (the card then scrolls a little).
     const useSide=side.level<9?side.level<=stacked.level+1:stacked.level<9?false:side.over<=stacked.over;
     set(!useSide,Math.min(useSide?side.level:stacked.level,3));}
-  function render(){LP.audio.stopSpeech();const key=currentKey();$('task').dataset.view=key;$('page').classList.toggle('words',mode==='words');if(mode==='count')countView();else if(mode==='add')addView();else if(mode==='patterns'&&patternMode==='make')makeView();else if(mode==='patterns')patternView();else wordsView();mood();save();fitTask();}
+  function render(){LP.audio.stopSpeech();const key=currentKey();$('task').dataset.view=key;$('page').classList.toggle('words',mode==='words');backArrow();if(mode==='count')countView();else if(mode==='add')addView();else if(mode==='patterns'&&patternMode==='make')makeView();else if(mode==='patterns')patternView();else wordsView();mood();save();fitTask();}
   // With the A to Z keys the gap keeps focus so its caret stays visible; the device keyboard is only opened by a tap on the gap.
   function focusTask(){const input=$('word-input');const target=input&&LP.prefs.keyboard==='az'?input:$('task').querySelector('button:not(.bubble-inline):not(:disabled),input,textarea');if(target)target.focus({preventScroll:true});}
   function keepFocus(){if(LP.prefs.keyboard==='az')$('word-input')?.focus({preventScroll:true});}
