@@ -211,4 +211,4 @@ lilac button, on Add and on Blocks.
 history, so Android Back leaves it as before, while the on-screen arrow opens the game's sub-menu. The device check in
 DEVICE-TEST.md covers the normal path (shelf, sub-menu, game, Back, Back).
 
-Commit (9b): COMMIT9B
+Commit (9b): 6d66ba9 (6d66ba9d5f7b688d2ff364f92888f4e041a3d7dc), with this line added in the commit that follows it.
