@@ -220,9 +220,8 @@ M.bossStrip = function(c, done, total, group, right, font){
 //   than a whole clip.
 //   If there is footage left on the card, the next clip is ready after CLIP.load: it is on the player to press again.
 //   SD cards are spare clips. They are never a longer clip.
-//   One clip always comes back by itself, so nobody is left without the camera, but slowly: CLIP.recharge storage
-//   units per second, which is many times slower than loading the next clip. Spare clips do not come back
-//   during the fight; a lost life gives the whole card back.
+//   All collected capacity comes back, one clip after another, at CLIP.recharge storage units per second.
+//   Recharging is much slower than loading a clip; a lost life gives the whole card back immediately.
 // The game sets C.boss while a boss is awake. Outside a boss nothing here applies.
 // Longer takes use the same card space: preserve spare counts, SD benefits and 15-second recharge.
 const CLIP = M.CLIP = { length:5, cost:3, load:0.6, recharge:0.2 };
@@ -241,7 +240,7 @@ function stepClips(C, pressEdge, dt){
     C.left = Math.max(0, C.left - dt*CLIP.cost/CLIP.length); C.t += dt;
     if (C.left <= 0 || C.t >= CLIP.length - 1e-9){ C.on = false; C.cool = CLIP.load; }
   } else if (C.cool > 0) C.cool = Math.max(0, C.cool - dt);
-  else if (C.left < CLIP.cost) C.left = Math.min(CLIP.cost, C.cap, C.left + CLIP.recharge*dt);
+  else C.left = Math.min(C.cap, C.left + CLIP.recharge*dt);
   C.refused = Math.max(0, C.refused - dt);
   return C.on ? CAM.scale : 1;
 }

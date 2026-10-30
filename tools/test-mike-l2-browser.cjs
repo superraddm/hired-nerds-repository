@@ -31,6 +31,33 @@ const sleep = ms => new Promise(r => setTimeout(r, ms)); let ws;
   };
   const shot = async name => { const d = await send('Page.captureScreenshot'); fs.writeFileSync(path.join(OUT, name + '.png'), Buffer.from(d.data, 'base64')); };
   const result = {};
+  if (args[0] === 'mobile-controls'){
+    for (const [width, height] of [[667, 375], [844, 390], [1024, 768]]){
+      await open('?room=1&test=1', width, height, true);
+      const rects = await ev(`Array.from(document.querySelectorAll('.tc')).map(b => { const r=b.getBoundingClientRect(); return { id:b.id,x:r.x,y:r.y,w:r.width,h:r.height }; })`);
+      const down = rects.find(b => b.id === 'tc-look'), up = rects.find(b => b.id === 'tc-jump');
+      assert.ok(down.y >= up.y + up.h + 8, 'Down is beneath Up');
+      assert.equal(down.x + down.w/2, up.x + up.w/2, 'arrows share a centre line');
+      for (const a of rects){
+        assert.ok(a.x >= 0 && a.y >= 0 && a.x+a.w <= width && a.y+a.h <= height, a.id+' stays on screen');
+        for (const b of rects) if (a.id !== b.id) assert.ok(a.x+a.w <= b.x || b.x+b.w <= a.x || a.y+a.h <= b.y || b.y+b.h <= a.y, a.id+' does not overlap '+b.id);
+      }
+      for (const direction of ['left','right']){
+        await ev(`__l2.place(${direction === 'left' ? 36 : 28},14,{suit:true}); __l2.step(1,{}); __l2.release()`);
+        const before = await ev('__l2.snapshot()');
+        const side = rects.find(b => b.id === 'tc-'+direction);
+        const points = [side,down].map((r,i) => ({id:i+1,x:r.x+r.w/2,y:r.y+r.h/2}));
+        await send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:points}); await sleep(650);
+        const after = await ev('__l2.snapshot()');
+        await send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});
+        assert.ok((after.x-before.x)*(direction === 'left' ? -1 : 1) > 1, 'steers '+direction+' while diving');
+        assert.ok(after.y-before.y > 1, 'dives while steering '+direction);
+      }
+      await shot('mobile-controls-'+width);
+    }
+    assert.deepEqual(errors,[]); console.log('Mobile controls passed: three screen sizes, no overlap, Down below Up, simultaneous dive and left/right.');
+    await send('Browser.close'); ws.close(); chrome.kill(); return;
+  }
   if (args[0] === 'boss-start'){
     await open('?test=1');
     const saved = await ev(`(() => { const keys=['mike-game.l2.v1.save','mike-game.l2.v1.progress']; const old=keys.map(k=>localStorage.getItem(k)); keys.forEach(k=>localStorage.setItem(k,'{}')); return old; })()`);
@@ -38,7 +65,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms)); let ws;
       await open('?room=boss&test=1');
       const start = await ev(`({snap:__l2.snapshot(),health:__l2.S.health,suit:__l2.S.suit,claimed:__l2.S.got.has('l6-1'),cards:__l2.S.inv.sdCard})`);
       assert.equal(start.snap.x,470); assert.equal(start.snap.checkpoint.x,470); assert.equal(start.snap.boss.on,false);
-      assert.equal(start.health,3); assert.ok(start.suit); assert.equal(start.claimed,false); assert.equal(start.cards,4);
+      assert.equal(start.health,3); assert.ok(start.suit); assert.equal(start.claimed,false); assert.equal(start.cards,5);
       await ev('__l2.S.health=2; __l2.step(26,{right:true})');
       assert.ok(await ev("__l2.S.got.has('l6-1') && __l2.S.health===3"), 'nearby health can be collected normally');
       await ev('__l2.save(); __l2.clearSave()');

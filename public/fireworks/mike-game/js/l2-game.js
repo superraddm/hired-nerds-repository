@@ -309,101 +309,21 @@ function bossState(){
 }
 const toScreen = (x, y) => ({ x:(x*T - Math.round(G.camX*Z)/Z)*Z, y:(y*T - Math.round(G.camY*Z)/Z)*Z });
 
-// ---------- the camera's viewfinder and the HUD (Level 1's, with the suit's static charge added) ----------
-function drawViewfinder(c){
-  c.save();
-  const g = c.createRadialGradient(W/2, H/2, H*.42, W/2, H/2, H*1.02); g.addColorStop(0, 'rgba(0,12,28,0)'); g.addColorStop(1, 'rgba(0,12,28,.42)');
-  c.fillStyle = g; c.fillRect(0, 0, W, H);
-  c.strokeStyle = 'rgba(255,255,255,.45)'; c.lineWidth = 1.5; c.strokeRect(30.5, 30.5, W - 61, H - 61);
-  c.strokeStyle = 'rgba(255,255,255,.4)'; c.lineWidth = 2;
-  for (const x of [W/3, 2*W/3]){ c.beginPath(); c.moveTo(x, 30); c.lineTo(x, 44); c.moveTo(x, H - 30); c.lineTo(x, H - 44); c.stroke(); }
-  for (const y of [H/3, 2*H/3]){ c.beginPath(); c.moveTo(30, y); c.lineTo(44, y); c.moveTo(W - 30, y); c.lineTo(W - 44, y); c.stroke(); }
-  const m = 16, l = 70;
-  for (const [x, y, dx, dy] of [[m, m, 1, 1], [W - m, m, -1, 1], [m, H - m, 1, -1], [W - m, H - m, -1, -1]]){
-    c.lineCap = 'square'; c.beginPath(); c.moveTo(x, y + dy*l); c.lineTo(x, y); c.lineTo(x + dx*l, y);
-    c.strokeStyle = 'rgba(0,20,40,.6)'; c.lineWidth = 12; c.stroke(); c.strokeStyle = C.white; c.lineWidth = 7; c.stroke();
-  }
-  c.shadowColor = 'rgba(0,0,0,.6)'; c.shadowBlur = 4; c.textBaseline = 'middle';
-  if (Math.floor(G.t*2.5) % 2 === 0 || G.slowShow){ c.fillStyle = '#FF2A2A'; A.circ(c, 64, 62, 11); c.fill(); }
-  c.fillStyle = C.white; c.font = `900 28px ${FONT}`; c.textAlign = 'left'; c.fillText('REC', 84, 63);
-  c.textAlign = 'right'; c.fillText('120 FPS', W - 58, 63); c.font = `700 18px ${FONT}`; c.fillText('SLOW ×0.2', W - 58, 92);
-  const left = G.slowShow ? G.slowShow.left : M.cameraSeconds(S.cam), cap = G.slowShow ? G.slowShow.cap : M.cameraSeconds(S.cam, S.cam.cap), low = left <= 1;
-  c.save(); c.translate(68, 116); c.scale(1.4, 1.4); A.pickupIcon(c, 'sdCard', 0, 0, 1); c.restore();
-  c.fillStyle = low && Math.floor(G.t*6) % 2 ? '#FF2A2A' : C.white; c.textAlign = 'left';
-  const clip = S.cam.boss && !G.slowShow ? M.clipRemaining(S.cam) : null;
-  c.font = `700 30px ui-monospace,Menlo,Consolas,monospace`; c.fillText((clip === null ? left : clip).toFixed(1) + 's', 96, 110);
-  c.font = `700 14px ${FONT}`; c.fillStyle = C.white; c.fillText(clip === null ? 'LEFT ON CARD' : 'LEFT IN THIS CLIP', 97, 134);
-  c.shadowBlur = 0;
-  const bw = 150, bx = W - 58 - bw, by = 112;
-  A.rr(c, bx, by, bw, 14, 5); c.fillStyle = 'rgba(0,20,40,.55)'; c.fill();
-  A.rr(c, bx, by, Math.max(6, bw*left/cap), 14, 5); c.fillStyle = low ? '#FF2A2A' : C.white; c.fill();
-  c.strokeStyle = C.white; c.lineWidth = 2; A.rr(c, bx, by, bw, 14, 5); c.stroke();
-  if (clip !== null){ c.fillStyle = 'rgba(0,20,40,.8)'; for (let s = M.CLIP.length; s < cap - .01; s += M.CLIP.length) c.fillRect(bx + bw*s/cap - 1.5, by - 3, 3, 20); }
-  c.fillStyle = C.white; c.font = `700 14px ${FONT}`; c.textAlign = 'right'; c.fillText(clip === null ? `${cap.toFixed(1)}s CARD` : `${M.spareClips(S.cam)} MORE CLIP${M.spareClips(S.cam) === 1 ? '' : 'S'}`, W - 58, by + 30);
-  if (G.af){
-    const s = toScreen(G.af.x, G.af.y), w = 74, h = 104, x = s.x - w/2, y = s.y - h - 4, k = 16, p = 1 + .03*Math.sin(G.t*8);
-    c.save(); c.translate(s.x, y + h/2); c.scale(p, p); c.translate(-s.x, -(y + h/2));
-    c.strokeStyle = '#7CFF9A'; c.lineWidth = 3; c.beginPath();
-    for (const [cx, cy, dx, dy] of [[x, y, 1, 1], [x + w, y, -1, 1], [x, y + h, 1, -1], [x + w, y + h, -1, -1]]){ c.moveTo(cx, cy + dy*k); c.lineTo(cx, cy); c.lineTo(cx + dx*k, cy); }
-    c.stroke(); c.restore();
-  }
-  c.restore();
+// ---------- the HUD: the shared compact one (js/hud.js), with the suit's static charge as its one extra pill ----------
+// (owner, 2 Oct: the screens were too busy). The static pill stays whenever the suit is on: it is what keeps him alive.
+function drawViewfinder(c){ M.hud.viewfinder(c, { t:G.t, font:FONT, af:G.af ? toScreen(G.af.x, G.af.y) : null }); }
+function hud(c, filming){
+  const cap = E.W.limit, left = cap - S.static;
+  M.hud.pills(c, { font:FONT, t:G.t, health:S.health, lives:S.lives, cam:S.cam, filming, score:S.score, salvage:E.salvageCount(S), total:L.salvageTotal, newBest:G.newBest,
+    continues:M.campaign.continues, paused:G.paused, lifeIcon:(cc, x, y) => M.puppet.draw(cc, rig, pose('idle', 0, 0, null, 0), x, y, 24, { facing:1 }),
+    extra:S.suit ? { frac:S.static/cap, warn:left <= E.W.warn, crit:left <= 3, text:Math.ceil(left - 1e-6) + 's' } : null });
 }
-function hud(c){
-  c.save(); c.textBaseline = 'middle';
-  A.rr(c, 12, 10, 410, 68, 14); c.fillStyle = 'rgba(0,44,90,.82)'; c.fill();
-  for (let i = 0; i < 3; i++){ A.circ(c, 36 + i*26, 34, 9); c.fillStyle = i < S.health ? C.white : 'rgba(255,255,255,0)'; c.fill(); c.strokeStyle = C.white; c.lineWidth = 3; c.stroke(); }
-  M.puppet.draw(c, rig, pose('idle', 0, 0, null, 0), 126, 50, 32, { facing:1 });
-  c.fillStyle = C.white; c.font = `700 22px ${FONT}`; c.textAlign = 'left'; c.fillText('× ' + S.lives, 144, 35);
-  const cont = M.campaign.continues;
-  if (cont > 0){ A.rr(c, 12, 112, 128, 22, 11); c.fillStyle = 'rgba(0,44,90,.82)'; c.fill(); c.fillStyle = '#FFE066'; c.font = `700 12px ${FONT}`; c.fillText('CONTINUES × ' + cont, 24, 123); }
-  c.font = `600 13px ${FONT}`; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText('SALVAGE', 198, 35);
-  const n = E.salvageCount(S);
-  c.font = `700 23px ${FONT}`; c.fillStyle = C.white; c.fillText(n + '/' + L.salvageTotal, 275, 35);
-  c.fillStyle = '#284851'; c.fillRect(30, 59, 370, 4); c.fillStyle = '#a4e8d5'; c.fillRect(30, 59, 370*n/L.salvageTotal, 4);
-  c.fillStyle = 'rgba(255,255,255,.55)'; for (let m = 10; m < L.salvageTotal; m += 10) c.fillRect(30 + 370*m/L.salvageTotal - 1, 56, 2, 10);
-  c.fillStyle = 'rgba(0,44,90,.82)'; A.rr(c, 12, 74, 250, 34, 12); c.fill();
-  c.font = `600 13px ${FONT}`; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText('SCORE', 30, 92);
-  const gold = G.newBest, flash = gold && Math.sin(G.t*10) > 0, pop = 1 + .35*G.scorePop;
-  c.save(); c.translate(84, 92); c.scale(pop, pop); c.font = `900 22px ${FONT}`; c.fillStyle = gold ? (flash ? '#FFE066' : '#FFB84D') : C.white; c.fillText(S.score.toLocaleString('en-GB'), 0, 1); c.restore();
-  if (gold){ c.font = `900 11px ${FONT}`; c.fillStyle = flash ? '#FFE066' : 'rgba(255,224,102,.6)'; c.fillText('NEW BEST', 196, 92); }
-  const bx = W - 262, by = 10, low = S.cam.left < M.CAMERA.min;
-  A.rr(c, bx, by, 250, 56, 14); c.fillStyle = 'rgba(0,44,90,.82)'; c.fill();
-  A.cameraIcon(c, bx + 28, by + 28, 1, C.white); A.pickupIcon(c, 'sdCard', bx + 64, by + 28, .9);
-  c.fillStyle = low ? 'rgba(255,255,255,.5)' : C.white; c.font = `700 24px ui-monospace,Menlo,Consolas,monospace`; c.textAlign = 'left'; c.fillText(M.cameraSeconds(S.cam).toFixed(1) + 's', bx + 84, by + 29);
-  const mx = bx + 162, my = by + 20, mw = 76, mh = 16;
-  A.rr(c, mx, my, mw, mh, 5); c.fillStyle = 'rgba(255,255,255,.15)'; c.fill();
-  if (S.cam.left > 0){ A.rr(c, mx, my, Math.max(6, mw*S.cam.left/S.cam.cap), mh, 5); c.fillStyle = low ? 'rgba(255,255,255,.4)' : C.white; c.fill(); }
-  c.strokeStyle = C.white; c.lineWidth = 2; A.rr(c, mx, my, mw, mh, 5); c.stroke();
-  if (S.cam.boss){ c.fillStyle = C.navy; for (let s = M.CLIP.cost; s < S.cam.cap - .01; s += M.CLIP.cost) c.fillRect(mx + mw*s/S.cam.cap - 1.5, my - 3, 3, mh + 6); }
-  if (S.cam.refused > 0){ c.fillStyle = C.white; c.font = `700 14px ${FONT}`; c.fillText('Card busy', mx, by + 47); }
-  c.restore();
-}
-// The suit's static charge: a bolt, a bar that fills as it builds, and the seconds left before it discharges. Amber in
-// the last quarter, a red pulse at the end. Shown while filming too, because static builds on real time.
-function staticMeter(c, y){
-  if (!S.suit) return;
-  const x = W - 262, cap = E.W.limit, left = cap - S.static, warn = left <= E.W.warn, crit = left <= 3, pulse = crit ? .5 + .5*Math.sin(G.t*12) : 0;
-  c.save(); c.textBaseline = 'middle';
-  A.rr(c, x, y, 250, 40, 12); c.fillStyle = crit ? `rgba(${Math.round(90 + 70*pulse)},20,20,.9)` : 'rgba(0,44,90,.82)'; c.fill();
-  if (warn){ c.strokeStyle = crit ? '#FF5A4A' : A2.P.warn; c.lineWidth = 2.5; c.stroke(); }
-  c.fillStyle = crit ? '#FFD7D2' : warn ? A2.P.warn : '#cdf6f0'; c.beginPath(); c.moveTo(x + 31, y + 6); c.lineTo(x + 17, y + 23); c.lineTo(x + 25, y + 23); c.lineTo(x + 21, y + 35); c.lineTo(x + 36, y + 17); c.lineTo(x + 28, y + 17); c.closePath(); c.fill();
-  c.font = `600 12px ${FONT}`; c.fillStyle = 'rgba(255,255,255,.75)'; c.textAlign = 'left'; c.fillText('STATIC', x + 46, y + 21);
-  const mx = x + 98, mw = 88, mh = 14, my = y + 13;
-  A.rr(c, mx, my, mw, mh, 5); c.fillStyle = 'rgba(255,255,255,.15)'; c.fill();
-  if (S.static > .05){ A.rr(c, mx, my, Math.max(6, mw*S.static/cap), mh, 5); c.fillStyle = crit ? '#FF5A4A' : warn ? A2.P.warn : '#cdf6f0'; c.fill(); }
-  c.strokeStyle = C.white; c.lineWidth = 2; A.rr(c, mx, my, mw, mh, 5); c.stroke();
-  c.fillStyle = 'rgba(255,255,255,.6)'; c.fillRect(mx + mw*.75 - 1, my - 3, 2, mh + 6);
-  c.font = `700 20px ui-monospace,Menlo,Consolas,monospace`; c.fillStyle = crit ? '#FFD7D2' : C.white; c.textAlign = 'right'; c.fillText(Math.ceil(left - 1e-6) + 's', x + 240, y + 21);
-  if (!S.headWet && S.static > .05){ c.fillStyle = '#9be4c7'; c.beginPath(); c.moveTo(x + 190, y + 15); c.lineTo(x + 196, y + 26); c.lineTo(x + 202, y + 15); c.closePath(); c.fill(); }      // shedding
-  c.restore();
-}
+// The journey panel (room and progress) lives on the pause screen now.
 function journey(c){
-  const P = S.P, r = L.rooms.find(r => P.x >= r.x && P.x < r.x + r.width) || L.rooms[L.rooms.length - 1], idx = L.rooms.indexOf(r) + 1;
-  c.save(); c.fillStyle = 'rgba(5,17,27,.88)'; A.rr(c, 690, S.suit ? 118 : 76, 258, 40, 7); c.fill();
-  const y = S.suit ? 118 : 76;
-  c.font = `600 10px ${FONT}`; c.textAlign = 'left'; c.textBaseline = 'alphabetic'; c.fillStyle = '#a9c5d0'; c.fillText(String(idx).padStart(2, '0') + ' / ' + String(L.rooms.length).padStart(2, '0') + '   ' + r.title.toUpperCase(), 704, y + 18);
-  c.fillStyle = '#29434f'; c.fillRect(704, y + 28, 230, 3); c.fillStyle = '#8cdcd7'; c.fillRect(704, y + 28, 230*Math.min(1, P.x/L.W), 3);
+  const P = S.P, r = L.rooms.find(r => P.x >= r.x && P.x < r.x + r.width) || L.rooms[L.rooms.length - 1], idx = L.rooms.indexOf(r) + 1, x = W/2 - 129, y = H - 54;
+  c.save(); c.fillStyle = 'rgba(5,17,27,.88)'; A.rr(c, x, y, 258, 40, 7); c.fill();
+  c.font = `600 10px ${FONT}`; c.textAlign = 'left'; c.textBaseline = 'alphabetic'; c.fillStyle = '#a9c5d0'; c.fillText(String(idx).padStart(2, '0') + ' / ' + String(L.rooms.length).padStart(2, '0') + '   ' + r.title.toUpperCase(), x + 14, y + 18);
+  c.fillStyle = '#29434f'; c.fillRect(x + 14, y + 28, 230, 3); c.fillStyle = '#8cdcd7'; c.fillRect(x + 14, y + 28, 230*Math.min(1, P.x/L.W), 3);
   c.restore();
 }
 function bossHud(c){
@@ -417,9 +337,9 @@ function bossHud(c){
 }
 function drawOverlay(c){
   const filming = S.cam.on || G.slowShow;
-  if (filming) drawViewfinder(c); else hud(c);
-  staticMeter(c, filming ? 150 : 72);
-  if (!filming) journey(c);
+  if (filming) drawViewfinder(c);
+  hud(c, filming);
+  if (G.paused) journey(c);
   bossHud(c);
   if (G.card > 0){
     const a = Math.min(1, G.card/.5, (2.8 - G.card)/.3 + .001);
@@ -599,7 +519,8 @@ function toTitle(){
 }
 $('play').onclick = () => { AU.unlock(); AU2.unlock(); clearSave(); startPlay(); };
 $('resume-save').onclick = () => { AU.unlock(); AU2.unlock(); startPlay(loadSave()); };
-$('res-replay').onclick = () => { clearSave(); startPlay(); };       // after Level 2 there is only Play again (owner, 30 Sept)
+$('res-replay').onclick = () => { clearSave(); startPlay(); };
+$('res-continue').onclick = () => { location.href = 'level-3.html'; };   // on to Level 3, as Level 1's card goes on to Level 2 (owner, 2 Oct)
 $('resume').onclick = () => setPaused(false);
 $('restart-cp').onclick = () => { setPaused(false); S.health = 0; S.lives++; S.livesLost--; S.dead = .01; S.events = []; };
 $('quit').onclick = () => { save(); setPaused(false); toTitle(); };

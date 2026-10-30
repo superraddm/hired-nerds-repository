@@ -1,0 +1,91 @@
+{
+  "scenes": [
+    "title",
+    "induction",
+    "first-grab",
+    "jump-it",
+    "floor-arm",
+    "hook",
+    "switchyard",
+    "switchyard-low",
+    "cell-row",
+    "the-line",
+    "hook-relay",
+    "tower",
+    "roof",
+    "return-belts",
+    "weld-alley",
+    "rover-yard",
+    "crossing",
+    "sorting-line",
+    "wrap-station",
+    "sorter",
+    "marshalling",
+    "boss-idle",
+    "boss-break",
+    "boss-reteach",
+    "boss-deliver",
+    "boss-sweep-warn",
+    "boss-sweep",
+    "boss-two",
+    "boss-colours",
+    "results",
+    "bands",
+    "poses"
+  ],
+  "keyboard": {
+    "x": 6.499999999999994
+  },
+  "lookDown": 158.18514214369026,
+  "save": true,
+  "boss": {
+    "brokeAt": "F",
+    "reTaught": true
+  },
+  "touch": [
+    {
+      "ctl": "left",
+      "w": 64,
+      "h": 64,
+      "visible": true
+    },
+    {
+      "ctl": "right",
+      "w": 64,
+      "h": 64,
+      "visible": true
+    },
+    {
+      "ctl": "lookDown",
+      "w": 64,
+      "h": 64,
+      "visible": true
+    },
+    {
+      "ctl": "jump",
+      "w": 76,
+      "h": 76,
+      "visible": true
+    },
+    {
+      "ctl": "camera",
+      "w": 64,
+      "h": 64,
+      "visible": true
+    },
+    {
+      "ctl": "fix",
+      "w": 0,
+      "h": 0,
+      "visible": false
+    }
+  ],
+  "perf": {
+    "workP50": 1.5,
+    "workP95": 3.100000023841858,
+    "frameP95": 16.800000000000182,
+    "lowQ": false
+  },
+  "requestsAfterLoad": 0,
+  "errors": []
+}

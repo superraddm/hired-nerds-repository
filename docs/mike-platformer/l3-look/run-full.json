@@ -1,0 +1,19 @@
+{
+ "when": "2026-10-09T17:02:17.251Z",
+ "results": {
+  "full": {
+   "seconds": 68.9,
+   "lanes": [
+    "assembly-f",
+    "roof-g",
+    "weld-m",
+    "packout-f",
+    "packout-u"
+   ],
+   "salvage": 21,
+   "health": 3,
+   "livesLost": 0,
+   "planner": 314.512
+  }
+ }
+}

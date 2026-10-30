@@ -195,6 +195,11 @@
      "id": "s1-8",
      "type": "controlUnit",
      "at": [44, 9]
+    },
+    {
+     "id": "sd1-1",
+     "type": "sdCard",
+     "at": [40, 11]
     }
    ]
   },

@@ -213,6 +213,12 @@ function respawn(S){
 function discharge(S){
   S.health--; S.static = 0; say(S, 'discharge', { x:S.P.x, y:S.P.y });
   if (S.health <= 0){ loseLife(S); return; }
+  // A discharge can send him outside a sealed tank without costing a life. Reset that tank's valve so the
+  // entrance opens again; retain the water state when his refuge is still inside the same tank.
+  const tank = tankOf(S.L, S.P.x, S.P.y);
+  if (tank && !(S.refuge.x > tank.x0 && S.refuge.x < tank.x1)){
+    for (const v of S.L.valves) if (v.reset !== undefined && tank.id in v.states[v.reset]) setValve(S, v, v.reset, true);
+  }
   S.P = M.newPlayer(S.refuge.x, S.refuge.y); S.P.hitT = 0; S.wet = false; S.headWet = false; S.boss.fix = 0;
 }
 

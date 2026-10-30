@@ -68,8 +68,8 @@
     }
   ],
   "perf": {
-    "workP50": 1.5,
-    "workP95": 2.600000023841858,
+    "workP50": 1.7999999523162842,
+    "workP95": 3,
     "frameP95": 16.800000000000182,
     "lowQ": false
   },
@@ -78,7 +78,7 @@
     "steps": 19840,
     "seconds": 330.7,
     "won": true,
-    "score": 8000,
+    "score": 8100,
     "salvage": 36
   },
   "errors": []

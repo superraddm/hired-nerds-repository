@@ -1,0 +1,41 @@
+{
+ "when": "2026-10-02T14:52:17.491Z",
+ "results": {
+  "full": {
+   "seconds": 68.9,
+   "lanes": [
+    "assembly-f",
+    "roof-g",
+    "weld-m",
+    "packout-f",
+    "packout-u"
+   ],
+   "salvage": 21,
+   "health": 3,
+   "livesLost": 0,
+   "planner": 132.361
+  },
+  "boss": {
+   "filmed": 7,
+   "runs": [
+    {
+     "variant": 0,
+     "cards": false,
+     "seconds": 108.1,
+     "turns": 14,
+     "health": 2,
+     "livesLost": 0
+    },
+    {
+     "variant": 0,
+     "cards": true,
+     "seconds": 104.9,
+     "turns": 14,
+     "health": 1,
+     "livesLost": 0
+    }
+   ],
+   "moves": 1
+  }
+ }
+}

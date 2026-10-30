@@ -1,0 +1,135 @@
+{
+ "when": "2026-10-02T14:48:13.293Z",
+ "results": [
+  {
+   "name": "the level validates",
+   "pass": true,
+   "note": "377 tiles, 23 carriers, 4 hooks, 17 arms, 13 rovers, 14 crate drops, 56 salvage"
+  },
+  {
+   "name": "dry physics is Level 1's: a held jump rises 3 tiles",
+   "pass": true,
+   "note": "apex 3.000 tiles"
+  },
+  {
+   "name": "every carrier ride is clear of solid scenery (gratings in hubs are hatches it lifts him through)",
+   "pass": true,
+   "note": "23 carriers, 42 destinations"
+  },
+  {
+   "name": "every ride, and every destination, is clear of every hazard (outside the boss)",
+   "pass": true
+  },
+  {
+   "name": "walking into a hovering gripper: picked up, no choice, set down on his feet at its next destination, unhurt",
+   "pass": true,
+   "note": "23 carriers"
+  },
+  {
+   "name": "each grab sends him to the next destination on the list, round and round",
+   "pass": true,
+   "note": "cU: 1 → 2 → 1"
+  },
+  {
+   "name": "jumping over the gripper gets him past it",
+   "pass": true
+  },
+  {
+   "name": "nothing hurts him while a carrier holds him",
+   "pass": true
+  },
+  {
+   "name": "a carrier rests at home after a ride before it can grab again",
+   "pass": true
+  },
+  {
+   "name": "the camera slows carriers and hooks, never Mike",
+   "pass": true,
+   "note": "ride 2.05s normally, 4.42s while filming; running speed unchanged"
+  },
+  {
+   "name": "a hook: jump into the handle, ride the rail, Jump lets go with a hop onto the far deck",
+   "pass": true,
+   "note": "rode 2.50s, landed at 32.51"
+  },
+  {
+   "name": "Down lets go of a hook without a hop",
+   "pass": true
+  },
+  {
+   "name": "hazard arms hurt only while their light is red",
+   "pass": true,
+   "note": "398 red and 537 safe instants sampled; a1 hurt him only while red"
+  },
+  {
+   "name": "a floor rover hurts on contact; a low rover can be jumped",
+   "pass": true,
+   "note": "r1 reached him after 1.58s"
+  },
+  {
+   "name": "crates hurt only while falling",
+   "pass": true
+  },
+  {
+   "name": "belts carry him, and reversing belts reverse on machine time",
+   "pass": true,
+   "note": "b4 6.39 tiles/s"
+  },
+  {
+   "name": "the route log records a lane once he stands on it",
+   "pass": true
+  },
+  {
+   "name": "every round starts with the route broken, and can be put right",
+   "pass": true,
+   "note": "round 1: 2 turns, round 2: 5 turns, round 3: 7 turns"
+  },
+  {
+   "name": "the arena door shuts behind him when the Teach Cell wakes, and a checkpoint inside it is lit",
+   "pass": true
+  },
+  {
+   "name": "the arm carries its crate along the route and drops it where the route breaks",
+   "pass": true,
+   "note": "the crate fell at waypoint F"
+  },
+  {
+   "name": "a crate it drops hurts him if he stands under the break",
+   "pass": true
+  },
+  {
+   "name": "holding Fix at a dial for 2.2 s turns it to its next exit, filming or not; each turn needs a new hold",
+   "pass": true,
+   "note": "2.22 s, 2.22 s filming"
+  },
+  {
+   "name": "after each trip the arm warns, then sweeps one level of the cell: it hurts him there and nowhere else; no level is safe from all three",
+   "pass": true,
+   "note": "y 11.05, y 7.45, y 3.45"
+  },
+  {
+   "name": "round 2 has two arms, each working from its own chute",
+   "pass": true
+  },
+  {
+   "name": "a put-right route delivers the crate; the round is done and the next one begins",
+   "pass": true
+  },
+  {
+   "name": "in round 3, a blue crate at the orange pallet is dropped, not delivered",
+   "pass": true
+  },
+  {
+   "name": "a lost life restarts the round with its dials as they were, and he comes back inside the cell",
+   "pass": true
+  },
+  {
+   "name": "all three rounds put right: the arm is restored, the exit opens and the level is won",
+   "pass": true
+  },
+  {
+   "name": "a save keeps the round, the route log and the pickups; a save after the fix resumes the ending",
+   "pass": true
+  }
+ ]
+}

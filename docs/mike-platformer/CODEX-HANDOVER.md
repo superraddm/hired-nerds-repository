@@ -1,5 +1,7 @@
 # Mike platformer: current handover and continuation
 
+> **Level 3, Cobot Mania (Claude):** design, then revision 2 on 1 October after Jof's first play (full-length level, forced-grab carriers, redrawn cobots, clearer boss), local and not deployed. Its own continuation document is [L3-CONTINUATION.md](L3-CONTINUATION.md), and its review page is [l3-look/index.html](l3-look/index.html). Level 3 has its own `level-3.html` and `l3-*` files and does not change Level 1 or 2. Everything below is about Levels 1 and 2.
+
 ## LIVE: deployed to kpopboom.party on 30 September at 12:05 and again at 12:20, on the owner's word (Claude)
 
 Both levels, the clip camera, the campaign rules and the hardened Level 2 are live. Since 12:20 Level 1's debug switches (`?section`, `?scene`, `?demo`, `?test`, `?lab`) are local-only too, like Level 2's: the owner's rule is that address switches exist for local testing and nothing else. Every `mike-game` file on the site matches the local copy by hash. The prototype pages went up with the folder (unlinked). Not committed to git.

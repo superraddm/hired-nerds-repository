@@ -1,0 +1,18 @@
+{
+ "when": "2026-10-09T17:01:02.445Z",
+ "results": {
+  "boss": {
+   "filmed": 4,
+   "runs": [
+    {
+     "variant": 0,
+     "cards": true,
+     "seconds": 104.9,
+     "turns": 14,
+     "health": 1,
+     "livesLost": 0
+    }
+   ]
+  }
+ }
+}

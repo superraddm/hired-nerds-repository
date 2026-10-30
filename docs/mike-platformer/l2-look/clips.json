@@ -4,14 +4,14 @@
   "clipSeconds": 5,
   "loadSeconds": 0.6,
   "Boss 1": {
-    "sdCards": 9,
+    "sdCards": 6,
     "footage": 20,
     "clips": 4,
     "repairs": 9
   },
   "Boss 2": {
-    "sdCards": 4,
-    "footage": 15,
+    "sdCards": 5,
+    "footage": 17.5,
     "clips": 3,
     "repairs": 6
   },

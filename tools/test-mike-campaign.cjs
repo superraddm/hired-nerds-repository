@@ -1,5 +1,6 @@
 // The campaign rules in both pages (owner, 30 Sept): the last life restarts the level with a continue or the game without; a
-// finished level awards one continue; Level 2 ends with Play again only. Also captures both boss strips. Isolated headless Chrome, port 9353.
+// finished level awards one continue; Level 2's card goes on to Level 3 (or replays); Level 3's card has only New game,
+// which wipes the campaign and goes back to Level 1. Also captures both boss strips. Isolated headless Chrome, port 9353.
 // Needs node tools/serve-fireworks.cjs 8788.
 const { spawn } = require('child_process'), path = require('path'), fs = require('fs'), assert = require('node:assert/strict');
 const OUT = 'C:/hirednerds-portfolio/docs/mike-platformer/l2-look';
@@ -42,7 +43,20 @@ const sleep = ms => new Promise(r => setTimeout(r, ms)); let ws;
   await open('http://localhost:8788/mike-game/level-2.html?scene=boss-flush&test=1'); await sleep(150); await shot('boss-flush');
   await open('http://localhost:8788/mike-game/level-2.html?scene=results&test=1'); await sleep(150);
   out.l2Results = await ev(`Array.from(document.querySelectorAll('#menu button')).filter(b => getComputedStyle(b).display !== 'none').map(b => b.textContent)`);
-  assert.deepEqual(out.l2Results, ['Play again']); await shot('results');
+  assert.deepEqual(out.l2Results, ['Continue', 'Replay']); await shot('results');
+  // finishing Level 2 opens Level 3, and its Continue goes there
+  await open('http://localhost:8788/mike-game/level-2.html?scene=results&test=1');
+  await ev(`localStorage.setItem('mike-game.campaign.v1', JSON.stringify({ continues:2, cleared:['level-1', 'level-2'], scores:{ 'level-1':7650, 'level-2':9350 } })); document.getElementById('res-continue').click()`);
+  for (let i = 0; i < 100 && !/level-3/.test(await ev('location.pathname').catch(() => '')); i++) await sleep(100);
+  out.l2ContinueTo = await ev('location.pathname'); assert.ok(/level-3/.test(out.l2ContinueTo), 'Continue goes to Level 3');
+  // ---- Level 3: the last card, New game only
+  await open('http://localhost:8788/mike-game/level-3.html?scene=results&test=1');
+  out.l3Results = await ev(`Array.from(document.querySelectorAll('#menu button')).filter(b => getComputedStyle(b).display !== 'none').map(b => b.textContent)`);
+  assert.deepEqual(out.l3Results, ['New game']);
+  await ev(`localStorage.setItem('mike-game.campaign.v1', JSON.stringify({ continues:3, cleared:['level-1', 'level-2', 'level-3'], scores:{ 'level-1':7650, 'level-2':9350, 'level-3':11200 } })); document.getElementById('res-new').click()`);
+  for (let i = 0; i < 100 && /level-3/.test(await ev('location.pathname').catch(() => 'level-3')); i++) await sleep(100);
+  out.l3NewGame = { url:await ev('location.pathname'), camp:JSON.parse(await ev('localStorage.getItem("mike-game.campaign.v1")')) };
+  assert.ok(!/level-/.test(out.l3NewGame.url), 'New game goes back to Level 1'); assert.deepEqual(out.l3NewGame.camp.cleared, []); assert.deepEqual(out.l3NewGame.camp.scores, {}); assert.equal(out.l3NewGame.camp.continues, 0);
   out.errors = errors; assert.deepEqual(errors, []);
   console.log(JSON.stringify(out, null, 1));
   await send('Browser.close'); ws.close(); chrome.kill();

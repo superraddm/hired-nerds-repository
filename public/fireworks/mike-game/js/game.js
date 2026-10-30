@@ -556,96 +556,19 @@ function drawMike(c, x, y, pose, facing, protectedNow){
 }
 const toScreen = (x, y) => ({ x:(x*T - Math.round(G.camX*Z)/Z)*Z, y:(y*T - CAM_Y)*Z });
 
-// The camera's view while slow motion runs: a camcorder viewfinder. Nothing covers play: a frame, heavy corner
-// brackets, REC, 120 FPS, the seconds of footage left on the card, a focus box on Mike, a light vignette.
-function drawViewfinder(c){
-  c.save();
-  const g = c.createRadialGradient(W/2, H/2, H*.42, W/2, H/2, H*1.02); g.addColorStop(0, 'rgba(0,12,28,0)'); g.addColorStop(1, 'rgba(0,12,28,.42)');
-  c.fillStyle = g; c.fillRect(0, 0, W, H);
-  c.strokeStyle = 'rgba(255,255,255,.45)'; c.lineWidth = 1.5; c.strokeRect(30.5, 30.5, W - 61, H - 61);
-  c.strokeStyle = 'rgba(255,255,255,.4)'; c.lineWidth = 2;
-  for (const x of [W/3, 2*W/3]){ c.beginPath(); c.moveTo(x, 30); c.lineTo(x, 44); c.moveTo(x, H - 30); c.lineTo(x, H - 44); c.stroke(); }
-  for (const y of [H/3, 2*H/3]){ c.beginPath(); c.moveTo(30, y); c.lineTo(44, y); c.moveTo(W - 30, y); c.lineTo(W - 44, y); c.stroke(); }
-  const m = 16, l = 70;
-  for (const [x, y, dx, dy] of [[m, m, 1, 1], [W - m, m, -1, 1], [m, H - m, 1, -1], [W - m, H - m, -1, -1]]){
-    c.lineCap = 'square'; c.beginPath(); c.moveTo(x, y + dy*l); c.lineTo(x, y); c.lineTo(x + dx*l, y);
-    c.strokeStyle = 'rgba(0,20,40,.6)'; c.lineWidth = 12; c.stroke(); c.strokeStyle = C.white; c.lineWidth = 7; c.stroke();
-  }
-  c.shadowColor = 'rgba(0,0,0,.6)'; c.shadowBlur = 4; c.textBaseline = 'middle';
-  if (Math.floor(G.t*2.5) % 2 === 0 || G.slowShow){ c.fillStyle = '#FF2A2A'; A.circ(c, 64, 62, 11); c.fill(); }
-  c.fillStyle = C.white; c.font = `900 28px ${FONT}`; c.textAlign = 'left'; c.fillText('REC', 84, 63);
-  c.textAlign = 'right'; c.font = `900 28px ${FONT}`; c.fillText('120 FPS', W - 58, 63);
-  c.font = `700 18px ${FONT}`; c.fillText('SLOW ×0.2', W - 58, 92);
-  // footage left on the card: the slow-motion counter
-  const left = G.slowShow ? G.slowShow.left : M.cameraSeconds(CAMR), cap = G.slowShow ? G.slowShow.cap : M.cameraSeconds(CAMR, CAMR.cap), low = left <= 1;
-  // (kept at the top, clear of the touch buttons in the bottom corners)
-  c.save(); c.translate(68, 116); c.scale(1.4, 1.4); A.pickupIcon(c, 'sdCard', 0, 0, 1); c.restore();
-  c.fillStyle = low && Math.floor(G.t*6) % 2 ? '#FF2A2A' : C.white; c.textAlign = 'left';
-  const clip = CAMR.boss && !G.slowShow ? M.clipRemaining(CAMR) : null;
-  c.font = `700 30px ui-monospace,Menlo,Consolas,monospace`; c.fillText((clip === null ? left : clip).toFixed(1) + 's', 96, 110);
-  c.font = `700 14px ${FONT}`; c.fillStyle = C.white; c.fillText(clip === null ? 'LEFT ON CARD' : 'LEFT IN THIS CLIP', 97, 134);
-  c.shadowBlur = 0;
-  const bw = 150, bx = W - 58 - bw, by = 112;
-  A.rr(c, bx, by, bw, 14, 5); c.fillStyle = 'rgba(0,20,40,.55)'; c.fill();
-  A.rr(c, bx, by, Math.max(6, bw*left/cap), 14, 5); c.fillStyle = low ? '#FF2A2A' : C.white; c.fill();
-  c.strokeStyle = C.white; c.lineWidth = 2; A.rr(c, bx, by, bw, 14, 5); c.stroke();
-  if (clip !== null){ c.fillStyle = 'rgba(0,20,40,.8)'; for (let s = M.CLIP.length; s < cap - .01; s += M.CLIP.length) c.fillRect(bx + bw*s/cap - 1.5, by - 3, 3, 20); }
-  c.fillStyle = C.white; c.font = `700 14px ${FONT}`; c.textAlign = 'right'; c.fillText(clip === null ? `${cap.toFixed(1)}s CARD` : `${M.spareClips(CAMR)} MORE CLIP${M.spareClips(CAMR) === 1 ? '' : 'S'}`, W - 58, by + 30);
-  if (G.af){
-    const s = toScreen(G.af.x, G.af.y), w = 74, h = 104, x = s.x - w/2, y = s.y - h - 4, k = 16, p = 1 + .03*Math.sin(G.t*8);
-    c.save(); c.translate(s.x, y + h/2); c.scale(p, p); c.translate(-s.x, -(y + h/2));
-    c.strokeStyle = '#7CFF9A'; c.lineWidth = 3; c.beginPath();
-    for (const [cx, cy, dx, dy] of [[x, y, 1, 1], [x + w, y, -1, 1], [x, y + h, 1, -1], [x + w, y + h, -1, -1]]){ c.moveTo(cx, cy + dy*k); c.lineTo(cx, cy); c.lineTo(cx + dx*k, cy); }
-    c.stroke(); c.restore();
-  }
-  c.restore();
-}
-// The HUD (design section 9). Labels >= 22px. It steps aside while the camera is filming.
-function hud(c){
-  c.save(); c.textBaseline = 'middle';
-  A.rr(c, 12, 10, 410, 68, 14); c.fillStyle = 'rgba(0,44,90,.82)'; c.fill();
-  for (let i = 0; i < 3; i++){ A.circ(c, 36 + i*26, 34, 9); c.fillStyle = i < G.health ? C.white : 'rgba(255,255,255,0)'; c.fill(); c.strokeStyle = C.white; c.lineWidth = 3; c.stroke(); }
-  M.puppet.draw(c, rig, pose('idle', 0, 0, null, 0), 126, 50, 32, { facing:1 });
-  c.fillStyle = C.white; c.font = `700 22px ${FONT}`; c.textAlign = 'left'; c.fillText('× ' + G.lives, 144, 35);
-  const cont = M.campaign.continues;
-  if (cont > 0){ A.rr(c, 12, 112, 128, 22, 11); c.fillStyle = 'rgba(0,44,90,.82)'; c.fill(); c.fillStyle = '#FFE066'; c.font = `700 12px ${FONT}`; c.fillText('CONTINUES × ' + cont, 24, 123); }
-  c.font = `600 13px ${FONT}`; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText('SALVAGE', 198, 35);
-  c.font = `700 23px ${FONT}`; c.fillStyle = C.white; c.fillText(salvageCount()+'/'+L.salvageTotal, 275, 35);
-  c.fillStyle='#284851';c.fillRect(30,59,370,4);c.fillStyle='#a4e8d5';c.fillRect(30,59,370*salvageCount()/L.salvageTotal,4);
-  // salvage milestone ticks every 10
-  c.fillStyle='rgba(255,255,255,.55)';for(let m=10;m<L.salvageTotal;m+=10)c.fillRect(30+370*m/L.salvageTotal-1,56,2,10);
-  c.fillStyle = 'rgba(0,44,90,.82)'; A.rr(c, 12, 74, 250, 34, 12); c.fill();
-  c.font = `600 13px ${FONT}`; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText('SCORE', 30, 92);
-  const gold = G.newBest, flash = gold && Math.sin(G.t*10) > 0, pop = 1 + .35*(G.scorePop || 0);
-  c.save(); c.translate(84, 92); c.scale(pop, pop); c.font = `900 22px ${FONT}`; c.fillStyle = gold ? (flash ? '#FFE066' : '#FFB84D') : C.white;
-  c.fillText(G.score.toLocaleString('en-GB'), 0, 1); c.restore();
-  if (gold){ c.font = `900 11px ${FONT}`; c.fillStyle = flash ? '#FFE066' : 'rgba(255,224,102,.6)'; c.fillText('NEW BEST', 196, 92); }
-  // the camera: footage left on the SD card, in seconds
-  const bx = W - 262, by = 10, low = CAMR.left < M.CAMERA.min;
-  A.rr(c, bx, by, 250, 56, 14); c.fillStyle = 'rgba(0,44,90,.82)'; c.fill();
-  A.cameraIcon(c, bx + 28, by + 28, 1, C.white);
-  A.pickupIcon(c, 'sdCard', bx + 64, by + 28, .9);
-  c.fillStyle = low ? 'rgba(255,255,255,.5)' : C.white; c.font = `700 24px ui-monospace,Menlo,Consolas,monospace`; c.textAlign = 'left';
-  c.fillText(M.cameraSeconds(CAMR).toFixed(1) + 's', bx + 84, by + 29);
-  const mx = bx + 162, my = by + 20, mw = 76, mh = 16;
-  A.rr(c, mx, my, mw, mh, 5); c.fillStyle = 'rgba(255,255,255,.15)'; c.fill();
-  if (CAMR.left > 0){ A.rr(c, mx, my, Math.max(6, mw*CAMR.left/CAMR.cap), mh, 5); c.fillStyle = low ? 'rgba(255,255,255,.4)' : C.white; c.fill(); }
-  c.strokeStyle = C.white; c.lineWidth = 2; A.rr(c, mx, my, mw, mh, 5); c.stroke();
-  if (CAMR.boss){ c.fillStyle = C.navy; for (let s = M.CLIP.cost; s < CAMR.cap - .01; s += M.CLIP.cost) c.fillRect(mx + mw*s/CAMR.cap - 1.5, my - 3, 3, mh + 6); }
-  if (CAMR.refused > 0){ c.fillStyle = C.white; c.font = `700 14px ${FONT}`; c.fillText('Card busy', mx, by + 47); }
-  c.restore();
+// The HUD and the viewfinder are the shared compact ones in js/hud.js (owner, 2 Oct: the screens were too busy).
+// The viewfinder keeps REC, 120 FPS and the focus box (owner, 26 Sept), small; the card's footage is in the camera pill.
+function drawViewfinder(c){ M.hud.viewfinder(c, { t:G.t, font:FONT, af:G.af ? toScreen(G.af.x, G.af.y) : null }); }
+function hud(c, filming){
+  M.hud.pills(c, { font:FONT, t:G.t, health:G.health, lives:G.lives, cam:CAMR, filming, score:G.score, salvage:salvageCount(), total:L.salvageTotal, newBest:G.newBest,
+    continues:M.campaign.continues, paused:G.paused, lifeIcon:(cc, x, y) => M.puppet.draw(cc, rig, pose('idle', 0, 0, null, 0), x, y, 24, { facing:1 }) });
 }
 function drawOverlay(c){
-  if (CAMR.on || G.slowShow) drawViewfinder(c); else hud(c);
+  const filming = CAMR.on || G.slowShow;
+  if (filming) drawViewfinder(c);
+  hud(c, filming);
   if (A.journeyHUD) A.journeyHUD(c,L,P,G,B);
-  if (B.on&&!B.done){
-    c.save();c.fillStyle='rgba(7,18,27,.94)'; A.rr(c,246,432,468,74,10);c.fill();
-    c.fillStyle='#fff'; c.font=`700 23px ${FONT}`; c.textAlign='center';
-    c.fillText(isTouch()?'Hold the wrench to Fix':'Hold E to Fix',480,460);
-    c.fillStyle='#a9d1d3';c.font=`500 13px ${FONT}`;
-    c.fillText(B.fix>0?'Stay still. Release or a hit cancels.':'Go to the flashing service point and hold.',480,480);
-    c.font=`600 11px ${FONT}`;c.fillStyle='#7f9eac';c.fillText('SALVAGE IS YOUR COLLECTION · REPAIRS DO NOT SPEND IT',480,497);c.restore();
-  }
+  if (B.on&&!B.done) M.hud.helper(c, isTouch() ? 'Hold the wrench to fix' : 'Hold E to fix', FONT);       // the owner's helper, kept, slim
   if (G.card > 0){                                          // the level card: supplied lock-up, unchanged
     const a = Math.min(1, G.card/0.5, (2.8 - G.card)/0.3 + .001);
     c.save(); c.globalAlpha = Math.max(0, a);

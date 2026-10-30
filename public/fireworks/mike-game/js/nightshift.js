@@ -303,11 +303,10 @@ A.journeyHUD=function(c,L,P,G,B){
   if(!P)return;
   c.save();
   const section=L.sectionAt(P.x),idx=L.sections.indexOf(section)+1;
-  if(G.ts!==.2&&!G.slowShow){
-  c.fillStyle='rgba(5,17,27,.88)';rr(c,690,76,258,47,7);c.fill();
-  text(c,String(idx).padStart(2,'0')+' / '+L.sections.length+'   '+section.title.toUpperCase(),704,96,10,'#a9c5d0');
-  c.fillStyle='#29434f';c.fillRect(704,108,230,3);c.fillStyle='#8cdcd7';c.fillRect(704,108,230*Math.min(1,P.x/L.W),3);
-  if(P.y<6){text(c,'MAINTENANCE ROUTE  ↑',704,139,10,'#a7e1e0');}
+  if(G.paused){                                            // the section panel lives on the pause screen now (owner, 2 Oct)
+  c.fillStyle='rgba(5,17,27,.88)';rr(c,351,470,258,47,7);c.fill();
+  text(c,String(idx).padStart(2,'0')+' / '+L.sections.length+'   '+section.title.toUpperCase(),365,490,10,'#a9c5d0');
+  c.fillStyle='#29434f';c.fillRect(365,502,230,3);c.fillStyle='#8cdcd7';c.fillRect(365,502,230*Math.min(1,P.x/L.W),3);
   }
   if(B.on&&!B.done){
     const seq=(L.boss.orders[B.order]||L.boss.orders[0]);

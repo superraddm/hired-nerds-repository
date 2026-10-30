@@ -19,7 +19,7 @@ const rooms = [
   nozzles:[{ id:'n1a', at:[32, 16], dir:[0, -1], reach:4.5, cycle:4.6, tell:.9, active:1.2 }],
   scenery:[{ type:'sign', kind:'move', at:[3.7, 6.5] }, { type:'sign', kind:'swim', at:[32, 7.4] }, { type:'window', at:[18, 4.5], w:6, h:5 }, { type:'rack', at:[11.5, 12] }],
   pickups:[sal('s1-1', 'bearing', 7.5, 8.6), sal('s1-2', 'seal', 12, 6.4), sal('s1-3', 'coupling', 7.5, 4.2), sal('s1-4', 'bearing', 21.5, 11), sal('s1-5', 'seal', 24, 11),
-    sal('s1-6', 'coupling', 30, 15), sal('s1-7', 'bearing', 34.5, 15), sal('s1-8', 'controlUnit', 44, 9)] },
+    sal('s1-6', 'coupling', 30, 15), sal('s1-7', 'bearing', 34.5, 15), sal('s1-8', 'controlUnit', 44, 9), sal('sd1-1', 'sdCard', 40, 11)] },
 // ---------------------------------------------------------------------------------------------------- 02
 { id:'flushing-gallery', title:'Flushing gallery', x:48, width:80, salvage:10,
   solids:[[48, 12, 8, 16], [56, 24, 64, 4], [120, 12, 8, 16]],

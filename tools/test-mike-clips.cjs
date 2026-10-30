@@ -3,7 +3,7 @@
 //   1. Slow motion must be worth using on a boss.
 //   2. A repair fits inside one clip.
 //   3. No amount of footage makes the boss a walk: cards are spare clips, never a longer clip; the player loads each
-//      clip by pressing; and the one clip that comes back by itself comes back far slower than a clip loads.
+//      clip by pressing; and all collected capacity comes back far slower than a clip loads.
 const assert = require('node:assert/strict'), fs = require('fs'), path = require('path');
 const { M, E, levelData, step, place } = require('./mike-l2-lib.cjs');
 const base = path.resolve(__dirname, '../public/fireworks/mike-game'), DT = 1/60, CLIP = M.CLIP, CAM = M.CAMERA, result = {};
@@ -11,6 +11,8 @@ const run = (C, secs, press) => { let filmed = 0; for (let i = 0; i < Math.round
 const near = (a, b, tol) => Math.abs(a - b) < (tol || .03);
 const L1 = JSON.parse(fs.readFileSync(path.join(base, 'level-1.json'), 'utf8')), L2 = levelData();
 const cards = L => L.sections.reduce((n, s) => n + (s.pickups || []).filter(p => p.type === 'sdCard').length, 0);
+assert.equal(cards(L1), (CAM.max - CAM.base)/CAM.perCard, 'Level 1 has no cards beyond its 12-second capacity');
+assert.equal(cards(L2), 5, 'Level 2 has one extra SD card');
 
 // The partially used current take must not hide a full spare in either HUD.
 { for (const count of [0, 1, 2, 3, 4, 5, 6]){
@@ -45,12 +47,15 @@ const cards = L => L.sections.reduce((n, s) => n + (s.pickups || []).filter(p =>
     result[name] = { sdCards:cards(L), footage:M.cameraSeconds(C, C.cap), clips, repairs:(L.boss.orders[0].flat ? L.boss.orders[0].flat() : L.boss.orders[0]).length };
     assert.ok(clips < result[name].repairs, name + ': every card collected still films fewer repairs than the boss needs'); } }
 
-// Recharge: only one clip comes back by itself, and far slower than a clip loads.
-{ const C = M.newCamera(6); C.boss = true; C.left = 0; C.cool = 0;
+// Recharge continues after the first clip, restores every collected spare, and never exceeds capacity.
+{ for (const count of [0, 1, 2, 5, 6]){
+  const C = M.newCamera(count); C.boss = true; C.left = 0; C.cool = 0;
   run(C, 10); assert.ok(near(C.left, 10*CLIP.recharge, .05), 'one fifth of a storage unit per second'); assert.ok(C.left < CLIP.cost);
-  run(C, 60); assert.ok(near(C.left, CLIP.cost), 'one clip comes back, and only one, whatever the card holds');
+  run(C, 5); assert.ok(near(C.left, CLIP.cost), 'first clip is ready after 15 seconds');
+  run(C, 15); assert.ok(near(C.left, Math.min(C.cap, 2*CLIP.cost)), 'the next clip recharges at the same slow rate');
+  run(C, 60); assert.equal(C.left, C.cap, 'all collected capacity returns, without extra cards');
   const seconds = CLIP.cost/CLIP.recharge; assert.ok(seconds >= 10*CLIP.load, 'recharging is at least ten times slower than loading');
-  result.rechargeSecondsPerClip = seconds; result.timesSlowerThanLoading = +(seconds/CLIP.load).toFixed(0); }
+  result.rechargeSecondsPerClip = seconds; result.timesSlowerThanLoading = +(seconds/CLIP.load).toFixed(0); } }
 
 // A bare card: one clip on arrival, the same clip again after the wait. Nobody is ever left without the camera.
 { const C = M.newCamera(0); C.boss = true; assert.equal(M.clipsLeft(C), 1); assert.ok(near(run(C, CLIP.length + 1, true), CLIP.length)); assert.ok(near(run(C, 2, true), 0, .05), 'nothing to film with yet');

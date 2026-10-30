@@ -112,7 +112,7 @@ for i,s in enumerate(sectors):
     for j,p in enumerate(picks):s['pickups'].append(dict(id=f'v3-salvage-{i}-{j}',type=['bearing','seal','coupling'][(i+j)%3],at=[p[0]+p[2]/2,p[1]-1]))
     if i in (3,7):
         p=min(shelves,key=lambda p:p[1]);s['pickups'].append(dict(id=f'v3-unit-{i}',type='controlUnit',at=[p[0]+p[2]/2,p[1]-1]))
-    if i in (0,3,5,8):
+    if i == 8:  # Five earlier SD cards plus this one reach the 12-second capacity.
         p=min(shelves,key=lambda p:p[1]);s['pickups'].append(dict(id=f'v3-sd-{i}',type='sdCard',at=[p[0]+.5,p[1]-1]))
     if i in (2,4,7):s['pickups'].append(dict(id=f'v3-lube-{i}',type='lubricant',at=[s['width']-4,11]))
 d['sections']=d['sections'][:8]+sectors+d['sections'][-2:]

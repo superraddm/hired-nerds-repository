@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540" font-family="Arial,Helvetica,sans-serif">
+  <!-- CONCEPT MOCK-UP ONLY, not game art: the Teach Cell as a route puzzle, with a minimal boss HUD -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5F8195"/><stop offset="1" stop-color="#2C4252"/></linearGradient>
+    <marker id="ar" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto"><path d="M0 1 L11 6 L0 11 z" fill="#FFE27A"/></marker>
+  </defs>
+  <rect width="960" height="540" fill="url(#bg)"/>
+  <!-- back wall panels -->
+  <g fill="#3A5466" opacity=".55"><rect x="40" y="80" width="250" height="400"/><rect x="355" y="80" width="250" height="300"/><rect x="670" y="80" width="250" height="400"/></g>
+  <!-- the Big Arm's gantry track across the ceiling -->
+  <rect x="0" y="26" width="960" height="18" fill="#56616C" stroke="#1B1F24" stroke-width="2"/>
+  <!-- the route rails on the back wall: lit where the program reaches, dark beyond the break -->
+  <g stroke-linecap="round" fill="none">
+    <!-- dark (unreached) rails -->
+    <g stroke="#2A3843" stroke-width="12">
+      <path d="M72 128 L72 72"/><path d="M72 128 L888 128"/><path d="M240 272 L480 312"/><path d="M480 312 L720 272"/><path d="M720 272 L888 128"/>
+      <path d="M240 272 L240 432"/><path d="M240 432 L720 432"/><path d="M720 272 L720 432"/><path d="M720 432 L860 432"/><path d="M480 312 L720 432"/>
+    </g>
+    <g stroke="#45606E" stroke-width="5">
+      <path d="M72 128 L888 128"/><path d="M480 312 L720 272"/><path d="M720 272 L888 128"/><path d="M240 432 L720 432"/><path d="M720 272 L720 432"/><path d="M720 432 L860 432"/><path d="M480 312 L720 432"/><path d="M240 272 L480 312"/>
+    </g>
+    <!-- lit rails: the program as it runs now: chute -> A -> B -> F, which points into the wall -->
+    <g stroke="#7FE7FF" stroke-width="7"><path d="M72 72 L72 128"/><path d="M72 128 L240 272"/><path d="M240 272 L240 432"/></g>
+  </g>
+  <!-- the infeed chute (top left), with the three fault lamps: one round fixed -->
+  <rect x="44" y="44" width="58" height="34" rx="5" fill="#3A4148" stroke="#1B1F24" stroke-width="2"/>
+  <rect x="58" y="50" width="28" height="22" rx="2" fill="#FF8A1F" stroke="#5A2E00" stroke-width="2"/>
+  <g stroke="#1B1F24" stroke-width="1.5"><circle cx="118" cy="54" r="6" fill="#35C06A"/><circle cx="134" cy="54" r="6" fill="#E8503A"/><circle cx="150" cy="54" r="6" fill="#E8503A"/></g>
+  <!-- tiers: top ledges, side decks, centre grating, floor -->
+  <g fill="#C7CCD1" stroke="#1B1F24" stroke-width="2.5">
+    <rect x="20" y="200" width="104" height="22"/><rect x="836" y="200" width="104" height="22"/>
+    <rect x="160" y="344" width="160" height="22"/><rect x="640" y="344" width="160" height="22"/>
+    <rect x="380" y="400" width="200" height="12"/>
+  </g>
+  <rect x="0" y="504" width="960" height="36" fill="#5D5751"/><rect x="0" y="504" width="960" height="8" fill="#C2BBAE"/>
+  <rect x="0" y="0" width="16" height="540" fill="#4D5863"/><rect x="944" y="0" width="16" height="540" fill="#4D5863"/>
+  <!-- the waypoint dials: each points to the next waypoint. Hold E at one to re-teach it (it turns to its next exit) -->
+  <g stroke="#1B1F24" stroke-width="2.5">
+    <g transform="translate(72 128)"><circle r="19" fill="#2F353B"/><circle r="13" fill="none" stroke="#7FE7FF" stroke-width="3"/><path d="M0 0 L16 14" stroke="#FFE27A" stroke-width="4" marker-end="url(#ar)"/><text y="-26" text-anchor="middle" fill="#cfe6ea" font-size="12" stroke="none" font-weight="700">A</text></g>
+    <g transform="translate(240 272)"><circle r="19" fill="#2F353B"/><circle r="13" fill="none" stroke="#7FE7FF" stroke-width="3"/><path d="M0 0 L0 18" stroke="#FFE27A" stroke-width="4" marker-end="url(#ar)"/><text y="-26" text-anchor="middle" fill="#cfe6ea" font-size="12" stroke="none" font-weight="700">B</text></g>
+    <g transform="translate(480 312)"><circle r="19" fill="#2F353B"/><circle r="13" fill="none" stroke="#45606E" stroke-width="3"/><path d="M0 0 L18 -3" stroke="#8BA0AA" stroke-width="4"/><text y="-26" text-anchor="middle" fill="#cfe6ea" font-size="12" stroke="none" font-weight="700">C</text></g>
+    <g transform="translate(720 272)"><circle r="19" fill="#2F353B"/><circle r="13" fill="none" stroke="#45606E" stroke-width="3"/><path d="M0 0 L0 18" stroke="#8BA0AA" stroke-width="4"/><text y="-26" text-anchor="middle" fill="#cfe6ea" font-size="12" stroke="none" font-weight="700">D</text></g>
+    <g transform="translate(888 128)"><circle r="19" fill="#2F353B"/><circle r="13" fill="none" stroke="#45606E" stroke-width="3"/><path d="M0 0 L-18 0" stroke="#8BA0AA" stroke-width="4"/><text y="-26" text-anchor="middle" fill="#cfe6ea" font-size="12" stroke="none" font-weight="700">E</text></g>
+    <g transform="translate(240 432)"><circle r="19" fill="#2F353B"/><circle r="13" fill="none" stroke="#E8503A" stroke-width="3"/><path d="M0 0 L-18 0" stroke="#FF5A4A" stroke-width="4"/><text y="-26" text-anchor="middle" fill="#ffb3a8" font-size="12" stroke="none" font-weight="700">F</text></g>
+    <g transform="translate(720 432)"><circle r="19" fill="#2F353B"/><circle r="13" fill="none" stroke="#45606E" stroke-width="3"/><path d="M0 0 L18 0" stroke="#8BA0AA" stroke-width="4"/><text y="-26" text-anchor="middle" fill="#cfe6ea" font-size="12" stroke="none" font-weight="700">G</text></g>
+  </g>
+  <!-- F points into the wall: that is where the program breaks, and where the arm drops its crate -->
+  <g stroke="#FF5A4A" stroke-width="4"><path d="M206 418 L222 434 M222 418 L206 434"/></g>
+  <!-- the crate it just let go of, falling, and its shadow on the floor -->
+  <ellipse cx="240" cy="505" rx="26" ry="6" fill="#0A0E12" opacity=".5"/>
+  <rect x="226" y="462" width="28" height="28" rx="3" fill="#C99D60" stroke="#6E4F28" stroke-width="2"/>
+  <!-- the Big Arm: a gantry cobot that follows the lit route, carrying the next crate down from A towards B -->
+  <rect x="134" y="20" width="64" height="30" rx="6" fill="#3A4148" stroke="#1B1F24" stroke-width="2.5"/>
+  <rect x="160" y="50" width="12" height="118" fill="#F2F4F5" stroke="#1B1F24" stroke-width="2"/>
+  <rect x="160" y="96" width="12" height="16" fill="#17191C"/><path d="M160 96 l12 8 M160 104 l12 8" stroke="#F4CA46" stroke-width="3"/>
+  <circle cx="166" cy="172" r="12" fill="#F4F6F7" stroke="#1B1F24" stroke-width="2.5"/><circle cx="166" cy="172" r="6" fill="none" stroke="#E8503A" stroke-width="3"/>
+  <rect x="152" y="184" width="28" height="24" rx="3" fill="#FF8A1F" stroke="#5A2E00" stroke-width="2"/>
+  <!-- the pallet, bottom right, where every crate should end up -->
+  <circle cx="872" cy="490" r="34" fill="none" stroke="#3EDB86" stroke-width="3" opacity=".7"/>
+  <g fill="#2FBF71" stroke="#0B3D22" stroke-width="2"><rect x="840" y="488" width="64" height="7" rx="2"/><rect x="840" y="497" width="64" height="7" rx="2"/></g>
+  <!-- Mike on the left side deck at dial B, holding E: the ring around the dial fills -->
+  <circle cx="240" cy="272" r="27" fill="none" stroke="#FFE27A" stroke-width="5" stroke-dasharray="110 200" transform="rotate(-90 240 272)"/>
+  <g transform="translate(292 344)"><rect x="-13" y="-78" width="26" height="30" rx="8" fill="#D8231E" stroke="#1B1F24" stroke-width="2"/><rect x="-5" y="-48" width="10" height="26" fill="#1B1F24"/><path d="M-4 -22 L-9 0 M4 -22 L9 0" stroke="#1B1F24" stroke-width="4"/><path d="M-5 -42 L-24 -62" stroke="#1B1F24" stroke-width="4"/><circle cx="-25" cy="-63" r="5" fill="#D8231E"/></g>
+  <g transform="translate(240 222)"><rect x="-58" y="-14" width="116" height="26" rx="7" fill="#0A2230" stroke="#F4CA46" stroke-width="2"/><text y="4" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">Hold E to re-teach</text></g>
+  <!-- the minimal boss HUD: health and lives top left, camera clips top right; nothing else -->
+  <g><rect x="12" y="10" width="118" height="30" rx="15" fill="rgba(0,44,90,.78)"/><g fill="#fff"><circle cx="30" cy="25" r="6"/><circle cx="48" cy="25" r="6"/><circle cx="66" cy="25" r="6" fill="none" stroke="#fff" stroke-width="2"/></g><text x="84" y="30" fill="#fff" font-size="15" font-weight="700">×3</text></g>
+  <g><rect x="830" y="10" width="118" height="30" rx="15" fill="rgba(0,44,90,.78)"/><path d="M846 18 h16 a2 2 0 0 1 2 2 v2 l6 -4 v14 l-6 -4 v2 a2 2 0 0 1 -2 2 h-16 a2 2 0 0 1 -2 -2 v-10 a2 2 0 0 1 2 -2 z" fill="#fff"/><g fill="#fff"><rect x="882" y="18" width="16" height="14" rx="3"/><rect x="902" y="18" width="16" height="14" rx="3"/><rect x="922" y="18" width="16" height="14" rx="3" fill="none" stroke="#fff" stroke-width="2"/></g></g>
+  <text x="480" y="526" text-anchor="middle" fill="rgba(255,255,255,.55)" font-size="11">CONCEPT MOCK-UP: not game art</text>
+</svg>

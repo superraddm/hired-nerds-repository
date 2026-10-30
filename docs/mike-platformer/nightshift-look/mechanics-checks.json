@@ -39,15 +39,14 @@
     "camY": -381.87041827277255,
     "lookDown": false,
     "charge": 100,
-    "left": 4.5,
-    "cap": 4.5,
+    "left": 3,
+    "cap": 3,
     "cameraOn": false,
     "cool": 0,
-    "score": 450,
+    "score": 350,
     "got": [
       "v3-salvage-3-2",
-      "v3-unit-3",
-      "v3-sd-3"
+      "v3-unit-3"
     ],
     "health": 3,
     "lives": 3,
@@ -61,7 +60,7 @@
       "coupling": 1,
       "lubricant": 0,
       "controlUnit": 1,
-      "sdCard": 1,
+      "sdCard": 0,
       "miniMike": 0
     },
     "rec": {
@@ -124,14 +123,12 @@
       "camY": -270.39999793598656,
       "lookDown": false,
       "charge": 100,
-      "left": 4.5,
-      "cap": 4.5,
+      "left": 3,
+      "cap": 3,
       "cameraOn": false,
       "cool": 0,
-      "score": 100,
-      "got": [
-        "v3-sd-0"
-      ],
+      "score": 0,
+      "got": [],
       "health": 3,
       "lives": 3,
       "dead": 0,
@@ -144,7 +141,7 @@
         "coupling": 0,
         "lubricant": 0,
         "controlUnit": 0,
-        "sdCard": 1,
+        "sdCard": 0,
         "miniMike": 0
       },
       "rec": {
@@ -206,14 +203,12 @@
       "camY": -110.40059626449982,
       "lookDown": true,
       "charge": 100,
-      "left": 4.5,
-      "cap": 4.5,
+      "left": 3,
+      "cap": 3,
       "cameraOn": false,
       "cool": 0,
-      "score": 100,
-      "got": [
-        "v3-sd-0"
-      ],
+      "score": 0,
+      "got": [],
       "health": 3,
       "lives": 3,
       "dead": 0,
@@ -226,7 +221,7 @@
         "coupling": 0,
         "lubricant": 0,
         "controlUnit": 0,
-        "sdCard": 1,
+        "sdCard": 0,
         "miniMike": 0
       },
       "rec": {
@@ -288,14 +283,12 @@
       "camY": -270.3994037377145,
       "lookDown": false,
       "charge": 100,
-      "left": 4.5,
-      "cap": 4.5,
+      "left": 3,
+      "cap": 3,
       "cameraOn": false,
       "cool": 0,
-      "score": 100,
-      "got": [
-        "v3-sd-0"
-      ],
+      "score": 0,
+      "got": [],
       "health": 3,
       "lives": 3,
       "dead": 0,
@@ -308,7 +301,7 @@
         "coupling": 0,
         "lubricant": 0,
         "controlUnit": 0,
-        "sdCard": 1,
+        "sdCard": 0,
         "miniMike": 0
       },
       "rec": {
