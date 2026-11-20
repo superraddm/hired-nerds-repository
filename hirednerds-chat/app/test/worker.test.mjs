@@ -326,6 +326,22 @@ test("retired CV request form redirects to the CV page", async () => {
   assert.equal(r.res.headers.get("Location"), "https://jofdavies.com/cv/");
 });
 
+test("chat: the contact marker is removed even when the model tacks it onto a sentence", async () => {
+  const before = modelReply;
+  try {
+    modelReply = "Salary is discussed directly with Jof. Please use the contact form on this site. ACTION: OPEN_CONTACT";
+    let r = await call("POST", "/api/chat", { body: { question: "What salary is he looking for?" } });
+    assert.equal(r.data.answer, "Salary is discussed directly with Jof. Please use the contact form on this site.");
+    assert.equal(r.data.action, "suggest-contact");
+    modelReply = "Use the form.\n\nACTION: open_contact\n";
+    r = await call("POST", "/api/chat", { body: { question: "What salary is he looking for?" } });
+    assert.equal(r.data.answer, "Use the form.");
+    assert.equal(r.data.action, "suggest-contact");
+  } finally {
+    modelReply = before;
+  }
+});
+
 test("health check", async () => {
   const r = await call("GET", "/api/health");
   assert.equal(r.data.ok, true);

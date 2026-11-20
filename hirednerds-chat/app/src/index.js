@@ -187,7 +187,10 @@ const CONTACT_PATTERNS = [
 export function wantsContact(question) {
   return CONTACT_PATTERNS.some((re) => re.test(question));
 }
-const ACTION_TOKEN = /(^|\n)\s*ACTION:\s*OPEN_CONTACT\s*(?=\n|$)/gi;
+// The model is asked to put the marker on its own last line, but it sometimes tacks it onto a sentence.
+// It is detected and removed wherever it appears, so a visitor never sees it.
+const ACTION_SEEN = /ACTION:\s*OPEN_CONTACT/i;
+const ACTION_TOKEN = /[ \t]*ACTION:\s*OPEN_CONTACT\b[ \t]*/gi;
 
 async function handleChat(request, env, ctx, cors) {
   if (!(await allowed(env.CHAT_LIMITER, clientKey(request)))) {
@@ -248,8 +251,8 @@ async function handleChat(request, env, ctx, cors) {
   const data = await chat.json();
   const raw = clean(data.choices && data.choices[0] && data.choices[0].message ? data.choices[0].message.content : "", 4000);
 
-  const modelWantsContact = /(^|\n)\s*ACTION:\s*OPEN_CONTACT\s*(\n|$)/i.test(raw);
-  const answer = raw.replace(ACTION_TOKEN, "").trim();
+  const modelWantsContact = ACTION_SEEN.test(raw);
+  const answer = raw.replace(ACTION_TOKEN, "").replace(/\n{3,}/g, "\n\n").trim();
   const suggestContact = modelWantsContact || wantsContact(question);
 
   return json(

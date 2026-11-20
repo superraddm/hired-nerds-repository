@@ -57,7 +57,7 @@ the visitor to `/cv/Jof-Davies-CV.pdf`. The visitor fills in nothing and never w
 
 ```
 cd app
-node test/worker.test.mjs        # 19 offline tests
+node test/worker.test.mjs        # 20 offline tests
 npx wrangler deploy --dry-run    # validates the config and bundle, deploys nothing
 ```
 

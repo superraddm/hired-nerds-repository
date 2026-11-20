@@ -172,13 +172,13 @@
       })
       .then(function (data) {
         var answer = String(data.answer || "").trim();
-        var token = /(^|\n)\s*ACTION:\s*OPEN_CONTACT\s*(\n|$)/i;
+        var token = /ACTION:\s*OPEN_CONTACT/i;
         var wantsContact =
           token.test(answer) ||
           data.action === "open-contact-form" ||
           data.action === "suggest-contact" ||
           data.appendContactLine === true;
-        answer = answer.replace(/(^|\n)\s*ACTION:\s*OPEN_CONTACT\s*(?=\n|$)/gi, "").trim();
+        answer = answer.replace(/[ \t]*ACTION:\s*OPEN_CONTACT\b[ \t]*/gi, "").trim();
         if (!answer) answer = "I do not have an answer for that. The contact form will reach Jof directly.";
         thinking.remove();
         addMessage(answer, "bot");
