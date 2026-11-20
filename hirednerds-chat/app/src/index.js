@@ -5,6 +5,8 @@
 //   GET  /download/cv       email Jof a short notice, then redirect to the CV PDF
 //   POST /api/ingest        (Bearer INGEST_TOKEN) upsert library records
 //   POST /api/admin/delete  (Bearer INGEST_TOKEN) delete library records by id
+//   GET  /api/admin/mail-status  (Bearer INGEST_TOKEN) what Postmark did with the last few emails
+//   POST /api/admin/mail-test    (Bearer INGEST_TOKEN) send Jof one test email and return Postmark's reply
 //   GET  /api/health        liveness check
 //
 // Guard rails: origin allow-list, per-IP rate limits, a daily cap on chat calls,
@@ -48,6 +50,12 @@ export default {
       }
       if (url.pathname === "/api/admin/delete" && request.method === "POST") {
         return await handleDelete(request, env, cors);
+      }
+      if (url.pathname === "/api/admin/mail-test" && request.method === "POST") {
+        return await handleMailTest(request, env, cors);
+      }
+      if (url.pathname === "/api/admin/mail-status" && request.method === "GET") {
+        return await handleMailStatus(request, env, cors);
       }
       if (url.pathname === "/api/health" && request.method === "GET") {
         return json({ ok: true, service: "jofdavies-api", version: "2026-11" }, 200, cors);
@@ -302,6 +310,7 @@ async function handleContact(request, env, cors) {
     console.error("Postmark rejected contact email", res.status, await res.text());
     return json({ error: "Email service rejected the request." }, 502, cors);
   }
+  console.log("Contact email accepted by Postmark", await res.text());
   return json({ success: true }, 200, cors);
 }
 
@@ -424,6 +433,7 @@ export async function notifyCvDownload(request, env) {
     console.error("Postmark rejected CV download notice", res.status, await res.text());
     return "failed";
   }
+  console.log("CV download notice accepted by Postmark", await res.text());
   return "sent";
 }
 
@@ -462,4 +472,146 @@ async function handleDelete(request, env, cors) {
   if (!ids.length || ids.length > 200) return json({ error: "Send between 1 and 200 ids." }, 400, cors);
   const result = await env.DOC_INDEX.deleteByIds(ids);
   return json({ success: true, count: ids.length, result }, 200, cors);
+}
+
+// ---------------------------------------------------------------- mail diagnostics (authenticated, read-only)
+
+async function postmarkGet(env, path) {
+  const res = await fetch("https://api.postmarkapp.com" + path, {
+    headers: { "X-Postmark-Server-Token": env.POSTMARK_API_TOKEN, Accept: "application/json" },
+  });
+  let body = null;
+  try {
+    body = await res.json();
+  } catch {
+    body = null;
+  }
+  return { status: res.status, body: body || {} };
+}
+
+// Answers "did the email actually go?": the Postmark server's delivery mode, the last few messages
+// with their delivery events, and recent bounces. Subjects and recipients only, never message bodies.
+async function handleMailStatus(request, env, cors) {
+  if (!isAuthorised(request, env)) return json({ error: "Unauthorised." }, 401, cors);
+  if (!env.POSTMARK_API_TOKEN) return json({ error: "No mail token configured." }, 500, cors);
+
+  // ?id=<Postmark message id> looks up one message: status, recipients and delivery events, never the body.
+  const id = new URL(request.url).searchParams.get("id") || "";
+  if (id) {
+    if (!/^[0-9a-f-]{36}$/i.test(id)) return json({ error: "Not a message id." }, 400, cors);
+    const one = await postmarkGet(env, `/messages/outbound/${id}/details`);
+    return json(
+      {
+        httpStatus: one.status,
+        error: one.body.Message,
+        receivedAt: one.body.ReceivedAt,
+        to: (one.body.To || []).map((t) => t.Email),
+        subject: one.body.Subject,
+        status: one.body.Status,
+        events: (Array.isArray(one.body.MessageEvents) ? one.body.MessageEvents : []).map((e) => ({
+          type: e.Type,
+          at: e.ReceivedAt,
+          details: e.Details,
+        })),
+      },
+      200,
+      cors
+    );
+  }
+
+  const today = new Date().toISOString().slice(0, 10);
+  const sendDays = await postmarkGet(env, `/stats/outbound/sends?fromdate=2025-12-01&todate=${today}`);
+  const server = await postmarkGet(env, "/server");
+  const sent = await postmarkGet(env, "/messages/outbound?count=8&offset=0");
+  const statsToday = await postmarkGet(env, `/stats/outbound?fromdate=${today}&todate=${today}`);
+  const messages = [];
+  for (const m of Array.isArray(sent.body.Messages) ? sent.body.Messages : []) {
+    const detail = await postmarkGet(env, `/messages/outbound/${encodeURIComponent(m.MessageID)}/details`);
+    messages.push({
+      receivedAt: m.ReceivedAt,
+      to: (m.To || []).map((t) => t.Email),
+      from: m.From,
+      subject: m.Subject,
+      status: m.Status,
+      stream: m.MessageStream,
+      events: (Array.isArray(detail.body.MessageEvents) ? detail.body.MessageEvents : []).map((e) => ({
+        type: e.Type,
+        at: e.ReceivedAt,
+        details: e.Details,
+      })),
+    });
+  }
+  const bounces = await postmarkGet(env, "/bounces?count=5&offset=0");
+  const stats = await postmarkGet(env, "/stats/outbound");
+  const streams = await postmarkGet(env, "/message-streams");
+  const suppressed = await postmarkGet(env, "/message-streams/outbound/suppressions/dump");
+
+  return json(
+    {
+      server: {
+        httpStatus: server.status,
+        name: server.body.Name,
+        deliveryType: server.body.DeliveryType,
+        error: server.body.Message,
+      },
+      sent: { httpStatus: sent.status, total: sent.body.TotalCount, error: sent.body.Message, messages },
+      stats: { httpStatus: stats.status, sent: stats.body.Sent, bounced: stats.body.Bounced, error: stats.body.Message },
+      today: { date: today, sent: statsToday.body.Sent, bounced: statsToday.body.Bounced },
+      // Days on which Postmark actually sent something, most recent last.
+      sendDays: (Array.isArray(sendDays.body.Days) ? sendDays.body.Days : []).filter((d) => d.Sent > 0).slice(-12),
+      streams: {
+        httpStatus: streams.status,
+        list: (Array.isArray(streams.body.MessageStreams) ? streams.body.MessageStreams : []).map((x) => ({
+          id: x.ID,
+          type: x.MessageStreamType,
+          archivedAt: x.ArchivedAt,
+        })),
+      },
+      bounces: {
+        httpStatus: bounces.status,
+        total: bounces.body.TotalCount,
+        recent: (Array.isArray(bounces.body.Bounces) ? bounces.body.Bounces : []).map((b) => ({
+          at: b.BouncedAt,
+          type: b.Type,
+          email: b.Email,
+          description: b.Description,
+          details: b.Details,
+          inactive: b.Inactive,
+        })),
+      },
+      suppressions: {
+        httpStatus: suppressed.status,
+        list: (Array.isArray(suppressed.body.Suppressions) ? suppressed.body.Suppressions : []).slice(0, 20),
+      },
+    },
+    200,
+    cors
+  );
+}
+
+// One plain test email to Jof, returning exactly what Postmark answered. Used to prove the mail path end to end.
+async function handleMailTest(request, env, cors) {
+  if (!isAuthorised(request, env)) return json({ error: "Unauthorised." }, 401, cors);
+  const res = await fetch("https://api.postmarkapp.com/email", {
+    method: "POST",
+    headers: {
+      "X-Postmark-Server-Token": env.POSTMARK_API_TOKEN,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      From: NOTIFY_ADDRESS,
+      To: NOTIFY_ADDRESS,
+      Subject: "[Test] Mail check from jofdavies.com",
+      TextBody: `This is a test of the mail path used by the contact form and the CV download notice.\nSent ${new Date().toISOString()}. No action needed.`,
+      MessageStream: "outbound",
+    }),
+  });
+  let body = null;
+  try {
+    body = await res.json();
+  } catch {
+    body = null;
+  }
+  return json({ httpStatus: res.status, postmark: body }, 200, cors);
 }

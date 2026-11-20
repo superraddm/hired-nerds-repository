@@ -33,6 +33,12 @@ the visitor to `/cv/Jof-Davies-CV.pdf`. The visitor fills in nothing and never w
 - Someone who is sent the PDF address itself, or opens it from a saved copy, is not reported.
 - On a branch preview the Worker is not in front, so `public/_redirects` sends `/download/cv` straight to the PDF.
 
+## Did the email go?
+
+`python tools/mail_status.py --token-file <token file>` asks the Worker (`/api/admin/mail-status`, token needed) what
+Postmark did with the last few emails: the server's delivery mode, each message's delivery events, recent bounces
+and suppressed recipients. Read-only; subjects and recipients only.
+
 ## Guard rails
 
 - Origin allow-list (the site and its Pages previews).
@@ -57,7 +63,7 @@ the visitor to `/cv/Jof-Davies-CV.pdf`. The visitor fills in nothing and never w
 
 ```
 cd app
-node test/worker.test.mjs        # 20 offline tests
+node test/worker.test.mjs        # 21 offline tests
 npx wrangler deploy --dry-run    # validates the config and bundle, deploys nothing
 ```
 

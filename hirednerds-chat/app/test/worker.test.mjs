@@ -342,6 +342,25 @@ test("chat: the contact marker is removed even when the model tacks it onto a se
   }
 });
 
+test("mail status: needs the token and reports what Postmark says", async () => {
+  let r = await call("GET", "/api/admin/mail-status");
+  assert.equal(r.res.status, 401);
+  calls.length = 0;
+  r = await call("GET", "/api/admin/mail-status", { headers: { Authorization: "Bearer " + TOKEN } });
+  assert.equal(r.res.status, 200);
+  assert.ok(calls.some((c) => c.url.endsWith("/server")));
+  assert.ok(calls.every((c) => c.url.includes("postmarkapp.com")), "it only talks to Postmark");
+  assert.ok(Array.isArray(r.data.sent.messages));
+
+  r = await call("POST", "/api/admin/mail-test", { body: {} });
+  assert.equal(r.res.status, 401, "the test send needs the token too");
+  calls.length = 0;
+  r = await call("POST", "/api/admin/mail-test", { body: {}, headers: { Authorization: "Bearer " + TOKEN } });
+  assert.equal(r.res.status, 200);
+  assert.equal(notices().length, 1);
+  assert.equal(notices()[0].body.To, "jof@jofdavies.com");
+});
+
 test("health check", async () => {
   const r = await call("GET", "/api/health");
   assert.equal(r.data.ok, true);
