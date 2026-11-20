@@ -1,86 +1,50 @@
 /**
- * For more details on how to configure Wrangler, refer to:
- * https://developers.cloudflare.com/workers/wrangler/configuration/
+ * jofdavies.com API Worker.
+ * Docs: https://developers.cloudflare.com/workers/wrangler/configuration/
+ *
+ * Secrets (set with `wrangler secret put NAME`, never committed):
+ *   OPENAI_API_KEY      embeddings and chat completions
+ *   POSTMARK_API_TOKEN  contact form email
+ *   INGEST_TOKEN        bearer token for /api/ingest and /api/admin/delete (24+ characters)
  */
 {
-  // Basic Worker configuration
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "app",
   "main": "src/index.js",
   "compatibility_date": "2025-12-11",
 
+  // The public workers.dev address is switched off: the API is reachable only through jofdavies.com.
+  "workers_dev": false,
+
   "routes": [
-    {
-      "pattern": "jofdavies.com/api*",
-      "zone_name": "jofdavies.com"
-    },
-    {
-    "pattern": "jofdavies.com/download/cv*",
-    "zone_name": "jofdavies.com"
-  }
+    { "pattern": "jofdavies.com/api*", "zone_name": "jofdavies.com" },
+    { "pattern": "jofdavies.com/download/cv*", "zone_name": "jofdavies.com" }
   ],
 
-   "kv_namespaces": [
-    {
-      "binding": "PDF_REQUESTS",
-      "id": "dd88bd4a3be34411a98198ca1b284214"
-    }
+  // KV: holds the daily chat counter (key chat-count:YYYY-MM-DD). The binding keeps its original name.
+  "kv_namespaces": [
+    { "binding": "PDF_REQUESTS", "id": "dd88bd4a3be34411a98198ca1b284214" }
   ],
 
-  // Observability (optional)
-  "observability": {
-    "enabled": true
-  },
-
-  // Bind Vectorize index
+  // Vectorize: the chatbot's library. The November 2026 rebuild uses a fresh index so the old one stays as a rollback.
+  //   wrangler vectorize create jof-library-2026-11 --dimensions=1536 --metric=cosine
   "vectorize": [
-    {
-      "binding": "DOC_INDEX",
-      "index_name": "jof-master-cv"
-    }
+    { "binding": "DOC_INDEX", "index_name": "jof-library-2026-11" }
   ],
 
-  // Public (non-secret) environment variables
+  // Per-IP rate limits (Workers Rate Limiting API). period is 10 or 60 seconds.
+  "ratelimits": [
+    { "name": "CHAT_LIMITER", "namespace_id": "2611", "simple": { "limit": 12, "period": 60 } },
+    { "name": "CONTACT_LIMITER", "namespace_id": "2612", "simple": { "limit": 3, "period": 60 } }
+  ],
+
+  "observability": { "enabled": true },
+
+  // Public (non-secret) settings
   "vars": {
     "OPENAI_API_BASE": "https://api.openai.com/v1",
     "OPENAI_EMBEDDING_MODEL": "text-embedding-3-small",
-    "OPENAI_CHAT_MODEL": "gpt-4.1-mini"
+    "OPENAI_CHAT_MODEL": "gpt-4.1-mini",
+    "CHAT_DAILY_CAP": "400"
   }
-
-
-
-
-
-
-
-	/**
-	 * Smart Placement
-	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
-	 */
-	// "placement": { "mode": "smart" }
-	/**
-	 * Bindings
-	 * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
-	 * databases, object storage, AI inference, real-time communication and more.
-	 * https://developers.cloudflare.com/workers/runtime-apis/bindings/
-	 */
-	/**
-	 * Environment Variables
-	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
-	 */
-	// "vars": { "MY_VARIABLE": "production_value" }
-	/**
-	 * Note: Use secrets to store sensitive data.
-	 * https://developers.cloudflare.com/workers/configuration/secrets/
-	 */
-	/**
-	 * Static Assets
-	 * https://developers.cloudflare.com/workers/static-assets/binding/
-	 */
-	// "assets": { "directory": "./public/", "binding": "ASSETS" }
-	/**
-	 * Service Bindings (communicate between multiple Workers)
-	 * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
-	 */
-	// "services": [{ "binding": "MY_SERVICE", "service": "my-service" }]
 }

@@ -17,3 +17,13 @@
 
 # Mike the Mic lives at kpopboom.party for now (owner, 26 Sept). One live home, not two.
 /fireworks/mike-game/*  https://kpopboom.party/mike-game/:splat  302
+
+# November 2026 rebuild: pages that were removed or renamed.
+/testimonials.html              /                       302
+/testimonials                   /                       302
+/download.html                  /cv/                    302
+/download                       /cv/                    302
+/cv/cv-email-marketing-OLD      /cv/cv-email-marketing  301
+/cv/cv-email-marketing-OLD.html /cv/cv-email-marketing  301
+/cv/pdf/*                       /cv/                    302
+/jof-email/*                    /                       302

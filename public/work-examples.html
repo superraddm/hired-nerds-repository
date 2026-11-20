@@ -1,359 +1,444 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <title>Work Examples</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Work | Jof Davies</title>
+    <meta name="description" content="Case studies from Jof Davies: AI agent pipelines, a PDF-to-website publisher, CRM data tooling, a video-edit pipeline dispatcher, email infrastructure, global media ingest and insurance CRM migrations.">
+    <link rel="canonical" href="https://jofdavies.com/work-examples">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Jof Davies">
+    <meta property="og:title" content="Work | Jof Davies">
+    <meta property="og:description" content="Case studies: agent pipelines, integrations, data tooling and infrastructure, each with the problem, the build and the controls.">
+    <meta property="og:url" content="https://jofdavies.com/work-examples">
+    <meta property="og:image" content="https://jofdavies.com/assets/img/og-card.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/css/styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/openseadragon.min.js"></script>
 </head>
-
 <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
-            <div><a href="/index.html"class="nav-logo">Jof Davies</a></div>
-
-            <button class="nav-toggle" aria-label="Toggle navigation" style="color: #e0e0e0;">
-                ☰
-            </button>
-
-            <nav class="nav-menu nav-links">
-                <a href="/work-examples.html">Work Examples</a>
-                <a href="/testimonials.html">Testimonials</a>
-                
-                <a href="/about.html">About Me</a>
-            </nav>
-        </header>
-
-<main class="page-container">
-
-    <header class="page-header">
-        <h1>Work Examples</h1>
-        <p class="page-intro">
-            Selected case studies demonstrating complex workflows, systems design,
-            and production solutions across video, automation, and distributed teams.
-        </p>
+        <a href="/" class="nav-logo">Jof Davies<span>_</span></a>
+        <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
+        <nav class="nav-menu" aria-label="Main">
+            <a href="/work-examples" aria-current="page">Work</a>
+            <a href="/about">About</a>
+            <a href="/cv/">CV</a>
+            <a href="#contact" class="nav-cta" data-open-contact>Contact</a>
+        </nav>
     </header>
 
-    <section class="case-study" id="case-site-development">
-    <div class="case-study-content">
-        <h2>Portfolio Site Development — Interactive CV & Proof of Work</h2>
-
-        <p>
-            <strong>The Client:</strong> This project was built for myself, as a practical response to a prolonged job
-            search where traditional CV submissions were frequently filtered or rejected before reaching a human reviewer.
-        </p>
-
-        <p>
-            <strong>The Task:</strong> Create a working, recruiter-facing portfolio that communicates both breadth and
-            depth: a long and varied career history, plus demonstrable capability across modern technical and creative
-            delivery. The goal was to provide an evidence-led alternative to static documents—something that can be
-            explored, verified, and assessed quickly.
-        </p>
-
-        <p>
-            <strong>The Execution &amp; Result:</strong> Using AI-assisted development to accelerate iteration, I designed
-            and implemented a static site with interactive components, including an embedded on-site chatbot (retrieval-led,
-            constrained to a curated reference archive), DeepZoom workflow visualisations, and structured case studies
-            derived from a consolidated archive of roles, assets, and outcomes. The build required full-stack thinking:
-            information architecture, content modelling, frontend implementation (HTML/CSS/JavaScript), deployment and
-            performance considerations, and ongoing maintainability. The result is a single destination that demonstrates
-            what I have done and how I work—through real artefacts, not claims.
-        </p>
-    </div>
-
-    <div class="case-study-media">
-        <img src="/assets/images/site-development.png" alt="Portfolio site development screenshot showing interactive CV elements">
-    </div>
-</section>
-
-
-    <!-- CASE STUDY 1 -->
-    <section class="case-study" id="case-insurance-crm">
-    <div class="case-study-content">
-        <h2>Insurance CRM Transformation & Sales Enablement</h2>
-
-        <p>
-            <strong>The Client:</strong> A group of UK insurance brokers and employee benefits
-            providers operating in highly regulated, high-volume sales environments. Clients
-            included Consilium Employee Benefits, Chase Templeton, Towergate Insurance, Square Mile
-            Broking, and Clear Insurance, operating across multiple ownership changes and business
-            structures.
-        </p>
-
-        <p>
-            <strong>The Challenge:</strong> The organisations relied on a fragmented mix of legacy
-            CRM platforms, spreadsheets, and manual processes. This resulted in duplicated data,
-            limited reporting, poor sales visibility, and operational risk during mergers and
-            acquisitions. The requirement was to design and implement a scalable CRM system capable
-            of supporting telemarketing, renewals, and compliant client communication while
-            preserving data integrity through business transitions.
-        </p>
-
-        <p>
-            <strong>The Solution &amp; Result:</strong> I led the specification, migration, and
-            deployment of a CallPro-based CRM solution, tailored specifically for insurance sales
-            and telemarketing workflows. This included structured data hierarchies, automated email
-            and call campaigns driven by renewal and prospect status, and real-time reporting for
-            management. The solution delivered seamless data continuity across multiple acquisitions,
-            improved lead conversion and retention, and provided leadership teams with clear,
-            actionable insight into pipeline value and sales performance.
-        </p>
-    </div>
-
-    <div class="case-study-media">
-        <!-- YouTube poster thumbnail -->
-        <button
-            class="yt-poster"
-            type="button"
-            data-youtube-id="fZEWGMCCtCI"
-            aria-label="Play Insurance CRM case study video">
-            <img
-                src="https://i.ytimg.com/vi/fZEWGMCCtCI/hqdefault.jpg"
-                alt="Insurance CRM implementation case study video thumbnail"
-                loading="lazy">
-            <span class="yt-play" aria-hidden="true"></span>
-        </button>
-
-        <noscript>
-            <div class="video-embed">
-                <iframe
-                    src="https://www.youtube.com/embed/fZEWGMCCtCI"
-                    title="Insurance CRM implementation case study"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
-                </iframe>
+    <main id="main">
+        <section class="page-top">
+            <div class="wrap">
+                <p class="eyebrow">Work</p>
+                <h1>Case studies</h1>
+                <p class="lede">Systems I designed, built and still run or handed over. Each one covers the problem, what I built and how it is kept under control. Employer and client data is described in general terms.</p>
+                <ul class="toc">
+                    <li><a href="#inbox-agent">Inbox and task-board agents</a></li>
+                    <li><a href="#publishing">PDF to website</a></li>
+                    <li><a href="#data">CRM data tooling</a></li>
+                    <li><a href="#edit-pipeline">Edit-pipeline dispatcher</a></li>
+                    <li><a href="#email">Email infrastructure</a></li>
+                    <li><a href="#ingest">Media ingest and archive</a></li>
+                    <li><a href="#insurance-crm">Insurance CRM migrations</a></li>
+                    <li><a href="#this-site">This site</a></li>
+                    <li><a href="#video">Video production</a></li>
+                </ul>
             </div>
-        </noscript>
-    </div>
-</section>
+        </section>
 
-
-
-
-    <!-- CASE STUDY 3 -->
-   <section class="case-study" id="case-video-ingest">
-    <div class="case-study-content">
-        <h2>Global Video Ingest, Proxy & Archive System</h2>
-
-        <p>
-            <strong>The Client:</strong> A global video marketing agency within the manufacturing
-            sector, producing and managing large volumes of high-resolution video content across
-            multiple editors and geographic locations.
-        </p>
-
-        <p>
-            <strong>The Challenge:</strong> Video files were fragmented across individual editing
-            workstations, posted physical media, and dozens of consumer-grade external hard drives.
-            There was no central archive, no reliable backup strategy, and no effective way to search
-            or retrieve historical content. Data loss was common, ingest was slow, and accessing
-            specific footage could take weeks—or be impossible entirely.
-        </p>
-
-        <p>
-            <strong>Research &amp; Cost Analysis:</strong> An extensive review was conducted across
-            commercial SaaS media management platforms, bespoke vendor solutions, and enterprise
-            storage providers. Many off-the-shelf systems carried annual costs in the tens of
-            thousands of pounds while still lacking core requirements such as flexible ingest,
-            proxy workflows, or true ownership of the data. Bespoke vendor proposals were
-            significantly higher again, often requiring long-term contracts and ongoing licence
-            fees.
-        </p>
-
-        <p>
-            <strong>The Solution:</strong> Rather than adopting an expensive and inflexible platform,
-            I designed and deployed a self-hosted system built around two high-capacity QNAP storage
-            units, each providing approximately 100&nbsp;TB of storage. One system was deployed
-            on-site, with a second installed at a remote location for full failover. Using QNAP HBS3,
-            the primary system synchronises continuously with Dropbox, enabling global ingest while
-            maintaining high-speed local access via a 10&nbsp;Gb internal network and a 1&nbsp;Gb
-            leased line.
-        </p>
-
-        <p>
-            <strong>The Workflow:</strong> Media can be ingested from anywhere worldwide or directly
-            within the office. An automated batch process monitors new files hourly and generates
-            proxy media at approximately 5&nbsp;% of the original file size. Remote editors can begin
-            work immediately on low-bandwidth connections while full-resolution assets continue
-            downloading in the background. Nightly replication to the secondary QNAP provides
-            full-system redundancy. Long-term archive is handled via Amazon S3 Glacier, selected
-            following cost modelling that showed retrieval costs of only fractions of a penny per
-            file.
-        </p>
-
-        <p>
-            <strong>The Result &amp; Cost Impact:</strong> The complete system was delivered for
-            approximately £7,000 in capital expenditure, with no ongoing SaaS licensing costs.
-            Ongoing operational costs are limited to around £100 per month for cold archive storage
-            in S3 Glacier and £216 per year for Dropbox. Compared to the nearest commercially viable
-            off-the-shelf solution, this represented an estimated 70–80&nbsp;% reduction in annual
-            cost. When compared to the higher-end bespoke and enterprise solutions evaluated, the
-            system was over 90&nbsp;% cheaper while delivering greater flexibility, faster ingest,
-            and full ownership of the data.
-        </p>
-
-        <p>
-            Beyond cost savings, the impact on operations was transformative. Editing throughput
-            increased immediately, data loss was eliminated, and any project can now be accessed by
-            any editor worldwide at any time. The system removed reliance on physical media, local
-            storage, and manual file transfers, fundamentally changing how the business operates.
-        </p>
-    </div>
-
-    <div class="case-study-media">
-        <div class="workflow-grid">
-            <div class="workflow-item">
-                <h3>Ingest → Proxy → Archive Pipeline</h3>
-                <div class="workflow-viewer" id="viewer5"></div>
-                <button class="fullscreen-btn" onclick="toggleFullscreen('viewer5')">
-                    View Fullscreen
-                </button>
+        <!-- 1 -->
+        <section class="case" id="inbox-agent">
+            <div class="wrap">
+                <div class="case-head">
+                    <p class="kicker">AI agents &middot; MTDCNC &middot; 2025 to 2026</p>
+                    <h2>An inbox that turns itself into a task list</h2>
+                    <p>Two agents built in Claude Code and Python. One reads a mailbox and keeps the task board in step with it. The other runs tools when someone tags it on the board.</p>
+                    <ul class="chips"><li class="chip">Claude Code</li><li class="chip">Python</li><li class="chip">Monday.com API</li><li class="chip">Spend ledger</li></ul>
+                </div>
+                <div class="case-body">
+                    <div>
+                        <h3>The problem</h3>
+                        <p>Requests arrive by email from colleagues, clients and suppliers, mixed in with notifications and promotions. The work itself is tracked on a Monday.com board. Keeping the board in step with the inbox was manual work.</p>
+                        <h3>What I built</h3>
+                        <ul>
+                            <li>An agent that reads the inbox and sent items since its last run, discards notifications, promotions and junk, and extracts the real tasks.</li>
+                            <li>Each task is checked against the open items on the board. New ones are added with a note of the source email. Existing ones have their status moved when the mail shows they have progressed.</li>
+                            <li>Where it can do the groundwork alone it does: it looks things up, drafts the reply or the report, and posts what it found on the item.</li>
+                            <li>At 07:00 it posts a brief, grouped by whose move each task is and ordered by deadline.</li>
+                            <li>A second agent watches the board. Tag it on an item and it runs the right tool, writes the result back and mentions whoever asked. Items are closed on evidence, not on say-so.</li>
+                        </ul>
+                        <h3>How it is controlled</h3>
+                        <ul>
+                            <li>A daily spend cap of a few pounds, enforced by a ledger, with a canary run before any batch and a stop switch that halts it at once.</li>
+                            <li>It prepares and never sends. Emails and messages wait as drafts until a named person releases them.</li>
+                            <li>Steps that do not need judgement are plain Python. The model is called only where reading and deciding are the job.</li>
+                        </ul>
+                        <h3>Where it is now</h3>
+                        <p>In daily use. The rules it follows are written down in the repository, so a change in how the team works is a change to a text file, not a rebuild.</p>
+                    </div>
+                    <div class="case-media">
+                        <ol class="flow" aria-label="Inbox agent flow">
+                            <li><b>Mailbox</b>Inbox and sent items since the last run</li>
+                            <li><b>Filter</b>Notifications, promotions and junk removed</li>
+                            <li><b>Extract</b>Real tasks pulled out, under the spend cap</li>
+                            <li><b>Deduplicate</b>Matched against open items on the task board</li>
+                            <li><b>Write</b>New items with a source note, status updates, groundwork posted</li>
+                            <li class="gate"><b>Human release</b>Drafts wait for a named person before anything is sent</li>
+                            <li><b>07:00 brief</b>Grouped by whose move, in deadline order</li>
+                        </ol>
+                        <p class="flow-caption">Amber marks the point where a person decides.</p>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
 
-
-    <!-- CASE STUDY 4 -->
-<section class="case-study" id="case-efb">
-    <div class="case-study-content">
-        <h2>Eurofood Brands — Corporate Promo / Sales Outreach Video</h2>
-
-        <p>
-            <strong>The Client:</strong> Eurofood Brands (EFB) is a UK-based importer and distributor established in 1991,
-            specialising in bringing global food and beverage brands to the UK &amp; Ireland. Their portfolio includes
-            brands such as Barilla, illy, Hershey&#39;s, and Peppadew, with a focus on brand building, marketing, sales,
-            and supply chain delivery across supermarkets, food service, and private label.
-        </p>
-
-        <p>
-            <strong>The Task:</strong> Create a promotional video showcasing EFB&#39;s reach, capabilities, customers, markets,
-            and vendor relationships. The objective was to support new partnership outreach beyond the UK &amp; Ireland,
-            targeting customers across Europe and internationally.
-        </p>
-
-        <p>
-            <strong>The Execution &amp; Result:</strong> From initial planning through delivery, I coordinated with the
-            Brand Director to develop the script and storyboard, combining repurposed supplier footage with newly created
-            assets. This included leveraging existing content relating to illy and Hershey&#39;s, including a shoot day
-            directing Hershey&#39;s-branded black cabs across major London landmarks. The final video exceeded expectations
-            as both a sales outreach tool and corporate explainer, and was used in sales presentations and prospect follow-ups.
-        </p>
-    </div>
-
-    <div class="case-study-media">
-        <!-- Poster thumbnail (loads instantly); iframe inserted only on click -->
-        <button
-            class="yt-poster"
-            type="button"
-            data-youtube-id="pisvhbM_ybE"
-            aria-label="Play Eurofood Brands promotional video">
-            <img
-                src="https://i.ytimg.com/vi/pisvhbM_ybE/hqdefault.jpg"
-                alt="Eurofood Brands promotional video thumbnail"
-                loading="lazy">
-            <span class="yt-play" aria-hidden="true"></span>
-        </button>
-
-        <noscript>
-            <div class="video-embed">
-                <iframe
-                    src="https://www.youtube.com/embed/pisvhbM_ybE"
-                    title="Eurofood Brands promotional video"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen>
-                </iframe>
+        <!-- 2 -->
+        <section class="case" id="publishing">
+            <div class="wrap">
+                <div class="case-head">
+                    <p class="kicker">Publishing &middot; MTDCNC &middot; 2026</p>
+                    <h2>A magazine PDF becomes a set of web posts</h2>
+                    <p>A Python tool that takes each issue of a bi-monthly magazine and publishes its articles to the website through the WordPress REST API.</p>
+                    <ul class="chips"><li class="chip">Python</li><li class="chip">PDF parsing</li><li class="chip">WordPress REST API</li><li class="chip">Image processing</li></ul>
+                </div>
+                <div class="case-body">
+                    <div>
+                        <h3>The problem</h3>
+                        <p>The magazine is laid out for print and delivered as a PDF. Every article of a page or more also belongs on the website as its own post, with its images, its category and the right company as author. By hand that is copy, paste and re-export, article by article, every issue.</p>
+                        <h3>What I built</h3>
+                        <ul>
+                            <li>A tool that reads the issue PDF and splits it into articles.</li>
+                            <li>It extracts the text and the images, takes the category from the page label and sets the company as the author.</li>
+                            <li>It writes a preview folder first, one file per article, so the result can be checked before anything is posted.</li>
+                            <li>On approval it creates the posts through the WordPress REST API, with images placed inline where the page had them.</li>
+                            <li>A companion tool draws the mock-up images of each new issue from scratch for the website and email.</li>
+                        </ul>
+                        <h3>How it is controlled</h3>
+                        <ul>
+                            <li>Nothing is uploaded until the previews have been looked at.</li>
+                            <li>I built it with AI-assisted development, but it runs as plain Python with no model calls. An issue costs nothing to process and the output is the same every time.</li>
+                        </ul>
+                        <h3>Where it is now</h3>
+                        <p>Used for every issue.</p>
+                    </div>
+                    <div class="case-media">
+                        <ol class="flow" aria-label="Magazine publishing flow">
+                            <li><b>Issue PDF</b>The print layout, as supplied</li>
+                            <li><b>Split</b>Articles of a page or longer identified</li>
+                            <li><b>Extract</b>Text, images, category from the page label, author company</li>
+                            <li class="gate"><b>Preview</b>One file per article, checked by a person</li>
+                            <li><b>Publish</b>Posts created through the WordPress REST API, images inline</li>
+                        </ol>
+                        <p class="flow-caption">Amber marks the point where a person decides.</p>
+                    </div>
+                </div>
             </div>
-        </noscript>
-    </div>
-</section>
+        </section>
 
+        <!-- 3 -->
+        <section class="case" id="data">
+            <div class="wrap">
+                <div class="case-head">
+                    <p class="kicker">Data &middot; MTDCNC</p>
+                    <h2>Keeping 120,000 CRM records clean</h2>
+                    <p>Python tooling that stops bad data getting into the CRM, takes the bots out of campaign statistics and reports straight from the production database.</p>
+                    <ul class="chips"><li class="chip">Python</li><li class="chip">pandas</li><li class="chip">rapidfuzz</li><li class="chip">MySQL</li><li class="chip">SQLite</li><li class="chip">Excel output</li></ul>
+                </div>
+                <div class="case-body">
+                    <div>
+                        <h3>The problem</h3>
+                        <p>Contact lists arrive from events, clients and two separate platforms. Imported as they come, they create duplicates and mismatched companies. Meanwhile security scanners and mail privacy proxies click every link in an email, so raw open and click figures overstate real interest.</p>
+                        <h3>What I built</h3>
+                        <ul>
+                            <li><strong>Import validator.</strong> Each incoming record runs down a resolution chain: email, exact name, company domain, then fuzzy name matching. Matches of 90% or more are approved automatically. Matches of 75 to 89% go to a review workbook, along with any record whose country does not agree with the one on file.</li>
+                            <li><strong>Bot-click filter.</strong> Classifies each click using Apple Mail Privacy Protection address ranges, an IP classification cache held in SQLite and behavioural scoring, so reports show people and not scanners.</li>
+                            <li><strong>Campaign reports.</strong> A script reads the email platform's production database and writes the customer report in Excel: summary, opens and clicks.</li>
+                            <li><strong>Master list.</strong> In October 2026 I merged the contact bases of two systems into one deduplicated master list of 121,663 contacts.</li>
+                        </ul>
+                        <h3>How it is controlled</h3>
+                        <ul>
+                            <li>Reporting connects to the production database read-only.</li>
+                            <li>Any write follows plan, apply, verify: the script shows what it will change, makes the change, then reads it back.</li>
+                            <li>Uncertain matches are never guessed. They go to a person in a workbook built for quick review.</li>
+                        </ul>
+                    </div>
+                    <div class="case-media">
+                        <ol class="flow" aria-label="Import validator resolution chain">
+                            <li><b>Incoming record</b>From an event list, a client or another platform</li>
+                            <li><b>Email match</b>Exact match on address</li>
+                            <li><b>Name match</b>Exact match on name</li>
+                            <li><b>Domain match</b>Company domain against known accounts</li>
+                            <li><b>Fuzzy match</b>90% and over approved automatically</li>
+                            <li class="gate"><b>Review workbook</b>75 to 89% matches and country mismatches, decided by a person</li>
+                            <li><b>Clean import</b>Only resolved records reach the CRM</li>
+                        </ol>
+                        <p class="flow-caption">The import validator's resolution chain.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+        <!-- 4 -->
+        <section class="case" id="edit-pipeline">
+            <div class="wrap">
+                <div class="case-head">
+                    <p class="kicker">Media operations &middot; MTDCNC &middot; 2026</p>
+                    <h2>A video-edit pipeline that runs unattended</h2>
+                    <p>A dispatcher that takes edit jobs from a queue, drives Adobe Premiere to build them, and calls for help when a machine misbehaves.</p>
+                    <ul class="chips"><li class="chip">Python</li><li class="chip">Claude Code</li><li class="chip">Premiere XML</li><li class="chip">QNAP</li><li class="chip">Pushover</li></ul>
+                </div>
+                <div class="case-body">
+                    <div>
+                        <h3>The problem</h3>
+                        <p>First assemblies of interview and factory-tour films follow consistent house rules, but building them is repetitive work that has to happen before the creative work starts. An automated build has to survive the things that go wrong on a real workstation: a hidden dialog, a full disk, a network share that drops.</p>
+                        <h3>What I built</h3>
+                        <ul>
+                            <li>A dispatcher that picks up jobs from a queue, restores any archived material, opens Premiere itself and builds the sequences from XML.</li>
+                            <li>The build follows the house cutting rules: minimum shot lengths, where a cut may fall, how supporting footage and captions are laid.</li>
+                            <li>The deliverable is a real Premiere project. An editor opens it and carries on, rather than receiving a flat export.</li>
+                            <li>Idle jobs are moved to network storage to keep the local disk clear, and restored automatically before a run.</li>
+                            <li>On a machine fault the job is held, not lost, and the operator is paged by push notification.</li>
+                        </ul>
+                        <h3>How it is controlled</h3>
+                        <ul>
+                            <li>Hold, pause and resume never consume the original request, so a fault costs time and not work.</li>
+                            <li>Source footage is never moved or deleted by the tool. Archiving moves working files only.</li>
+                            <li>Quality-control renders are checked automatically. Anything for a person to judge waits for that person.</li>
+                        </ul>
+                        <h3>Where it is now</h3>
+                        <p>Handed over to a permanent runner machine with a written operations plan and a fault-recovery procedure.</p>
+                    </div>
+                    <div class="case-media">
+                        <ol class="flow" aria-label="Edit pipeline dispatcher flow">
+                            <li><b>Job queue</b>Edit requests waiting to be built</li>
+                            <li><b>Restore</b>Archived material brought back from network storage</li>
+                            <li><b>Build</b>Premiere opened, sequences built from XML to the house rules</li>
+                            <li><b>Check</b>Quality-control renders tested automatically</li>
+                            <li class="gate"><b>Editor</b>Opens the project and finishes the film</li>
+                            <li><b>Archive</b>Idle jobs moved to network storage</li>
+                        </ol>
+                        <p class="flow-caption">On a machine fault the job is held and the operator is paged.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+        <!-- 5 -->
+        <section class="case" id="email">
+            <div class="wrap">
+                <div class="case-head">
+                    <p class="kicker">Infrastructure &middot; MTDCNC &middot; 2016 to present</p>
+                    <h2>Email at a million a month, built to a rule set</h2>
+                    <p>The sending infrastructure, the authentication behind it and the build standard that keeps campaigns rendering correctly in Outlook.</p>
+                    <ul class="chips"><li class="chip">SPF</li><li class="chip">DKIM</li><li class="chip">DMARC</li><li class="chip">SendGrid</li><li class="chip">Mailwizz</li><li class="chip">HTML / VML</li><li class="chip">Python linter</li></ul>
+                </div>
+                <div class="case-body">
+                    <div>
+                        <h3>The problem</h3>
+                        <p>A media business sends on behalf of many clients across several brands and domains. Volume peaked at around a million emails a month. At that scale a deliverability problem or a broken layout in Outlook is a commercial problem.</p>
+                        <h3>What I built and run</h3>
+                        <ul>
+                            <li>Sending through SendGrid and Mailwizz, with SPF, DKIM and DMARC maintained across the sending domains, plus reputation monitoring and suppression management.</li>
+                            <li>More than 3,000 hand-coded HTML and VML campaigns over ten years.</li>
+                            <li>A written rendering rule set covering Outlook's VML, DPI scaling and dark mode, and a linter that every build has to pass before it can be proofed.</li>
+                            <li>A Python pipeline from Photoshop design to HTML, and a converter that brings supplied or AI-generated HTML up to the house standard.</li>
+                            <li>A deliverability tracker that follows authentication and reputation per brand.</li>
+                        </ul>
+                        <h3>How it is controlled</h3>
+                        <ul>
+                            <li>Builds are rendered at desktop and phone width and linted before a person sees a proof.</li>
+                            <li>Test sends go to test lists. Live campaigns are prepared as drafts and sent by a person.</li>
+                        </ul>
+                    </div>
+                    <div class="case-media">
+                        <ol class="flow" aria-label="Email build flow">
+                            <li><b>Design or supplied HTML</b>Photoshop file or a client's markup</li>
+                            <li><b>Build</b>Rebuilt to the rendering rule set</li>
+                            <li><b>Lint</b>Automated checks: links, images, Outlook rules</li>
+                            <li><b>Render</b>Desktop and 375px phone checks</li>
+                            <li class="gate"><b>Proof</b>Approved by a person</li>
+                            <li><b>Send</b>Authenticated with SPF, DKIM and DMARC</li>
+                        </ol>
+                        <p class="flow-caption">Amber marks the point where a person decides.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-</main>
+        <!-- 6 -->
+        <section class="case" id="ingest">
+            <div class="wrap">
+                <div class="case-head">
+                    <p class="kicker">Infrastructure &middot; MTDCNC</p>
+                    <h2>Global video ingest, proxy and archive</h2>
+                    <p>A self-hosted system that lets around 20 editors in the UK, Europe, the USA, Mexico and India work on the same footage, with about 100 TB archived for roughly &pound;100 a month.</p>
+                    <ul class="chips"><li class="chip">QNAP</li><li class="chip">Dropbox</li><li class="chip">AWS S3 Glacier</li><li class="chip">HandBrake</li><li class="chip">10 Gb network</li></ul>
+                </div>
+                <div class="case-body">
+                    <div>
+                        <h3>The problem</h3>
+                        <p>Video files were spread across individual editing workstations, posted physical media and dozens of consumer external drives. There was no central archive, no reliable backup and no practical way to find old footage.</p>
+                        <h3>Research and cost</h3>
+                        <p>I reviewed commercial media-management platforms, bespoke vendor proposals and enterprise storage. The off-the-shelf systems were quoted in the tens of thousands of pounds a year and still lacked flexible ingest, proxy workflows or ownership of the data.</p>
+                        <h3>What I built</h3>
+                        <ul>
+                            <li>Two QNAP units of about 100 TB each: one on site, one at a remote location for failover.</li>
+                            <li>The primary unit synchronises with Dropbox, so footage can be ingested from anywhere while the office keeps fast local access over a 10 Gb network and a 1 Gb leased line.</li>
+                            <li>An automated batch process checks for new files every hour and generates proxy media at about 5% of the original size, so remote editors can start on a slow connection while full-resolution files follow.</li>
+                            <li>Nightly replication to the second unit, and a nightly long-term archive to Amazon S3 Glacier.</li>
+                        </ul>
+                        <h3>Result</h3>
+                        <p>Delivered for about &pound;7,000 of capital spend with no software licences. Running costs are around &pound;100 a month for Glacier and &pound;216 a year for Dropbox. Any project can be opened by any editor, anywhere, and the business no longer depends on drives in the post.</p>
+                    </div>
+                    <div class="case-media">
+                        <div class="workflow-item">
+                            <h3>Ingest, proxy and archive pipeline</h3>
+                            <div class="workflow-viewer" id="viewer-ingest" data-dzi="/assets/workflows/remote-ingest-fileserver.dzi"></div>
+                            <button class="fullscreen-btn" type="button" data-fullscreen="viewer-ingest">View full screen</button>
+                        </div>
+                        <p class="flow-caption">Zoom and pan to read the diagram.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7 -->
+        <section class="case" id="insurance-crm">
+            <div class="wrap">
+                <div class="case-head">
+                    <p class="kicker">CRM migration &middot; Super Rad Data Management &middot; from 2012</p>
+                    <h2>Insurance CRMs carried through successive acquisitions</h2>
+                    <p>CRM specification, migration and workflow design for UK insurance brokers and employee-benefits providers, as an independent consultant.</p>
+                    <ul class="chips"><li class="chip">CallPro</li><li class="chip">SQL</li><li class="chip">Data migration</li><li class="chip">Workflow design</li><li class="chip">Training</li></ul>
+                </div>
+                <div class="case-body">
+                    <div>
+                        <h3>The clients</h3>
+                        <p>Consilium Employee Benefits, Chase Templeton, Towergate Insurance, Square Mile Broking and Clear Insurance: regulated, high-volume sales environments, several of them changing ownership during the work.</p>
+                        <h3>The problem</h3>
+                        <p>A mix of legacy CRM platforms, spreadsheets and manual processes, with duplicated data, limited reporting and real risk of losing records during mergers.</p>
+                        <h3>What I did</h3>
+                        <ul>
+                            <li>Won the tender to move Consilium from its legacy CRM to CallPro, then led specification, data mapping, cleansing, deduplication, migration, deployment and training.</li>
+                            <li>Designed the client, policy and renewal data structures.</li>
+                            <li>Built automated renewal reminders, cancellations and telemarketing workflows driven by renewal and prospect status.</li>
+                            <li>Built management dashboards and reporting on pipeline and sales activity.</li>
+                            <li>Carried the data through the acquisitions by Chase Templeton and then Towergate.</li>
+                        </ul>
+                    </div>
+                    <div class="case-media">
+                        <button class="yt-poster" type="button" data-youtube-id="fZEWGMCCtCI" aria-label="Play the insurance CRM case study video">
+                            <img src="https://i.ytimg.com/vi/fZEWGMCCtCI/hqdefault.jpg" alt="" loading="lazy">
+                            <span class="yt-play" aria-hidden="true"></span>
+                        </button>
+                        <p class="flow-caption">Case study video. Loads from YouTube when played.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8 -->
+        <section class="case" id="this-site">
+            <div class="wrap">
+                <div class="case-head">
+                    <p class="kicker">Personal project &middot; 2025 to 2026</p>
+                    <h2>This site, and the chatbot on it</h2>
+                    <p>A static site with a small serverless backend and a retrieval chatbot that is only allowed to answer from records I wrote.</p>
+                    <ul class="chips"><li class="chip">Cloudflare Pages</li><li class="chip">Workers</li><li class="chip">Vectorize</li><li class="chip">OpenAI API</li><li class="chip">Postmark</li><li class="chip">HTML / CSS / JS</li></ul>
+                </div>
+                <div class="case-body">
+                    <div>
+                        <h3>What it is</h3>
+                        <ul>
+                            <li>Plain HTML, CSS and JavaScript with no framework and no build step, deployed from GitHub to Cloudflare Pages.</li>
+                            <li>A Cloudflare Worker behind <code>/api</code> that handles the chatbot and the contact form.</li>
+                            <li>A curated library of short records about my roles, projects and tools, embedded and stored in Cloudflare Vectorize.</li>
+                            <li>For each question the Worker retrieves the closest records and asks the model to answer from those alone. If the library does not cover it, the chatbot says so.</li>
+                        </ul>
+                        <h3>How it is controlled</h3>
+                        <ul>
+                            <li>The chatbot is told what it may not claim, including the limits of my experience with tools I have only touched.</li>
+                            <li>Writing to the library needs a secret key, and questions are rate-limited and capped per day.</li>
+                        </ul>
+                        <p><a href="#chat" data-open-chat data-question="How was this site built?">Ask it how it was built &rarr;</a></p>
+                    </div>
+                    <div class="case-media">
+                        <ol class="flow" aria-label="Chatbot flow">
+                            <li><b>Question</b>Typed into the widget on any page</li>
+                            <li><b>Embed</b>Turned into a vector</li>
+                            <li><b>Retrieve</b>Closest records fetched from the library</li>
+                            <li><b>Answer</b>Model answers from those records only</li>
+                            <li class="gate"><b>Not covered?</b>It says so and offers the contact form</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9 -->
+        <section class="case" id="video">
+            <div class="wrap">
+                <div class="case-head">
+                    <p class="kicker">Video production &middot; Eurofood Brands</p>
+                    <h2>A corporate film for sales outreach</h2>
+                    <p>Twenty years of filming, editing and livestream engineering sit behind the systems work. This is one example.</p>
+                    <ul class="chips"><li class="chip">Script and storyboard</li><li class="chip">Location shoot</li><li class="chip">Premiere Pro</li></ul>
+                </div>
+                <div class="case-body">
+                    <div>
+                        <h3>The client</h3>
+                        <p>Eurofood Brands, a UK importer and distributor of food and drink brands including Barilla, illy, Hershey's and Peppadew.</p>
+                        <h3>The task</h3>
+                        <p>A promotional film showing the company's reach, customers and vendor relationships, to support new partnership outreach beyond the UK and Ireland.</p>
+                        <h3>What I did</h3>
+                        <p>Worked with the Brand Director on script and storyboard, combined supplier footage with new material, and directed a shoot day with Hershey's-branded black cabs at London landmarks. The film was used in sales presentations and prospect follow-ups.</p>
+                    </div>
+                    <div class="case-media">
+                        <button class="yt-poster" type="button" data-youtube-id="pisvhbM_ybE" aria-label="Play the Eurofood Brands promotional video">
+                            <img src="https://i.ytimg.com/vi/pisvhbM_ybE/hqdefault.jpg" alt="" loading="lazy">
+                            <span class="yt-play" aria-hidden="true"></span>
+                        </button>
+                        <p class="flow-caption">Loads from YouTube when played.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="wrap">
+                <div class="cta-band">
+                    <div>
+                        <h2>Want to see one of these working?</h2>
+                        <p>I am happy to walk through any of them, including the parts that went wrong and what I changed.</p>
+                    </div>
+                    <div class="btn-row">
+                        <a class="btn btn-primary" href="#contact" data-open-contact>Get in touch</a>
+                        <a class="btn" href="/cv/">Read the CV</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
     <footer class="site-footer">
-        <p>© <span class="year">2025</span> JofDavies.com | Multiple Skills, One Person</p>
+        <div class="wrap">
+            <p>&copy; <span class="year">2026</span> Jof Davies. Built on Cloudflare Pages and Workers.</p>
+            <nav aria-label="Footer">
+                <a href="/work-examples">Work</a>
+                <a href="/about">About</a>
+                <a href="/cv/">CV</a>
+                <a href="https://www.linkedin.com/in/joffad" rel="noopener">LinkedIn</a>
+                <a href="https://github.com/superraddm" rel="noopener">GitHub</a>
+            </nav>
+        </div>
     </footer>
-    <script>
-document.addEventListener("click", function (e) {
-    const poster = e.target.closest(".yt-poster");
-    if (!poster) return;
 
-    const videoId = poster.getAttribute("data-youtube-id");
-    if (!videoId) return;
-
-    const wrapper = document.createElement("div");
-    wrapper.className = "video-embed";
-    wrapper.innerHTML = `
-        <iframe
-            src="https://www.youtube.com/embed/${videoId}?autoplay=1"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-        </iframe>
-    `;
-
-    poster.replaceWith(wrapper);
-});
-</script>
-
-    <script>
-        // OpenSeadragon initialization for workflow viewers
-        function initializeViewers() {
-            // Example viewer 3
-            const viewer5 = OpenSeadragon({
-                id: "viewer5",
-                prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/images/",
-                tileSources: "/assets/workflows/remote-ingest-fileserver.dzi",
-                showNavigationControl: true,
-                navigationControlAnchor: OpenSeadragon.ControlAnchor.TOP_RIGHT,
-                showNavigator: true,
-                navigatorPosition: "BOTTOM_RIGHT",
-                minZoomLevel: 0.5,
-                maxZoomLevel: 10,
-                visibilityRatio: 1,
-                constrainDuringPan: true,
-                placeholderFillStyle: "#0f1e32",
-                timeout: 120000
-            });
-        }
-
-        function toggleFullscreen(viewerId) {
-            const element = document.getElementById(viewerId);
-            if (!document.fullscreenElement) {
-                element.requestFullscreen().catch(err => {
-                    console.error('Error attempting to enable fullscreen:', err);
-                });
-            } else {
-                document.exitFullscreen();
-            }
-        }
-
-        // Initialize viewers on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            // Only initialize if workflow viewers exist on page
-            if (document.querySelector('.workflow-viewer')) {
-                // Add error handling for missing .dzi files
-                try {
-                    initializeViewers();
-                } catch (error) {
-                    console.warn('Workflow viewers not yet configured. Add .dzi files to assets/workflows/');
-                }
-            }
-        document.querySelector('.nav-toggle').addEventListener('click', () => {
-        document.querySelector('.nav-menu')
-            .classList.toggle('open');
-        });    
-
-            // Update footer year
-            const yearSpan = document.querySelector('.year');
-            if (yearSpan) {
-                yearSpan.textContent = new Date().getFullYear();
-            }
-        });
-    </script>
+    <script src="/js/site.js" defer></script>
+    <script src="/js/chat-widget.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/openseadragon.min.js" defer></script>
+    <script src="/js/viewers.js" defer></script>
 </body>
 </html>

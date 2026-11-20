@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /fireworks/
+Disallow: /api/
+
+Sitemap: https://jofdavies.com/sitemap.xml

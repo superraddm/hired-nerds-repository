@@ -1,234 +1,184 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Jof Davies - Digital Marketing & Automation Expert</title>
-    <meta name="description" content="Jof Davies - Email Marketing Expert, CRM Specialist, Video Production, Workflow Automation, and Digital Marketing Professional based in Northampton, UK">
-    <meta name="keywords" content="Email Marketing Manager, CRM Developer, SQL Specialist, Video Production Expert, Workflow Automation Consultant, Digital Marketing Manager, Marketing Automation Specialist, Zapier Expert, Monday.com Consultant">
-    <link rel="stylesheet" href="css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>About | Jof Davies</title>
+    <meta name="description" content="About Jof Davies: ten years owning CRM, data, email infrastructure and integrations for a B2B media business, now building AI agent pipelines in Claude Code and Python. Based in Northampton, UK.">
+    <link rel="canonical" href="https://jofdavies.com/about">
+    <meta property="og:type" content="profile">
+    <meta property="og:site_name" content="Jof Davies">
+    <meta property="og:title" content="About Jof Davies">
+    <meta property="og:description" content="Business systems, CRM and AI automation. Based in Northampton, UK.">
+    <meta property="og:url" content="https://jofdavies.com/about">
+    <meta property="og:image" content="https://jofdavies.com/assets/img/og-card.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
-        <div><a href="/index.html"class="nav-logo">Jof Davies</a></div>
-
-        <button class="nav-toggle" aria-label="Toggle navigation" style="color: #e0e0e0;">
-            ☰
-        </button>
-
-        <nav class="nav-menu nav-links">
-            <a href="/work-examples.html">Work Examples</a>
-            <a href="/testimonials.html">Testimonials</a>
-            
-            <a href="#" onclick="openContactModal(); return false;">Contact</a>
+        <a href="/" class="nav-logo">Jof Davies<span>_</span></a>
+        <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
+        <nav class="nav-menu" aria-label="Main">
+            <a href="/work-examples">Work</a>
+            <a href="/about" aria-current="page">About</a>
+            <a href="/cv/">CV</a>
+            <a href="#contact" class="nav-cta" data-open-contact>Contact</a>
         </nav>
     </header>
-    
-    <main class="about-container">
-        <div class="about-header">
-            <h1>About Jof Davies</h1>
-            <div class="vital-stats">
-                <div class="stat-item">
-                    <span class="stat-label">Born:</span>
-                    <span class="stat-value">1984</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Location:</span>
-                    <span class="stat-value">Northampton, United Kingdom</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Availability:</span>
-                    <span class="stat-value">Full-Time Roles Only</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Working Pattern:</span>
-                    <span class="stat-value">Office / Hybrid / WFH</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Work Locations:</span>
-                    <span class="stat-value">Global (depending on working pattern)</span>
-                </div>
-            </div>
-        </div>
-        <div class="cta-section" style="padding-bottom:30px;">
-                <button class="contact-btn" onclick="openContactModal()">CONTACT ME</button>
-                <button class="download-cv-btn" id="openCvModal">
-                    <span>⬇</span> DOWNLOAD CV (PDF)
-                </button>
-            </div>
-        <div class="about-content">
-            <div class="profile-images">
-                <div class="image-box childhood-image">
-                    <img src="assets/images/Jof-Young.png" alt="Jof Davies childhood photo">
-                    <p class="image-caption">Early Level</p>
-                </div>
-                <div class="image-box modern-image">
-                    <img src="assets/images/headshot.png" alt="Jof Davies current headshot">
-                    <p class="image-caption">Max Level</p>
-                </div>
-            </div>
 
-            <section class="roles-section">
-                <h2>Roles & Expertise</h2>
-                <div class="roles-list">
-                    <span class="role-tag">Email Marketing Manager</span>
-                    <span class="role-tag">Email Marketing Developer</span>
-                    <span class="role-tag">HTML Email Developer</span>
-                    <span class="role-tag">CRM Manager</span>
-                    <span class="role-tag">CRM Developer</span>
-                    <span class="role-tag">Data Analyst</span>
-                    <span class="role-tag">SQL Developer</span>
-                    <span class="role-tag">Insurance CRM Specialist</span>
-                    <span class="role-tag">Video Production Manager</span>
-                    <span class="role-tag">Video Editor</span>
-                    <span class="role-tag">Live Stream Producer</span>
-                    <span class="role-tag">Workflow Automation Specialist</span>
-                    <span class="role-tag">Zapier Consultant</span>
-                    <span class="role-tag">Marketing Automation Manager</span>
-                    <span class="role-tag">Monday.com Specialist</span>
-                    <span class="role-tag">Digital Marketing Manager</span>
-                    <span class="role-tag">Content Creator</span>
-                    <span class="role-tag">Marketing Strategist</span>
-                    <span class="role-tag">Copywriter</span>
-                    <span class="role-tag">Digital Marketing Consultant</span>
+    <main id="main">
+        <section class="page-top">
+            <div class="wrap about-grid">
+                <div>
+                    <!-- Stand-in portrait: a crop of an existing photo. Replace assets/img/jof-headshot-standin.jpg with a proper headshot. -->
+                    <img class="portrait" src="/assets/img/jof-headshot-standin.jpg" width="400" height="400" alt="Jof Davies">
+                    <dl class="facts">
+                        <div><dt>Based</dt><dd>Northampton, UK</dd></div>
+                        <div><dt>Looking for</dt><dd>A permanent role in business systems, CRM or AI automation</dd></div>
+                        <div><dt>Working pattern</dt><dd>Hybrid near Northampton, or remote in the UK</dd></div>
+                        <div><dt>Notice</dt><dd>Three months</dd></div>
+                    </dl>
                 </div>
-            </section>
-
-            <section class="statement-section">
-                <h2>Professional Statement</h2>
-                <div class="statement-box">
-                    <p>With decades of experience spanning email marketing, CRM development, video production, and workflow automation, I bring a unique multi-disciplinary approach to digital marketing challenges. Having hand-coded over 3,000 HTML email templates and built complex automation workflows across enterprise platforms, I combine technical expertise with creative problem-solving.</p>
-                    
-                    <p>My background in SQL development and insurance CRM systems provides deep data analysis capabilities, while my video production skills enable complete content creation from concept to delivery. I specialize in connecting disparate systems through automation, streamlining processes, and building scalable marketing operations.</p>
-                    
-                    <p>Whether managing campaigns, developing technical solutions, or creating multimedia content, I deliver results through a combination of hands-on execution and strategic thinking.</p>
+                <div>
+                    <p class="eyebrow">About</p>
+                    <h1>I find the manual work in a business and replace it with systems people actually use.</h1>
+                    <p class="lede">I build and run the systems a business depends on: CRM, customer data, email infrastructure, the integrations between platforms and, over the last two years, AI-driven automation.</p>
+                    <p>At MTDCNC, a B2B media business serving the manufacturing technology sector, I have owned the CRM and marketing systems end to end since 2016. My job title says Digital Marketing Manager. The work is systems: a CRM of more than 20,000 contacts, email infrastructure that has carried around a million messages a month, and the integrations that connect them to the task board, the website and the video team.</p>
+                    <p>Since 2025 I have built a set of agent pipelines in Claude Code and Python. They read a shared inbox and turn it into a task list, run tools from a task board, publish a magazine to the website and drive a video-edit pipeline. Every one runs behind a spend cap and a kill switch, and nothing leaves the building without a person releasing it.</p>
+                    <p>Before that I ran my own consultancy migrating CRMs for UK insurance brokers, and earlier still I replaced spreadsheet processes with Access and VBA systems at a college and a telemarketing firm. The pattern has been the same for fifteen years: learn how the work is really done, model the data, build the simplest thing that holds, document it, and train the people who use it.</p>
+                    <div class="btn-row">
+                        <a class="btn btn-primary" href="#contact" data-open-contact>Get in touch</a>
+                        <a class="btn" href="/cv/">Read the CV</a>
+                        <a class="btn" href="/work-examples">See the work</a>
+                    </div>
                 </div>
-            </section>
-
-            <div class="cta-section">
-                <button class="contact-btn" onclick="openContactModal()">CONTACT ME</button>
-                <button class="download-cv-btn" id="openCvModal">
-                    <span>⬇</span> DOWNLOAD CV (PDF)
-                </button>
             </div>
-        </div>
+        </section>
+
+        <section class="section">
+            <div class="wrap">
+                <div class="section-head">
+                    <p class="eyebrow">Capabilities</p>
+                    <h2>What I bring to a team</h2>
+                </div>
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3>Automation and AI</h3>
+                        <p>Claude Code agent pipelines in daily production. OpenAI, Anthropic and Gemini APIs. Retrieval (RAG) with Cloudflare Vectorize. Prompt and tool design, approval gates, spend ledgers and kill switches.</p>
+                        <ul class="chips"><li class="chip">Claude Code</li><li class="chip">Python 3</li><li class="chip">Zapier</li><li class="chip">Google Apps Script</li><li class="chip">Monday.com</li></ul>
+                    </div>
+                    <div class="card">
+                        <h3>Integration</h3>
+                        <p>REST APIs, webhooks, OAuth 2.0 and JSON. Services in Python, Flask and Node. Cloudflare Workers and Pages. WordPress, Monday.com, Dropbox, YouTube and Pushover APIs.</p>
+                        <ul class="chips"><li class="chip">REST</li><li class="chip">Webhooks</li><li class="chip">OAuth 2.0</li><li class="chip">Flask</li><li class="chip">Node</li><li class="chip">Cloudflare</li></ul>
+                    </div>
+                    <div class="card">
+                        <h3>CRM and data</h3>
+                        <p>GoHighLevel, FiveCRM and CallPro, and working knowledge of HubSpot. SQL and MySQL, schema design, migrations, deduplication and fuzzy matching. Access, VBA and Excel where they are the right tool.</p>
+                        <ul class="chips"><li class="chip">SQL</li><li class="chip">MySQL</li><li class="chip">pandas</li><li class="chip">rapidfuzz</li><li class="chip">GoHighLevel</li><li class="chip">HubSpot</li></ul>
+                    </div>
+                    <div class="card">
+                        <h3>Email infrastructure</h3>
+                        <p>SendGrid and Mailwizz at volume. SPF, DKIM, DMARC, reputation and suppression management. More than 3,000 hand-coded HTML and VML campaigns, plus the rendering rule set and linter the team builds against.</p>
+                        <ul class="chips"><li class="chip">SPF</li><li class="chip">DKIM</li><li class="chip">DMARC</li><li class="chip">SendGrid</li><li class="chip">Mailwizz</li><li class="chip">HTML / VML</li></ul>
+                    </div>
+                </div>
+                <p class="muted" style="margin-top:20px">And around the edges: requirements discovery, documentation, user training, vendor evaluation, cost control, and twenty years of video production and livestream engineering.</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="wrap">
+                <div class="section-head">
+                    <p class="eyebrow">Career</p>
+                    <h2>Where I have done it</h2>
+                </div>
+                <ol class="timeline">
+                    <li>
+                        <span class="when">2016 to present</span>
+                        <div>
+                            <h3>MTDCNC &middot; Digital Marketing Manager (CRM, systems and automation)</h3>
+                            <p>Sole owner of the CRM, email infrastructure and marketing systems across more than 50 client accounts. Built the AI agent pipelines, the data tooling, the integrations and the global media ingest and archive.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="when">2012 to 2020</span>
+                        <div>
+                            <h3>Super Rad Data Management &middot; Founder and CRM / data consultant</h3>
+                            <p>Won the tender to move Consilium Employee Benefits to a new CRM and carried the data through successive acquisitions by Chase Templeton and Towergate. Also delivered for Clear Insurance and Square Mile Broking.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="when">2011 to 2012</span>
+                        <div>
+                            <h3>MAK Media Solutions &middot; CRM and systems support</h3>
+                            <p>CRM configuration and training, websites on WordPress, Drupal and Squarespace, small-business IT and video production.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="when">2009 to 2011</span>
+                        <div>
+                            <h3>Integrity Business Connections &middot; Data and systems</h3>
+                            <p>Upgraded the CRM and replaced spreadsheet reporting with a query-driven Access and VBA system for a telemarketing operation.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="when">2007 to 2009</span>
+                        <div>
+                            <h3>Moulton College &middot; Transport department systems</h3>
+                            <p>Built an Access and VBA transport database covering routes, passenger lists, scheduling and manifests for several hundred students.</p>
+                        </div>
+                    </li>
+                </ol>
+                <p style="margin-top:28px"><a href="/cv/">The full CV has the detail &rarr;</a></p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="wrap">
+                <div class="aside-photo">
+                    <img src="/assets/img/jof-started-early.jpg" width="480" height="614" alt="Jof as a child, typing at a computer keyboard" loading="lazy">
+                    <div>
+                        <h3>Started early</h3>
+                        <p>A Commodore 64 first, then building and fixing PCs, then filming and editing on VHS from about the age of ten. The curiosity about how systems work has not gone away.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="wrap">
+                <div class="cta-band">
+                    <div>
+                        <h2>Want the short version?</h2>
+                        <p>Ask the chatbot anything about my work, or send me a message.</p>
+                    </div>
+                    <div class="btn-row">
+                        <a class="btn btn-primary" href="#chat" data-open-chat>Ask the chatbot</a>
+                        <a class="btn" href="#contact" data-open-contact>Get in touch</a>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- Contact Modal -->
-    <div id="contact-modal-root"></div>
-    
-    <div class="cv-modal-overlay" id="cvModal" hidden>
-        <div class="cv-modal">
-
-            <button class="cv-modal-close" id="closeCvModal" aria-label="Close">
-            ×
-            </button>
-
-            <h3>Get this CV</h3>
-
-            <p class="cv-modal-copy">
-            Enter your email address to receive a copy of this CV.
-            <br />
-            <small>Your email will not be used for any marketing purposes.</small>
-            </p>
-
-            <form class="cv-download-form">
-
-            <input
-                type="email"
-                name="email"
-                required
-                placeholder="Email address"
-            />
-
-            <input
-                type="hidden"
-                name="cv"
-                value="executive"
-            />
-
-            <button type="submit" class="download-cv-btn">
-                Send CV
-            </button>
-
-            </form>
-
-            <p class="cv-modal-status" hidden></p>
-
-        </div>
-    </div>
-
     <footer class="site-footer">
-        <p>© <span class="year">2025</span> JofDavies.com | Multiple Skills, One Person</p>
+        <div class="wrap">
+            <p>&copy; <span class="year">2026</span> Jof Davies. Built on Cloudflare Pages and Workers.</p>
+            <nav aria-label="Footer">
+                <a href="/work-examples">Work</a>
+                <a href="/about">About</a>
+                <a href="/cv/">CV</a>
+                <a href="https://www.linkedin.com/in/joffad" rel="noopener">LinkedIn</a>
+                <a href="https://github.com/superraddm" rel="noopener">GitHub</a>
+            </nav>
+        </div>
     </footer>
-    <script src="/js/modal-functions.js"></script>
-    <script>
 
-        document.querySelector('.nav-toggle').addEventListener('click', () => {
-        document.querySelector('.nav-menu')
-        .classList.toggle('open');
-        });
-
-        // Footer year
-        document.getElementById('year').textContent = new Date().getFullYear();
-
-        
-
-        
-    </script>
-      <script>
-        document.addEventListener("DOMContentLoaded", () => {
-
-        const modal = document.getElementById("cvModal");
-        const openBtn = document.getElementById("openCvModal");
-        const closeBtn = document.getElementById("closeCvModal");
-
-        if (!modal || !openBtn || !closeBtn) {
-            console.warn("CV modal elements not found on page.");
-            return;
-        }
-
-        openBtn.addEventListener("click", () => {
-            modal.hidden = false;
-        });
-
-        closeBtn.addEventListener("click", () => {
-            modal.hidden = true;
-        });
-
-        modal.addEventListener("click", (e) => {
-            if (e.target === modal) {
-            modal.hidden = true;
-            }
-        });
-
-        });
-        </script>
-    </script>
-    <script>
-        document.querySelectorAll(".cv-download-form").forEach(form => {
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
-
-            const status = form
-            .closest(".cv-modal")
-            .querySelector(".cv-modal-status");
-
-            const response = await fetch("/api/request-pdf", {
-            method: "POST",
-            body: new FormData(form)
-            });
-
-            if (response.ok) {
-            status.textContent = "The CV has been sent to your email address.";
-            status.hidden = false;
-            form.reset();
-            } else {
-            status.textContent = "There was a problem. Please try again.";
-            status.hidden = false;
-            }
-        });
-        });
-        </script>
+    <script src="/js/site.js" defer></script>
+    <script src="/js/chat-widget.js" defer></script>
 </body>
 </html>

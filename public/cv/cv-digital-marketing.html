@@ -1,42 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital / Product Marketing Specialist - Jof Davies</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Digital marketing | Jof Davies</title>
+    <meta name="description" content="Jof Davies on digital marketing: multi-channel publishing, automation and the technical systems behind content.">
+    <link rel="canonical" href="https://jofdavies.com/cv/cv-digital-marketing">
+    <meta property="og:type" content="profile">
+    <meta property="og:site_name" content="Jof Davies">
+    <meta property="og:title" content="Digital marketing | Jof Davies">
+    <meta property="og:description" content="Jof Davies on digital marketing: multi-channel publishing, automation and the technical systems behind content.">
+    <meta property="og:url" content="https://jofdavies.com/cv/cv-digital-marketing">
+    <meta property="og:image" content="https://jofdavies.com/assets/img/og-card.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="/css/styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/openseadragon.min.js"></script>
 </head>
 <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
-        <div><a href="/index.html"class="nav-logo">Jof Davies</a></div>
-
-        <button class="nav-toggle" aria-label="Toggle navigation" style="color: #e0e0e0;">
-            ☰
-        </button>
-
-        <nav class="nav-menu nav-links">
-            <a href="/work-examples.html">Work Examples</a>
-            <a href="/testimonials.html">Testimonials</a>
-            
-            <a href="/about.html">About Me</a>
+        <a href="/" class="nav-logo">Jof Davies<span>_</span></a>
+        <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
+        <nav class="nav-menu" aria-label="Main">
+            <a href="/work-examples">Work</a>
+            <a href="/about">About</a>
+            <a href="/cv/">CV</a>
+            <a href="#contact" class="nav-cta" data-open-contact>Contact</a>
         </nav>
     </header>
 
-    <main class="cv-page">
+    <main class="cv-page" id="main">
         <div class="cv-container">
             <header class="cv-header">
                 <div class="character-badge">
-                    <img src="/assets/characters/Digital-Director.png" alt="Digital / Product Marketing Specialist" class="badge-image" />
+                    <img src="/assets/img/sprite-marketing.png" width="384" height="560" alt="" class="badge-image">
                 </div>
                 <div class="cv-title-section">
-                    <h1>DIGITAL / PRODUCT MARKETING SPECIALIST</h1>
+                    <p class="eyebrow">Profile</p>
+                    <h1>Digital marketing</h1>
                     <p class="cv-tagline">Multi-Channel Publishing • Automation • Technical Content Systems</p>
                     <div class="cv-actions">
-                        <button class="download-cv-btn" id="openCvModal">
-                            <span>⬇</span> DOWNLOAD CV (PDF)
-                        </button>
-                        <a href="/index.html" class="back-btn">← BACK TO JOF SELECT</a>
+                        <a class="btn btn-primary" href="/cv/">Read the full CV</a>
+                        <a href="/#profiles" class="btn">All profiles</a>
                     </div>
                 </div>
             </header>
@@ -79,7 +84,7 @@
             <section class="cv-section">
                 <h2>Professional Experience Highlights</h2>
                 <div class="experience-timeline">                    <div class="experience-item">
-                        <div class="experience-year">2016–PRESENT</div>
+                        <div class="experience-year">2016 to present</div>
                         <div class="experience-content">
                             <h3>Multi-Channel Marketing Automation</h3>
                             <p class="experience-company">MTDCNC</p>
@@ -91,7 +96,7 @@
                         </div>
                     </div>
                     <div class="experience-item">
-                        <div class="experience-year">2016–PRESENT</div>
+                        <div class="experience-year">2016 to present</div>
                         <div class="experience-content">
                             <h3>Email Marketing Framework &amp; Engagement Reporting</h3>
                             <p class="experience-company">MTDCNC</p>
@@ -152,125 +157,21 @@
                 </div>
             </section>
         </div>
-        
-    <div class="cv-modal-overlay" id="cvModal" hidden>
-        <div class="cv-modal">
-
-            <button class="cv-modal-close" id="closeCvModal" aria-label="Close">
-            ×
-            </button>
-
-            <h3>Get this CV</h3>
-
-            <p class="cv-modal-copy">
-            Enter your email address to receive a copy of this CV.
-            <br />
-            <small>Your email will not be used for any marketing purposes.</small>
-            </p>
-
-            <form class="cv-download-form">
-
-            <input
-                type="email"
-                name="email"
-                required
-                placeholder="Email address"
-            />
-
-            <input
-                type="hidden"
-                name="cv"
-                value="digital-marketing"
-            />
-
-            <button type="submit" class="download-cv-btn">
-                Send CV
-            </button>
-
-            </form>
-
-            <p class="cv-modal-status" hidden></p>
-
-        </div>
-    </div>
     </main>
 
     <footer class="site-footer">
-        <p>© <span class="year">2025</span> JofDavies.com | Multiple Skills, One Person</p>
+        <div class="wrap">
+            <p>&copy; <span class="year">2026</span> Jof Davies. Built on Cloudflare Pages and Workers.</p>
+            <nav aria-label="Footer">
+                <a href="/work-examples">Work</a>
+                <a href="/about">About</a>
+                <a href="/cv/">CV</a>
+                <a href="https://www.linkedin.com/in/joffad" rel="noopener">LinkedIn</a>
+                <a href="https://github.com/superraddm" rel="noopener">GitHub</a>
+            </nav>
+        </div>
     </footer>
-
-    <script>
-
-        document.querySelector('.nav-toggle').addEventListener('click', () => {
-        document.querySelector('.nav-menu')
-            .classList.toggle('open');
-        });
-
-        // Initialize viewers on page load
-        document.addEventListener('DOMContentLoaded', () => {
-           
-
-            // Update footer year
-            const yearSpan = document.querySelector('.year');
-            if (yearSpan) {
-                yearSpan.textContent = new Date().getFullYear();
-            }
-        });
-    </script>
-    
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-
-        const modal = document.getElementById("cvModal");
-        const openBtn = document.getElementById("openCvModal");
-        const closeBtn = document.getElementById("closeCvModal");
-
-        if (!modal || !openBtn || !closeBtn) {
-            console.warn("CV modal elements not found on page.");
-            return;
-        }
-
-        openBtn.addEventListener("click", () => {
-            modal.hidden = false;
-        });
-
-        closeBtn.addEventListener("click", () => {
-            modal.hidden = true;
-        });
-
-        modal.addEventListener("click", (e) => {
-            if (e.target === modal) {
-            modal.hidden = true;
-            }
-        });
-
-        });
-        </script>
-
-    <script>
-        document.querySelectorAll(".cv-download-form").forEach(form => {
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
-
-            const status = form
-            .closest(".cv-modal")
-            .querySelector(".cv-modal-status");
-
-            const response = await fetch("/api/request-pdf", {
-            method: "POST",
-            body: new FormData(form)
-            });
-
-            if (response.ok) {
-            status.textContent = "The CV has been sent to your email address.";
-            status.hidden = false;
-            form.reset();
-            } else {
-            status.textContent = "There was a problem. Please try again.";
-            status.hidden = false;
-            }
-        });
-        });
-        </script>
+    <script src="/js/site.js" defer></script>
+    <script src="/js/chat-widget.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,278 @@
+[
+  {
+    "id": "lib-profile-summary",
+    "section": "profile",
+    "title": "Profile summary",
+    "text": "Jof Davies builds and runs the systems a business depends on: CRM, customer data, email infrastructure, integrations between platforms and, since 2025, AI-driven automation. At MTDCNC he has owned the CRM and marketing systems end to end since June 2016 and has built a set of agent pipelines in Claude Code and Python that read a shared inbox, run a task board, publish content and drive a video-edit pipeline, all behind spend caps and human release gates. Before that he ran his own consultancy migrating CRMs for UK insurance brokers, and earlier replaced spreadsheet processes with Access and VBA systems. He is hands-on, documents what he builds and trains the people who use it."
+  },
+  {
+    "id": "lib-role-sought",
+    "section": "practical",
+    "title": "The role Jof is looking for",
+    "text": "Jof is looking for a permanent, full-time role where the main work is business systems, CRM and marketing-operations systems, integration, data, or AI workflow automation. Typical titles that fit: Business Systems Manager or Analyst, CRM Manager or Developer, Marketing Automation or Marketing Operations Manager, RevOps or GTM systems roles, AI Automation Specialist or Engineer, Automation Manager, Integration Specialist. He wants to keep doing the kind of work he does now at MTDCNC: finding manual work, modelling the data and building the automation. He is not looking for a marketing manager or content role, and he is not looking for contract or freelance work because he wants a permanent position."
+  },
+  {
+    "id": "lib-practical-facts",
+    "section": "practical",
+    "title": "Location, working pattern, notice and availability",
+    "text": "Jof lives in Northampton, UK, and has a full UK driving licence. He has the right to work in the UK. He prefers hybrid working within commuting distance of Northampton, with two or three days a week in the office, and is equally open to fully remote roles based in the UK. Occasional travel, including a couple of days a month in London, is fine. His notice period is three months. Salary expectations are discussed directly with Jof rather than quoted by the assistant. The quickest way to reach him is the contact form on jofdavies.com or LinkedIn at linkedin.com/in/joffad."
+  },
+  {
+    "id": "lib-skills-hands-on",
+    "section": "skills",
+    "title": "Skills Jof uses hands-on",
+    "text": "Skills Jof uses directly, most days. Programming and data: Python 3 (including pandas and rapidfuzz), SQL and MySQL, SQLite, JavaScript, JSON, VBA, Excel. Automation: Claude Code for AI-assisted development and agent pipelines, Zapier, Google Apps Script, Monday.com automations and API. Integration: REST APIs, webhooks, OAuth 2.0, the WordPress REST API, and the Monday.com, Dropbox, YouTube and Pushover APIs. CRM: GoHighLevel, and earlier FiveCRM and CallPro. Email: hand-coded HTML and VML, SendGrid, Mailwizz, SPF, DKIM and DMARC. Web: HTML, CSS, WordPress. He also has historic T-SQL and Access experience from his CRM consultancy and earlier roles."
+  },
+  {
+    "id": "lib-skills-depth-and-gaps",
+    "section": "skills",
+    "title": "Honest depth: working knowledge, exposure and gaps",
+    "text": "Jof is careful about what he claims. Working knowledge, meaning he has used them but would not call himself an expert: HubSpot (he holds no HubSpot certification), Node and Express, Flask, PHP, PowerShell and Bash, Linux basics, Cloudflare Workers, Pages and Vectorize, AWS S3 Glacier, Mailchimp, ActiveCampaign. Exposure only, meaning he has seen and worked around them but not administered them: Salesforce, Zoho and Power BI. Not used in production: n8n, Make, Power Automate, UiPath, Workato, Kubernetes and Azure. He builds the same kinds of workflow automation in Python, Zapier and Google Apps Script, and he learns new platforms quickly, but he would say so plainly rather than list them as skills. He has no React or Next.js production experience. He does not do machine-learning research or model training."
+  },
+  {
+    "id": "lib-how-he-codes",
+    "section": "skills",
+    "title": "Is Jof a developer? How he writes code",
+    "text": "Jof writes and maintains Python, SQL, JavaScript, VBA and some PHP, and has done since building Access and VBA systems in 2007. His job titles have been in systems, data and marketing rather than software engineering. Since 2025 most of his new code is written with AI-assisted development in Claude Code: he specifies the work, directs the agent, reviews and tests the output, and owns the result in production. He is clear that this is AI-assisted development and not unaided software engineering. What he brings to it is judgement about what to build, how to control it and how to keep it running: spend caps, release gates, handover documents and operations plans."
+  },
+  {
+    "id": "lib-education",
+    "section": "practical",
+    "title": "Education",
+    "text": "Jof does not have a degree. His education: The Ferrers School, GCSEs with 2 A*, 3 B and 4 C. Northampton College: Film Studies (B), Film and Video (C) and an Acting BTEC Award (Merit). Tresham Institute: eight units of a BTEC National Diploma in Performing Arts, part-completed. His technical skills are self-taught and proven in delivered systems over more than fifteen years, from Access and VBA databases in 2007 to AI agent pipelines in 2026."
+  },
+  {
+    "id": "lib-mtdcnc-overview",
+    "section": "mtdcnc",
+    "title": "MTDCNC: role overview (June 2016 to present)",
+    "text": "Jof has worked at MTDCNC in Northampton since June 2016. MTDCNC is a B2B media business serving the manufacturing technology sector. His title is Digital Marketing Manager, with responsibility for CRM, systems and automation. He is the sole owner of the CRM (more than 20,000 contacts), the email infrastructure and the marketing systems, across more than 50 client accounts. Over ten years the role has covered CRM architecture and automation, Python data tooling, platform integrations, email development and deliverability, a global media ingest and archive system, video production and livestream engineering, staff training and, since 2025, a programme of AI agent pipelines."
+  },
+  {
+    "id": "lib-ai-agents-overview",
+    "section": "ai-automation",
+    "title": "AI agent pipelines built in 2025 and 2026",
+    "text": "In 2025 and 2026 Jof built and now runs a set of AI agent pipelines at MTDCNC using Claude Code and Python. They are: an inbox agent that reads a shared mailbox, extracts tasks and posts them to Monday.com with a 07:00 daily brief; a board watcher that executes tagged tasks and reports back; a tool that turns a magazine PDF into categorised, illustrated web posts through the WordPress REST API; a two-voice podcast generator using Gemini text-to-speech; a deliverability tracker; and a dispatcher that drives a video-edit pipeline in Adobe Premiere. Every pipeline that can spend money runs behind a spend ledger, a canary and a kill switch, and nothing is sent or published without a person releasing it."
+  },
+  {
+    "id": "lib-inbox-agent",
+    "section": "ai-automation",
+    "title": "Inbox agent: a mailbox turned into a task list",
+    "text": "The inbox agent is built in Claude Code and Python. It reads a mailbox's inbox and sent items since its last run, discards notifications, promotions and junk, and extracts the real tasks. Each task is checked against the open items on a Monday.com task board: new tasks are added with a note of the source email, and existing items have their status moved when the mail shows progress. Where it can do the groundwork alone it does, for example looking something up, drafting a reply or a report and posting what it found on the item. At 07:00 each day it posts a brief grouped by whose move each task is, in deadline order. It runs under a daily spend cap of a few pounds and it prepares drafts but never sends them: a named person releases anything that goes out."
+  },
+  {
+    "id": "lib-board-watcher",
+    "section": "ai-automation",
+    "title": "Task-board watcher: tags fire tools",
+    "text": "The board watcher is the second of Jof's agents at MTDCNC. It watches a Monday.com task board. When someone tags the agent on an item, it works out which tool the request needs, such as a report, a draft or a data check, runs it, writes the result back to the item and mentions the person who asked. Items are closed on evidence that the work is done, not on an instruction alone. Replies and drafts it prepares wait for a person to release them. It is built in Claude Code and Python and uses the Monday.com API."
+  },
+  {
+    "id": "lib-guardrails",
+    "section": "ai-automation",
+    "title": "How Jof controls AI automation: spend caps and human release",
+    "text": "Jof's rule for AI automation is that it must be safe to leave running. Every pipeline that can spend money has four controls: a ledger that records what each run costs, a hard cap it cannot exceed, a canary run on a small sample before any batch, and a kill switch that stops it at once. Large jobs are chunked so a failure costs little. Separately, the tools prepare and a person releases: emails, messages and published content wait as drafts until a named person lets them go. Steps that do not need judgement are written as plain Python with no model calls, which makes them cheaper and repeatable. Each system has a handover document and an operations plan so that other people can run it."
+  },
+  {
+    "id": "lib-magazine-publisher",
+    "section": "ai-automation",
+    "title": "Magazine PDF to WordPress posts",
+    "text": "Jof built a Python tool that takes each issue of MTDCNC's bi-monthly magazine as a PDF and publishes its articles to the website. It splits the issue into articles of a page or longer, extracts the text and images, takes the category from the page label and sets the right company as author. It writes a preview folder first so the result can be checked, then creates the posts through the WordPress REST API with images placed inline. He built it with AI-assisted development, but it runs as plain Python with no model calls, so an issue costs nothing to process and the output is repeatable. A companion tool draws the mock-up images of each new issue from scratch for use on the website and in emails."
+  },
+  {
+    "id": "lib-podcast-generator",
+    "section": "ai-automation",
+    "title": "Two-voice podcast generator",
+    "text": "Jof built a tool that turns a written findings document into a two-voice podcast episode, in which a host interviews an analyst and the episode ends with calls to action. It uses Gemini text-to-speech and runs behind a hard-capped spend ledger. He also built a tool that combines the mastered tracks of the audio edition of the magazine into one file with chapter markers and writes the episode description, ready for upload to a podcast platform."
+  },
+  {
+    "id": "lib-edit-pipeline",
+    "section": "ai-automation",
+    "title": "Video-edit pipeline dispatcher",
+    "text": "Jof designed and documented a dispatcher that runs a video-edit pipeline unattended. It picks edit jobs from a queue, restores any archived material, opens Adobe Premiere itself and builds sequences from XML to the house cutting rules, such as minimum shot lengths and where a cut may fall. The deliverable is a real Premiere project that an editor opens and finishes. Idle jobs are archived to QNAP network storage and restored before a run. If the machine faults, the job is held rather than lost and the operator is paged through Pushover. Source footage is never moved or deleted by the tool. The pipeline has been handed over to a permanent runner machine with a written operations plan and a fault-recovery procedure."
+  },
+  {
+    "id": "lib-crm-automation",
+    "section": "crm-data",
+    "title": "CRM automation in GoHighLevel",
+    "text": "At MTDCNC Jof designed and built a multi-branch lead qualification workflow in the GoHighLevel CRM. It covers intake validation, enrichment, conditional branching, a sequence of HTML and plain-text follow-up emails driven by how each contact engages, lead scoring, notifications to sales staff and updates to CRM state. He also designed the CRM's structure, tagging and reporting, and earlier ran the company's CRM on FiveCRM. He has working knowledge of HubSpot but GoHighLevel is the platform he has built the most in. A large deep-zoom diagram of the workflow is on the workflow automation profile page of jofdavies.com."
+  },
+  {
+    "id": "lib-import-validator",
+    "section": "crm-data",
+    "title": "Python CRM import validator",
+    "text": "Jof wrote a Python import validator that stops bad or duplicate records entering the CRM. Each incoming record runs down a resolution chain: match on email, then exact name, then company domain, then fuzzy name matching using rapidfuzz. Fuzzy matches of 90% or more are approved automatically. Matches of 75 to 89% go to a review queue, together with any record whose country does not agree with the one on file. The tool writes an Excel review workbook so a person can decide the uncertain cases quickly. Only resolved records reach the CRM."
+  },
+  {
+    "id": "lib-bot-click-filter",
+    "section": "crm-data",
+    "title": "Bot-click filter for campaign statistics",
+    "text": "Security scanners and mail privacy proxies open emails and click links automatically, which inflates campaign statistics. Jof built a Python bot-click filter that classifies each click using Apple Mail Privacy Protection address ranges, an IP classification cache held in SQLite and behavioural scoring. Campaign reports then show activity from real people rather than scanners, which makes the engagement figures given to clients honest."
+  },
+  {
+    "id": "lib-reporting-master-list",
+    "section": "crm-data",
+    "title": "Campaign reporting and the 121,663-contact master list",
+    "text": "Jof generates client campaign reports by script, reading the email platform's production MySQL database directly and read-only, and writing an Excel report with a summary, opens and clicks. Any write to that database follows a plan, apply, verify routine. In October 2026 he merged the contact bases of two systems into a single deduplicated master list of 121,663 contacts. He also built deduplication tooling between the CRM and the email platform."
+  },
+  {
+    "id": "lib-integrations",
+    "section": "integration",
+    "title": "Integrations built at MTDCNC",
+    "text": "Integrations Jof has built at MTDCNC include: Monday.com with Google Apps Script, pulling YouTube statistics into boards; Zapier with webhooks, taking LinkedIn posts through Google Sheets and an AI rewrite into WordPress; a Flask application on Render that uploads to YouTube using OAuth 2.0; a Node and Express proxy that makes Monday.com images public so Zapier can use them; WordPress REST API publishing; read-only reporting from a MySQL production database; the Dropbox team API; Pushover notifications; and the Gemini API for text-to-speech. He works with REST APIs, webhooks, OAuth 2.0 and JSON routinely."
+  },
+  {
+    "id": "lib-linkedin-wordpress",
+    "section": "integration",
+    "title": "LinkedIn to WordPress automation",
+    "text": "Jof built an automation that turns LinkedIn posts into website articles using Zapier, webhooks, Google Sheets, Formatter steps and an AI rewrite. Post URLs are collected into Google Sheets with Phantombuster, then cleaned and validated. Webhooks extract the body text and media of each post. The content is rewritten into an editorial-style article by an AI model, and the image and article are posted to WordPress. The spreadsheet is updated with status and metadata, and fallback logic handles failed rewrites and republished posts. A deep-zoom diagram of the workflow is on the workflow automation profile page of the site."
+  },
+  {
+    "id": "lib-youtube-uploader",
+    "section": "integration",
+    "title": "YouTube publishing automation (Ultimate Video Uploader)",
+    "text": "Jof built a YouTube publishing automation known internally as the Ultimate Video Uploader. A trigger on the project management board starts it. It formats titles, descriptions, tags and categories, handles thumbnails, branches on whether a video is short-form (under two minutes) or long-form, uploads and schedules through the YouTube API, publishes to WordPress, logs status and notifies people on success or failure. It turned a multi-person publishing routine into a single button. Related code is in his GitHub repositories, including a Flask YouTube uploader deployed on Render."
+  },
+  {
+    "id": "lib-email-infrastructure",
+    "section": "email",
+    "title": "Email infrastructure and deliverability",
+    "text": "Jof runs MTDCNC's email infrastructure, which has carried around one million emails a month at peak through SendGrid and Mailwizz. He maintains SPF, DKIM and DMARC across the sending domains, monitors sender reputation and blacklists, and manages suppression and unsubscribes. He has hand-coded more than 3,000 HTML and VML email campaigns that render correctly across Outlook, Gmail and Apple Mail. He built a deliverability tracker that follows authentication and reputation for each sending brand. He has also used Mailchimp and ActiveCampaign."
+  },
+  {
+    "id": "lib-email-build-standard",
+    "section": "email",
+    "title": "Email build standard: rule set, linter and converters",
+    "text": "Jof wrote the rule set that MTDCNC's emails are built to, covering Outlook's VML rendering, DPI scaling and dark mode, and a Python linter called email_lint that every build must pass before it is proofed. He built a Python pipeline from Photoshop design to HTML, and a converter that brings supplied or AI-generated HTML up to the house standard, extracting and compressing images and rendering the result at desktop and phone width. Test sends go to test lists; live campaigns are prepared as drafts and sent by a person."
+  },
+  {
+    "id": "lib-media-ingest",
+    "section": "infrastructure",
+    "title": "Global video ingest, proxy and archive system",
+    "text": "Jof designed and deployed MTDCNC's media ingest and archive system. Two QNAP storage units of about 100 TB each sit on site and at a remote location. The office unit synchronises with Dropbox so footage can be ingested from anywhere, with fast local access over a 10 Gb network and a 1 Gb leased line. Footage replicates hourly, proxy files are generated automatically at about 5% of the original size so remote editors can start work on slow connections, and new material is archived nightly to AWS S3 Glacier. About 100 TB is archived at roughly £100 a month. The system cost about £7,000 in hardware with no software licences and serves around 20 remote editors in the UK, Europe, the USA, Mexico and India. Commercial platforms he evaluated were quoted in the tens of thousands of pounds a year."
+  },
+  {
+    "id": "lib-proxy-generation",
+    "section": "infrastructure",
+    "title": "Automated proxy generation",
+    "text": "Proxy creation in MTDCNC's media system is automated with HBBatchBeast and a custom HandBrake preset that Jof tuned. A workstation checks the project footage folder every hour and processes only new files. The preset keeps enough picture quality for editing, cuts file size substantially for remote transfer, standardises the format for every editor and decodes predictably in Premiere Pro. This removed manual transcoding and means editors usually have proxy-ready footage within about an hour of upload."
+  },
+  {
+    "id": "lib-super-rad",
+    "section": "career",
+    "title": "Super Rad Data Management: insurance CRM migrations (December 2012 to 2020)",
+    "text": "Jof founded Super Rad Data Management and worked as a CRM and data consultant from December 2012 to 2020, mainly for UK insurance brokers and employee-benefits providers. He won the tender to move Consilium Employee Benefits from a legacy CRM to CallPro and led the specification, data mapping, cleansing, deduplication, migration, workflow design, deployment and training. He designed client, policy and renewal data structures, automated renewal reminders, cancellations and telemarketing workflows, and built management dashboards and reporting. He carried the data through successive acquisitions, from Consilium to Chase Templeton and then Towergate, and also delivered for Clear Insurance and Square Mile Broking. This overlapped with his role at MTDCNC, with less activity in the later years."
+  },
+  {
+    "id": "lib-mak-media",
+    "section": "career",
+    "title": "MAK Media Solutions (2011 to 2012)",
+    "text": "At MAK Media Solutions from 2011 to 2012 Jof worked in CRM and systems support and as Customer Support Manager. He configured CRM systems and trained users, built and maintained websites on WordPress, Drupal and Squarespace, looked after small-business IT including hosting, DNS, email and telephony, and directed, filmed and edited video content."
+  },
+  {
+    "id": "lib-integrity",
+    "section": "career",
+    "title": "Integrity Business Connections (2009 to 2011)",
+    "text": "At Integrity Business Connections, a telemarketing business, from 2009 to 2011 Jof worked on data and systems. He upgraded the CRM, replaced spreadsheet reporting with a query-driven Access and VBA reporting system, and handled data imports, cleansing and deduplication for the telemarketing operation."
+  },
+  {
+    "id": "lib-moulton",
+    "section": "career",
+    "title": "Moulton College (2007 to 2009)",
+    "text": "At Moulton College from 2007 to 2009 Jof worked in the Transport Department. He built an Access and VBA transport management database covering routes, passenger lists, scheduling, printable manifests and route mapping for several hundred students. It replaced error-prone Excel budgeting and invoicing sheets. This was his first substantial systems project."
+  },
+  {
+    "id": "lib-early-career",
+    "section": "career",
+    "title": "Early career and background",
+    "text": "Before his systems roles Jof worked at Cineworld from 2003 to 2005 in customer service and shift-based operations, and at Barclaycard from 2005 to 2006 in a regulated financial-services setting that required accuracy and careful data handling. He grew up around computers, starting with a Commodore 64 and moving on to building and repairing PCs and writing BASIC. From about the age of ten he filmed and edited his own short films on VHS, which is where his video production skills began."
+  },
+  {
+    "id": "lib-career-timeline",
+    "section": "career",
+    "title": "Career timeline",
+    "text": "Jof's career in order. 2003 to 2005: Cineworld. 2005 to 2006: Barclaycard. 2007 to 2009: Moulton College, Transport Department systems (Access and VBA database). 2009 to 2011: Integrity Business Connections, data and systems. 2011 to 2012: MAK Media Solutions, CRM and systems support and Customer Support Manager. December 2012 to 2020: founder and CRM and data consultant at Super Rad Data Management, alongside other work in later years. June 2016 to present: Digital Marketing Manager (CRM, systems and automation) at MTDCNC in Northampton."
+  },
+  {
+    "id": "lib-video-production",
+    "section": "video",
+    "title": "Video production experience",
+    "text": "Jof has more than 20 years of video production experience, including Adobe Premiere Pro throughout. At MTDCNC he has filmed and edited interviews, factory tours, product demonstrations and studio programmes, working as camera operator, lighting and audio technician, editor and sometimes director. He uses Blackmagic Pocket Cinema, Sony and Panasonic cameras and wireless video systems from Hollyland, Teradek, LiveU and Vaxis. He understands codecs and compression (H.264, H.265, ProRes, HandBrake, ffmpeg). Earlier he made a corporate film for Eurofood Brands, including directing a shoot day with Hershey's-branded black cabs in London. Video is background to his systems work now, not the role he is seeking."
+  },
+  {
+    "id": "lib-livestream",
+    "section": "video",
+    "title": "Livestream engineering",
+    "text": "Jof directs and engineers multicamera livestreams. He uses vMix and Blackmagic ATEM switchers, NDI and SDI video transport, SRT and RTMP links, wireless camera systems and vMix Call for remote guests, and manages talkback, monitoring, the audio mix and failover. He has remotely directed simultaneous international live events, bringing in signals from the USA, India, Mexico, mainland Europe and the UK into one broadcast. He covers every technical role except presenting. He also engineered MTDCNC's podcast and studio programme recordings."
+  },
+  {
+    "id": "lib-training",
+    "section": "working-style",
+    "title": "Training, documentation and leadership",
+    "text": "Jof trains the people who use what he builds. At MTDCNC he trained and supports around 20 remote editors on the media ingest system, has trained colleagues in camera operation, editing and livestream set-ups, and delivers CRM training. He writes the handover documents and operations plans for his automation pipelines, including a runner handover for the edit pipeline. In his consultancy he trained client staff on new CRM systems. He has not held a line-management job title: he leads by training, documentation and example, and mentors junior technical staff."
+  },
+  {
+    "id": "lib-working-style",
+    "section": "working-style",
+    "title": "How Jof works",
+    "text": "Jof's method has been consistent across fifteen years: learn how the work is really done, model the data, build the simplest thing that holds, document it and train the people who use it. He prefers plain, deterministic code where it does the job and uses AI models only where reading and judgement are needed. He controls cost: his media archive runs at roughly £100 a month and his AI pipelines run under hard spend caps. He is direct about limits, saying where his knowledge is working-level rather than expert. He is used to being the only technical owner in a business, which means handling requirements, build, support and incidents himself."
+  },
+  {
+    "id": "lib-infrastructure-it",
+    "section": "infrastructure",
+    "title": "IT and infrastructure experience",
+    "text": "Alongside systems work Jof has practical IT and infrastructure experience. He specified and installed network storage (QNAP) with cross-site synchronisation, a 10 Gb office network and coordinated the installation of a 1 Gb leased line. He administers Windows workstations, has handled small-business hosting, DNS, email and telephony, and manages cloud services including Dropbox, AWS S3 Glacier and Cloudflare. He specifies and builds PC hardware and troubleshoots production equipment and connectivity."
+  },
+  {
+    "id": "lib-this-site",
+    "section": "projects",
+    "title": "How jofdavies.com and this chatbot were built",
+    "text": "jofdavies.com is Jof's personal project. It is a static site of plain HTML, CSS and JavaScript with no framework and no build step, deployed from GitHub to Cloudflare Pages. A Cloudflare Worker handles the chatbot and the contact form. The chatbot uses retrieval: a curated library of short records about Jof's roles, projects and tools is embedded with OpenAI embeddings and stored in Cloudflare Vectorize. For each question the Worker retrieves the closest records and asks the model to answer only from them. Writing to the library requires a secret key, and questions are rate-limited and capped per day. The contact form sends email through Postmark. Workflow diagrams use OpenSeadragon deep zoom. Jof built it with AI-assisted development in VS Code and rebuilt it in November 2026."
+  },
+  {
+    "id": "lib-github",
+    "section": "projects",
+    "title": "GitHub repositories",
+    "text": "Jof's GitHub account is github.com/superraddm. Repositories include: render-youtube-uploader, a Flask application deployed on Render that uploads and schedules YouTube videos using OAuth 2.0 as part of the video publishing automation; public-monday-images, a Node and Express service that makes Monday.com images publicly reachable for Zapier and CMS workflows; linkedin-image-processor, a Node service that fetches LinkedIn post images and prepares them for WordPress; bunny-temp-storage, which gives automations short-lived public URLs for assets using BunnyCDN; and the repository for jofdavies.com itself."
+  },
+  {
+    "id": "lib-sector-clients",
+    "section": "mtdcnc",
+    "title": "Sector and client exposure",
+    "text": "Through MTDCNC Jof has worked for more than ten years in the manufacturing technology sector, producing campaigns and content for machine tool, CNC, automation and metrology companies. Organisations served through MTDCNC include Mazak, DMG Mori, Haas, FANUC, XYZ Machine Tools, Starrag, Hurco, Siemens, Autodesk, Renishaw, Heidenhain, Ward Hi-Tech and Engineering Technology Group. Through his consultancy he worked in the UK insurance broking and employee-benefits sector, a regulated environment, for Consilium Employee Benefits, Chase Templeton, Towergate, Clear Insurance and Square Mile Broking."
+  },
+  {
+    "id": "lib-fit-ai-automation",
+    "section": "fit",
+    "title": "Why Jof suits an AI automation or business automation role",
+    "text": "For an AI automation, business automation or workflow automation role, the relevant evidence is that Jof already does the job. He found the manual processes in a business, built agent pipelines in Claude Code and Python to replace them, put cost controls and human approval around them, documented them and handed them to other people to run. Examples in production: an inbox-to-task-board agent with a daily brief, a board watcher that runs tools on request, a PDF-to-website publisher and a video-edit pipeline dispatcher. He integrates through REST APIs, webhooks and OAuth 2.0 and reports from SQL databases. Points to be straight about: he has not used n8n, Make, Power Automate or UiPath in production, and he has not held a line-management title."
+  },
+  {
+    "id": "lib-fit-crm-systems",
+    "section": "fit",
+    "title": "Why Jof suits a CRM, RevOps or business systems role",
+    "text": "For a CRM, marketing operations, RevOps or business systems role, the relevant evidence is ten years as sole owner of a CRM and its surrounding systems, plus eight years migrating CRMs for insurance brokers. He has designed data models, run migrations with cleansing and deduplication, built multi-branch lead qualification and nurture automation in GoHighLevel, written Python tooling that keeps imports clean, and produced reporting from production databases. He manages email authentication and deliverability at volume. Points to be straight about: his HubSpot knowledge is working-level and uncertified, and his Salesforce experience is exposure only. His strongest CRM platforms are GoHighLevel, FiveCRM and CallPro."
+  },
+  {
+    "id": "lib-tools",
+    "section": "skills",
+    "title": "Tools and platforms list",
+    "text": "Tools and platforms Jof has worked with. AI and automation: Claude Code, OpenAI, Anthropic and Gemini APIs, Zapier, Google Apps Script, Monday.com, Phantombuster. Languages and data: Python, SQL, MySQL, SQLite, T-SQL, JavaScript, PHP, VBA, Access, Excel, pandas, rapidfuzz. CRM and email: GoHighLevel, HubSpot (working knowledge), FiveCRM, CallPro, Mailwizz, SendGrid, Mailchimp, ActiveCampaign, Postmark. Web and cloud: HTML, CSS, WordPress, Drupal, Squarespace, Cloudflare Workers, Pages and Vectorize, Render, GitHub, AWS S3 Glacier, Dropbox, QNAP. Video: Adobe Premiere Pro, After Effects, DaVinci Resolve, vMix, ATEM, OBS, HandBrake, ffmpeg."
+  },
+  {
+    "id": "lib-faq-management-team",
+    "section": "fit",
+    "title": "Team size, management and working with others",
+    "text": "Jof has mostly worked as the single technical owner inside a small business, working daily with sales, editorial and video colleagues and with clients. He has not managed direct reports under a management title. He has trained colleagues, supported around 20 remote editors on his systems, mentored junior staff and evaluated vendors and tools. He takes requirements from non-technical colleagues and explains technical decisions in plain language. For how he would fit a particular team structure, it is best to ask him directly."
+  },
+  {
+    "id": "lib-faq-why-moving",
+    "section": "practical",
+    "title": "Why Jof is looking for a new role",
+    "text": "Jof has been at MTDCNC since 2016 and his work there has moved steadily from marketing delivery to systems, data and automation. He is looking for a permanent role where that systems and automation work is the job itself, with room to keep building. At MTDCNC he has had the freedom to build everything described on this site."
+  },
+  {
+    "id": "lib-faq-security-data",
+    "section": "working-style",
+    "title": "Data protection, security and confidentiality",
+    "text": "Jof has worked with customer and contact data throughout his career, including in the regulated UK insurance sector, and manages suppression, unsubscribes and list hygiene for large email programmes. His tools connect to production databases read-only for reporting, and any write follows a plan, apply, verify routine. His AI pipelines keep a person in control of anything sent externally. On this site, employer and client data is described only in general terms. The chatbot's library can only be changed with a secret key."
+  }
+]
