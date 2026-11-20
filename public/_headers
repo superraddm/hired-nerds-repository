@@ -2,6 +2,10 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
 
+# Search engines should send people to the CV page, not straight to the file.
+/cv/Jof-Davies-CV.pdf
+  X-Robots-Tag: noindex
+
 /assets/img/*
   Cache-Control: public, max-age=604800
 

@@ -21,6 +21,9 @@
 # November 2026 rebuild: pages that were removed or renamed.
 /testimonials.html              /                       302
 /testimonials                   /                       302
+# On jofdavies.com the API Worker answers /download/cv (it emails Jof, then redirects to the PDF).
+# This line only applies where the Worker is not in front, such as branch previews.
+/download/cv                    /cv/Jof-Davies-CV.pdf   302
 /download.html                  /cv/                    302
 /download                       /cv/                    302
 /cv/cv-email-marketing-OLD      /cv/cv-email-marketing  301

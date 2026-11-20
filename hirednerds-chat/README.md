@@ -1,6 +1,7 @@
 # jofdavies.com API Worker and chatbot library
 
-The Worker behind `jofdavies.com/api/*`: the "Ask about Jof" chatbot and the contact form.
+The Worker behind `jofdavies.com/api/*` and `jofdavies.com/download/cv`: the "Ask about Jof" chatbot, the contact
+form and the CV download notice.
 
 ```
 hirednerds-chat/
@@ -19,6 +20,18 @@ hirednerds-chat/
 2. The Worker embeds the question and fetches the closest records from Vectorize.
 3. The model is given the fact sheet, those records and the question, and told to answer only from them.
 4. If the library does not cover it, the assistant says so and the widget offers the contact form.
+
+## CV download notice
+
+The "Download PDF" button on `/cv/` links to `/download/cv`. The Worker emails Jof through Postmark and redirects
+the visitor to `/cv/Jof-Davies-CV.pdf`. The visitor fills in nothing and never waits on the email.
+
+- The email gives the time, the town and country, the network the request came from (often a company name on an
+  office connection), the page the button was on and the browser. No IP address is stored or sent.
+- One notice per visitor per day, and at most `CV_NOTIFY_DAILY_CAP` notices a day (25). Both are counted in KV.
+- Crawlers, link-preview fetchers, prefetches and scripts get the file without an email.
+- Someone who is sent the PDF address itself, or opens it from a saved copy, is not reported.
+- On a branch preview the Worker is not in front, so `public/_redirects` sends `/download/cv` straight to the PDF.
 
 ## Guard rails
 
@@ -44,7 +57,7 @@ hirednerds-chat/
 
 ```
 cd app
-node test/worker.test.mjs        # 16 offline tests
+node test/worker.test.mjs        # 19 offline tests
 npx wrangler deploy --dry-run    # validates the config and bundle, deploys nothing
 ```
 

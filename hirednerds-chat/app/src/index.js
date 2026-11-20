@@ -2,6 +2,7 @@
 //
 //   POST /api/chat          question + recent history -> answer grounded in the Vectorize library
 //   POST /api/contact       contact form -> email via Postmark
+//   GET  /download/cv       email Jof a short notice, then redirect to the CV PDF
 //   POST /api/ingest        (Bearer INGEST_TOKEN) upsert library records
 //   POST /api/admin/delete  (Bearer INGEST_TOKEN) delete library records by id
 //   GET  /api/health        liveness check
@@ -22,6 +23,9 @@ const TOP_K = 8;
 const MIN_SCORE = 0.2;
 const DEFAULT_DAILY_CAP = 400;
 const MAX_RECORD_CHARS = 6000;
+const CV_PDF_URL = "https://jofdavies.com/cv/Jof-Davies-CV.pdf";
+const DEFAULT_CV_NOTIFY_CAP = 25; // download notices per day
+const NOTIFY_ADDRESS = "jof@jofdavies.com";
 
 export default {
   async fetch(request, env, ctx) {
@@ -48,8 +52,12 @@ export default {
       if (url.pathname === "/api/health" && request.method === "GET") {
         return json({ ok: true, service: "jofdavies-api", version: "2026-11" }, 200, cors);
       }
-      // The emailed CV download was retired; the CV is a direct download now.
-      if (url.pathname.startsWith("/download/cv") || url.pathname === "/api/request-pdf") {
+      // The site's "Download PDF" button points here so that Jof hears about each download.
+      if (url.pathname.startsWith("/download/cv") && (request.method === "GET" || request.method === "HEAD")) {
+        return handleCvDownload(request, env, ctx);
+      }
+      // The old "email me the CV" form was retired; anything still calling it lands on the CV page.
+      if (url.pathname === "/api/request-pdf") {
         return Response.redirect("https://jofdavies.com/cv/", 302);
       }
       return json({ error: "Not found" }, 404, cors);
@@ -279,8 +287,8 @@ async function handleContact(request, env, cors) {
       Accept: "application/json",
     },
     body: JSON.stringify({
-      From: "jof@jofdavies.com",
-      To: "jof@jofdavies.com",
+      From: NOTIFY_ADDRESS,
+      To: NOTIFY_ADDRESS,
       ReplyTo: email,
       Subject: `[Contact] ${subject}`,
       TextBody: `New contact form submission\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
@@ -292,6 +300,128 @@ async function handleContact(request, env, cors) {
     return json({ error: "Email service rejected the request." }, 502, cors);
   }
   return json({ success: true }, 200, cors);
+}
+
+// ---------------------------------------------------------------- CV download notice
+
+// Link checkers, preview fetchers and scripts get the file but do not trigger an email.
+const AUTOMATED_AGENT =
+  /bot|crawl|spider|slurp|preview|scanner|monitor|headless|lighthouse|curl|wget|python|go-http|java\/|okhttp|axios|node-fetch|facebookexternalhit|whatsapp|embedly|feedfetcher/i;
+
+// The visitor always gets the PDF straight away. The email to Jof is sent in the background,
+// so a mail problem can never break the download.
+function handleCvDownload(request, env, ctx) {
+  if (request.method === "GET") {
+    ctx.waitUntil(notifyCvDownload(request, env).catch((err) => console.error("CV download notice failed", err)));
+  }
+  return new Response(null, { status: 302, headers: { Location: CV_PDF_URL, "Cache-Control": "no-store" } });
+}
+
+async function sha256Hex(text) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function describeAgent(agent) {
+  const browsers = [
+    [/Edg\//, "Edge"],
+    [/OPR\//, "Opera"],
+    [/Firefox\//, "Firefox"],
+    [/Chrome\//, "Chrome"],
+    [/Safari\//, "Safari"],
+  ];
+  const systems = [
+    [/iPhone/, "iPhone"],
+    [/iPad/, "iPad"],
+    [/Android/, "Android"],
+    [/Windows/, "Windows"],
+    [/Mac OS X/, "Mac"],
+    [/Linux/, "Linux"],
+  ];
+  const pick = (table, fallback) => (table.find(([re]) => re.test(agent)) || [null, fallback])[1];
+  return `${pick(browsers, "Unknown browser")} on ${pick(systems, "unknown system")}`;
+}
+
+// Returns a short reason string so the tests can see which path was taken.
+export async function notifyCvDownload(request, env) {
+  const agent = request.headers.get("User-Agent") || "";
+  if (!agent || AUTOMATED_AGENT.test(agent)) return "skipped-automated";
+  const purpose = request.headers.get("Sec-Purpose") || request.headers.get("Purpose") || "";
+  if (/prefetch|preview/i.test(purpose)) return "skipped-prefetch";
+  if (!env.POSTMARK_API_TOKEN) return "skipped-no-mail";
+
+  const now = new Date();
+  const day = now.toISOString().slice(0, 10);
+  let lastOfDay = false;
+  if (env.PDF_REQUESTS) {
+    // One notice per visitor per day. The address is hashed together with the date and never stored.
+    const seenKey = "cv-dl:" + (await sha256Hex(`${day}|${clientKey(request)}`)).slice(0, 32);
+    if (await env.PDF_REQUESTS.get(seenKey)) return "skipped-repeat";
+    // Daily ceiling, so a burst of traffic cannot flood the inbox or the mail account.
+    const cap = parseInt(env.CV_NOTIFY_DAILY_CAP, 10) || DEFAULT_CV_NOTIFY_CAP;
+    const countKey = "cv-dl-count:" + day;
+    const sent = parseInt((await env.PDF_REQUESTS.get(countKey)) || "0", 10) || 0;
+    if (sent >= cap) return "skipped-cap";
+    lastOfDay = sent + 1 >= cap;
+    await env.PDF_REQUESTS.put(seenKey, "1", { expirationTtl: 86400 });
+    await env.PDF_REQUESTS.put(countKey, String(sent + 1), { expirationTtl: 172800 });
+  }
+
+  const cf = request.cf || {};
+  const place = [cf.city, cf.region, cf.country].map((v) => clean(v, 60)).filter(Boolean).join(", ");
+  const network = clean(cf.asOrganization, 120);
+  let from = "";
+  try {
+    const ref = new URL(request.headers.get("Referer") || "");
+    from = /(^|\.)jofdavies\.com$/.test(ref.hostname) ? ref.pathname : ref.hostname + ref.pathname;
+  } catch {
+    from = "";
+  }
+  const when = now.toLocaleString("en-GB", {
+    timeZone: "Europe/London",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  const lines = [
+    "Someone downloaded your CV from jofdavies.com.",
+    "",
+    `When: ${when} (UK time)`,
+    `Where: ${place || "not known"}`,
+    `Network: ${network || "not known"}`,
+    `Clicked from: ${clean(from, 200) || "not known (a direct or shared link)"}`,
+    `Device: ${describeAgent(agent)}`,
+    "",
+    "Network is the internet connection the download came from. A company name usually means an office connection. A home broadband or mobile provider tells you little.",
+    "No name or email address is collected. The visitor's IP address is not stored and is not in this email. You get one notice per visitor per day.",
+  ];
+  if (lastOfDay) {
+    lines.push("", "This is the last notice for today: the daily limit has been reached. Later downloads today still work but are not reported.");
+  }
+
+  const res = await fetch("https://api.postmarkapp.com/email", {
+    method: "POST",
+    headers: {
+      "X-Postmark-Server-Token": env.POSTMARK_API_TOKEN,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      From: NOTIFY_ADDRESS,
+      To: NOTIFY_ADDRESS,
+      Subject: `[CV download] ${network || place || "jofdavies.com"}`.replace(/[\r\n]+/g, " "),
+      TextBody: lines.join("\n"),
+      MessageStream: "outbound",
+    }),
+  });
+  if (!res.ok) {
+    console.error("Postmark rejected CV download notice", res.status, await res.text());
+    return "failed";
+  }
+  return "sent";
 }
 
 // ---------------------------------------------------------------- library maintenance (authenticated)

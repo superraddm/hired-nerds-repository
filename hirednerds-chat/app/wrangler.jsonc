@@ -4,7 +4,7 @@
  *
  * Secrets (set with `wrangler secret put NAME`, never committed):
  *   OPENAI_API_KEY      embeddings and chat completions
- *   POSTMARK_API_TOKEN  contact form email
+ *   POSTMARK_API_TOKEN  contact form email and CV download notices
  *   INGEST_TOKEN        bearer token for /api/ingest and /api/admin/delete (24+ characters)
  */
 {
@@ -21,7 +21,8 @@
     { "pattern": "jofdavies.com/download/cv*", "zone_name": "jofdavies.com" }
   ],
 
-  // KV: holds the daily chat counter (key chat-count:YYYY-MM-DD). The binding keeps its original name.
+  // KV: holds the daily chat counter (chat-count:YYYY-MM-DD) and the CV download notice counters
+  // (cv-dl-count:YYYY-MM-DD, plus one hashed cv-dl:* key per visitor per day). The binding keeps its original name.
   "kv_namespaces": [
     { "binding": "PDF_REQUESTS", "id": "dd88bd4a3be34411a98198ca1b284214" }
   ],
@@ -45,6 +46,7 @@
     "OPENAI_API_BASE": "https://api.openai.com/v1",
     "OPENAI_EMBEDDING_MODEL": "text-embedding-3-small",
     "OPENAI_CHAT_MODEL": "gpt-4.1-mini",
-    "CHAT_DAILY_CAP": "400"
+    "CHAT_DAILY_CAP": "400",
+    "CV_NOTIFY_DAILY_CAP": "25"
   }
 }

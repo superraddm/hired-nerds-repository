@@ -251,11 +251,79 @@ test("contact: validates, then sends through Postmark with a reply-to", async ()
   assert.equal(r.res.status, 429);
 });
 
-test("retired CV download routes redirect to the CV page", async () => {
+const BROWSER = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
+const PDF = "https://jofdavies.com/cv/Jof-Davies-CV.pdf";
+const notices = () => calls.filter((c) => c.url.includes("postmarkapp.com"));
+
+test("CV download: visitor gets the PDF and Jof gets one notice per visitor per day", async () => {
+  calls.length = 0;
+  const env = makeEnv();
+  const headers = { "User-Agent": BROWSER, Referer: "https://jofdavies.com/cv/" };
+  let r = await call("GET", "/download/cv", { headers, env });
+  assert.equal(r.res.status, 302);
+  assert.equal(r.res.headers.get("Location"), PDF);
+  assert.equal(notices().length, 1);
+  const mail = notices()[0].body;
+  assert.equal(mail.To, "jof@jofdavies.com");
+  assert.ok(mail.Subject.startsWith("[CV download]"));
+  assert.ok(mail.TextBody.includes("Clicked from: /cv/"));
+  assert.ok(mail.TextBody.includes("Device: Chrome on Windows"));
+  assert.ok(!mail.TextBody.includes("203.0.113.9"), "the IP address is not in the email");
+  assert.ok(![...env.PDF_REQUESTS._map.keys()].some((k) => k.includes("203.0.113.9")), "the IP address is not stored");
+
+  r = await call("GET", "/download/cv", { headers, env });
+  assert.equal(r.res.headers.get("Location"), PDF);
+  assert.equal(notices().length, 1, "same visitor, same day: no second email");
+
+  await call("GET", "/download/cv", { headers: { ...headers, "CF-Connecting-IP": "198.51.100.7" }, env });
+  assert.equal(notices().length, 2, "a different visitor is reported");
+});
+
+test("CV download: crawlers, link previews, prefetches and HEAD requests get the file but send no email", async () => {
+  calls.length = 0;
+  const env = makeEnv();
+  const quiet = [
+    ["GET", { "User-Agent": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" }],
+    ["GET", { "User-Agent": "LinkedInBot/1.0 (compatible; Mozilla/5.0; Apache-HttpClient +http://www.linkedin.com)" }],
+    ["GET", { "User-Agent": "curl/8.9.1" }],
+    ["GET", { "User-Agent": BROWSER, "Sec-Purpose": "prefetch" }],
+    ["HEAD", { "User-Agent": BROWSER }],
+  ];
+  let n = 0;
+  for (const [method, headers] of quiet) {
+    const r = await call(method, "/download/cv", { headers: { ...headers, "CF-Connecting-IP": "192.0.2." + ++n }, env });
+    assert.equal(r.res.status, 302);
+    assert.equal(r.res.headers.get("Location"), PDF);
+  }
   const c = ctx();
-  const res = await worker.fetch(new Request("https://jofdavies.com/download/cv?token=abc"), makeEnv(), c);
-  assert.equal(res.status, 302);
-  assert.equal(res.headers.get("Location"), "https://jofdavies.com/cv/");
+  const res = await worker.fetch(new Request("https://jofdavies.com/download/cv?token=abc", { headers: { "User-Agent": "" } }), env, c);
+  await c.settle();
+  assert.equal(res.headers.get("Location"), PDF, "old emailed links still reach the CV");
+  assert.equal(notices().length, 0);
+});
+
+test("CV download: daily notice limit, and a mail failure never blocks the download", async () => {
+  calls.length = 0;
+  const env = makeEnv({ CV_NOTIFY_DAILY_CAP: "2" });
+  for (let i = 1; i <= 4; i++) {
+    const r = await call("GET", "/download/cv", { headers: { "User-Agent": BROWSER, "CF-Connecting-IP": "198.51.100." + i }, env });
+    assert.equal(r.res.headers.get("Location"), PDF);
+  }
+  assert.equal(notices().length, 2, "two notices, then silence");
+  assert.ok(!notices()[0].body.TextBody.includes("last notice for today"));
+  assert.ok(notices()[1].body.TextBody.includes("last notice for today"));
+
+  calls.length = 0;
+  const r = await call("GET", "/download/cv", { headers: { "User-Agent": BROWSER }, env: makeEnv({ POSTMARK_API_TOKEN: "" }) });
+  assert.equal(r.res.status, 302);
+  assert.equal(r.res.headers.get("Location"), PDF);
+  assert.equal(notices().length, 0);
+});
+
+test("retired CV request form redirects to the CV page", async () => {
+  const r = await call("POST", "/api/request-pdf", { body: { email: "a@example.com" } });
+  assert.equal(r.res.status, 302);
+  assert.equal(r.res.headers.get("Location"), "https://jofdavies.com/cv/");
 });
 
 test("health check", async () => {

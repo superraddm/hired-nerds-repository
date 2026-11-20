@@ -62,10 +62,25 @@ class Page(HTMLParser):
             self.text.append(data)
 
 
-def resolves(link):
+def redirect_target(path):
+    """Target of an exact-match rule in public/_redirects, or None. Wildcard rules are ignored."""
+    rules = os.path.join(ROOT, "_redirects")
+    if not os.path.exists(rules):
+        return None
+    for line in io.open(rules, encoding="utf-8"):
+        parts = line.split()
+        if len(parts) >= 2 and not parts[0].startswith("#") and parts[0] == path:
+            return parts[1]
+    return None
+
+
+def resolves(link, hops=0):
     path = link.split("#")[0].split("?")[0]
     if not path or not path.startswith("/"):
         return True  # external, anchor-only or relative: not checked here
+    target = redirect_target(path)
+    if target and hops < 3:
+        return resolves(target, hops + 1)  # a redirected address is fine if its target exists
     local = os.path.join(ROOT, path.lstrip("/").replace("/", os.sep))
     if path.endswith("/"):
         return os.path.exists(os.path.join(local, "index.html"))
